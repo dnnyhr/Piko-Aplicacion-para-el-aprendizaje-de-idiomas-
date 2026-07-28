@@ -1,0 +1,35 @@
+<svg width="900" height="54" viewBox="0 0 900 54" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="section divider">
+  <defs>
+    <linearGradient id="ln" gradientUnits="userSpaceOnUse" x1="40" y1="0" x2="860" y2="0">
+      <stop offset="0%" stop-color="#2FA84F" stop-opacity="0"></stop>
+      <stop offset="20%" stop-color="#2FA84F" stop-opacity="0.6"></stop>
+      <stop offset="50%" stop-color="#159C8C" stop-opacity="0.95"></stop>
+      <stop offset="80%" stop-color="#1E7FD1" stop-opacity="0.6"></stop>
+      <stop offset="100%" stop-color="#1E7FD1" stop-opacity="0"></stop>
+    </linearGradient>
+    <linearGradient id="mt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#43946A"></stop>
+      <stop offset="100%" stop-color="#2C6A3C"></stop>
+    </linearGradient>
+  </defs>
+
+  
+  <line x1="40" y1="34" x2="406" y2="34" stroke="url(#ln)" stroke-width="2" stroke-linecap="round"></line>
+  <line x1="494" y1="34" x2="860" y2="34" stroke="url(#ln)" stroke-width="2" stroke-linecap="round"></line>
+
+  
+  <circle cx="420" cy="34" r="2" fill="#159C8C" opacity="0.75"></circle>
+  <circle cx="480" cy="34" r="2" fill="#1E7FD1" opacity="0.75"></circle>
+
+  
+  <g>
+    <path d="M424,34 L444,12 L458,24 L472,6 L488,34 Z" fill="url(#mt)"></path>
+    <path d="M446,34 L462,20 L472,28 L484,14 L494,34 Z" fill="#1E5537" opacity="0.5"></path>
+    
+    <path d="M450,34 C450,24 450,16 450,9" fill="none" stroke="#2C6A3C" stroke-width="2.2" stroke-linecap="round"></path>
+    <path d="M450,26 C442,20 432,20 428,25 C435,29 445,29 450,30 Z" fill="#4EA277"></path>
+    <path d="M450,20 C458,13 468,13 472,18 C465,22 455,22 450,23 Z" fill="#6FBE8E"></path>
+    <path d="M450,13 C445,7 438,6 434,9 C438,13 445,14 450,15 Z" fill="#7ACF63"></path>
+    <circle cx="450" cy="8" r="2.6" fill="#F2C230"></circle>
+  </g>
+</svg>

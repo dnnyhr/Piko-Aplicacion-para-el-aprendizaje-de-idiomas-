@@ -1,0 +1,68 @@
+<svg width="900" height="150" viewBox="0 0 900 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PIKO footer">
+  <defs>
+    <linearGradient id="fsky" x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0%" stop-color="#BFE6E0"></stop>
+      <stop offset="100%" stop-color="#98D8C8"></stop>
+    </linearGradient>
+    <radialGradient id="fsun" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFF3C8" stop-opacity="0.95"></stop>
+      <stop offset="60%" stop-color="#FBE39A" stop-opacity="0.3"></stop>
+      <stop offset="100%" stop-color="#FBE39A" stop-opacity="0"></stop>
+    </radialGradient>
+    <linearGradient id="fm1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6FBE8E"></stop>
+      <stop offset="100%" stop-color="#4EA277"></stop>
+    </linearGradient>
+    <linearGradient id="fm2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4C9A6E"></stop>
+      <stop offset="100%" stop-color="#357E57"></stop>
+    </linearGradient>
+    <linearGradient id="fm3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2E6E48"></stop>
+      <stop offset="100%" stop-color="#1E5537"></stop>
+    </linearGradient>
+    <linearGradient id="frule" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="900" y2="0">
+      <stop offset="0%" stop-color="#2FA84F" stop-opacity="0"></stop>
+      <stop offset="30%" stop-color="#159C8C" stop-opacity="0.7"></stop>
+      <stop offset="70%" stop-color="#1E7FD1" stop-opacity="0.7"></stop>
+      <stop offset="100%" stop-color="#1E7FD1" stop-opacity="0"></stop>
+    </linearGradient>
+  </defs>
+
+  
+  <clipPath id="fclip"><rect x="0" y="0" width="900" height="150" rx="10"></rect></clipPath>
+  <g clip-path="url(#fclip)">
+    <rect width="900" height="150" fill="url(#fsky)"></rect>
+
+    
+    <circle cx="770" cy="52" r="90" fill="url(#fsun)"></circle>
+    <circle cx="770" cy="52" r="26" fill="#FBD873" opacity="0.9"></circle>
+
+    
+    <g stroke="#2E6E48" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6">
+      <path d="M150,40 C155,35 160,35 165,40 C170,35 175,35 180,40"></path>
+      <path d="M210,58 C214,54 218,54 222,58 C226,54 230,54 234,58"></path>
+    </g>
+
+    
+    <polygon points="0,150 0,96 130,58 300,104 460,54 640,106 820,64 900,92 900,150" fill="url(#fm1)"></polygon>
+    <polygon points="0,150 0,118 180,82 380,120 560,80 760,122 900,96 900,150" fill="url(#fm2)"></polygon>
+    <polygon points="0,150 0,138 220,112 470,140 700,110 900,134 900,150" fill="url(#fm3)"></polygon>
+
+    
+    <g transform="translate(120,0)">
+      <path d="M330,138 C330,128 330,122 330,116" fill="none" stroke="#1E5537" stroke-width="2" stroke-linecap="round"></path>
+      <path d="M330,128 C324,123 316,123 313,127 C318,131 326,131 330,132 Z" fill="#4EA277"></path>
+      <path d="M330,123 C336,118 344,118 347,122 C342,126 334,126 330,127 Z" fill="#6FBE8E"></path>
+    </g>
+
+    
+    <g stroke="#255E36" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.8">
+      <path d="M60,146 C58,140 57,137 55,133 M63,146 C63,140 63,137 64,132 M66,146 C69,140 70,137 72,133"></path>
+      <path d="M840,146 C838,140 837,137 835,133 M843,146 C843,140 843,137 844,132 M846,146 C849,140 850,137 852,133"></path>
+    </g>
+  </g>
+
+  
+  <rect x="0" y="0" width="900" height="3" fill="url(#frule)"></rect>
+</svg>
