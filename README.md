@@ -2,17 +2,18 @@
 
 <img src="readme/banner.svg" width="100%" alt="Piko — paisaje de montañas con sol, y una pila de libros con cada lengua enseñada"/>
 
+<br><br>
+
 <img src="https://img.shields.io/badge/Hackathon-Nicaragua%202026%20(HN10)-2F6B4F?style=for-the-badge&labelColor=1F4E5F" alt="hackathon badge"/>
 <img src="https://img.shields.io/badge/Equipo-MugiWare-1F4E5F?style=for-the-badge&labelColor=2F6B4F" alt="team badge"/>
 <img src="https://img.shields.io/badge/Estado-En%20construcci%C3%B3n-E7B84C?style=for-the-badge&labelColor=3A3A3A" alt="status badge"/>
 <br>
 <img src="https://komarev.com/ghpvc/?username=piko-hn10&label=Visitas%20al%20README&color=2F6B4F&style=flat-square" alt="visitas"/>
 
-<br>
+<br><br>
 
 <img src="https://readme-typing-svg.demolab.com?font=Georgia&size=20&pause=1600&color=2F6B4F&center=true&vCenter=true&width=650&lines=Un+loro+repite+lo+que+escucha...;Miskito+%C2%B7+Mayangna+%C2%B7+Rama+%C2%B7+Gar%C3%ADfuna+%C2%B7+Ingles;Rescatando+lenguas%2C+abriendo+puertas." alt="tagline" />
 
-<br><br>
 
 <br><br>
 
