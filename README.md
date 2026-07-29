@@ -1,4 +1,4 @@
-<div align="center">
+<img width="1917" height="1078" alt="image" src="https://github.com/user-attachments/assets/be658c55-60c3-477e-ba8d-f49a4767fe79" /><div align="center">
 
 <img src="readme/banner.svg" width="100%" alt="Piko — paisaje de montañas con sol, y una pila de libros con cada lengua enseñada"/>
 
@@ -218,7 +218,7 @@ La mascota se llama **Piko**, y también le da nombre a la app. Piko es un choco
 </td>
 <td align="center" width="20%">
 <img src="https://ui-avatars.com/api/?name=Erling&background=159C8C&color=fff&size=128&rounded=true&bold=true" width="90"/><br>
-<b>Erling</b><br>
+<b>Erling Arauz</b><br>
 <sub>Diseño</sub>
 </td>
 <td align="center" width="20%">
