@@ -18,9 +18,6 @@
 
 <br><br>
 
-> **"[frase en una lengua indígena de Nicaragua]"**
-> *"Piko intentará rescatar las lenguas abandonadas."*
-
 </div>
 
 <br>
@@ -169,8 +166,6 @@ La mascota se llama **Piko**, y también le da nombre a la app. Piko es un choco
 |---|---|
 | <img src="https://api.iconify.design/mdi/bird.svg?color=%232F6B4F" width="18"/> Mascota | Piko, un chocoyito — repite lo que escucha, igual que queremos que las nuevas generaciones repitan estas lenguas |
 | <img src="https://api.iconify.design/mdi/palette.svg?color=%231F4E5F" width="18"/> Paleta | Verde · Azul — bosques y cielos de Nicaragua |
-| <img src="https://api.iconify.design/mdi/flag-outline.svg?color=%232F6B4F" width="18"/> Meta de entrega | HN10 · 28 de octubre de 2026 |
-
 </div>
 
 <br>
@@ -187,7 +182,6 @@ La mascota se llama **Piko**, y también le da nombre a la app. Piko es un choco
 - [x] Definición del reto y las dos rutas de solución
 - [x] Guion y producción del video de presentación
 - [ ] Prototipo funcional para la demo de HN10
-- [ ] Alianza con MINED para pilotos educativos
 - [ ] Piloto en comunidad real
 - [ ] *Visión futura:* diálogo generado y respuestas del robot vía un LLM liviano con RAG, alimentado con diccionarios y literatura de las lenguas en peligro e inglés
 
