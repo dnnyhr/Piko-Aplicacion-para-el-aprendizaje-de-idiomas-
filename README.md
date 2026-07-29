@@ -1,4 +1,4 @@
-<img width="1917" height="1078" alt="image" src="https://github.com/user-attachments/assets/be658c55-60c3-477e-ba8d-f49a4767fe79" /><div align="center">
+
 
 <img src="readme/banner.svg" width="100%" alt="Piko — paisaje de montañas con sol, y una pila de libros con cada lengua enseñada"/>
 
