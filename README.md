@@ -1,8 +1,9 @@
-
+<div align="center">
 
 <img src="readme/banner.svg" width="100%" alt="Piko — paisaje de montañas con sol, y una pila de libros con cada lengua enseñada"/>
 
 <br><br>
+
 <div align="center">
 <img src="https://img.shields.io/badge/Hackathon-Nicaragua%202026%20(HN10)-2F6B4F?style=for-the-badge&labelColor=1F4E5F" alt="hackathon badge"/>
 <img src="https://img.shields.io/badge/Equipo-MugiWare-1F4E5F?style=for-the-badge&labelColor=2F6B4F" alt="team badge"/>
@@ -10,12 +11,15 @@
 <br>
 <img src="https://komarev.com/ghpvc/?username=piko-hn10&label=Visitas%20al%20README&color=2F6B4F&style=flat-square" alt="visitas"/>
 </div>
+
 <br><br>
 
 <img src="https://readme-typing-svg.demolab.com?font=Georgia&size=20&pause=1600&color=2F6B4F&center=true&vCenter=true&width=650&lines=Un+loro+repite+lo+que+escucha...;Miskito+%C2%B7+Mayangna+%C2%B7+Rama+%C2%B7+Gar%C3%ADfuna+%C2%B7+Ingles;Rescatando+lenguas%2C+abriendo+puertas." alt="tagline" />
 
-
 <br><br>
+
+> **"[frase en una lengua indígena de Nicaragua]"**
+> *"Piko intentará rescatar las lenguas abandonadas."*
 
 </div>
 
@@ -204,14 +208,41 @@ La mascota se llama **Piko**, y también le da nombre a la app. Piko es un choco
 
 <br><br>
 
-<table> <tr> <td align="center" valign="top" width="20%"> <img src="https://ui-avatars.com/api/?name=Danilo+Herrera&background=2F6B4F&color=fff&size=128&rounded=true&bold=true" width="90" height="90"/><br> <b>Danilo<br>Herrera</b><br> <sub>Desarrollo</sub> </td> <td align="center" valign="top" width="20%"> <img src="readme/perfilScarleth.png" width="90" height="90"/><br> <b>Scarleth<br>Blandon</b><br> <sub>Diseño</sub> </td> <td align="center" valign="top" width="20%"> <img src="readme/perfilErlin.png" width="90" height="90"/><br> <b>Erling<br>Arauz</b><br> <sub>Diseño</sub> </td> <td align="center" valign="top" width="20%"> <img src="readme/perfilRuby.png" width="90" height="90"/><br> <b>Ruby<br>Perez</b><br> <sub>Comunicación</sub> </td> <td align="center" valign="top" width="20%"> <img src="readme/perfilHumberto.png" width="90" height="90"/><br> <b>Humberto<br>Gutierrez</b><br> <sub>Marketing</sub> </td> </tr> </table> </div> <br>
+<table>
+<tr>
+<td align="center" valign="top" width="20%">
+<img src="https://ui-avatars.com/api/?name=Danilo+Herrera&background=2F6B4F&color=fff&size=128&rounded=true&bold=true" width="90" height="90"/><br>
+<b>Danilo<br>Herrera</b><br>
+<sub>Desarrollo</sub>
+</td>
+<td align="center" valign="top" width="20%">
+<img src="readme/perfilScarleth.png" width="90" height="90"/><br>
+<b>Scarleth<br>Blandon</b><br>
+<sub>Diseño</sub>
+</td>
+<td align="center" valign="top" width="20%">
+<img src="readme/perfilErlin.png" width="90" height="90"/><br>
+<b>Erling<br>Arauz</b><br>
+<sub>Diseño</sub>
+</td>
+<td align="center" valign="top" width="20%">
+<img src="readme/perfilRuby.png" width="90" height="90"/><br>
+<b>Ruby<br>Perez</b><br>
+<sub>Comunicación</sub>
+</td>
+<td align="center" valign="top" width="20%">
+<img src="readme/perfilHumberto.png" width="90" height="90"/><br>
+<b>Humberto<br>Gutierrez</b><br>
+<sub>Marketing</sub>
+</td>
+</tr>
+</table>
 
 </div>
 
 <br>
 
 <div align="center">
-
 
 <img src="readme/footer.svg" width="100%" alt="Piko — paisaje de montañas al atardecer"/>
 
