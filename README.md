@@ -223,7 +223,7 @@ La mascota se llama **Piko**, y también le da nombre a la app. Piko es un choco
 </td>
 <td align="center" width="20%">
 <img src="https://ui-avatars.com/api/?name=Ruby+Perez&background=2FA84F&color=fff&size=128&rounded=true&bold=true" width="90"/><br>
-<b>Ruby Perez</b><br>
+<b>Eveling Perez</b><br>
 <sub>Comunicación</sub>
 </td>
 <td align="center" width="20%">
