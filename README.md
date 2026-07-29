@@ -204,35 +204,7 @@ La mascota se llama **Piko**, y también le da nombre a la app. Piko es un choco
 
 <br><br>
 
-<table>
-<tr>
-<td align="center" width="20%">
-<img src="https://ui-avatars.com/api/?name=Danilo+Herrera&background=2F6B4F&color=fff&size=128&rounded=true&bold=true" width="90"/><br>
-<b>Danilo Herrera</b><br>
-<sub>Desarrollo</sub>
-</td>
-<td align="center" width="20%">
-<img src="https://ui-avatars.com/api/?name=Scarleth+Blandon&background=1F4E5F&color=fff&size=128&rounded=true&bold=true" width="90"/><br>
-<b>Scarleth Blandon</b><br>
-<sub>Diseño</sub>
-</td>
-<td align="center" width="20%">
-<img src="https://ui-avatars.com/api/?name=Erling&background=159C8C&color=fff&size=128&rounded=true&bold=true" width="90"/><br>
-<b>Erling Arauz</b><br>
-<sub>Diseño</sub>
-</td>
-<td align="center" width="20%">
-<img src="https://ui-avatars.com/api/?name=Ruby+Perez&background=2FA84F&color=fff&size=128&rounded=true&bold=true" width="90"/><br>
-<b>Eveling Perez</b><br>
-<sub>Comunicación</sub>
-</td>
-<td align="center" width="20%">
-<img src="https://ui-avatars.com/api/?name=Humberto+Gutierrez&background=1E7FD1&color=fff&size=128&rounded=true&bold=true" width="90"/><br>
-<b>Humberto Gutierrez</b><br>
-<sub>Marketing</sub>
-</td>
-</tr>
-</table>
+<table> <tr> <td align="center" valign="top" width="20%"> <img src="https://ui-avatars.com/api/?name=Danilo+Herrera&background=2F6B4F&color=fff&size=128&rounded=true&bold=true" width="90" height="90"/><br> <b>Danilo<br>Herrera</b><br> <sub>Desarrollo</sub> </td> <td align="center" valign="top" width="20%"> <img src="readme/perfilScarleth.png" width="90" height="90"/><br> <b>Scarleth<br>Blandon</b><br> <sub>Diseño</sub> </td> <td align="center" valign="top" width="20%"> <img src="readme/perfilErlin.png" width="90" height="90"/><br> <b>Erling<br>&nbsp;</b><br> <sub>Diseño</sub> </td> <td align="center" valign="top" width="20%"> <img src="readme/perfilRuby.png" width="90" height="90"/><br> <b>Ruby<br>Perez</b><br> <sub>Comunicación</sub> </td> <td align="center" valign="top" width="20%"> <img src="readme/perfilHumberto.png" width="90" height="90"/><br> <b>Humberto<br>Gutierrez</b><br> <sub>Marketing</sub> </td> </tr> </table> </div> <br> <div align="center">
 
 </div>
 
