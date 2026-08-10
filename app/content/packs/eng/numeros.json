@@ -1,0 +1,77 @@
+{
+  "id": "eng.numeros.1",
+  "lang": "eng",
+  "theme": "numeros",
+  "difficulty": 1,
+  "title": "Números",
+  "items": [
+    {
+      "id": "eng.numeros.1.a",
+      "type": "choice",
+      "skill": "eng.numeros",
+      "prompt": "uno",
+      "answer": "one",
+      "options": ["one", "two", "ten"]
+    },
+    {
+      "id": "eng.numeros.1.b",
+      "type": "choice",
+      "skill": "eng.numeros",
+      "prompt": "tres",
+      "answer": "three",
+      "options": ["three", "two", "eight"]
+    },
+    {
+      "id": "eng.numeros.1.c",
+      "type": "choice",
+      "skill": "eng.numeros",
+      "prompt": "cinco",
+      "answer": "five",
+      "options": ["five", "four", "nine"]
+    },
+    {
+      "id": "eng.numeros.1.d",
+      "type": "choice",
+      "skill": "eng.numeros",
+      "prompt": "siete",
+      "answer": "seven",
+      "options": ["seven", "six", "ten"]
+    },
+    {
+      "id": "eng.numeros.1.e",
+      "type": "choice",
+      "skill": "eng.numeros",
+      "prompt": "diez",
+      "answer": "ten",
+      "options": ["ten", "nine", "three"]
+    },
+    {
+      "id": "eng.numeros.1.f",
+      "type": "listen",
+      "skill": "eng.numeros",
+      "tts": "three",
+      "ttsLang": "en-US",
+      "answer": "three",
+      "options": ["three", "tree", "free"],
+      "gloss": "tres"
+    },
+    {
+      "id": "eng.numeros.1.g",
+      "type": "listen",
+      "skill": "eng.numeros",
+      "tts": "eight",
+      "ttsLang": "en-US",
+      "answer": "eight",
+      "options": ["eight", "eighty", "ate"],
+      "gloss": "ocho"
+    },
+    {
+      "id": "eng.numeros.1.h",
+      "type": "build",
+      "skill": "eng.numeros",
+      "target": "I have two brothers",
+      "blocks": ["I", "have", "two", "brothers", "sisters", "am"],
+      "gloss": "Tengo dos hermanos"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "id": "eng.escuela.2",
+  "lang": "eng",
+  "theme": "escuela",
+  "difficulty": 2,
+  "title": "En la escuela",
+  "items": [
+    {
+      "id": "eng.escuela.2.a",
+      "type": "choice",
+      "skill": "eng.escuela",
+      "prompt": "maestro",
+      "answer": "teacher",
+      "options": ["teacher", "student", "school"]
+    },
+    {
+      "id": "eng.escuela.2.b",
+      "type": "choice",
+      "skill": "eng.escuela",
+      "prompt": "libro",
+      "answer": "book",
+      "options": ["book", "pencil", "paper"]
+    },
+    {
+      "id": "eng.escuela.2.c",
+      "type": "choice",
+      "skill": "eng.escuela",
+      "prompt": "¿Puedo pasar?",
+      "answer": "May I come in?",
+      "options": ["May I come in?", "Can I go out?", "Where is the door?"]
+    },
+    {
+      "id": "eng.escuela.2.d",
+      "type": "listen",
+      "skill": "eng.escuela",
+      "tts": "open your book",
+      "ttsLang": "en-US",
+      "answer": "open your book",
+      "options": ["open your book", "close your book", "open your bag"],
+      "gloss": "abre tu libro"
+    },
+    {
+      "id": "eng.escuela.2.e",
+      "type": "build",
+      "skill": "eng.escuela",
+      "target": "I go to school every day",
+      "blocks": ["I", "go", "to", "school", "every", "day", "week", "the"],
+      "gloss": "Voy a la escuela todos los días"
+    },
+    {
+      "id": "eng.escuela.2.f",
+      "type": "build",
+      "skill": "eng.escuela",
+      "target": "The teacher is reading a book",
+      "blocks": ["The", "teacher", "is", "reading", "a", "book", "writing", "student"],
+      "gloss": "El maestro está leyendo un libro"
+    },
+    {
+      "id": "eng.escuela.2.g",
+      "type": "build",
+      "skill": "eng.escuela",
+      "target": "I do not understand",
+      "blocks": ["I", "do", "not", "understand", "know", "you"],
+      "gloss": "No entiendo"
+    }
+  ]
+}

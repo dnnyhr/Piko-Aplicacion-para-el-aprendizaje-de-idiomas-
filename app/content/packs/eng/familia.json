@@ -1,0 +1,67 @@
+{
+  "id": "eng.familia.1",
+  "lang": "eng",
+  "theme": "familia",
+  "difficulty": 1,
+  "title": "La familia",
+  "items": [
+    {
+      "id": "eng.familia.1.a",
+      "type": "choice",
+      "skill": "eng.familia",
+      "prompt": "madre",
+      "answer": "mother",
+      "options": ["mother", "father", "sister"]
+    },
+    {
+      "id": "eng.familia.1.b",
+      "type": "choice",
+      "skill": "eng.familia",
+      "prompt": "padre",
+      "answer": "father",
+      "options": ["father", "brother", "mother"]
+    },
+    {
+      "id": "eng.familia.1.c",
+      "type": "choice",
+      "skill": "eng.familia",
+      "prompt": "hermana",
+      "answer": "sister",
+      "options": ["sister", "brother", "daughter"]
+    },
+    {
+      "id": "eng.familia.1.d",
+      "type": "choice",
+      "skill": "eng.familia",
+      "prompt": "abuela",
+      "answer": "grandmother",
+      "options": ["grandmother", "grandfather", "aunt"]
+    },
+    {
+      "id": "eng.familia.1.e",
+      "type": "listen",
+      "skill": "eng.familia",
+      "tts": "my brother",
+      "ttsLang": "en-US",
+      "answer": "my brother",
+      "options": ["my brother", "my mother", "my father"],
+      "gloss": "mi hermano"
+    },
+    {
+      "id": "eng.familia.1.f",
+      "type": "build",
+      "skill": "eng.familia",
+      "target": "This is my mother",
+      "blocks": ["This", "is", "my", "mother", "your", "are"],
+      "gloss": "Esta es mi madre"
+    },
+    {
+      "id": "eng.familia.1.g",
+      "type": "build",
+      "skill": "eng.familia",
+      "target": "My family is big",
+      "blocks": ["My", "family", "is", "big", "small", "are"],
+      "gloss": "Mi familia es grande"
+    }
+  ]
+}

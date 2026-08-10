@@ -1,0 +1,22 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@core/*": ["./src/core/*"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  "exclude": [
+    "node_modules",
+    // Todo lo que corre en Node y no en el teléfono se revisa con
+    // tsconfig.node.json, que sí trae @types/node.
+    "tools",
+    "tests",
+    "vitest.config.mts",
+    "src/net/tcp.node.ts"
+  ]
+}

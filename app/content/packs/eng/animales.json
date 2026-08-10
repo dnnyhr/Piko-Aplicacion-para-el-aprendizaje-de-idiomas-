@@ -1,0 +1,59 @@
+{
+  "id": "eng.animales.1",
+  "lang": "eng",
+  "theme": "animales",
+  "difficulty": 1,
+  "title": "Animales",
+  "items": [
+    {
+      "id": "eng.animales.1.a",
+      "type": "choice",
+      "skill": "eng.animales",
+      "prompt": "pájaro",
+      "answer": "bird",
+      "options": ["bird", "fish", "dog"]
+    },
+    {
+      "id": "eng.animales.1.b",
+      "type": "choice",
+      "skill": "eng.animales",
+      "prompt": "perro",
+      "answer": "dog",
+      "options": ["dog", "cat", "cow"]
+    },
+    {
+      "id": "eng.animales.1.c",
+      "type": "choice",
+      "skill": "eng.animales",
+      "prompt": "pez",
+      "answer": "fish",
+      "options": ["fish", "bird", "horse"]
+    },
+    {
+      "id": "eng.animales.1.d",
+      "type": "choice",
+      "skill": "eng.animales",
+      "prompt": "vaca",
+      "answer": "cow",
+      "options": ["cow", "horse", "pig"]
+    },
+    {
+      "id": "eng.animales.1.e",
+      "type": "listen",
+      "skill": "eng.animales",
+      "tts": "a small bird",
+      "ttsLang": "en-US",
+      "answer": "a small bird",
+      "options": ["a small bird", "a small fish", "a tall bird"],
+      "gloss": "un pájaro pequeño"
+    },
+    {
+      "id": "eng.animales.1.f",
+      "type": "build",
+      "skill": "eng.animales",
+      "target": "The bird can fly",
+      "blocks": ["The", "bird", "can", "fly", "swim", "fish"],
+      "gloss": "El pájaro puede volar"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+# Dependencias
+node_modules/
+
+# Expo / Metro
+.expo/
+.expo-export/
+.expo-export-web/
+dist/
+web-build/
+expo-env.d.ts
+.metro-health-check*
+
+# Carpetas nativas generadas por prebuild
+/app/android/
+/app/ios/
+
+# Build local
+*.apk
+*.aab
+*.keystore
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# TypeScript
+*.tsbuildinfo
+
+# Entorno
+.env
+.env*.local
+
+# Configuración local de editores
+.vscode/
+.idea/
+
+# Editores y sistema
+.DS_Store
+Thumbs.db
+*.orig.*
+
+# Logs
+npm-debug.*
+yarn-debug.*
+yarn-error.*

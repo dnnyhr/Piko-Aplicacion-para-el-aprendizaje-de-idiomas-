@@ -1,0 +1,85 @@
+{
+  "id": "eng.saludos.1",
+  "lang": "eng",
+  "theme": "saludos",
+  "difficulty": 1,
+  "title": "Saludos",
+  "items": [
+    {
+      "id": "eng.saludos.1.a",
+      "type": "choice",
+      "skill": "eng.saludos",
+      "prompt": "Buenos días",
+      "answer": "Good morning",
+      "options": ["Good morning", "Good night", "Good afternoon"]
+    },
+    {
+      "id": "eng.saludos.1.b",
+      "type": "choice",
+      "skill": "eng.saludos",
+      "prompt": "Buenas noches",
+      "answer": "Good night",
+      "options": ["Good night", "Good morning", "Good evening"]
+    },
+    {
+      "id": "eng.saludos.1.c",
+      "type": "choice",
+      "skill": "eng.saludos",
+      "prompt": "Gracias",
+      "answer": "Thank you",
+      "options": ["Thank you", "Please", "Sorry"]
+    },
+    {
+      "id": "eng.saludos.1.d",
+      "type": "choice",
+      "skill": "eng.saludos",
+      "prompt": "Por favor",
+      "answer": "Please",
+      "options": ["Please", "Thank you", "Welcome"]
+    },
+    {
+      "id": "eng.saludos.1.e",
+      "type": "choice",
+      "skill": "eng.saludos",
+      "prompt": "Adiós",
+      "answer": "Goodbye",
+      "options": ["Goodbye", "Hello", "See you"]
+    },
+    {
+      "id": "eng.saludos.1.f",
+      "type": "listen",
+      "skill": "eng.saludos",
+      "tts": "Good morning",
+      "ttsLang": "en-US",
+      "answer": "Good morning",
+      "options": ["Good morning", "Good night", "Good afternoon"],
+      "gloss": "Buenos días"
+    },
+    {
+      "id": "eng.saludos.1.g",
+      "type": "listen",
+      "skill": "eng.saludos",
+      "tts": "Thank you very much",
+      "ttsLang": "en-US",
+      "answer": "Thank you very much",
+      "options": ["Thank you very much", "Thank you", "See you later"],
+      "gloss": "Muchas gracias"
+    },
+    {
+      "id": "eng.saludos.1.h",
+      "type": "build",
+      "skill": "eng.saludos",
+      "target": "How are you",
+      "blocks": ["How", "are", "you", "is", "the"],
+      "gloss": "¿Cómo estás?"
+    },
+    {
+      "id": "eng.saludos.1.i",
+      "type": "build",
+      "skill": "eng.saludos",
+      "target": "See you tomorrow",
+      "blocks": ["See", "you", "tomorrow", "today", "me"],
+      "gloss": "Nos vemos mañana"
+    }
+  ]
+}

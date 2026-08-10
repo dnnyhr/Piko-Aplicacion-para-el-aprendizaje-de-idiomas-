@@ -1,0 +1,59 @@
+{
+  "id": "eng.colores.1",
+  "lang": "eng",
+  "theme": "colores",
+  "difficulty": 1,
+  "title": "Colores",
+  "items": [
+    {
+      "id": "eng.colores.1.a",
+      "type": "choice",
+      "skill": "eng.colores",
+      "prompt": "verde",
+      "answer": "green",
+      "options": ["green", "blue", "grey"]
+    },
+    {
+      "id": "eng.colores.1.b",
+      "type": "choice",
+      "skill": "eng.colores",
+      "prompt": "azul",
+      "answer": "blue",
+      "options": ["blue", "black", "brown"]
+    },
+    {
+      "id": "eng.colores.1.c",
+      "type": "choice",
+      "skill": "eng.colores",
+      "prompt": "rojo",
+      "answer": "red",
+      "options": ["red", "pink", "orange"]
+    },
+    {
+      "id": "eng.colores.1.d",
+      "type": "choice",
+      "skill": "eng.colores",
+      "prompt": "amarillo",
+      "answer": "yellow",
+      "options": ["yellow", "white", "orange"]
+    },
+    {
+      "id": "eng.colores.1.e",
+      "type": "listen",
+      "skill": "eng.colores",
+      "tts": "the green tree",
+      "ttsLang": "en-US",
+      "answer": "the green tree",
+      "options": ["the green tree", "the grey tree", "the green three"],
+      "gloss": "el árbol verde"
+    },
+    {
+      "id": "eng.colores.1.f",
+      "type": "build",
+      "skill": "eng.colores",
+      "target": "The bird is green",
+      "blocks": ["The", "bird", "is", "green", "blue", "are"],
+      "gloss": "El pájaro es verde"
+    }
+  ]
+}
