@@ -319,7 +319,7 @@ details.plegable > .cuerpo{padding:0 .85rem 1rem}
       <label>Ángulo <span class="valor" id="vServo">90°</span></label>
       <input type="range" id="servo" min="0" max="180" value="90">
       <div class="fila">
-        <button class="tecla" data-servo="0">Abajo</button>
+        <button class="tecla" data-servo="0" data-reposo>Abajo</button>
         <button class="tecla" data-servo="90">Centro</button>
         <button class="tecla" data-servo="150">Arriba</button>
       </div>
@@ -889,9 +889,17 @@ function cortarSecuencia() {
   secuenciaEnCurso = null;
 }
 
-/* El ángulo con el que las alas quedan en reposo. Con la ventana de pulso
-   ensanchada del firmware, 0 es lo más abajo que llega el servo. */
-const ALAS_ABAJO = 0;
+/* El ángulo con el que las alas quedan en reposo, y el que da el botón
+   «Abajo». Con la ventana de pulso ensanchada del firmware, 0 es lo más abajo
+   que llega el servo; se deja un poco por encima para que las alas descansen
+   sin quedar forzadas contra el tope. Si hay que corregirlo, es este número y
+   nada más. */
+const ALAS_ABAJO = 10;
+
+/* El botón y el reposo de las secuencias son la misma posición, definida en un
+   solo lugar. El manejador lee `data-servo` recién al tocarlo, así que ponerlo
+   acá alcanza. */
+document.querySelector('[data-servo][data-reposo]').dataset.servo = ALAS_ABAJO;
 
 function ponerServo(a) {
   mandar(`SV ${a}`);
