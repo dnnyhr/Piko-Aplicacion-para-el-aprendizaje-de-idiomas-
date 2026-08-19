@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Piko</title>
+<meta name="theme-color" content="#0F5D3D">
+
+<!-- Instalada desde «Agregar a pantalla de inicio», Chrome en Android la abre
+     sin barra de direcciones y se queda así toda la clase. Es más confiable
+     que pedir pantalla completa por código, que Android concede a medias y
+     abandona en cuanto el sistema muestra cualquier cosa encima. -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icono.svg" type="image/svg+xml">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+/* Todo negro y sin nada de más: esto es una cara, no una página. */
+*{margin:0; padding:0; box-sizing:border-box}
+html,body{
+  height:100%; background:#000; overflow:hidden;
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent;
+}
+
+#piko-caja{position:fixed; inset:0; opacity:0; transition:opacity .15s ease}
+#piko-caja.puesta{opacity:1}
+
+#escena{position:fixed; inset:0}
+#escena > *{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:contain;
+  opacity:0; transition:opacity .18s ease;
+  pointer-events:none;
+}
+#escena > .puesta{opacity:1}
+
+/* ---------- el velo de arranque ---------- */
+#velo{
+  position:fixed; inset:0; z-index:10;
+  background:#0F5D3D; color:#F7F0E4;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:1.4rem; text-align:center; padding:2rem;
+}
+#velo h1{font-size:clamp(1.6rem,7vw,2.6rem); font-weight:650; letter-spacing:-.02em}
+#velo p{font-size:clamp(.95rem,3.6vw,1.15rem); opacity:.8; max-width:24ch; line-height:1.5}
+#velo .pico{
+  width:0; height:0; margin-bottom:.5rem;
+  border-left:26px solid transparent; border-right:26px solid transparent;
+  border-top:34px solid #E8A429;
+  animation:latir 1.6s ease-in-out infinite;
+}
+@keyframes latir{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+#velo.ido{display:none}
+
+/* ---------- avisos discretos ---------- */
+#aviso{
+  position:fixed; left:0; right:0; bottom:0; z-index:5;
+  padding:.5rem; text-align:center;
+  font-size:.8rem; color:#F7F0E4; background:rgba(192,57,43,.92);
+  transform:translateY(100%); transition:transform .25s ease;
+}
+#aviso.visible{transform:translateY(0)}
+
+/* Un botón chico para volver a pantalla completa. Aparece sólo cuando hace
+   falta: Android la concede y la abandona sola en cuanto el sistema muestra
+   algo encima, y sin esto la única salida es recargar la página. */
+#lleno{
+  position:fixed; top:.6rem; right:.6rem; z-index:8;
+  width:44px; height:44px; border:none; border-radius:50%;
+  background:rgba(15,93,61,.55); color:#F7F0E4;
+  font-size:1.2rem; line-height:1; cursor:pointer;
+  display:none;
+}
+#lleno.visible{display:block}
+
+@media (prefers-reduced-motion:reduce){
+  #escena > *{transition:none}
+  #velo .pico{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div id="piko-caja"></div>
+<div id="escena"></div>
+<audio id="voz"></audio>
+
+<div id="velo">
+  <div class="pico"></div>
+  <h1>Piko</h1>
+  <p>Tocá la pantalla para empezar</p>
+</div>
+
+<button id="lleno" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
+<div id="aviso"></div>
+
+<script src="piko.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const escena = $('escena');
+const voz = $('voz');
+
+/* El Piko animado se monta una sola vez y se queda ahí. Las expresiones que
+   sabe hacer las hace moviendo las pupilas, la boca y los párpados; las que no
+   conoce caen a mostrar el archivo suelto de `caras/`. */
+Piko.montar($('piko-caja'));
+
+let ws = null;
+let arrancado = false;
+const piezas = new Map();   // nombre → elemento
+let puesta = null;
+
+// ═══════════════════════════════════════════════════════════════════════
+//  El arranque
+// ═══════════════════════════════════════════════════════════════════════
+
+/**
+ * Los navegadores de teléfono no dejan reproducir video ni audio hasta que
+ * alguien toca la pantalla. No es un capricho que se pueda saltear: sin ese
+ * toque, Piko se queda mudo y quieto sin decir por qué.
+ *
+ * Por eso el velo. Además es el momento de pedir pantalla completa y de pedir
+ * que no se apague, que también requieren un gesto de por medio.
+ */
+/**
+ * Pedir pantalla completa, y decirlo si no se puede.
+ *
+ * Tiene que salir del propio manejador del toque y **antes de cualquier
+ * `await`**: en cuanto la función cede el control, el navegador da por
+ * terminado el gesto del usuario y rechaza el pedido. Ése es el motivo más
+ * común de que esto «no haga nada» sin dar error.
+ *
+ * Y aun saliendo bien, Android la abandona sola en cuanto el sistema muestra
+ * algo encima —una notificación, el teclado—. Por eso queda el botón de la
+ * esquina para volver, y por eso conviene más instalarla desde «Agregar a
+ * pantalla de inicio», que arranca sin barra y se queda.
+ */
+function pedirPantallaCompleta() {
+  const raiz = document.documentElement;
+  const pedir = raiz.requestFullscreen || raiz.webkitRequestFullscreen;
+  if (!pedir) {
+    avisar('Este navegador no permite pantalla completa');
+    $('lleno').classList.add('visible');
+    return;
+  }
+
+  Promise.resolve(pedir.call(raiz, { navigationUI: 'hide' }))
+    .then(() => {
+      avisar(null);
+      $('lleno').classList.remove('visible');
+      // El bloqueo de orientación sólo se concede estando en pantalla completa.
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
+      }
+    })
+    .catch((e) => {
+      // Si falla, el botón queda a mano en vez de dejar la página sin salida.
+      avisar(`Pantalla completa rechazada: ${e && e.message ? e.message : e}`);
+      $('lleno').classList.add('visible');
+    });
+}
+
+function arrancar() {
+  if (arrancado) return;
+  arrancado = true;
+  $('velo').classList.add('ido');
+
+  // Primero, sin nada asincrónico delante, o se pierde el gesto.
+  pedirPantallaCompleta();
+
+  // Que la pantalla no se duerma: es la cara del robot, tiene que quedarse
+  // encendida toda la clase. Sólo existe en contextos seguros — por http en la
+  // red local no está, y ahí queda la pantalla completa como único recurso.
+  if ('wakeLock' in navigator) {
+    const pedirCandado = () => navigator.wakeLock.request('screen').catch(() => {});
+    pedirCandado();
+    // El sistema lo suelta cuando la pestaña pasa a segundo plano; hay que
+    // volver a pedirlo al regresar.
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') pedirCandado();
+    });
+  }
+
+  // Desbloquear el audio con el mismo gesto.
+  try { voz.play().catch(() => {}); voz.pause(); } catch { }
+
+  for (const el of piezas.values()) {
+    if (el.tagName === 'VIDEO') el.play().catch(() => {});
+  }
+}
+
+/* Sólo `click`. Antes escuchaba también `touchstart`, y en Android eso hacía
+   que la función corriera con el gesto todavía a medio formar — el pedido de
+   pantalla completa salía y el navegador lo descartaba sin avisar. */
+$('velo').addEventListener('click', arrancar);
+$('lleno').addEventListener('click', pedirPantallaCompleta);
+
+/* Si Android la abandona, vuelve a aparecer el botón. */
+document.addEventListener('fullscreenchange', () => {
+  $('lleno').classList.toggle('visible', arrancado && !document.fullscreenElement);
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+//  Las expresiones
+// ═══════════════════════════════════════════════════════════════════════
+
+/**
+ * Se cargan todas de entrada, no una por una al pedido.
+ *
+ * Con el túnel de por medio, bajar un video en el momento en que hay que
+ * mostrarlo se ve como un parpadeo negro justo cuando Piko tenía que
+ * reaccionar. Teniéndolas todas puestas y ocultas, cambiar de expresión es
+ * cambiar una clase: instantáneo y sin red.
+ */
+function prepararCaras(caras) {
+  escena.textContent = '';
+  piezas.clear();
+  puesta = null;
+
+  for (const cara of caras) {
+    let el;
+    if (cara.tipo === 'video') {
+      el = document.createElement('video');
+      el.src = `caras/${encodeURIComponent(cara.archivo)}`;
+      el.loop = true;
+      el.playsInline = true;
+      el.preload = 'auto';
+      // Arranca en silencio porque hasta el primer toque es la única forma de
+      // que el navegador lo deje reproducirse. Después se le saca el silencio.
+      el.muted = true;
+    } else {
+      el = document.createElement('img');
+      el.src = `caras/${encodeURIComponent(cara.archivo)}`;
+      el.alt = '';
+      el.decoding = 'async';
+    }
+    escena.appendChild(el);
+    piezas.set(cara.nombre, el);
+  }
+}
+
+/** Apaga lo que hubiera puesto de la escena de archivos. */
+function apagarArchivo() {
+  if (!puesta) return;
+  puesta.classList.remove('puesta');
+  if (puesta.tagName === 'VIDEO') puesta.pause();
+  puesta = null;
+}
+
+function mostrar(nombre) {
+  // Primero el Piko animado: si sabe hacer esta expresión, la mirada viaja de
+  // donde está a donde va en vez de desvanecerse.
+  if (Piko.conoce(nombre)) {
+    Piko.estado(nombre);
+    apagarArchivo();
+    $('piko-caja').classList.add('puesta');
+    return;
+  }
+
+  // Si no la conoce, se muestra el archivo tal cual.
+  const el = piezas.get(nombre);
+  if (!el || puesta === el) return;
+  $('piko-caja').classList.remove('puesta');
+  apagarArchivo();
+
+  el.classList.add('puesta');
+  if (el.tagName === 'VIDEO') {
+    el.currentTime = 0;
+    if (arrancado) el.muted = false;
+    el.play().catch(() => {});
+  }
+  puesta = el;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  Conexión
+// ═══════════════════════════════════════════════════════════════════════
+
+function avisar(texto) {
+  const a = $('aviso');
+  if (!texto) { a.classList.remove('visible'); return; }
+  a.textContent = texto;
+  a.classList.add('visible');
+}
+
+function conectar() {
+  const protocolo = location.protocol === 'https:' ? 'wss' : 'ws';
+  ws = new WebSocket(`${protocolo}://${location.host}`);
+
+  ws.onopen = () => {
+    avisar(null);
+    ws.send(JSON.stringify({ t: 'soy', rol: 'cara' }));
+  };
+
+  ws.onclose = () => {
+    avisar('Sin conexión con el puente — reintentando');
+    setTimeout(conectar, 1500);
+  };
+
+  ws.onmessage = (e) => {
+    const m = JSON.parse(e.data);
+
+    if (m.t === 'catalogo') {
+      prepararCaras(m.caras);
+      // Si esta página se abrió tarde o se recargó, se pone al día con la
+      // expresión que ya estaba puesta en vez de quedarse en negro.
+      // Sin expresión puesta y sin archivos, igual se ve a Piko de frente: la
+      // pantalla en negro nunca es una respuesta aceptable para una cara.
+      if (m.expresion) mostrar(m.expresion);
+      else if (m.caras.length) mostrar(m.caras[0].nombre);
+      else mostrar('enfrente');
+      return;
+    }
+
+    if (m.t === 'expresion') { mostrar(m.nombre); return; }
+
+    if (m.t === 'sonido') {
+      voz.src = `sonidos/${encodeURIComponent(m.archivo)}`;
+      voz.play().catch(() => avisar('Tocá la pantalla para permitir el sonido'));
+      return;
+    }
+
+    if (m.t === 'callar') { voz.pause(); voz.currentTime = 0; }
+  };
+}
+
+conectar();
+</script>
+</body>
+</html>

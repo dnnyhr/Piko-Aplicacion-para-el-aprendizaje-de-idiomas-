@@ -1,0 +1,26 @@
+{
+  "name": "Piko — la cara",
+  "short_name": "Piko",
+  "description": "La cara del acompañante de aula. Se abre en el teléfono montado en el robot.",
+  "start_url": "/cara",
+  "scope": "/",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "landscape",
+  "background_color": "#659327",
+  "theme_color": "#0F5D3D",
+  "icons": [
+    {
+      "src": "icono.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icono.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

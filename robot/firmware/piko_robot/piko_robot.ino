@@ -1,0 +1,364 @@
+/**
+ * Piko — firmware del acompañante de aula (Ruta 2).
+ *
+ * Un Arduino Mega —en realidad un MegaPi de Makeblock— que mueve el cuerpo y
+ * las luces. No decide nada: la inteligencia vive del otro lado del cable USB,
+ * en la PC.
+ *
+ * LA CARA NO ESTÁ ACÁ.
+ * --------------------
+ * Piko mira desde un teléfono montado en el robot, que muestra animaciones en
+ * un navegador. Este firmware no sabe nada de expresiones: sólo gira el motor
+ * a pasos que apunta ese teléfono. Toda la parte de OLED, mapas de bits e I2C
+ * que había antes desapareció, y con ella la mitad del código.
+ *
+ * PROTOCOLO
+ * ---------
+ * Una orden por línea, terminada en \n, en ASCII plano. Se eligió texto y no
+ * JSON por dos razones: parsear JSON en 8 KB de RAM es caro, y sobre todo
+ * porque así se puede depurar a mano desde el Monitor Serie cuando el panel no
+ * está — que es exactamente el momento en que uno necesita depurar.
+ *
+ *   host → robot
+ *     HB                      latido; mantiene vivo al hombre muerto
+ *     SV <0..180>             servo: alas, cola y cuerpo
+ *     PA <pasos> <rpm>        motor a pasos: gira el teléfono. Relativo, con signo
+ *     PARA                    frena todo, ya
+ *     LED <i|-1> <r> <g> <b>  un píxel de 0 a 7, o todos con -1
+ *     BRILLO <0..255>         brillo global de las dos tiras
+ *     PING                    prueba de vida
+ *
+ *   robot → host
+ *     LISTO <version>         al terminar de arrancar
+ *     ARRANCA / PASO ...      marcas de arranque, por si algo se cuelga antes
+ *     OK <orden>              la orden se ejecutó
+ *     ERR <motivo>            no se entendió, o venía fuera de rango
+ *     TEL sv=.. pa=.. hm=..   telemetría periódica
+ *
+ * EL HOMBRE MUERTO
+ * ----------------
+ * Si pasan MS_HOMBRE_MUERTO sin recibir una sola línea, el firmware frena los
+ * motores por su cuenta. Entre el navegador y este chip hay un WebSocket, un
+ * túnel de Cloudflare e internet, y cualquiera de los tres se puede caer justo
+ * después de un "girá" y antes del "pará". La parada tiene que vivir acá
+ * abajo, donde no depende de nadie.
+ */
+
+#include <Servo.h>
+#include <Adafruit_NeoPixel.h>
+
+// ═════════════════════════════════════════════════════════════════════════
+//  PINES
+// ═════════════════════════════════════════════════════════════════════════
+
+/* Estos números no son los de un Arduino Mega pelado: son los del MegaPi de
+   Makeblock, donde los pines ya vienen cableados de fábrica a los slots de
+   motor. Salen del arreglo `megaPi_slots` de la biblioteca oficial y coinciden
+   con el serigrafiado, que va en orden físico:
+
+     PORT1  35  34  33  32  31  18  12  11
+     PORT2  36  37  40  41  38  19   8   7
+     PORT3  42  43  47  48  49   3   9   6
+     PORT4  A5  A4  A3  A2  A1   2   5   4
+
+   Lo que importa para cablear cómodo es la posición, no el número: el 49 y el
+   3 son vecinos aunque no se parezcan. Todo está elegido para que cada módulo
+   ocupe pines pegados. */
+
+const uint8_t PIN_ULN[4] = { 36, 37, 40, 41 };   // IN1..IN4, primeras 4 de PORT2
+
+/* Tres pines seguidos del header de diez que está debajo del Bluetooth. Con la
+   LCD fuera, del 22 al 26 quedan libres, más el 30 y el 39. */
+const uint8_t PIN_TIRA_A = 27;
+const uint8_t PIN_TIRA_B = 28;
+const uint8_t PIN_SERVO  = 29;
+
+// ═════════════════════════════════════════════════════════════════════════
+//  CONSTANTES
+// ═════════════════════════════════════════════════════════════════════════
+
+const char VERSION[] = "piko-robot 2.0";
+
+/* Dos módulos de cuatro. Se manejan como un solo espacio de ocho para que el
+   panel no tenga que saber cómo están repartidos: del 0 al 3 la primera tira,
+   del 4 al 7 la segunda. Van en pines distintos —y no encadenados— para poder
+   refrescar una sin tocar la otra. */
+const uint8_t LEDS_POR_TIRA = 4;
+const uint8_t LEDS_TOTAL    = LEDS_POR_TIRA * 2;
+
+const unsigned long MS_HOMBRE_MUERTO = 500;
+const unsigned long MS_TELEMETRIA    = 250;
+
+/* El 28BYJ-48 con su reductora no pasa de unas 15 rpm en el eje de salida.
+   Pedirle más no lo hace girar más rápido: lo hace zumbar quieto y perder
+   pasos. Y son 4096 medios pasos por vuelta, no 2048 — ése es el número en
+   pasos enteros, y acá se mueve en medios. */
+const uint16_t PASOS_POR_VUELTA = 4096;
+const uint16_t RPM_MAX = 15;
+
+// ═════════════════════════════════════════════════════════════════════════
+
+Adafruit_NeoPixel tiraA(LEDS_POR_TIRA, PIN_TIRA_A, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel tiraB(LEDS_POR_TIRA, PIN_TIRA_B, NEO_GRB + NEO_KHZ800);
+Servo servo;
+
+uint8_t anguloServo = 90;
+
+long          pasosRestantes  = 0;
+int8_t        sentidoPaso     = 1;
+unsigned long intervaloPasoUs = 1465;
+unsigned long ultimoPasoUs    = 0;
+uint8_t       faseULN         = 0;
+
+bool sucioA = false;
+bool sucioB = false;
+
+unsigned long ultimoContacto   = 0;
+unsigned long ultimaTelemetria = 0;
+bool          frenadoPorCorte  = false;
+
+char linea[80];
+uint8_t largoLinea = 0;
+
+// ═════════════════════════════════════════════════════════════════════════
+//  MOTORES
+// ═════════════════════════════════════════════════════════════════════════
+
+static void apagarBobinas() {
+  for (uint8_t i = 0; i < 4; i++) digitalWrite(PIN_ULN[i], LOW);
+}
+
+/**
+ * Medios pasos. Cada renglón dice qué bobinas quedan energizadas.
+ *
+ * Media paso en vez de paso entero porque el 28BYJ-48 tiene vueltas de sobra
+ * para permitírselo: se gana suavidad y algo de torque a cambio del doble de
+ * pulsos, que a estas velocidades no cuesta nada. Y suavidad importa: esto
+ * mueve el teléfono que hace de cara, y un tirón se ve.
+ */
+const uint8_t SECUENCIA[8] = {
+  0b1000, 0b1100, 0b0100, 0b0110,
+  0b0010, 0b0011, 0b0001, 0b1001
+};
+
+static void pararTodo() {
+  pasosRestantes = 0;
+  apagarBobinas();
+}
+
+/**
+ * El motor a pasos no bloquea.
+ *
+ * La tentación era usar `Stepper.step()`, que se queda girando hasta terminar
+ * — y durante esos segundos el firmware deja de leer el puerto serie. Un
+ * "PARA" que llega en medio de un giro largo no se atendería hasta que el giro
+ * termine solo, que es justo cuando no sirve.
+ */
+static void atenderPaso() {
+  if (pasosRestantes == 0) return;
+  const unsigned long ahora = micros();
+  if (ahora - ultimoPasoUs < intervaloPasoUs) return;
+  ultimoPasoUs = ahora;
+
+  faseULN = (faseULN + (sentidoPaso > 0 ? 1 : 7)) & 7;
+  for (uint8_t i = 0; i < 4; i++)
+    digitalWrite(PIN_ULN[i], (SECUENCIA[faseULN] >> (3 - i)) & 1);
+
+  /* Al terminar se sueltan las bobinas: un motor a pasos energizado consume y
+     calienta aunque esté quieto, y acá no hace falta que sostenga posición. */
+  if (--pasosRestantes == 0) apagarBobinas();
+}
+
+// ═════════════════════════════════════════════════════════════════════════
+//  LUCES
+// ═════════════════════════════════════════════════════════════════════════
+
+/**
+ * Las tiras se refrescan sólo cuando cambian, y sólo la que cambió.
+ *
+ * `show()` apaga las interrupciones mientras escribe: unos 130 µs por tira de
+ * cuatro. Si eso cayera en cada vuelta del `loop()`, el servo temblaría y el
+ * motor a pasos perdería cuentas. Actualizando sólo al cambiar, el temblor
+ * pasa a ser un parpadeo único que nadie ve, y entra holgado en el hueco entre
+ * dos pulsos del motor: el 28BYJ-48 a 10 rpm da un medio paso cada 1465 µs.
+ *
+ * Tenerlas en pines separados en vez de encadenadas es justamente lo que
+ * permite tocar una sin pagar el costo de la otra.
+ */
+static void atenderLeds() {
+  if (sucioA) { tiraA.show(); sucioA = false; }
+  if (sucioB) { tiraB.show(); sucioB = false; }
+}
+
+static void pintarLed(int16_t i, uint8_t r, uint8_t g, uint8_t b) {
+  if (i < 0) {
+    for (uint8_t k = 0; k < LEDS_POR_TIRA; k++) {
+      tiraA.setPixelColor(k, tiraA.Color(r, g, b));
+      tiraB.setPixelColor(k, tiraB.Color(r, g, b));
+    }
+    sucioA = sucioB = true;
+  } else if (i < LEDS_POR_TIRA) {
+    tiraA.setPixelColor((uint16_t)i, tiraA.Color(r, g, b));
+    sucioA = true;
+  } else {
+    tiraB.setPixelColor((uint16_t)(i - LEDS_POR_TIRA), tiraB.Color(r, g, b));
+    sucioB = true;
+  }
+}
+
+// ═════════════════════════════════════════════════════════════════════════
+//  PROTOCOLO
+// ═════════════════════════════════════════════════════════════════════════
+
+static void ok(const char* que)     { Serial.print(F("OK "));  Serial.println(que); }
+static void err(const char* motivo) { Serial.print(F("ERR ")); Serial.println(motivo); }
+
+static bool siguienteEntero(long& salida) {
+  char* t = strtok(NULL, " ");
+  if (!t) return false;
+  char* fin;
+  const long v = strtol(t, &fin, 10);
+  if (fin == t) return false;
+  salida = v;
+  return true;
+}
+
+static void ejecutar(char* l) {
+  ultimoContacto = millis();
+  frenadoPorCorte = false;
+
+  char* cmd = strtok(l, " ");
+  if (!cmd) return;
+
+  // El latido no contesta nada. Va cinco veces por segundo: si respondiera,
+  // la consola del panel sería ilegible.
+  if (!strcmp(cmd, "HB")) return;
+
+  if (!strcmp(cmd, "PING")) { Serial.println(F("OK PING")); return; }
+  if (!strcmp(cmd, "PARA")) { pararTodo(); ok("PARA"); return; }
+
+  if (!strcmp(cmd, "SV")) {
+    long a;
+    if (!siguienteEntero(a) || a < 0 || a > 180) { err("SV fuera de rango"); return; }
+    anguloServo = (uint8_t)a;
+    servo.write(anguloServo);
+    ok("SV");
+    return;
+  }
+
+  if (!strcmp(cmd, "PA")) {
+    long pasos, rpm;
+    if (!siguienteEntero(pasos)) { err("PA sin pasos"); return; }
+    if (!siguienteEntero(rpm)) rpm = 10;
+    if (rpm < 1 || rpm > RPM_MAX) { err("PA rpm fuera de rango"); return; }
+    sentidoPaso     = pasos < 0 ? -1 : 1;
+    pasosRestantes  = labs(pasos);
+    intervaloPasoUs = 60000000UL / ((unsigned long)rpm * PASOS_POR_VUELTA);
+    ultimoPasoUs    = micros();
+    ok("PA");
+    return;
+  }
+
+  if (!strcmp(cmd, "LED")) {
+    long i, r, g, b;
+    if (!siguienteEntero(i) || !siguienteEntero(r) ||
+        !siguienteEntero(g) || !siguienteEntero(b)) { err("LED faltan datos"); return; }
+    if (i >= LEDS_TOTAL) { err("LED indice"); return; }
+    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) { err("LED color"); return; }
+    pintarLed((int16_t)i, (uint8_t)r, (uint8_t)g, (uint8_t)b);
+    ok("LED");
+    return;
+  }
+
+  if (!strcmp(cmd, "BRILLO")) {
+    long v;
+    if (!siguienteEntero(v) || v < 0 || v > 255) { err("BRILLO fuera de rango"); return; }
+    tiraA.setBrightness((uint8_t)v);
+    tiraB.setBrightness((uint8_t)v);
+    sucioA = sucioB = true;
+    ok("BRILLO");
+    return;
+  }
+
+  err("orden desconocida");
+}
+
+static void leerSerie() {
+  while (Serial.available()) {
+    const char c = Serial.read();
+    if (c == '\r') continue;
+    if (c == '\n') {
+      linea[largoLinea] = 0;
+      if (largoLinea) ejecutar(linea);
+      largoLinea = 0;
+      continue;
+    }
+    if (largoLinea < sizeof(linea) - 1) linea[largoLinea++] = c;
+    else { largoLinea = 0; err("linea muy larga"); }
+  }
+}
+
+static void telemetria() {
+  Serial.print(F("TEL sv="));  Serial.print(anguloServo);
+  Serial.print(F(" pa="));     Serial.print(pasosRestantes);
+  Serial.print(F(" hm="));     Serial.println(frenadoPorCorte ? 1 : 0);
+}
+
+// ═════════════════════════════════════════════════════════════════════════
+
+void setup() {
+  Serial.begin(115200);
+
+  /* El saludo va primero, antes de tocar un solo periférico. Si un módulo mal
+     cableado cuelga la inicialización, sin esto la placa queda muda y desde
+     afuera parece que el firmware nunca entró. Las marcas `PASO` dicen hasta
+     dónde llegó: la última que se ve es la que falló. */
+  Serial.println();
+  Serial.print(F("ARRANCA "));
+  Serial.println(VERSION);
+
+  Serial.println(F("PASO pasos"));
+  for (uint8_t i = 0; i < 4; i++) pinMode(PIN_ULN[i], OUTPUT);
+  apagarBobinas();
+
+  Serial.println(F("PASO servo"));
+  servo.attach(PIN_SERVO);
+  servo.write(anguloServo);
+
+  Serial.println(F("PASO leds"));
+  tiraA.begin();
+  tiraB.begin();
+  tiraA.setBrightness(60);
+  tiraB.setBrightness(60);
+  tiraA.clear();
+  tiraB.clear();
+  tiraA.show();
+  tiraB.show();
+
+  ultimoContacto = millis();
+  Serial.print(F("LISTO "));
+  Serial.println(VERSION);
+}
+
+void loop() {
+  leerSerie();
+  atenderPaso();
+  atenderLeds();
+
+  const unsigned long ahora = millis();
+
+  // El hombre muerto. Sólo actúa una vez por corte, para no inundar el puerto
+  // con avisos mientras el cable siga desconectado.
+  if (!frenadoPorCorte && ahora - ultimoContacto > MS_HOMBRE_MUERTO) {
+    if (pasosRestantes != 0) {
+      pararTodo();
+      Serial.println(F("ERR hombre muerto: se corto el contacto, freno todo"));
+    }
+    frenadoPorCorte = true;
+  }
+
+  if (ahora - ultimaTelemetria >= MS_TELEMETRIA) {
+    ultimaTelemetria = ahora;
+    telemetria();
+  }
+}

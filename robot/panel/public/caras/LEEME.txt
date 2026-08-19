@@ -1,0 +1,7 @@
+Poné acá las animaciones de las caras de Piko.
+
+El nombre del archivo es el nombre de la expresión: `riendo.mp4` aparece en
+el panel como "riendo". Sirven .svg .gif .png .webp para imágenes y
+.mp4 .webm para video.
+
+No hay que tocar código: lo que esté en esta carpeta aparece solo.

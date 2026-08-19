@@ -1,0 +1,17 @@
+{
+  "name": "piko-panel",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Puente entre el panel web y el Arduino Mega del acompañante de aula",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "prueba": "node prueba-puente.mjs",
+    "puertos": "node server.js --listar"
+  },
+  "dependencies": {
+    "serialport": "^13.0.0",
+    "ws": "^8.18.0"
+  }
+}
