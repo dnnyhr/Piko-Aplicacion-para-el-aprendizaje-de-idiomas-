@@ -4,130 +4,275 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Piko — control del robot</title>
-<meta name="theme-color" content="#0F5D3D">
+<meta name="theme-color" content="#063D22">
 <style>
+/* ═══════════════════════════════════════════════════════════════════════
+   Un control de juguete, pensado para un pulgar.
+
+   La idea que ordena todo esto: la página no es un formulario, es la carcasa
+   de un control. El fondo verde oscuro es el plástico, los bloques crema son
+   la placa de botones, y cada botón tiene una sombra sólida abajo que se
+   aplasta al apretarlo. Eso último no es adorno — en un teléfono no hay
+   cursor ni estado «hover», así que el hundido es la única confirmación de
+   que el dedo dio en el blanco.
+
+   Todo mide al menos 56 píxeles de alto. Por debajo de eso, un dedo falla.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 :root{
   --verde-piko:#0F5D3D;
   --verde-hondo:#0A4530;
+  --verde-noche:#063D22;
   --verde-bosque:#197249;
   --verde-pasto:#97C137;
   --cielo:#60C5FA;
   --papel:#F7F0E4;
   --papel-hondo:#ECE1CC;
+  --papel-sombra:#D6C9AF;
   --copete:#E97927;
   --pico:#E8A429;
+  --pico-hondo:#B07715;
   --grafito:#16241D;
   --alarma:#C0392B;
-  --radio:14px;
+  --alarma-hondo:#8E2A1F;
+  --radio:16px;
 }
-*{box-sizing:border-box}
-body{
-  margin:0; background:var(--papel); color:var(--grafito);
-  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
-  font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
-  padding-bottom:2rem;
-}
-h1,h2{margin:0; font-weight:650; letter-spacing:-.01em}
-.wrap{width:min(1080px,94vw); margin-inline:auto}
 
-/* ---------- barra superior ---------- */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--verde-hondo);
+  color:var(--grafito);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+  /* Sitio para la parada, que va fija abajo y al alcance del pulgar. */
+  padding-bottom:calc(5.5rem + env(safe-area-inset-bottom, 0px));
+}
+h1,h2{margin:0; font-weight:700; letter-spacing:-.01em}
+
+.wrap{width:min(720px,100%); margin-inline:auto; padding:0 .7rem}
+
+/* ---------- la tira de estado ---------- */
 header{
-  background:var(--verde-piko); color:var(--papel);
-  padding:.9rem 0; position:sticky; top:0; z-index:10;
-  box-shadow:0 4px 14px rgba(10,69,48,.22);
+  background:var(--verde-noche);
+  color:var(--papel);
+  position:sticky; top:0; z-index:20;
+  padding:.55rem 0 .5rem;
+  padding-top:calc(.55rem + env(safe-area-inset-top, 0px));
+  box-shadow:0 3px 0 rgba(0,0,0,.25);
 }
-.barra{display:flex; align-items:center; gap:.7rem; flex-wrap:wrap}
-.barra h1{font-size:1.1rem; margin-right:auto}
+.barra{display:flex; align-items:center; gap:.4rem; flex-wrap:wrap}
+.barra h1{font-size:1rem; margin-right:auto; letter-spacing:.02em}
 .chip{
-  display:inline-flex; align-items:center; gap:.45rem;
-  background:rgba(255,255,255,.13); border-radius:999px;
-  padding:.3rem .8rem; font-size:.8rem; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:.35rem;
+  background:rgba(255,255,255,.1); border-radius:999px;
+  padding:.25rem .6rem; font-size:.72rem; white-space:nowrap;
 }
-.punto{width:9px; height:9px; border-radius:50%; background:var(--alarma); flex:none}
+.punto{width:8px; height:8px; border-radius:50%; background:var(--alarma); flex:none}
 .punto.si{background:var(--verde-pasto)}
 .punto.late{animation:latir .4s ease-out}
-@keyframes latir{from{transform:scale(1.9); opacity:.4} to{transform:scale(1); opacity:1}}
+@keyframes latir{from{transform:scale(2); opacity:.35} to{transform:scale(1); opacity:1}}
 
-/* ---------- parada ---------- */
-.parada{
-  width:100%; margin:1.2rem 0; padding:1.1rem;
-  background:var(--alarma); color:#fff; border:none; border-radius:var(--radio);
-  font-size:1.15rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
-  cursor:pointer; box-shadow:0 6px 0 #8E2A1F;
+/* ---------- los bloques ---------- */
+main{padding-top:.8rem}
+.bloque{
+  background:var(--papel);
+  border-radius:var(--radio);
+  padding:.85rem .85rem 1rem;
+  margin-bottom:.7rem;
+  box-shadow:0 4px 0 rgba(0,0,0,.22);
 }
-.parada:active{transform:translateY(4px); box-shadow:0 2px 0 #8E2A1F}
+.bloque h2{
+  font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--verde-bosque); margin-bottom:.7rem;
+  display:flex; align-items:center; gap:.45rem;
+}
+.bloque h2::before{
+  content:""; width:16px; height:4px; border-radius:2px;
+  background:var(--pico); flex:none;
+}
+.nota{font-size:.74rem; color:#6B7A70; margin:.7rem 0 0; line-height:1.4}
 
-/* ---------- tarjetas ---------- */
-.rejilla{display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:1rem}
-.tarjeta{background:#fff; border-radius:var(--radio); padding:1.1rem 1.2rem 1.3rem;
-  box-shadow:0 8px 22px rgba(10,69,48,.08)}
-.tarjeta h2{
-  font-size:.76rem; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--verde-bosque); margin-bottom:.9rem;
-  display:flex; align-items:center; gap:.5rem;
+/* ---------- las teclas ---------- */
+/* La sombra sólida abajo y el hundido al apretar son lo que hace que se
+   sientan como teclas de verdad. En un teléfono es la única confirmación
+   que hay, porque no existe el «hover». */
+button{
+  font:inherit; cursor:pointer; border:none;
+  border-radius:12px;
+  font-weight:650;
+  transition:transform .05s, box-shadow .05s;
+  touch-action:manipulation;
 }
-.tarjeta h2::before{content:""; width:20px; height:3px; border-radius:2px; background:var(--pico); flex:none}
-.tarjeta .nota{font-size:.78rem; color:#6B7A70; margin:.7rem 0 0}
+.tecla{
+  min-height:56px; padding:.7rem .6rem;
+  background:var(--papel-hondo); color:var(--grafito);
+  box-shadow:0 4px 0 var(--papel-sombra);
+  font-size:.95rem;
+}
+.tecla:active{transform:translateY(4px); box-shadow:0 0 0 var(--papel-sombra)}
+.tecla--verde{background:var(--verde-piko); color:var(--papel); box-shadow:0 4px 0 var(--verde-noche)}
+.tecla--verde:active{box-shadow:0 0 0 var(--verde-noche)}
+.tecla--ambar{background:var(--pico); color:var(--grafito); box-shadow:0 4px 0 var(--pico-hondo)}
+.tecla--ambar:active{box-shadow:0 0 0 var(--pico-hondo)}
 
-label{display:block; font-size:.83rem; color:#3B4C42; margin-bottom:.3rem}
-.valor{float:right; font-variant-numeric:tabular-nums; font-weight:650; color:var(--verde-piko)}
-input[type=range]{width:100%; accent-color:var(--verde-piko); margin:.1rem 0 .9rem}
-input[type=number]{
-  width:100%; padding:.5rem .65rem; border:2px solid var(--papel-hondo);
-  border-radius:10px; font:inherit; font-size:.95rem; background:var(--papel);
-}
-input:focus{outline:none; border-color:var(--verde-pasto)}
-
-button{font:inherit; cursor:pointer}
-.btn{
-  border:none; border-radius:10px; padding:.55rem .9rem; font-size:.9rem; font-weight:600;
-  background:var(--papel-hondo); color:var(--grafito); transition:transform .06s;
-}
-.btn:active{transform:scale(.96)}
-.btn--verde{background:var(--verde-piko); color:var(--papel)}
-.btn--ambar{background:var(--pico); color:var(--grafito)}
 .fila{display:flex; gap:.5rem; flex-wrap:wrap}
-.fila>*{flex:1 1 auto}
+.fila>*{flex:1 1 0; min-width:0}
 
-.sostener{touch-action:none; user-select:none; -webkit-user-select:none;
-  background:var(--verde-bosque); color:var(--papel); padding:.8rem}
-.sostener.activo{background:var(--copete)}
-
-/* caras */
-.caras{display:grid; grid-template-columns:repeat(auto-fit,minmax(104px,1fr)); gap:.45rem}
-.cara{padding:.6rem .3rem; font-size:.85rem; background:var(--papel-hondo); border:none; border-radius:10px}
-.cara.puesta{background:var(--verde-piko); color:var(--papel)}
-
-/* luces, por módulo y no luz por luz */
-.modulos{display:grid; grid-template-columns:1fr 1fr; gap:.6rem}
-.modulo{display:flex; flex-direction:column; gap:.3rem; font-size:.8rem; color:#3B4C42}
-.modulo input[type=color]{
-  width:100%; height:52px; padding:0; border:2px solid var(--papel-hondo);
-  border-radius:10px; background:none; cursor:pointer;
+/* ---------- la cruz de dirección ---------- */
+/* Es el control que más se va a usar, así que va primero y grande. La cruz
+   funciona porque el dedo no tiene que leer: la posición del botón ya dice
+   para dónde manda. */
+.cruz{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-areas:
+    ".      arriba  ."
+    "izq    centro  der";
+  gap:.5rem;
+  background:var(--verde-noche);
+  padding:.55rem; border-radius:var(--radio);
 }
-.efecto.puesto{background:var(--verde-piko); color:var(--papel)}
+.cruz .rumbo{min-height:64px; font-size:1rem}
+.rumbo[data-celda="arriba"]{grid-area:arriba}
+.rumbo[data-celda="izq"]{grid-area:izq}
+.rumbo[data-celda="centro"]{grid-area:centro}
+.rumbo[data-celda="der"]{grid-area:der}
+.rumbo .flecha{display:block; font-size:1.5rem; line-height:1}
+.rumbo .rotulo{display:block; font-size:.66rem; font-weight:500; opacity:.8; margin-top:.1rem}
+.rumbo.corriendo{background:var(--copete); box-shadow:0 4px 0 #A9531A}
 
-/* secuencias */
-.tarjeta--ancha{margin-bottom:1rem}
-.presets{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:.5rem}
+/* ---------- las acciones ---------- */
+.acciones{display:grid; grid-template-columns:1fr 1fr; gap:.5rem}
 .preset{
-  border:none; border-radius:10px; padding:.75rem .6rem; font-size:.92rem; font-weight:600;
-  background:var(--verde-piko); color:var(--papel); text-align:left;
+  min-height:64px; padding:.65rem .6rem;
+  background:var(--verde-piko); color:var(--papel);
+  box-shadow:0 4px 0 var(--verde-noche);
+  text-align:left; font-size:.95rem;
 }
-.preset small{display:block; font-weight:400; font-size:.72rem; opacity:.75; margin-top:.15rem}
-.preset.corriendo{background:var(--copete)}
-.preset--corte{background:var(--papel-hondo); color:var(--grafito)}
+.preset:active{transform:translateY(4px); box-shadow:0 0 0 var(--verde-noche)}
+.preset small{display:block; font-weight:400; font-size:.68rem; opacity:.72; margin-top:.15rem}
+.preset.corriendo{background:var(--copete); box-shadow:0 4px 0 #A9531A}
+.preset--corte{background:var(--papel-hondo); color:var(--grafito); box-shadow:0 4px 0 var(--papel-sombra)}
+.preset--corte:active{box-shadow:0 0 0 var(--papel-sombra)}
 
-#listaSonidos{display:flex; flex-direction:column; gap:.4rem; max-height:190px; overflow-y:auto}
-.vacio{font-size:.85rem; color:#6B7A70; font-style:italic; margin:0}
+/* ---------- expresiones ---------- */
+.caras{display:grid; grid-template-columns:repeat(auto-fit,minmax(90px,1fr)); gap:.45rem}
+.cara{
+  min-height:52px; padding:.55rem .3rem; font-size:.82rem;
+  background:var(--papel-hondo); color:var(--grafito);
+  box-shadow:0 3px 0 var(--papel-sombra);
+}
+.cara:active{transform:translateY(3px); box-shadow:0 0 0 var(--papel-sombra)}
+.cara.puesta{background:var(--verde-piko); color:var(--papel); box-shadow:0 3px 0 var(--verde-noche)}
+
+/* ---------- luces ---------- */
+.modulos{display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin-bottom:.6rem}
+.modulo{display:flex; flex-direction:column; gap:.3rem; font-size:.72rem; color:#3B4C42}
+.modulo input[type=color]{
+  width:100%; height:64px; padding:0; cursor:pointer;
+  border:3px solid var(--papel-sombra); border-radius:12px; background:none;
+}
+.colores{display:grid; grid-template-columns:repeat(4,1fr); gap:.45rem}
+.colores .tecla{font-size:.8rem; padding:.7rem .25rem}
+.efectos{display:grid; grid-template-columns:repeat(auto-fit,minmax(94px,1fr)); gap:.45rem}
+.efecto{min-height:50px; font-size:.85rem}
+.efecto.puesto{background:var(--verde-piko); color:var(--papel); box-shadow:0 4px 0 var(--verde-noche)}
+
+/* ---------- deslizadores ---------- */
+label{display:block; font-size:.76rem; color:#3B4C42; margin:.5rem 0 .2rem}
+.valor{float:right; font-variant-numeric:tabular-nums; font-weight:700; color:var(--verde-piko)}
+input[type=range]{
+  width:100%; margin:.2rem 0 .5rem;
+  accent-color:var(--verde-piko);
+  height:34px;   /* pista gorda: en un teléfono una fina es imposible de agarrar */
+}
+input[type=number]{
+  width:100%; padding:.7rem .6rem; font:inherit; font-size:1rem;
+  border:3px solid var(--papel-sombra); border-radius:12px; background:#fff;
+}
+input:focus-visible{outline:3px solid var(--verde-pasto); outline-offset:1px}
+button:focus-visible{outline:3px solid var(--verde-pasto); outline-offset:2px}
+
+.sostener{touch-action:none; user-select:none; -webkit-user-select:none}
+.sostener.activo{background:var(--copete); color:var(--papel); box-shadow:0 4px 0 #A9531A}
+
+/* ---------- sonidos ---------- */
+#listaSonidos{display:flex; flex-direction:column; gap:.4rem; max-height:230px; overflow-y:auto}
+#listaSonidos .tecla{text-align:left}
+.vacio{font-size:.8rem; color:#6B7A70; font-style:italic; margin:0}
+
+/* ---------- lo de ajustar y lo de mirar ---------- */
+/* El control fino del motor y la consola no se usan jugando: se usan cuando
+   algo anda mal. Van plegados para que no compitan por el pulgar. */
+details.plegable{
+  background:var(--papel); border-radius:var(--radio);
+  margin-bottom:.7rem; box-shadow:0 4px 0 rgba(0,0,0,.22);
+  overflow:hidden;
+}
+details.plegable > summary{
+  padding:.9rem .85rem; cursor:pointer; list-style:none;
+  font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--verde-bosque); font-weight:700;
+  display:flex; align-items:center; gap:.45rem;
+}
+details.plegable > summary::-webkit-details-marker{display:none}
+details.plegable > summary::before{content:"▸"; font-size:.9rem; letter-spacing:0}
+details.plegable[open] > summary::before{content:"▾"}
+details.plegable > .cuerpo{padding:0 .85rem 1rem}
 
 .consola{
-  background:var(--verde-hondo); color:#CFE8D8; border-radius:var(--radio);
-  padding:.8rem 1rem; margin-top:1rem; height:200px; overflow-y:auto;
-  font-family:ui-monospace,"Cascadia Code",Consolas,monospace; font-size:.78rem; line-height:1.55;
+  background:var(--verde-noche); color:#CFE8D8; border-radius:12px;
+  padding:.7rem .8rem; height:210px; overflow-y:auto;
+  font-family:ui-monospace,"Cascadia Code",Consolas,monospace;
+  font-size:.74rem; line-height:1.5;
 }
 .consola div{white-space:pre-wrap; word-break:break-word}
 .ent{color:#9FD4B4} .sal{color:var(--pico)} .mal{color:#FF9C8F}
+
+/* ---------- la parada, fija al alcance del pulgar ---------- */
+/* Arriba no sirve: cuando algo se está moviendo mal, la mano ya está abajo
+   sosteniendo el teléfono, y estirarse hasta el encabezado cuesta un segundo
+   que es justo el que no hay. */
+.parada{
+  position:fixed; left:0; right:0; bottom:0; z-index:30;
+  margin:0; width:100%;
+  padding:1.05rem 1rem;
+  padding-bottom:calc(1.05rem + env(safe-area-inset-bottom, 0px));
+  border-radius:0;
+  background:var(--alarma); color:#fff;
+  font-size:1.05rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+  box-shadow:0 -4px 0 var(--alarma-hondo), 0 -14px 26px rgba(0,0,0,.28);
+}
+.parada:active{background:#A63125; box-shadow:0 -4px 0 var(--alarma-hondo)}
+
+@media (prefers-reduced-motion:reduce){
+  button{transition:none}
+  .punto.late{animation:none}
+}
+
+/* ---------- pantallas grandes ---------- */
+/* En una PC el control de un juguete estirado a mil píxeles se ve absurdo.
+   Se mantiene angosto y se pone en dos columnas, sin perder el tamaño de los
+   botones: sirven igual para el mouse. */
+@media (min-width:760px){
+  .wrap{width:min(1000px,100%); padding:0 1rem}
+  .doble{display:grid; grid-template-columns:1fr 1fr; gap:.7rem; align-items:start; margin-bottom:.7rem}
+  .doble > *{margin-bottom:0}
+  .acciones{grid-template-columns:repeat(3,1fr)}
+  /* Una cruz de un metro de ancho no es una cruz. Se queda del tamaño de una
+     mano aunque el bloque que la contiene sea más largo. */
+  .cruz{max-width:420px; margin-inline:auto}
+  .parada{
+    position:sticky; bottom:.9rem;
+    width:min(968px,calc(100% - 2rem)); margin:1rem auto 0;
+    border-radius:var(--radio);
+  }
+  body{padding-bottom:1.5rem}
+}
 </style>
 </head>
 <body>
@@ -144,55 +289,46 @@ button{font:inherit; cursor:pointer}
 
 <main class="wrap">
 
-  <button class="parada" id="btnParada">Parada de emergencia</button>
-
-  <section class="tarjeta tarjeta--ancha">
-    <h2>Secuencias</h2>
-    <div class="presets" id="presets"></div>
-    <p class="nota">Encadenan cara, movimiento y luces. Corren en este
-      navegador, no en la placa: si se corta la conexión se cortan solas, que es
-      lo que hay que querer cuando algo se mueve. Cualquier botón corta la
-      secuencia anterior; la parada de emergencia también.</p>
+  <section class="bloque">
+    <h2>Hacia dónde mira</h2>
+    <div class="cruz" id="rumbo"></div>
+    <p class="nota">Gira la cara y mueve la luz al ala contraria. «Centrar» lo
+      devuelve al frente según la cuenta del panel: si el motor quedó torcido,
+      se endereza a mano.</p>
   </section>
 
-  <div class="rejilla">
+  <section class="bloque">
+    <h2>Qué hace</h2>
+    <div class="acciones" id="presets"></div>
+    <p class="nota">Cada botón encadena cara, movimiento y luces. Corren en este
+      navegador y no en la placa: si se corta la conexión se cortan solas, que es
+      lo que hay que querer cuando algo se mueve. Cualquier botón corta la
+      secuencia anterior; la parada también.</p>
+  </section>
 
-    <section class="tarjeta">
-      <h2>Expresiones</h2>
-      <div class="caras" id="caras"><p class="vacio">Buscando…</p></div>
-      <p class="nota" id="notaCara">La cara se abre en <b>/cara</b> desde el teléfono del robot.</p>
-    </section>
+  <section class="bloque">
+    <h2>Expresiones</h2>
+    <div class="caras" id="caras"><p class="vacio">Buscando…</p></div>
+    <p class="nota" id="notaCara">La cara se abre en <b>/cara</b> desde el teléfono del robot.</p>
+  </section>
 
-    <section class="tarjeta">
-      <h2>Alas, cola y cuerpo</h2>
+  <div class="doble">
+
+    <section class="bloque">
+      <h2>Alas y cuerpo</h2>
       <label>Ángulo <span class="valor" id="vServo">90°</span></label>
       <input type="range" id="servo" min="0" max="180" value="90">
       <div class="fila">
-        <button class="btn" data-servo="0">Abajo</button>
-        <button class="btn" data-servo="90">Centro</button>
-        <button class="btn" data-servo="150">Arriba</button>
+        <button class="tecla" data-servo="0">Abajo</button>
+        <button class="tecla" data-servo="90">Centro</button>
+        <button class="tecla" data-servo="150">Arriba</button>
       </div>
       <div class="fila" style="margin-top:.5rem">
-        <button class="btn sostener" id="aletear">Aletear ✦</button>
+        <button class="tecla tecla--verde sostener" id="aletear">Aletear ✦<br><small style="font-weight:400;opacity:.75">mantené apretado</small></button>
       </div>
     </section>
 
-    <section class="tarjeta">
-      <h2>Girar la cara</h2>
-      <fieldset class="fila" style="border:none; margin:0 0 .8rem; padding:0">
-        <div style="flex:1"><label>Medios pasos</label><input type="number" id="pasos" value="1024" min="1" max="999999"></div>
-        <div style="flex:1"><label>RPM</label><input type="number" id="rpm" value="10" min="1" max="15"></div>
-      </fieldset>
-      <div class="fila">
-        <button class="btn btn--verde" id="paIzq">↺ Izquierda</button>
-        <button class="btn btn--verde" id="paDer">Derecha ↻</button>
-      </div>
-      <p class="nota">4096 medios pasos es una vuelta entera; 1024 es un cuarto.
-        Arriba de 15 rpm zumba en vez de girar, y con el teléfono montado conviene
-        ir más despacio: un motor a pasos tiene más fuerza cuanto más lento va.</p>
-    </section>
-
-    <section class="tarjeta">
+    <section class="bloque">
       <h2>Luces</h2>
       <div class="modulos">
         <div class="modulo">
@@ -204,30 +340,55 @@ button{font:inherit; cursor:pointer}
           <input type="color" id="colorB" value="#ffffff">
         </div>
       </div>
-      <div class="fila" style="margin:.7rem 0">
-        <button class="btn" data-ambas="#ffffff">Blanco</button>
-        <button class="btn btn--ambar" data-ambas="#e8a429">Ámbar</button>
-        <button class="btn" data-ambas="#60c5fa">Cielo</button>
-        <button class="btn" data-ambas="#000000">Apagar</button>
+      <div class="colores">
+        <button class="tecla" data-ambas="#ffffff">Blanco</button>
+        <button class="tecla tecla--ambar" data-ambas="#e8a429">Ámbar</button>
+        <button class="tecla" data-ambas="#60c5fa">Cielo</button>
+        <button class="tecla" data-ambas="#000000">Apagar</button>
       </div>
       <label>Brillo <span class="valor" id="vBrillo">120</span></label>
       <input type="range" id="brillo" min="0" max="255" value="120">
       <label>Efectos</label>
-      <div class="fila" id="efectos"></div>
+      <div class="efectos" id="efectos"></div>
       <p class="nota">Los dos módulos, no luz por luz. Arrancan en blanco.</p>
-    </section>
-
-    <section class="tarjeta">
-      <h2>Sonidos</h2>
-      <div id="listaSonidos"><p class="vacio">Buscando…</p></div>
-      <button class="btn" id="btnCallar" style="width:100%;margin-top:.7rem">Callar</button>
-      <p class="nota">Suenan en el teléfono del robot, que es donde está la cara.</p>
     </section>
 
   </div>
 
-  <div class="consola" id="consola"></div>
+  <section class="bloque">
+    <h2>Sonidos</h2>
+    <div id="listaSonidos"><p class="vacio">Buscando…</p></div>
+    <button class="tecla" id="btnCallar" style="width:100%;margin-top:.6rem">Callar</button>
+    <p class="nota">Suenan en el teléfono del robot, que es donde está la cara.</p>
+  </section>
+
+  <details class="plegable">
+    <summary>Girar la cara a mano</summary>
+    <div class="cuerpo">
+      <div class="fila">
+        <div><label>Medios pasos</label><input type="number" id="pasos" value="1024" min="1" max="999999"></div>
+        <div><label>RPM</label><input type="number" id="rpm" value="10" min="1" max="15"></div>
+      </div>
+      <div class="fila" style="margin-top:.6rem">
+        <button class="tecla tecla--verde" id="paIzq">↺ Izquierda</button>
+        <button class="tecla tecla--verde" id="paDer">Derecha ↻</button>
+      </div>
+      <p class="nota">4096 medios pasos es una vuelta entera; 1024 es un cuarto.
+        Arriba de 15 rpm zumba en vez de girar, y con el teléfono montado conviene
+        ir más despacio: un motor a pasos tiene más fuerza cuanto más lento va.</p>
+    </div>
+  </details>
+
+  <details class="plegable">
+    <summary>Consola</summary>
+    <div class="cuerpo">
+      <div class="consola" id="consola"></div>
+    </div>
+  </details>
+
 </main>
+
+<button class="parada" id="btnParada">Parada de emergencia</button>
 
 <script src="piko.js"></script>
 <script>
@@ -413,9 +574,7 @@ let aleteo = null;
     clearInterval(aleteo);
     aleteo = null;
     b.classList.remove('activo');
-    mandar('SV 90');
-    $('servo').value = 90;
-    $('vServo').textContent = '90°';
+    ponerServo(ALAS_ABAJO);
   };
   b.addEventListener('pointerdown', arrancar);
   b.addEventListener('pointerup', soltar);
@@ -570,7 +729,7 @@ function ponerEfecto(nombre) {
 
 for (const [clave, efecto] of Object.entries(EFECTOS)) {
   const b = document.createElement('button');
-  b.className = 'btn efecto' + (clave === 'fijo' ? ' puesto' : '');
+  b.className = 'tecla efecto' + (clave === 'fijo' ? ' puesto' : '');
   b.dataset.efecto = clave;
   b.textContent = efecto.nombre;
   b.addEventListener('click', () => ponerEfecto(clave));
@@ -596,6 +755,10 @@ for (const [clave, efecto] of Object.entries(EFECTOS)) {
  *   tiras   [{ala, color, escala}] para pintar cada ala por separado
  *   brillo  brillo global
  *   ms      cuánto esperar antes del paso siguiente
+ *
+ * Las que traen `celda` van a la cruz de dirección en vez de a la lista de
+ * acciones. La cruz existe porque mirar a un lado es lo que más se va a
+ * apretar, y ahí el dedo no tiene que leer: la posición ya dice para dónde.
  */
 const dormir = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -611,8 +774,52 @@ function moverCara(pasos, rpm = 10) {
 }
 
 const AZUL = '#3fa9ff';
+const BLANCO = '#ffffff';
 
 const SECUENCIAS = {
+  /* Mirar a un lado ilumina el ala contraria. La idea es la de un foco: si Piko
+     mira a la izquierda, lo que queda iluminado es lo que deja atrás, y el
+     contraste empuja la mirada del que observa hacia donde Piko está mirando. */
+  izquierda: {
+    nombre: 'Mirar izquierda', detalle: 'cara, giro y luz al lado opuesto',
+    celda: 'izq', flecha: '◀', rotulo: 'Izquierda',
+    pasos: [
+      { cara: 'izquierda', efecto: 'fijo' },
+      { tiras: [{ ala: ALA_IZQ, color: AZUL, escala: 0.15 },
+                { ala: ALA_DER, color: AZUL, escala: 1 }] },
+      { pasos: -420, ms: 900 },
+    ],
+  },
+  derecha: {
+    nombre: 'Mirar derecha', detalle: 'cara, giro y luz al lado opuesto',
+    celda: 'der', flecha: '▶', rotulo: 'Derecha',
+    pasos: [
+      { cara: 'derecha', efecto: 'fijo' },
+      { tiras: [{ ala: ALA_IZQ, color: AZUL, escala: 1 },
+                { ala: ALA_DER, color: AZUL, escala: 0.15 }] },
+      { pasos: 420, ms: 900 },
+    ],
+  },
+  arriba: {
+    nombre: 'Mirar arriba', detalle: 'levanta la vista',
+    celda: 'arriba', flecha: '▲', rotulo: 'Arriba',
+    pasos: [
+      { cara: 'arriba', efecto: 'fijo' },
+      { tiras: [{ ala: ALA_IZQ, color: BLANCO, escala: 1 },
+                { ala: ALA_DER, color: BLANCO, escala: 1 }], ms: 1400 },
+    ],
+  },
+  centrar: {
+    nombre: 'Centrar', detalle: 'vuelve al frente y a blanco',
+    celda: 'centro', flecha: '⦿', rotulo: 'Centrar',
+    pasos: [
+      { cara: 'enfrente', efecto: 'fijo', brillo: 120 },
+      { volverAlCentro: true, ms: 900 },
+      { tiras: [{ ala: ALA_IZQ, color: BLANCO, escala: 1 },
+                { ala: ALA_DER, color: BLANCO, escala: 1 }] },
+    ],
+  },
+
   celebrar: {
     nombre: 'Celebrar',
     detalle: 'ojos cerrados, festejo y aleteo',
@@ -626,41 +833,6 @@ const SECUENCIAS = {
       { cara: 'enfrente', efecto: 'fijo', brillo: 120 },
     ],
   },
-
-  /* Mirar a un lado ilumina el ala contraria. La idea es la de un foco: si Piko
-     mira a la izquierda, lo que queda iluminado es lo que deja atrás, y el
-     contraste empuja la mirada del que observa hacia donde Piko está mirando. */
-  izquierda: {
-    nombre: 'Mirar izquierda',
-    detalle: 'cara, giro y luz al lado opuesto',
-    pasos: [
-      { cara: 'izquierda', efecto: 'fijo' },
-      { tiras: [{ ala: ALA_IZQ, color: AZUL, escala: 0.15 },
-                { ala: ALA_DER, color: AZUL, escala: 1 }] },
-      { pasos: -420, ms: 900 },
-    ],
-  },
-  derecha: {
-    nombre: 'Mirar derecha',
-    detalle: 'cara, giro y luz al lado opuesto',
-    pasos: [
-      { cara: 'derecha', efecto: 'fijo' },
-      { tiras: [{ ala: ALA_IZQ, color: AZUL, escala: 1 },
-                { ala: ALA_DER, color: AZUL, escala: 0.15 }] },
-      { pasos: 420, ms: 900 },
-    ],
-  },
-  centrar: {
-    nombre: 'Centrar',
-    detalle: 'vuelve al frente y a blanco',
-    pasos: [
-      { cara: 'enfrente', efecto: 'fijo', brillo: 120 },
-      { volverAlCentro: true, ms: 900 },
-      { tiras: [{ ala: ALA_IZQ, color: '#ffffff', escala: 1 },
-                { ala: ALA_DER, color: '#ffffff', escala: 1 }] },
-    ],
-  },
-
   saludo: {
     nombre: 'Saludar',
     detalle: 'guiño y aleteo corto',
@@ -706,7 +878,7 @@ const SECUENCIAS = {
 let secuenciaEnCurso = null;
 
 function marcarSecuencia(clave, corriendo) {
-  const b = document.querySelector(`.preset[data-seq="${clave}"]`);
+  const b = document.querySelector(`[data-seq="${clave}"]`);
   if (b) b.classList.toggle('corriendo', corriendo);
 }
 
@@ -768,13 +940,21 @@ async function correrSecuencia(clave) {
   cortarSecuencia();
 }
 
+/* Las que tienen `celda` arman la cruz; el resto, la lista de acciones. */
 for (const [clave, sec] of Object.entries(SECUENCIAS)) {
   const b = document.createElement('button');
-  b.className = 'preset';
   b.dataset.seq = clave;
-  b.innerHTML = `${sec.nombre}<small>${sec.detalle}</small>`;
+  if (sec.celda) {
+    b.className = 'tecla tecla--verde rumbo';
+    b.dataset.celda = sec.celda;
+    b.innerHTML = `<span class="flecha">${sec.flecha}</span><span class="rotulo">${sec.rotulo}</span>`;
+    $('rumbo').appendChild(b);
+  } else {
+    b.className = 'preset';
+    b.innerHTML = `${sec.nombre}<small>${sec.detalle}</small>`;
+    $('presets').appendChild(b);
+  }
   b.addEventListener('click', () => correrSecuencia(clave));
-  $('presets').appendChild(b);
 }
 
 (function () {
@@ -799,8 +979,7 @@ function pintarSonidos(lista) {
   }
   for (const archivo of lista) {
     const b = document.createElement('button');
-    b.className = 'btn';
-    b.style.textAlign = 'left';
+    b.className = 'tecla';
     b.textContent = `▶  ${archivo.replace(/\.[^.]+$/, '')}`;
     b.addEventListener('click', () => {
       if (vivo) ws.send(JSON.stringify({ t: 'sonido', archivo }));
