@@ -86,7 +86,20 @@ console.log('\nLas dos páginas\n');
   const htmlCara = await cara.text();
   comprobar('sirve la cara en /cara', cara.status === 200);
   comprobar('la cara se anuncia como tal', htmlCara.includes("rol: 'cara'"));
-  comprobar('la cara pide que no se apague la pantalla', htmlCara.includes('wakeLock'));
+
+  /* Las dos páginas piden que la pantalla no se apague, y la cara además lleva
+     el respaldo de video para cuando se sirva por http en la red local, donde
+     el candado no existe. */
+  comprobar('la cara pide que no se apague la pantalla',
+    htmlCara.includes('vigilia.js') && htmlCara.includes('respaldo: true'));
+  comprobar('el control también lo pide', html.includes('vigilia.js'));
+
+  const vigilia = await fetch(`http://localhost:${PUERTO}/vigilia.js`);
+  const js = await vigilia.text();
+  comprobar('sirve vigilia.js', vigilia.status === 200);
+  comprobar('usa el candado de pantalla', js.includes("wakeLock.request('screen')"));
+  comprobar('vuelve a pedirlo cuando el sistema lo suelta', js.includes("'release'"));
+  comprobar('tiene el respaldo de video', js.includes('captureStream'));
 
   const fuera = await fetch(`http://localhost:${PUERTO}/../server.js`);
   comprobar('no deja salir de public/', fuera.status === 404 || fuera.status === 403);

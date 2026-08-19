@@ -98,6 +98,7 @@ html,body{
 <div id="aviso"></div>
 
 <script src="piko.js"></script>
+<script src="vigilia.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 const escena = $('escena');
@@ -171,18 +172,23 @@ function arrancar() {
   // Primero, sin nada asincrónico delante, o se pierde el gesto.
   pedirPantallaCompleta();
 
-  // Que la pantalla no se duerma: es la cara del robot, tiene que quedarse
-  // encendida toda la clase. Sólo existe en contextos seguros — por http en la
-  // red local no está, y ahí queda la pantalla completa como único recurso.
-  if ('wakeLock' in navigator) {
-    const pedirCandado = () => navigator.wakeLock.request('screen').catch(() => {});
-    pedirCandado();
-    // El sistema lo suelta cuando la pestaña pasa a segundo plano; hay que
-    // volver a pedirlo al regresar.
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') pedirCandado();
-    });
-  }
+  /* Que la pantalla no se duerma. Es la cara del robot: se tiene que quedar
+     encendida toda la clase, no los diez minutos que permite el ajuste del
+     teléfono. Va acá adentro, con el gesto todavía fresco, porque el respaldo
+     de video no puede reproducirse sin un toque de por medio. */
+  Vigilia.empezar({
+    respaldo: true,
+    alCambiar(modo) {
+      const texto = 'La pantalla puede apagarse sola — abrilo por https o dejalo cargando';
+      if (modo === 'candado' || modo === 'video') {
+        // Sólo borra su propio aviso: el de «sin conexión» importa más que éste
+        // y no le corresponde taparlo.
+        if ($('aviso').textContent === texto) avisar(null);
+      } else {
+        avisar(texto);
+      }
+    },
+  });
 
   // Desbloquear el audio con el mismo gesto.
   try { voz.play().catch(() => {}); voz.pause(); } catch { }

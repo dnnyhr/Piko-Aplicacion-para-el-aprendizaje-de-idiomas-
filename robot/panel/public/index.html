@@ -391,6 +391,7 @@ details.plegable > .cuerpo{padding:0 .85rem 1rem}
 <button class="parada" id="btnParada">Parada de emergencia</button>
 
 <script src="piko.js"></script>
+<script src="vigilia.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 
@@ -989,6 +990,20 @@ function pintarSonidos(lista) {
 }
 
 $('btnCallar').addEventListener('click', () => { if (vivo) ws.send(JSON.stringify({ t: 'callar' })); });
+
+/* Que el teléfono del maestro tampoco se duerma mientras maneja el robot: si
+   se apaga se corta el latido, salta el hombre muerto y Piko se frena solo en
+   mitad de una clase.
+   Sin el respaldo de video que sí lleva la cara. Acá no hace falta: esta página
+   se está tocando todo el tiempo, y ningún teléfono se duerme mientras alguien
+   le aprieta botones. La que se queda una hora sin que nadie la toque es la
+   cara, y ésa es la que necesita el rodeo. */
+Vigilia.empezar({
+  alCambiar(modo) {
+    if (modo === 'candado') log('— la pantalla se queda encendida —', 'ent');
+    else log('— la pantalla puede apagarse sola: abrilo por https —', 'mal');
+  },
+});
 
 conectar();
 </script>

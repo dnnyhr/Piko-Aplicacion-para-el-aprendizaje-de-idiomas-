@@ -25,8 +25,9 @@ cara se entere.
 |---|---|
 | 4× WS2812 · pin 28 | **anda** |
 | 28BYJ-48 · PORT2 | **anda** — gira; falta confirmar que 4096 sea vuelta exacta |
-| Panel, puente y reparto de roles | **anda** — 20 comprobaciones automáticas |
+| Panel, puente y reparto de roles | **anda** — 24 comprobaciones automáticas |
 | Cara en el navegador | **anda** — las ocho expresiones, con la mirada animada |
+| Que no se apague la pantalla | **a medias** — probado el respaldo de video; el candado, no |
 | Servo · pin 29 | sin probar |
 | Segunda tira de LEDs · pin 27 | sin probar |
 | Todo junto, con el robot armado | sin probar |
@@ -166,9 +167,40 @@ sistema la abandona sola en cuanto aparece una notificación o el teclado. Para
 una cara que tiene que estar toda la clase, la aplicación instalada es lo único
 que aguanta. El botón ⛶ de la esquina queda por si hace falta volver.
 
-Y el bloqueo de «que no se apague la pantalla» sólo existe en conexiones
-seguras, así que por `http://` en la red local no está disponible: poné el
-tiempo de espera de pantalla en «nunca» en los ajustes de Android.
+### Que la pantalla no se apague
+
+El ajuste de Android no pasa de unos minutos y la cara tiene que estar toda la
+clase. De eso se ocupa `public/vigilia.js`, con dos recursos, en orden:
+
+**El candado de pantalla** (`navigator.wakeLock`), que es la forma correcta.
+Tiene una condición dura: **sólo funciona en conexión segura** — por el túnel
+sí, por `http://192.168.x.x` en la red local no.
+
+**El truco de YouTube**, para cuando el candado no está: mientras haya un video
+reproduciéndose, el sistema no apaga la pantalla. La cara lleva uno de 3×3
+píxeles, negro y mudo, en un rincón. El cuadro sale de un canvas y no de un
+archivo, así que no hay ningún binario en el repositorio por nueve píxeles
+negros.
+
+Lo que hace que esto aguante una clase y no unos minutos no es pedirlo, es
+insistir. El sistema suelta el candado solo —al pasar a segundo plano, al salir
+de pantalla completa, al bajar la batería— y no lo dice por ningún lado salvo el
+evento `release`. Un `request()` suelto al arrancar se pierde en el primer
+descuido y nadie se entera hasta que la pantalla ya está negra. Por eso se vuelve
+a pedir ante cada cosa que puede haberlo soltado, y además se revisa cada 20
+segundos por si se soltó callado.
+
+Si aun así no lo consigue, la cara lo dice en la barra de abajo y el panel lo
+escribe en su consola. Dos respaldos que no dependen del navegador: dejar el
+teléfono del robot **cargando** con «Permanecer activo» encendido en las
+opciones de desarrollador, que es una garantía del sistema y no una promesa del
+navegador; o poner el tiempo de espera de pantalla en «nunca».
+
+El panel de control lleva el mismo candado, sin el respaldo de video: esa página
+se está tocando todo el tiempo y ningún teléfono se duerme mientras le aprietan
+botones. La que se queda una hora sin que nadie la toque es la cara. Que el
+teléfono del maestro no se duerma igual importa: si se apaga se corta el latido
+y salta el hombre muerto, que frena a Piko en mitad de la clase.
 
 ## Los sonidos
 
