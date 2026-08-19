@@ -26,9 +26,15 @@ cara se entere.
 | 4× WS2812 · pin 28 | **anda** |
 | 28BYJ-48 · PORT2 | **anda** — gira; falta confirmar que 4096 sea vuelta exacta |
 | Panel, puente y reparto de roles | **anda** — 20 comprobaciones automáticas |
-| Cara en el navegador | **anda** — toma sola los archivos de `public/caras/` |
+| Cara en el navegador | **anda** — las ocho expresiones, con la mirada animada |
 | Servo · pin 29 | sin probar |
 | Segunda tira de LEDs · pin 27 | sin probar |
+| Todo junto, con el robot armado | sin probar |
+
+Del motor a pasos quedó verificado el orden de las bobinas y que una orden de
+4096 medios pasos tarda los 6,0 s que corresponden a 10 rpm. Lo que **no** está
+comprobado es que esos 4096 sean una vuelta exacta del eje de salida: para eso
+hay que marcar el eje con un fibrón y mirar dónde termina.
 
 ---
 
@@ -107,28 +113,62 @@ npm run prueba
 
 ## Las caras
 
-**Dejá los archivos en `public/caras/` y aparecen solos.** El nombre del
-archivo es el nombre de la expresión: `riendo.mp4` sale en el panel como
-«riendo». No hay que tocar el firmware, ni el panel, ni el servidor.
+Ocho expresiones: `enfrente`, `izquierda`, `derecha`, `arriba`, `guino`,
+`abierta`, `cerrados` y `celebracion`.
 
-Sirven `.svg` `.gif` `.png` `.webp` para imágenes y `.mp4` `.webm` para video.
-Hay un `_ejemplo.svg` para comprobar que la cadena funciona; borralo cuando
-pongas las tuyas.
+**No son ocho archivos: son un solo dibujo con estados**, en
+[`public/piko.js`](panel/public/piko.js). Los ocho SVG del diseño comparten
+casi todo —el fondo, el cielo, las franjas del atardecer, los contornos de los
+ojos son idénticos byte a byte—, y lo que cambia lo hace de dos maneras que
+piden tratos distintos:
 
-Tres cosas que la página de la cara resuelve y conviene conocer:
+**Se desplazan.** Las pupilas y sus brillos son el mismo trazado movido de
+lugar, así que se animan de verdad: la pupila viaja de donde está a donde va,
+que es lo que el ojo lee como que Piko giró la mirada. Las medidas salen de
+restar coordenadas entre los archivos, y respetan hasta el detalle de que los
+brillos se corren menos que las pupilas.
+
+**Son otro trazado.** El ojo cerrado, la ceja del guiño, las estrellas de la
+celebración: no son la misma figura corrida. Ésas cambian de golpe, como
+cuadros. Nada de fundidos — durante un cruce las dos versiones quedan a media
+opacidad y, como se superponen, deja de tapar el fondo y se transparenta toda
+la zona del ojo.
+
+Así, las **cincuenta y seis transiciones** entre pares de expresiones salen
+gratis. Con un archivo por cara habría que dibujarlas una por una, y una novena
+expresión costaría dieciséis más.
+
+Los ocho SVG quedan en `public/caras/` como respaldo y como fuente. Cualquier
+archivo que dejes ahí con un nombre que `piko.js` no conozca se muestra tal
+cual: sirven `.svg` `.gif` `.png` `.webp` y `.mp4` `.webm`.
+
+Tres cosas más que la página de la cara resuelve:
 
 **Se cargan todas de entrada.** Con el túnel de por medio, bajar un video justo
 cuando hay que mostrarlo se ve como un parpadeo negro en el peor momento.
-Teniéndolas todas puestas y ocultas, cambiar de expresión es cambiar una clase.
 
 **Hace falta tocar la pantalla una vez.** Los navegadores de teléfono no dejan
 reproducir video ni audio sin un gesto previo. Por eso el velo verde del
-arranque, que además es el momento de pedir pantalla completa y de pedir que la
-pantalla no se apague.
+arranque.
 
 **Una cara que llega tarde se pone al día.** Si el teléfono se reinicia o
 recarga la página, el puente le dice qué expresión estaba puesta y arranca ahí
 en vez de quedarse en negro.
+
+### Instalala como aplicación en el teléfono del robot
+
+Abrí `/cara` en Chrome y elegí **«Agregar a pantalla de inicio»**. Abierta
+desde ese ícono arranca sin barra de direcciones, en horizontal y a pantalla
+completa, y se queda así.
+
+No es un lujo: `requestFullscreen()` en Android es frágil por diseño — el
+sistema la abandona sola en cuanto aparece una notificación o el teclado. Para
+una cara que tiene que estar toda la clase, la aplicación instalada es lo único
+que aguanta. El botón ⛶ de la esquina queda por si hace falta volver.
+
+Y el bloqueo de «que no se apague la pantalla» sólo existe en conexiones
+seguras, así que por `http://` en la red local no está disponible: poné el
+tiempo de espera de pantalla en «nunca» en los ajustes de Android.
 
 ## Los sonidos
 
