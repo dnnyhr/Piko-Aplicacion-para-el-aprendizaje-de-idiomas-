@@ -94,6 +94,17 @@ console.log('\nLas dos páginas\n');
     htmlCara.includes('vigilia.js') && htmlCara.includes('respaldo: true'));
   comprobar('el control también lo pide', html.includes('vigilia.js'));
 
+  /* La boca se mueve con la onda del audio, no con un temporizador. Lo que se
+     comprueba acá es que el camino esté armado; que se vea bien es cosa de
+     mirarlo. */
+  comprobar('la cara analiza la onda del audio', htmlCara.includes('createMediaElementSource'));
+  comprobar('y con eso le mueve la boca a Piko', htmlCara.includes('Piko.boca('));
+
+  const pikojs = await fetch(`http://localhost:${PUERTO}/piko.js`);
+  const dibujo = await pikojs.text();
+  comprobar('piko.js abre el pico por cantidad y no por sí o no',
+    dibujo.includes('boca(cuanto)') && dibujo.includes('APERTURA_MAX'));
+
   const vigilia = await fetch(`http://localhost:${PUERTO}/vigilia.js`);
   const js = await vigilia.text();
   comprobar('sirve vigilia.js', vigilia.status === 200);

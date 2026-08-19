@@ -281,6 +281,14 @@
 }
 #piko #cuerpo, #piko #boca{transition:transform .3s cubic-bezier(.3,.9,.3,1)}
 
+/* Mientras habla, esa misma transición es el enemigo: la boca recibe un valor
+   nuevo cada cuadro y con 300 ms de suavizado llega siempre tarde y a media
+   sílaba. Se baja a 60 ms, que alcanza para que no se vea a saltos y no tanto
+   como para que la boca vaya atrasada respecto de lo que se escucha. */
+#piko.hablando #cuerpo, #piko.hablando #boca{
+  transition-duration:.06s; transition-timing-function:linear;
+}
+
 /* Los trazados que no son el mismo dibujo corrido —el ojo cerrado, la ceja del
    guiño, las estrellas de la celebración— cambian de golpe, sin fundido, y eso
    es a propósito.
@@ -313,6 +321,20 @@
   let relojParpadeo = null;
   let parpadeando = false;
 
+  /* Cuánto baja el cuerpo cuando el pico se abre del todo. Sale del estado
+     `abierta` del diseño, que baja cuerpo y boca 19 px y cambia el trazado del
+     pico. Se suma a lo que ya tenga la expresión en vez de reemplazarlo, así
+     hablar mirando a la izquierda sigue siendo mirar a la izquierda. */
+  const APERTURA_MAX = 19;
+
+  /* Por debajo de esto el pico se queda cerrado. Existe porque el pico son dos
+     dibujos y no uno estirable: abrirlo con cada soplido de fondo lo hace
+     tiritar. */
+  const UMBRAL_PICO = 0.18;
+
+  /** Cuánta voz hay ahora mismo, de 0 a 1. `null` es que no está hablando. */
+  let apertura = null;
+
   const el = (id) => raiz && raiz.querySelector('#' + id);
 
   /** Enciende una sola de las variantes de un grupo y apaga las demás. */
@@ -338,6 +360,32 @@
     el('briDer').classList.toggle('oculta', !e.ojosVisibles);
   }
 
+  /**
+   * El cuerpo, la boca y el pico, que son lo único que la voz mueve.
+   *
+   * Va en su propia función porque tiene dos dueños: la expresión, que los
+   * coloca al cambiar de cara, y la voz, que los corrige sesenta veces por
+   * segundo mientras suena un audio. Si cada uno escribiera el transform por su
+   * lado, cambiar de expresión mientras habla dejaría la boca clavada hasta el
+   * próximo cuadro.
+   */
+  function pintarBoca() {
+    const e = ESTADOS[estadoActual];
+    if (!e || !raiz) return;
+
+    const k = apertura === null ? 0 : apertura;
+    const baja = k * APERTURA_MAX;
+
+    el('cuerpo').style.transform = `translate(0px, ${e.cuerpo + baja}px)`;
+    el('boca').style.transform = `translate(0px, ${e.bocaY + baja}px)`;
+
+    /* El pico sólo se cambia si la expresión traía el normal. La celebración y
+       la boca abierta ya tienen el suyo, dibujado para esa cara, y pisarlo por
+       hablar sería romper el gesto para animar la boca dentro de él. */
+    const abierto = k >= UMBRAL_PICO && e.plato === 'normal';
+    variante('plato', abierto ? 'abierta' : e.plato);
+  }
+
   function aplicar(nombre) {
     const e = ESTADOS[nombre];
     if (!e || !raiz) return;
@@ -353,10 +401,8 @@
     variante('briIzq', e.brilloVar);
     variante('briDer', e.brilloVar);
 
-    el('cuerpo').style.transform = `translate(0px, ${e.cuerpo}px)`;
-    el('boca').style.transform = `translate(0px, ${e.bocaY}px)`;
     variante('boca', e.boca);
-    variante('plato', e.plato);
+    pintarBoca();
 
     el('chispas').classList.toggle('oculta', !e.chispas);
     el('pataIzq').classList.toggle('oculta', !e.pataIzq);
@@ -432,6 +478,25 @@
 
     /** Los nombres que entiende, para que el panel pueda ofrecerlos aunque no
         haya ningún archivo en la carpeta. */
+    /**
+     * Abre el pico según cuánta voz hay en este instante, de 0 a 1.
+     *
+     * `null` lo devuelve a donde lo deja la expresión. Se llama con la energía
+     * del audio, cuadro a cuadro: por eso recibe un número y no un «abrí» y un
+     * «cerrá». Una boca que se abre y se cierra a ritmo fijo se lee como que
+     * mastica; abrirse en las sílabas y cerrarse en las pausas es lo que se lee
+     * como que habla.
+     */
+    boca(cuanto) {
+      if (!raiz) return;
+      apertura = cuanto === null || cuanto === undefined
+        ? null
+        : Math.max(0, Math.min(1, cuanto));
+      const svg = el('piko');
+      if (svg) svg.classList.toggle('hablando', apertura !== null);
+      pintarBoca();
+    },
+
     nombres() { return Object.keys(ESTADOS); },
 
     conoce(nombre) { return resolver(nombre) !== null; },

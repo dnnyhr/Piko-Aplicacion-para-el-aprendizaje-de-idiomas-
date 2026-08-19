@@ -190,7 +190,12 @@ function arrancar() {
     },
   });
 
-  // Desbloquear el audio con el mismo gesto.
+  /* Desbloquear el audio con el mismo gesto, y armar el análisis de la onda que
+     le mueve la boca a Piko. Va acá y en ningún otro lado: el contexto de audio
+     nace suspendido y sólo un gesto lo despierta. Armado fuera del toque, el
+     audio quedaría desviado hacia un grafo dormido y no sonaría nada. */
+  prepararVoz();
+  despertarAudio();
   try { voz.play().catch(() => {}); voz.pause(); } catch { }
 
   for (const el of piezas.values()) {
@@ -282,6 +287,113 @@ function mostrar(nombre) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
+//  La boca sigue a la voz
+// ═══════════════════════════════════════════════════════════════════════
+
+/**
+ * El pico se abre con el volumen real del audio, cuadro a cuadro.
+ *
+ * La alternativa fácil era abrir y cerrar en bucle mientras dure el sonido, y
+ * se ve mal por un motivo concreto: la boca sigue moviéndose en las pausas
+ * entre frases y se queda quieta en medio de una palabra larga. Lo que el ojo
+ * lee como hablar es que la boca se abra en las sílabas y se cierre en los
+ * silencios, y eso sólo sale mirando la onda.
+ *
+ * El audio se desvía por un `AnalyserNode`. Ojo con esto: desde que se llama a
+ * `createMediaElementSource`, el elemento deja de sonar por su cuenta y sólo
+ * se escucha lo que se conecte a la salida. Y el contexto arranca suspendido,
+ * así que hay que despertarlo con un gesto — el mismo toque del velo que ya
+ * hacía falta para que el navegador dejara sonar algo.
+ */
+let contexto = null;      // null = sin preparar, false = este navegador no puede
+let analizador = null;
+let muestras = null;
+let cuadro = null;
+let relojTitere = null;
+let pico = 0;
+let suave = 0;
+
+function prepararVoz() {
+  if (analizador || contexto === false) return;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) { contexto = false; return; }
+  try {
+    contexto = new AC();
+    const fuente = contexto.createMediaElementSource(voz);
+    analizador = contexto.createAnalyser();
+    analizador.fftSize = 512;
+    fuente.connect(analizador);
+    analizador.connect(contexto.destination);   // sin esto no se oye nada
+    muestras = new Uint8Array(analizador.fftSize);
+  } catch {
+    contexto = false;
+    analizador = null;
+  }
+}
+
+function despertarAudio() {
+  if (contexto && contexto.state === 'suspended') contexto.resume().catch(() => {});
+}
+
+/** La energía de la onda en este instante: no un pico suelto, sino cuánto
+    sonido hay de verdad. Un chasquido no abre la boca; una sílaba sí. */
+function energia() {
+  analizador.getByteTimeDomainData(muestras);
+  let suma = 0;
+  for (let i = 0; i < muestras.length; i++) {
+    const v = (muestras[i] - 128) / 128;
+    suma += v * v;
+  }
+  return Math.sqrt(suma / muestras.length);
+}
+
+function seguirLaVoz() {
+  cuadro = requestAnimationFrame(seguirLaVoz);
+  const ahora = energia();
+
+  /* Se mide contra el pico reciente y no contra un número fijo. Con un umbral
+     fijo, un audio grabado bajo apenas movería el pico y uno fuerte lo dejaría
+     abierto de punta a punta. El pico decae despacio para que un grito al
+     principio no deje sorda a la boca por el resto de la frase. */
+  pico = Math.max(ahora, pico * 0.995);
+  const bruto = pico > 0.008 ? Math.min(1, ahora / pico) : 0;
+
+  /* Abre rápido y cierra despacio. Al revés se ve masticando: la boca alcanza
+     a cerrarse del todo entre sílaba y sílaba, que es justo cuando tendría que
+     seguir abierta. */
+  suave += (bruto - suave) * (bruto > suave ? 0.6 : 0.18);
+  Piko.boca(suave);
+}
+
+function empezarAHablar() {
+  despertarAudio();
+
+  if (analizador) {
+    if (cuadro === null) { pico = 0; suave = 0; cuadro = requestAnimationFrame(seguirLaVoz); }
+    return;
+  }
+
+  /* Sin Web Audio queda el títere: abrir y cerrar a ritmo fijo mientras dure
+     el audio. Se nota falso, pero una cara inmóvil mientras suena una voz se
+     nota más. */
+  if (!relojTitere) {
+    let abierto = false;
+    relojTitere = setInterval(() => Piko.boca((abierto = !abierto) ? 1 : 0), 170);
+  }
+}
+
+function dejarDeHablar() {
+  if (cuadro !== null) { cancelAnimationFrame(cuadro); cuadro = null; }
+  if (relojTitere) { clearInterval(relojTitere); relojTitere = null; }
+  Piko.boca(null);
+}
+
+voz.addEventListener('playing', empezarAHablar);
+voz.addEventListener('pause', dejarDeHablar);
+voz.addEventListener('ended', dejarDeHablar);
+voz.addEventListener('emptied', dejarDeHablar);
+
+// ═══════════════════════════════════════════════════════════════════════
 //  Conexión
 // ═══════════════════════════════════════════════════════════════════════
 
@@ -324,6 +436,7 @@ function conectar() {
     if (m.t === 'expresion') { mostrar(m.nombre); return; }
 
     if (m.t === 'sonido') {
+      despertarAudio();
       voz.src = `sonidos/${encodeURIComponent(m.archivo)}`;
       voz.play().catch(() => avisar('Tocá la pantalla para permitir el sonido'));
       return;

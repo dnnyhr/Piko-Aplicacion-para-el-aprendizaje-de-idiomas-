@@ -25,8 +25,9 @@ cara se entere.
 |---|---|
 | 4× WS2812 · pin 28 | **anda** |
 | 28BYJ-48 · PORT2 | **anda** — gira; falta confirmar que 4096 sea vuelta exacta |
-| Panel, puente y reparto de roles | **anda** — 24 comprobaciones automáticas |
+| Panel, puente y reparto de roles | **anda** — 27 comprobaciones automáticas |
 | Cara en el navegador | **anda** — las ocho expresiones, con la mirada animada |
+| La boca sigue a la voz | **anda** — probada con una onda de sílabas medidas |
 | Que no se apague la pantalla | **a medias** — probado el respaldo de video; el candado, no |
 | Servo · pin 29 | sin probar |
 | Segunda tira de LEDs · pin 27 | sin probar |
@@ -206,6 +207,35 @@ y salta el hombre muerto, que frena a Piko en mitad de la clase.
 
 En `public/sonidos/`, y los reproduce **el teléfono del robot** — el sonido
 tiene que salir de donde está la cara. Sirven `.mp3` `.ogg` `.wav` `.m4a`.
+
+**La boca se mueve con lo que suena.** El audio pasa por un `AnalyserNode` y el
+pico se abre según la energía de la onda en ese instante, cuadro a cuadro. La
+alternativa fácil —abrir y cerrar en bucle mientras dure el sonido— se ve mal
+por un motivo concreto: la boca sigue moviéndose en las pausas entre frases y se
+queda quieta en medio de una palabra larga. Lo que el ojo lee como hablar es que
+se abra en las sílabas y se cierre en los silencios.
+
+Tres detalles que hacen la diferencia entre que se vea hablando y que se vea
+masticando:
+
+- **Se mide contra el pico reciente, no contra un umbral fijo.** Con un número
+  fijo, un audio grabado bajo apenas movería el pico y uno fuerte lo dejaría
+  abierto de punta a punta.
+- **Abre rápido y cierra despacio.** Al revés, la boca alcanza a cerrarse del
+  todo entre sílaba y sílaba, que es justo cuando tendría que seguir abierta.
+- **Mientras habla, la transición de la boca baja de 300 ms a 60.** Con los 300
+  de la mirada, la boca llegaría siempre media sílaba tarde.
+
+El `AudioContext` nace suspendido y hay que despertarlo con un gesto, así que se
+arma en el toque del velo. Ojo si se toca esto: desde que se llama a
+`createMediaElementSource`, el `<audio>` deja de sonar por su cuenta y sólo se
+escucha lo que esté conectado a la salida del grafo. Si un navegador no tiene
+Web Audio, queda el títere —abrir y cerrar a ritmo fijo—, que se nota falso pero
+menos que una cara inmóvil mientras suena una voz.
+
+La secuencia **Hablar** del panel sigue existiendo y es otra cosa: mueve la boca
+sin audio, para cuando Piko tiene que parecer que dice algo y no hay nada que
+reproducir.
 
 ---
 
