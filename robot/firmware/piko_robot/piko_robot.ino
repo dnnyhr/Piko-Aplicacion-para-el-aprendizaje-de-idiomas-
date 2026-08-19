@@ -96,6 +96,23 @@ const uint8_t PIN_SERVO  = 29;
 const uint8_t SERVO_MIN = 0;
 const uint8_t SERVO_MAX = 180;
 
+/**
+ * La ventana de pulso, en microsegundos. Esto es lo que decide cuánto gira de
+ * tope a tope.
+ *
+ * La biblioteca de Arduino usa 544 a 2400 por defecto, que es conservador: casi
+ * todos estos servos llegan más lejos. Ensanchar la ventana da unos grados
+ * extra en cada extremo sin cambiar nada del cableado ni del panel — el ángulo
+ * 0 sigue siendo 0, sólo que ahora empuja más.
+ *
+ * **Hasta acá y no más.** Por debajo de 500 o por encima de 2500 se le está
+ * pidiendo al servo que pase su propio tope interno, y ahí no falla
+ * ruidosamente: zumba, sigue empujando, tira hasta 700 mA y se calienta hasta
+ * romperse. Si en el extremo zumba y no se mueve, achicá estos números.
+ */
+const uint16_t SERVO_PULSO_MIN = 500;
+const uint16_t SERVO_PULSO_MAX = 2500;
+
 /** Traduce lo que pide el panel a lo que hay que escribirle al servo. */
 static uint8_t anguloReal(uint8_t pedido) {
   const uint8_t acotado = constrain(pedido, SERVO_MIN, SERVO_MAX);
@@ -390,7 +407,7 @@ void setup() {
   apagarBobinas();
 
   Serial.println(F("PASO servo"));
-  servo.attach(PIN_SERVO);
+  servo.attach(PIN_SERVO, SERVO_PULSO_MIN, SERVO_PULSO_MAX);
   servo.write(anguloReal(anguloServo));
 
   Serial.println(F("PASO leds"));
