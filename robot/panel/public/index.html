@@ -168,7 +168,7 @@ button{font:inherit; cursor:pointer}
       <label>Ángulo <span class="valor" id="vServo">90°</span></label>
       <input type="range" id="servo" min="0" max="180" value="90">
       <div class="fila">
-        <button class="btn" data-servo="30">Abajo</button>
+        <button class="btn" data-servo="0">Abajo</button>
         <button class="btn" data-servo="90">Centro</button>
         <button class="btn" data-servo="150">Arriba</button>
       </div>
@@ -188,7 +188,8 @@ button{font:inherit; cursor:pointer}
         <button class="btn btn--verde" id="paDer">Derecha ↻</button>
       </div>
       <p class="nota">4096 medios pasos es una vuelta entera; 1024 es un cuarto.
-        Arriba de 15 rpm zumba en vez de girar.</p>
+        Arriba de 15 rpm zumba en vez de girar, y con el teléfono montado conviene
+        ir más despacio: un motor a pasos tiene más fuerza cuanto más lento va.</p>
     </section>
 
     <section class="tarjeta">
@@ -715,15 +716,21 @@ function cortarSecuencia() {
   secuenciaEnCurso = null;
 }
 
+/* El ángulo con el que las alas quedan en reposo. Con la ventana de pulso
+   ensanchada del firmware, 0 es lo más abajo que llega el servo. */
+const ALAS_ABAJO = 0;
+
+function ponerServo(a) {
+  mandar(`SV ${a}`);
+  $('servo').value = a;
+  $('vServo').textContent = `${a}°`;
+}
+
 function aplicarPaso(p) {
   if (p.cara) ponerExpresion(p.cara);
   if (p.efecto) ponerEfecto(p.efecto);
   if (p.brillo !== undefined) mandar(`BRILLO ${p.brillo}`);
-  if (p.servo !== undefined) {
-    mandar(`SV ${p.servo}`);
-    $('servo').value = p.servo;
-    $('vServo').textContent = `${p.servo}°`;
-  }
+  if (p.servo !== undefined) ponerServo(p.servo);
   if (p.pasos !== undefined) moverCara(p.pasos);
   if (p.volverAlCentro && posicionCara !== 0) moverCara(-posicionCara);
   if (p.tiras) {
@@ -752,7 +759,13 @@ async function correrSecuencia(clave) {
     if (paso.ms) await dormir(paso.ms);
   }
 
-  if (secuenciaEnCurso === mia) cortarSecuencia();
+  if (secuenciaEnCurso !== mia) return;
+
+  /* Las alas bajan al terminar, siempre. Va acá y no como último paso de cada
+     preset por una razón práctica: así una secuencia nueva no puede olvidarse
+     de hacerlo, y no hay que repetir la misma línea ocho veces. */
+  ponerServo(ALAS_ABAJO);
+  cortarSecuencia();
 }
 
 for (const [clave, sec] of Object.entries(SECUENCIAS)) {

@@ -139,11 +139,49 @@ const uint8_t LEDS_TOTAL    = LEDS_POR_TIRA * 2;
 const unsigned long MS_HOMBRE_MUERTO = 500;
 const unsigned long MS_TELEMETRIA    = 250;
 
+/**
+ * Cómo se energizan las bobinas. Esto decide cuánta fuerza tiene el motor.
+ *
+ *   1 = pasos completos. Siempre dos bobinas a la vez, así que da el torque
+ *       máximo del motor. 2048 pasos por vuelta.
+ *   0 = medios pasos. Alterna una bobina y dos, lo que duplica la resolución
+ *       —4096 por vuelta— y suaviza el movimiento, pero en los pasos de una
+ *       sola bobina tiene bastante menos fuerza.
+ *
+ * Está en medios pasos porque así es como quedó funcionando en la placa, con
+ * el movimiento más suave — y suavidad importa cuando lo que gira es la cara.
+ *
+ * El interruptor queda por si algún día el motor zumba sin avanzar con carga:
+ * el 28BYJ-48 tiene apenas unos 34 mN·m, y pasar a pasos completos es la única
+ * forma de ganarle fuerza sin cambiar de motor. Ojo que también cambia la
+ * cuenta —2048 por vuelta en vez de 4096— y hay que ajustar el panel.
+ */
+#define PASO_COMPLETO 0
+
+#if PASO_COMPLETO
+const uint16_t PASOS_POR_VUELTA = 2048;
+#else
+const uint16_t PASOS_POR_VUELTA = 4096;
+#endif
+
+/**
+ * Dejar las bobinas energizadas al terminar el giro.
+ *
+ * En 0 el motor queda suelto: no consume ni se calienta, pero tampoco sostiene
+ * la posición. Si el teléfono no está centrado sobre el eje, su propio peso lo
+ * va a hacer girar solo — y ahí hay que poner 1, a cambio de unos 250 mA
+ * permanentes y de que el motor se ponga tibio.
+ *
+ * Antes de recurrir a esto conviene equilibrar el montaje: que el centro de
+ * masa del teléfono caiga sobre el eje resuelve el problema sin gastar
+ * corriente ni calentar nada.
+ */
+#define SOSTENER_PASOS 0
+
 /* El 28BYJ-48 con su reductora no pasa de unas 15 rpm en el eje de salida.
    Pedirle más no lo hace girar más rápido: lo hace zumbar quieto y perder
-   pasos. Y son 4096 medios pasos por vuelta, no 2048 — ése es el número en
-   pasos enteros, y acá se mueve en medios. */
-const uint16_t PASOS_POR_VUELTA = 4096;
+   pasos. Y con carga conviene ir más lento todavía — un motor a pasos tiene
+   más fuerza cuanto más despacio va. */
 const uint16_t RPM_MAX = 15;
 
 // ═════════════════════════════════════════════════════════════════════════
@@ -179,17 +217,24 @@ static void apagarBobinas() {
 }
 
 /**
- * Medios pasos. Cada renglón dice qué bobinas quedan energizadas.
+ * La secuencia de bobinas. Cada renglón dice cuáles quedan energizadas.
  *
- * Media paso en vez de paso entero porque el 28BYJ-48 tiene vueltas de sobra
- * para permitírselo: se gana suavidad y algo de torque a cambio del doble de
- * pulsos, que a estas velocidades no cuesta nada. Y suavidad importa: esto
- * mueve el teléfono que hace de cara, y un tirón se ve.
+ * En pasos completos son cuatro estados y **los cuatro tienen dos bobinas
+ * prendidas**, que es de donde sale el torque. En medios pasos son ocho y se
+ * intercalan estados de una sola bobina: más resolución y más suavidad, pero
+ * en esos estados la fuerza cae bastante — y con un teléfono colgado del eje,
+ * ahí es donde el motor zumba sin llegar a girar.
  */
-const uint8_t SECUENCIA[8] = {
+#if PASO_COMPLETO
+const uint8_t SECUENCIA[] = { 0b1100, 0b0110, 0b0011, 0b1001 };
+#else
+const uint8_t SECUENCIA[] = {
   0b1000, 0b1100, 0b0100, 0b0110,
   0b0010, 0b0011, 0b0001, 0b1001
 };
+#endif
+
+const uint8_t FASES = sizeof(SECUENCIA);
 
 static void pararTodo() {
   pasosRestantes = 0;
@@ -210,13 +255,21 @@ static void atenderPaso() {
   if (ahora - ultimoPasoUs < intervaloPasoUs) return;
   ultimoPasoUs = ahora;
 
-  faseULN = (faseULN + (sentidoPaso > 0 ? 1 : 7)) & 7;
+  /* Sumar FASES−1 es restar 1 en módulo FASES. Las dos direcciones usan la
+     misma aritmética, así que el motor no puede ser más fuerte hacia un lado
+     que hacia el otro: si eso pasa, la causa es mecánica. */
+  faseULN = (faseULN + (sentidoPaso > 0 ? 1 : FASES - 1)) % FASES;
   for (uint8_t i = 0; i < 4; i++)
     digitalWrite(PIN_ULN[i], (SECUENCIA[faseULN] >> (3 - i)) & 1);
 
-  /* Al terminar se sueltan las bobinas: un motor a pasos energizado consume y
-     calienta aunque esté quieto, y acá no hace falta que sostenga posición. */
-  if (--pasosRestantes == 0) apagarBobinas();
+  if (--pasosRestantes == 0) {
+#if !SOSTENER_PASOS
+    /* Se sueltan las bobinas: un motor a pasos energizado consume y calienta
+       aunque esté quieto. Con SOSTENER_PASOS en 1 se quedan prendidas para
+       aguantar el peso del teléfono. */
+    apagarBobinas();
+#endif
+  }
 }
 
 // ═════════════════════════════════════════════════════════════════════════
