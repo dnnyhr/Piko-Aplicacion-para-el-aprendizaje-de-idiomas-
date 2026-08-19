@@ -25,6 +25,7 @@
  *     PA <pasos> <rpm>        motor a pasos: gira el teléfono. Relativo, con signo
  *     PARA                    frena todo, ya
  *     LED <i|-1> <r> <g> <b>  un píxel de 0 a 7, o todos con -1
+ *     TIRA <0|1|-1> <r> <g> <b>  una tira entera: A, B, o las dos
  *     BRILLO <0..255>         brillo global de las dos tiras
  *     PING                    prueba de vida
  *
@@ -72,6 +73,38 @@ const uint8_t PIN_ULN[4] = { 36, 37, 40, 41 };   // IN1..IN4, primeras 4 de PORT
 const uint8_t PIN_TIRA_A = 27;
 const uint8_t PIN_TIRA_B = 28;
 const uint8_t PIN_SERVO  = 29;
+
+// ── El servo, según cómo haya quedado montado ────────────────────────────
+
+/**
+ * 1 si el servo quedó al revés: las alas suben cuando deberían bajar.
+ *
+ * Se arregla acá y no desarmando porque el eje del servo tiene dientes: el
+ * brazo sólo entra en unas pocas posiciones, y casi nunca en la que uno
+ * necesita. Invertir el ángulo cuesta una resta y no toca el mecanismo.
+ */
+#define SERVO_INVERTIDO 1
+
+/**
+ * Hasta dónde puede moverse, en grados de los que pide el panel.
+ *
+ * El rango de 0 a 180 es del servo, no del robot: una vez montadas las alas,
+ * la pieza choca mucho antes. Un servo trabado contra un tope no falla
+ * ruidosamente — sigue empujando, tira hasta 700 mA y se calienta hasta
+ * romperse. Achicar estos dos números es lo que lo impide.
+ */
+const uint8_t SERVO_MIN = 0;
+const uint8_t SERVO_MAX = 180;
+
+/** Traduce lo que pide el panel a lo que hay que escribirle al servo. */
+static uint8_t anguloReal(uint8_t pedido) {
+  const uint8_t acotado = constrain(pedido, SERVO_MIN, SERVO_MAX);
+#if SERVO_INVERTIDO
+  return 180 - acotado;
+#else
+  return acotado;
+#endif
+}
 
 // ═════════════════════════════════════════════════════════════════════════
 //  CONSTANTES
@@ -190,6 +223,27 @@ static void atenderLeds() {
   if (sucioB) { tiraB.show(); sucioB = false; }
 }
 
+/**
+ * Pintar una tira entera de un saque.
+ *
+ * Existe además de `LED` porque los efectos del panel cambian módulos
+ * completos muchas veces por segundo, y hacerlo de a un píxel serían cuatro
+ * órdenes en vez de una — por el túnel, cuatro veces el tráfico y cuatro veces
+ * el ruido en la consola.
+ *
+ *   0 = tira A     1 = tira B     -1 = las dos
+ */
+static void pintarTira(int8_t cual, uint8_t r, uint8_t g, uint8_t b) {
+  if (cual <= 0) {
+    for (uint8_t k = 0; k < LEDS_POR_TIRA; k++) tiraA.setPixelColor(k, tiraA.Color(r, g, b));
+    sucioA = true;
+  }
+  if (cual != 0) {
+    for (uint8_t k = 0; k < LEDS_POR_TIRA; k++) tiraB.setPixelColor(k, tiraB.Color(r, g, b));
+    sucioB = true;
+  }
+}
+
 static void pintarLed(int16_t i, uint8_t r, uint8_t g, uint8_t b) {
   if (i < 0) {
     for (uint8_t k = 0; k < LEDS_POR_TIRA; k++) {
@@ -240,8 +294,11 @@ static void ejecutar(char* l) {
   if (!strcmp(cmd, "SV")) {
     long a;
     if (!siguienteEntero(a) || a < 0 || a > 180) { err("SV fuera de rango"); return; }
+    /* Se guarda lo que pidió el panel, no lo que se le escribió al servo: la
+       telemetría tiene que hablar el mismo idioma que la orden, o depurar
+       desde el otro lado se vuelve un acertijo. */
     anguloServo = (uint8_t)a;
-    servo.write(anguloServo);
+    servo.write(anguloReal(anguloServo));
     ok("SV");
     return;
   }
@@ -267,6 +324,17 @@ static void ejecutar(char* l) {
     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) { err("LED color"); return; }
     pintarLed((int16_t)i, (uint8_t)r, (uint8_t)g, (uint8_t)b);
     ok("LED");
+    return;
+  }
+
+  if (!strcmp(cmd, "TIRA")) {
+    long t, r, g, b;
+    if (!siguienteEntero(t) || !siguienteEntero(r) ||
+        !siguienteEntero(g) || !siguienteEntero(b)) { err("TIRA faltan datos"); return; }
+    if (t < -1 || t > 1) { err("TIRA indice"); return; }
+    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) { err("TIRA color"); return; }
+    pintarTira((int8_t)t, (uint8_t)r, (uint8_t)g, (uint8_t)b);
+    ok("TIRA");
     return;
   }
 
@@ -323,7 +391,7 @@ void setup() {
 
   Serial.println(F("PASO servo"));
   servo.attach(PIN_SERVO);
-  servo.write(anguloServo);
+  servo.write(anguloReal(anguloServo));
 
   Serial.println(F("PASO leds"));
   tiraA.begin();

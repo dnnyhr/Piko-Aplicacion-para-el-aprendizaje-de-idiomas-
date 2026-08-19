@@ -137,7 +137,8 @@ console.log('\nLista blanca de órdenes\n');
 
 {
   const buenas = ['SV 90', 'SV 0', 'PA -1024 10', 'PA 4096', 'LED 0 255 0 0',
-                  'LED 7 1 2 3', 'LED -1 0 0 0', 'BRILLO 60', 'PARA', 'PING'];
+                  'LED 7 1 2 3', 'LED -1 0 0 0', 'BRILLO 60', 'PARA', 'PING',
+                  'TIRA 0 255 255 255', 'TIRA 1 0 0 0', 'TIRA -1 63 169 255'];
   for (const b of buenas) control.send(JSON.stringify({ t: 'cmd', linea: b }));
   await esperar(300);
   const rechazos = control.recibidos.filter((m) => m.t === 'serie' && m.linea.includes('el puente rechazo'));
@@ -148,7 +149,8 @@ console.log('\nLista blanca de órdenes\n');
 {
   const antes = control.recibidos.filter((m) => m.t === 'serie' && m.linea.includes('el puente rechazo')).length;
   // DC y LCD ya no existen; LED sólo llega hasta el 7.
-  const malas = ['DC 160', 'LCD 0 hola', 'LED 8 1 2 3', 'SV 900', 'rm -rf /', 'PA 1024 99'];
+  const malas = ['DC 160', 'LCD 0 hola', 'LED 8 1 2 3', 'SV 900', 'rm -rf /',
+                 'PA 1024 99', 'TIRA 2 1 2 3', 'TIRA 0 300 0 0'];
   for (const m of malas) control.send(JSON.stringify({ t: 'cmd', linea: m }));
   await esperar(300);
   const ahora = control.recibidos.filter((m) => m.t === 'serie' && m.linea.includes('el puente rechazo')).length;
