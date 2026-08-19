@@ -1,0 +1,4 @@
+Poné acá los sonidos.
+
+Los reproduce el teléfono del robot, así que sirve .mp3 .ogg .wav .m4a —
+ya no hace falta que sean WAV como cuando los tocaba la PC.

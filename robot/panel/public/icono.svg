@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>Piko</title>
+  <!--
+    El ícono de la aplicación instalada. No es un recorte de las caras del
+    diseño: aquéllas son de 647×302, muy anchas, y recortadas a un cuadrado
+    quedan en un ojo y medio. Esto es la misma paleta en formato cuadrado.
+
+    El margen de 64 unidades alrededor del dibujo no es capricho: Android
+    recorta los íconos «maskable» a un círculo, y sin ese aire se le come el
+    pico.
+  -->
+  <rect width="512" height="512" fill="#659327"/>
+  <circle cx="256" cy="256" r="196" fill="#588EA9"/>
+
+  <!-- los dos ojos -->
+  <circle cx="180" cy="228" r="66" fill="#E7BB52"/>
+  <circle cx="332" cy="228" r="66" fill="#E7BB52"/>
+  <circle cx="180" cy="228" r="44" fill="white"/>
+  <circle cx="332" cy="228" r="44" fill="white"/>
+  <circle cx="176" cy="234" r="26" fill="#58302E"/>
+  <circle cx="328" cy="234" r="26" fill="#58302E"/>
+  <circle cx="166" cy="220" r="10" fill="white"/>
+  <circle cx="318" cy="220" r="10" fill="white"/>
+
+  <!-- el pico -->
+  <path d="M256 262 C300 262 322 300 322 336 C322 380 292 410 256 410 C220 410 190 380 190 336 C190 300 212 262 256 262 Z" fill="#E6A22A"/>
+  <path d="M256 286 C266 316 268 350 262 386 C261 392 253 391 253 385 C257 350 255 316 250 288 C249 284 255 282 256 286 Z" fill="#EEB453"/>
+</svg>
