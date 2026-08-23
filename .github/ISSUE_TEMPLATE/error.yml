@@ -1,0 +1,48 @@
+name: "Reportar un error"
+description: "Algo no funciona como debería"
+title: "[Error] "
+labels: ["error"]
+body:
+  - type: dropdown
+    id: parte
+    attributes:
+      label: ¿Qué parte?
+      options:
+        - La app (teléfono)
+        - La app (navegador, npm run web)
+        - El aula en red / multijugador
+        - El simulador (npm run sim)
+        - El robot / firmware
+        - El panel del robot
+        - La documentación
+        - No estoy seguro
+    validations:
+      required: true
+
+  - type: textarea
+    id: que-paso
+    attributes:
+      label: Qué pasó
+      description: "Contá qué esperabas que pasara y qué pasó en su lugar."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproducir
+    attributes:
+      label: Cómo reproducirlo
+      placeholder: |
+        1. Abrí ...
+        2. Toqué ...
+        3. Pasó ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: entorno
+    attributes:
+      label: Entorno
+      description: "Si aplica: modelo del teléfono y versión de Android, o versión de Node."
+      placeholder: "Android 11, teléfono de gama baja / Node 22"
+    validations:
+      required: false

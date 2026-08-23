@@ -1,0 +1,41 @@
+name: "Proponer una idea"
+description: "Sugerir una función o una mejora"
+title: "[Idea] "
+labels: ["idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Antes de escribir, vale la pena tener presentes las restricciones que
+        definen a Piko. No son descuidos — son el producto:
+
+        - **Nada puede depender de internet.**
+        - **El progreso pertenece al estudiante, no al aparato.**
+        - **Piko refuerza, no regaña.** El error nunca es rojo, el XP jamás baja.
+        - **Tiene que correr en teléfonos de gama baja.**
+
+        Si tu idea choca con alguna, contanos igual — pero explicanos cómo la
+        resolverías.
+
+  - type: textarea
+    id: problema
+    attributes:
+      label: ¿Qué problema resuelve?
+      description: "Describí la situación en el aula, no la solución todavía."
+    validations:
+      required: true
+
+  - type: textarea
+    id: propuesta
+    attributes:
+      label: Qué proponés
+    validations:
+      required: true
+
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Algo más
+      description: "Alternativas que consideraste, o por qué esto importa en una escuela rural."
+    validations:
+      required: false

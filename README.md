@@ -9,7 +9,15 @@
 <img src="https://img.shields.io/badge/Equipo-MugiWare-1F4E5F?style=for-the-badge&labelColor=2F6B4F" alt="team badge"/>
 <img src="https://img.shields.io/badge/Estado-En%20construcci%C3%B3n-E7B84C?style=for-the-badge&labelColor=3A3A3A" alt="status badge"/>
 <br>
+<img src="https://img.shields.io/badge/Licencia-MIT-2F6B4F?style=for-the-badge&labelColor=1F4E5F" alt="licencia MIT"/>
+<br>
 <img src="https://komarev.com/ghpvc/?username=piko-hn10&label=Visitas%20al%20README&color=2F6B4F&style=flat-square" alt="visitas"/>
+</div>
+
+<br>
+
+<div align="center">
+<a href="README.en.md"><b>Read this in English →</b></a>
 </div>
 
 <br><br>
@@ -30,6 +38,7 @@
 <a href="#cómo-funciona">Cómo funciona</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#identidad">Identidad</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#roadmap">Roadmap</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+<a href="#contribuir">Contribuir</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#equipo">Equipo</a>
 </div>
 
@@ -184,6 +193,55 @@ La mascota se llama **Piko**, y también le da nombre a la app. Piko es un choco
 - [ ] Prototipo funcional para la demo de HN10
 - [ ] Piloto en comunidad real
 - [ ] *Visión futura:* diálogo generado y respuestas del robot vía un LLM liviano con RAG, alimentado con diccionarios y literatura de las lenguas en peligro e inglés
+
+<br>
+
+<img src="readme/divider-subtle.svg" width="100%" alt=""/>
+
+<br>
+
+<h2 id="contribuir">
+<img src="https://api.iconify.design/mdi/hand-heart-outline.svg?color=%232F6B4F" width="26" height="26" valign="middle"/>
+&nbsp;Contribuir
+</h2>
+
+Piko es software libre, y la contribución que más falta le hace **no es código.**
+
+Hoy la aplicación sólo tiene contenido en inglés. Las cuatro lenguas indígenas
+tienen el formato listo y están vacías **a propósito**: el vocabulario y la
+pronunciación tienen que venir de hablantes nativos o de material lingüístico
+publicado. Inventarlos sería enseñarle una lengua falsa justo a los niños que
+están tratando de conservarla. Por eso el validador de contenido **rechaza la
+síntesis de voz** en miskito, mayangna, rama y garífuna: preferimos no tener
+audio a tener una pronunciación inventada por una máquina.
+
+<div align="center">
+
+| | |
+|---|---|
+| <img src="https://api.iconify.design/mdi/translate.svg?color=%232F6B4F" width="18"/> **¿Hablás una de estas lenguas?** | Abrí un [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml). No hace falta saber programar ni usar Git — escribí las palabras en texto plano y nosotros las convertimos. |
+| <img src="https://api.iconify.design/mdi/code-braces.svg?color=%231F4E5F" width="18"/> **¿Querés aportar código?** | Todo está en [CONTRIBUTING.md](CONTRIBUTING.md): cómo correr el proyecto, las 121 pruebas, el simulador de aula y las restricciones que no son negociables. |
+
+</div>
+
+Antes de participar, leé el [Código de Conducta](CODE_OF_CONDUCT.md). Un punto
+que va más allá de lo habitual: **estas lenguas pertenecen a las comunidades que
+las hablan.** Las decisiones sobre qué se enseña y cómo se pronuncia las tienen
+ellas, no quien escriba el código.
+
+¿Encontraste un problema de seguridad? No abras un issue público — mirá
+[SECURITY.md](SECURITY.md).
+
+<br>
+
+<h2 id="licencia">
+<img src="https://api.iconify.design/mdi/scale-balance.svg?color=%232F6B4F" width="26" height="26" valign="middle"/>
+&nbsp;Licencia
+</h2>
+
+Piko se distribuye bajo la [Licencia MIT](LICENSE). Cualquier escuela, maestro,
+ONG o institución puede usarlo, adaptarlo y distribuirlo libremente — que es
+justamente el punto.
 
 <br>
 
