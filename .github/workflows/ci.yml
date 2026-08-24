@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  app:
+    name: App — pruebas, tipos y contenido
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # node:sqlite, que usan las pruebas de persistencia, necesita Node 22+
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - run: npm ci
+
+      - name: Pruebas del núcleo y la persistencia
+        run: npm test
+
+      - name: Tipos (app + herramientas de Node)
+        run: npm run typecheck
+
+      - name: Formato de los paquetes de contenido
+        run: npm run validate:packs
+
+  panel:
+    name: Robot — panel y puente
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: robot/panel
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: robot/panel/package-lock.json
+
+      - run: npm ci
+
+      - name: Comprobaciones del puente
+        run: npm run prueba

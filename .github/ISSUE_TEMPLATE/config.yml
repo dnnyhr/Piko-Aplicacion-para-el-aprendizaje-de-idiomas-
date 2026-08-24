@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: "¿Hablás miskito, mayangna, rama o garífuna?"
+    url: https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/blob/main/CONTRIBUTING.md
+    about: "La contribución que más falta hace no es código. Mirá cómo aportar contenido en una lengua."
+  - name: "Reportar un problema de seguridad"
+    url: https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/blob/main/SECURITY.md
+    about: "No abras un issue público — escribinos en privado."

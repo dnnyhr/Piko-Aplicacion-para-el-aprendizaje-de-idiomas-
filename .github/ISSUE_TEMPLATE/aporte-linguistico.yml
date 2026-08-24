@@ -1,0 +1,88 @@
+name: "Aporte de contenido lingüístico"
+description: "Compartir palabras, frases o audio en miskito, mayangna, rama, garífuna o inglés. No hace falta saber programar."
+title: "[Contenido] "
+labels: ["contenido", "lengua"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Gracias.** Esta es la contribución que más falta le hace a Piko.
+
+        No necesitás saber programar ni usar Git. Escribí las palabras acá
+        nomás, en texto plano, como te salga. Nosotros nos encargamos de
+        convertirlo al formato de la aplicación.
+
+  - type: dropdown
+    id: lengua
+    attributes:
+      label: ¿Qué lengua?
+      options:
+        - Miskito (miq)
+        - Mayangna (sum)
+        - Rama (rma)
+        - Garífuna (cab)
+        - Inglés (eng)
+    validations:
+      required: true
+
+  - type: input
+    id: tema
+    attributes:
+      label: Tema
+      description: "Por ejemplo: saludos, familia, números, colores, animales, comida, el cuerpo…"
+      placeholder: "saludos"
+    validations:
+      required: true
+
+  - type: textarea
+    id: contenido
+    attributes:
+      label: Palabras o frases
+      description: |
+        Una por línea, con su traducción al español. El formato no importa
+        mientras se entienda.
+      placeholder: |
+        naksa — hola
+        yamni — bueno
+        ¿Nahki sma? — ¿Cómo estás?
+    validations:
+      required: true
+
+  - type: textarea
+    id: fuente
+    attributes:
+      label: ¿De dónde viene?
+      description: |
+        Esto no es burocracia. Estas lenguas tienen variantes entre comunidades,
+        y queremos poder decirle a un maestro de dónde viene lo que su alumno
+        está aprendiendo.
+
+        Sirve cualquiera de estas: sos hablante nativo, te lo dictó alguien de
+        una comunidad, o salió de un diccionario o libro publicado (poné cuál).
+      placeholder: "Hablante nativo de Puerto Cabezas / Diccionario Miskito-Español de ..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: audio
+    attributes:
+      label: ¿Podés aportar audio?
+      description: |
+        En las cuatro lenguas indígenas, Piko **no usa síntesis de voz** — está
+        bloqueado a propósito, para no enseñar una pronunciación inventada. La
+        única forma de que estas palabras suenen es que alguien las grabe.
+        Una grabación con el teléfono es más que suficiente.
+      options:
+        - "Sí, puedo grabar audio"
+        - "Sí, ya tengo grabaciones hechas"
+        - "No, sólo el texto"
+    validations:
+      required: true
+
+  - type: textarea
+    id: notas
+    attributes:
+      label: Algo más que debamos saber
+      description: "Variantes regionales, palabras que se usan sólo con ciertas personas, algo que se traduzca mal al español, lo que sea."
+    validations:
+      required: false

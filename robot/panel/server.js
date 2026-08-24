@@ -89,8 +89,25 @@ let nombrePuerto = null;
 const FABRICANTES = [/arduino/i, /wch/i, /ftdi/i, /silicon labs/i, /prolific/i];
 const VENDEDORES = ['2341', '1a86', '0403', '10c4', '067b', '2a03'];
 
+/* Enumerar puertos serie depende del sistema: en Linux se apoya en `udevadm`,
+   que no siempre está (un contenedor pelado, CI). Si falla, el puente tiene que
+   seguir sirviendo el panel y la cara igual — sólo se queda sin Arduino. */
+async function listarPuertos() {
+  try {
+    return await SerialPort.list();
+  } catch (err) {
+    if (!avisadoDeListado) {
+      console.warn(`No se pudieron enumerar los puertos serie: ${err.message}`);
+      avisadoDeListado = true;
+    }
+    return [];
+  }
+}
+
+let avisadoDeListado = false;
+
 async function buscarPuerto() {
-  const lista = await SerialPort.list();
+  const lista = await listarPuertos();
   if (PUERTO_FIJO) {
     const hallado = lista.find((p) => p.path.toUpperCase() === PUERTO_FIJO.toUpperCase());
     return hallado ? hallado.path : PUERTO_FIJO;
@@ -429,7 +446,7 @@ wss.on('connection', (socket) => {
 // ═════════════════════════════════════════════════════════════════════════
 
 if (process.argv.includes('--listar')) {
-  const lista = await SerialPort.list();
+  const lista = await listarPuertos();
   if (lista.length === 0) console.log('No hay puertos serie.');
   for (const p of lista) {
     console.log(`${p.path}\t${p.manufacturer || 'sin fabricante'}\tvid=${p.vendorId || '-'}`);
