@@ -38,6 +38,7 @@
 <a href="#cómo-entendimos-el-reto">Cómo entendimos el reto</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#nuestra-solución-dos-rutas-un-mismo-destino">Nuestra solución</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#cómo-funciona">Cómo funciona</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+<a href="#el-mapa-del-repositorio">El mapa del repositorio</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#identidad">Identidad</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#roadmap">Roadmap</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#contribuir">Contribuir</a>&nbsp;&nbsp;·&nbsp;&nbsp;
@@ -157,6 +158,78 @@ Dos caminos distintos. **El mismo destino: que estas lenguas sigan vivas.**
 **Evaluación de pronunciación:** cada grupo manda a un representante a hablar con el robot, que corre un modelo de reconocimiento de voz liviano en la computadora del aula. No intenta entender oraciones completas — detecta si el estudiante dijo las palabras clave esperadas y con qué claridad, que es justo lo necesario para dar una retroalimentación útil sin exigir un modelo pesado.
 
 **Configuración y conexión:** el profesor arma la sesión desde la app y se la envía al robot por la misma red WiFi del hotspot. El robot guarda esa configuración, así que si la conexión se corta a mitad de clase, sigue funcionando con los últimos datos que recibió.
+
+<br>
+
+<img src="readme/divider.svg" width="100%" alt=""/>
+
+<br>
+
+<h2 id="el-mapa-del-repositorio">
+<img src="https://api.iconify.design/mdi/map-marker-path.svg?color=%232F6B4F" width="26" height="26" valign="middle"/>
+&nbsp;El mapa del repositorio
+</h2>
+
+Piko no es una sola cosa — son tres puertas que salen del mismo tronco: la
+app, el robot y el sitio. Así se abre cada una por dentro:
+
+```mermaid
+flowchart TD
+    RAIZ(("🐦<br/>Piko"))
+
+    RAIZ --> APP["📱 app/<br/><sub>la aplicación</sub>"]
+    RAIZ --> ROBOT["🤖 robot/<br/><sub>el acompañante de aula</sub>"]
+    RAIZ --> WEB["🌐 web/<br/><sub>piko.mugiware.com</sub>"]
+    RAIZ --> DOCS["📖 docs/<br/><sub>por qué se construyó así</sub>"]
+
+    APP --> CORE["🧠 src/core/<br/><sub>protocolo · sync · progreso</sub>"]
+    APP --> RESTO["src/net · src/db · src/ui<br/><sub>red, datos e interfaz</sub>"]
+    APP --> CONTENT["🗣️ content/<br/><sub>las lenguas, en JSON</sub>"]
+    APP --> TESTS["✅ tests/ · tools/<br/><sub>121 pruebas · simulador de aula</sub>"]
+
+    ROBOT --> FIRM["⚙️ firmware/<br/><sub>Arduino: motores y luces</sub>"]
+    ROBOT --> PANEL["🌉 panel/<br/><sub>puente Node ↔ navegador</sub>"]
+
+    classDef raiz fill:#0F5D3D,stroke:#0A4530,color:#fff,font-weight:bold
+    classDef puerta fill:#2F6B4F,stroke:#1F4E5F,color:#fff
+    classDef nucleo fill:#E7B84C,stroke:#B9860F,color:#16241D,font-weight:bold
+    classDef hoja fill:#F7F0E4,stroke:#97C137,color:#16241D
+
+    class RAIZ raiz
+    class APP,ROBOT,WEB,DOCS puerta
+    class CORE nucleo
+    class RESTO,CONTENT,TESTS,FIRM,PANEL hoja
+```
+
+<p align="center"><sub>🧠 <code>src/core/</code> es el único cuarto con una regla de la casa: no entra ni
+un import de React Native. Por eso el protocolo del aula, la sincronización y
+el motor de progreso se prueban en Node en dos segundos, y por eso el
+simulador juega una clase entera sin un solo teléfono.</sub></p>
+
+<br>
+
+**¿Qué edito si quiero…?**
+
+| Quiero… | Voy a… |
+|---|---|
+| 🗣️ Corregir o agregar una palabra de una lengua | `app/content/packs/<idioma>/` — o, sin tocar código, el [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml) |
+| 🔌 Tocar el protocolo del aula o la sincronización | `app/src/core/` — recordá: nada de React Native ahí adentro |
+| 🎨 Cambiar una pantalla, un ejercicio o el diseño | `app/src/ui/` · `app/src/features/` |
+| 🤖 Arreglar algo del robot físico | `robot/firmware/` (Arduino) · `robot/panel/` (el puente) |
+| 🌐 Editar el sitio piko.mugiware.com | `web/index.html` |
+| 📖 Entender por qué se decidió algo así | `docs/decisiones.md` |
+
+<div align="center">
+
+| Documento | Para qué |
+|---|---|
+| [docs/arquitectura.md](docs/arquitectura.md) | Cómo está organizado el código, el protocolo del aula y la sincronización |
+| [docs/tecnologias.md](docs/tecnologias.md) | Qué se usa y por qué se eligió sobre las alternativas |
+| [docs/decisiones.md](docs/decisiones.md) | Registro de decisiones, con su contexto y sus consecuencias |
+| [docs/desarrollo.md](docs/desarrollo.md) | Correr, probar y compilar el APK |
+| [app/content/README.md](app/content/README.md) | Formato de los paquetes de contenido |
+
+</div>
 
 <br>
 
