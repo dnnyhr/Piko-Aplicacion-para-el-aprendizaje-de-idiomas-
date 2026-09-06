@@ -349,7 +349,7 @@ justamente el punto.
 </td>
 <td align="center" valign="top" width="20%">
 <img src="readme/perfilErlin.png" width="90" height="90"/><br>
-<b>Erling<br>Arauz</b><br>
+<b>Erlin<br>Arauz</b><br>
 <sub>Diseño</sub>
 </td>
 <td align="center" valign="top" width="20%">
