@@ -25,8 +25,11 @@ cara se entere.
 |---|---|
 | 4× WS2812 · pin 28 | **anda** |
 | 28BYJ-48 · PORT2 | **anda** — gira; falta confirmar que 4096 sea vuelta exacta |
-| Panel, puente y reparto de roles | **anda** — 20 comprobaciones automáticas |
+| Panel, puente y reparto de roles | **anda** — 44 comprobaciones automáticas |
+| Voz de Google y ejercicio simulado | **anda** — probado de punta a punta en el navegador, sin placa |
 | Cara en el navegador | **anda** — las ocho expresiones, con la mirada animada |
+| La boca sigue a la voz | **anda** — probada con una onda de sílabas medidas |
+| Que no se apague la pantalla | **a medias** — probado el respaldo de video; el candado, no |
 | Servo · pin 29 | sin probar |
 | Segunda tira de LEDs · pin 27 | sin probar |
 | Todo junto, con el robot armado | sin probar |
@@ -166,14 +169,152 @@ sistema la abandona sola en cuanto aparece una notificación o el teclado. Para
 una cara que tiene que estar toda la clase, la aplicación instalada es lo único
 que aguanta. El botón ⛶ de la esquina queda por si hace falta volver.
 
-Y el bloqueo de «que no se apague la pantalla» sólo existe en conexiones
-seguras, así que por `http://` en la red local no está disponible: poné el
-tiempo de espera de pantalla en «nunca» en los ajustes de Android.
+### Que la pantalla no se apague
+
+El ajuste de Android no pasa de unos minutos y la cara tiene que estar toda la
+clase. De eso se ocupa `public/vigilia.js`, con dos recursos, en orden:
+
+**El candado de pantalla** (`navigator.wakeLock`), que es la forma correcta.
+Tiene una condición dura: **sólo funciona en conexión segura** — por el túnel
+sí, por `http://192.168.x.x` en la red local no.
+
+**El truco de YouTube**, para cuando el candado no está: mientras haya un video
+reproduciéndose, el sistema no apaga la pantalla. La cara lleva uno de 3×3
+píxeles, negro y mudo, en un rincón. El cuadro sale de un canvas y no de un
+archivo, así que no hay ningún binario en el repositorio por nueve píxeles
+negros.
+
+Lo que hace que esto aguante una clase y no unos minutos no es pedirlo, es
+insistir. El sistema suelta el candado solo —al pasar a segundo plano, al salir
+de pantalla completa, al bajar la batería— y no lo dice por ningún lado salvo el
+evento `release`. Un `request()` suelto al arrancar se pierde en el primer
+descuido y nadie se entera hasta que la pantalla ya está negra. Por eso se vuelve
+a pedir ante cada cosa que puede haberlo soltado, y además se revisa cada 20
+segundos por si se soltó callado.
+
+Si aun así no lo consigue, la cara lo dice en la barra de abajo y el panel lo
+escribe en su consola. Dos respaldos que no dependen del navegador: dejar el
+teléfono del robot **cargando** con «Permanecer activo» encendido en las
+opciones de desarrollador, que es una garantía del sistema y no una promesa del
+navegador; o poner el tiempo de espera de pantalla en «nunca».
+
+El panel de control lleva el mismo candado, sin el respaldo de video: esa página
+se está tocando todo el tiempo y ningún teléfono se duerme mientras le aprietan
+botones. La que se queda una hora sin que nadie la toque es la cara. Que el
+teléfono del maestro no se duerma igual importa: si se apaga se corta el latido
+y salta el hombre muerto, que frena a Piko en mitad de la clase.
 
 ## Los sonidos
 
 En `public/sonidos/`, y los reproduce **el teléfono del robot** — el sonido
 tiene que salir de donde está la cara. Sirven `.mp3` `.ogg` `.wav` `.m4a`.
+
+**La boca se mueve con lo que suena.** El audio pasa por un `AnalyserNode` y el
+pico se abre según la energía de la onda en ese instante, cuadro a cuadro. La
+alternativa fácil —abrir y cerrar en bucle mientras dure el sonido— se ve mal
+por un motivo concreto: la boca sigue moviéndose en las pausas entre frases y se
+queda quieta en medio de una palabra larga. Lo que el ojo lee como hablar es que
+se abra en las sílabas y se cierre en los silencios.
+
+Tres detalles que hacen la diferencia entre que se vea hablando y que se vea
+masticando:
+
+- **Se mide contra el pico reciente, no contra un umbral fijo.** Con un número
+  fijo, un audio grabado bajo apenas movería el pico y uno fuerte lo dejaría
+  abierto de punta a punta.
+- **Abre rápido y cierra despacio.** Al revés, la boca alcanza a cerrarse del
+  todo entre sílaba y sílaba, que es justo cuando tendría que seguir abierta.
+- **Mientras habla, la transición de la boca baja de 300 ms a 60.** Con los 300
+  de la mirada, la boca llegaría siempre media sílaba tarde.
+
+El `AudioContext` nace suspendido y hay que despertarlo con un gesto, así que se
+arma en el toque del velo. Ojo si se toca esto: desde que se llama a
+`createMediaElementSource`, el `<audio>` deja de sonar por su cuenta y sólo se
+escucha lo que esté conectado a la salida del grafo. Si un navegador no tiene
+Web Audio, queda el títere —abrir y cerrar a ritmo fijo—, que se nota falso pero
+menos que una cara inmóvil mientras suena una voz.
+
+La secuencia **Hablar** del panel sigue existiendo y es otra cosa: mueve la boca
+sin audio, para cuando Piko tiene que parecer que dice algo y no hay nada que
+reproducir.
+
+---
+
+## La voz
+
+Piko habla con la voz del traductor de Google, y el panel tiene una sección
+—**Lo que dice**— para escribirle cualquier frase. Suena en el teléfono del
+robot, como los sonidos, y con la misma boca: el pico se abre con la energía de
+la onda.
+
+El audio no lo baja el teléfono por su cuenta: se lo pide al puente, que lo trae
+de Google, lo guarda y lo sirve desde `/voz?q=...&idioma=es`. Da esa vuelta por
+tres motivos y ninguno es rodeo:
+
+- **La boca.** Para leer la onda hay que meter el audio en un `AnalyserNode`, y
+  un archivo de otro dominio sin permiso de CORS —el de Google no lo da— entra
+  al grafo como silencio: se escucharía la voz y la cara quedaría quieta.
+- **La caché.** En una clase, «Di esta palabra» suena cuarenta veces. Guardada
+  en el puente, treinta y nueve de esas veces no salen a internet.
+- **El largo.** Google corta cerca de los 200 caracteres. Partir la frase y
+  pegar los pedazos se hace una vez acá y no en cada teléfono.
+
+**Sin internet, la cara cae a la voz del propio teléfono** (`speechSynthesis`).
+Suena peor, pero un robot mudo en el aula sin señal es exactamente lo que no
+puede pasar. Ahí la boca va con el títere: el sistema no presta la onda.
+
+Las lenguas originarias no están en Google. Escritas como suenan y leídas con la
+voz en español quedan más cerca que con cualquier otra, así que el desplegable
+arranca en español y ahí se queda para miskitu, mayangna y rama.
+
+## El ejercicio simulado
+
+La primera actividad completa, manejada entera desde el panel:
+
+```
+  palabra en la pantalla   ──►  «Di esta palabra»  ──►  el chico responde
+                                                              │
+                        el maestro aprieta una de dos teclas ◄┘
+                                     │
+              ✓ ─────────────────────┴───────────────────── ↻
+       festejo, luces y elogio                 «casi, se dice…» y de nuevo
+```
+
+La palabra va en **una franja abajo, y la cara no se toca**: sigue entera y a
+pantalla completa. Correrla a un costado para hacerle lugar al texto se probó y
+se ve mal — la cara es el robot, y achicada deja de serlo.
+
+La franja es corta a propósito, un sexto de la pantalla, y queda por debajo del
+pico, que es lo que se mueve cuando Piko habla. Eso es lo que hace que la palabra
+se lea como algo que él está diciendo y no como un cartel: se le ve el pico
+moverse mientras suena. En una pantalla angosta las tres partes se apilan, que
+ahí sobra alto: parado, el dibujo es tan ancho que deja negro arriba y abajo y la
+franja se come el de abajo sin tapar nada.
+
+**Lo que el robot no hace es escuchar.** Que decida solo si el chico pronunció
+bien es otro problema —micrófono, reconocimiento, una lengua que ningún modelo
+conoce— y no hace falta resolverlo para ver si el ejercicio funciona. Acá el que
+escucha es el maestro y aprieta una de dos teclas; todo lo demás pasa igual que
+si lo hubiera decidido el robot. El día que haya reconocimiento, lo único que
+cambia es de dónde sale ese sí o ese no.
+
+Cuando el chico no acierta, **Piko no dice «mal» ni «incorrecto»**: reconoce el
+intento y vuelve a mostrar cómo es. La regla y las frases salen de
+[`app/src/ui/piko/frases.ts`](../app/src/ui/piko/frases.ts), para que el robot y
+la aplicación hablen igual. El que está aprendiendo la lengua de su comunidad no
+necesita que un robot le diga que la habla mal.
+
+Dos detalles del andamiaje:
+
+**La cara avisa cuando terminó de hablar.** El ejercicio encadena consigna,
+palabra y festejo, y si el panel calculara la duración con una cuenta de
+caracteres, Piko se pisaría a sí mismo cada vez que Google tarde en contestar.
+El único que sabe cuándo dejó de sonar es el teléfono, así que lo dice él —con
+un plazo máximo por si no hay ninguna cara conectada.
+
+**Se corta de verdad.** Cada paso comprueba su propio testigo antes de seguir,
+igual que las secuencias, así que la parada de emergencia y el botón «Cortar» lo
+detienen en el acto y no una frase más tarde.
 
 ---
 

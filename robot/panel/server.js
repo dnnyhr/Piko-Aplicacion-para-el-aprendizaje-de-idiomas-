@@ -8,6 +8,10 @@
  *   El teléfono del robot, que abre /cara — es la cara de Piko.
  *   El teléfono del maestro, que abre / — manda las órdenes.
  *
+ * Y además le pone voz a Piko: `/voz` trae del traductor de Google el audio
+ * de cualquier frase, lo guarda, y la cara lo reproduce por el mismo camino
+ * que ya le mueve la boca.
+ *
  * Todo pasa por acá. El control nunca le habla al teléfono de la cara: le
  * habla al puente, y el puente reparte. Así se puede tener dos maestros
  * mirando, o ninguno, sin que la cara se entere.
@@ -78,6 +82,7 @@ const ORDENES = new RegExp(
   `|SV ${N_0_180}` +
   `|PA -?\\d{1,6}( ${RPM_1_15})?` +
   `|LED ${INDICE} ${N_0_255} ${N_0_255} ${N_0_255}` +
+  `|TIRA (-1|[01]) ${N_0_255} ${N_0_255} ${N_0_255}` +
   `|BRILLO ${N_0_255})$`
 );
 
@@ -281,6 +286,145 @@ async function refrescarCatalogo() {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
+//  LA VOZ
+// ═════════════════════════════════════════════════════════════════════════
+
+/**
+ * Piko habla con la voz del traductor de Google, y el audio pasa por acá en
+ * vez de bajarlo el teléfono por su cuenta. Tres motivos, y ninguno es rodeo:
+ *
+ *   La boca. El pico se abre con la energía de la onda, y para leerla hay que
+ *   meter el audio en un `AnalyserNode`. Un archivo traído de otro dominio sin
+ *   permiso de CORS —y el de Google no lo da— entra al grafo como silencio: se
+ *   escucharía la voz y la boca quedaría quieta. Servido desde el mismo origen
+ *   que la página, el problema no existe.
+ *
+ *   La caché. En una clase, «Di esta palabra» suena cuarenta veces. Guardada
+ *   acá, treinta y nueve de esas veces no salen a internet.
+ *
+ *   El largo. Google corta cerca de los 200 caracteres. Partir la frase y
+ *   pegar los pedazos se hace una vez acá y no en cada teléfono. Los MP3 se
+ *   pegan uno detrás del otro sin ceremonia: son cuadros independientes.
+ */
+const VOZ_GOOGLE = 'https://translate.google.com/translate_tts';
+
+/* Lo que entra por acá viene de internet igual que las órdenes del serie, así
+   que se recorta antes de tocarlo. */
+const VOZ_LARGO = 300;
+const TARJETA_LARGO = 64;
+const TARJETA_SUB_LARGO = 120;
+
+/* Se parte en 180 y no en el límite exacto para no quedar pegado al borde: el
+   corte de Google cuenta bytes y no letras, y una tilde ocupa dos. */
+const VOZ_TROZO = 180;
+
+const IDIOMA = /^[a-z]{2,3}(-[A-Za-z]{2,4})?$/;
+
+const ESTADOS_TARJETA = ['neutro', 'escuchando', 'bien', 'mal'];
+
+/** Deja el texto en una sola línea, sin caracteres de control y recortado. */
+function limpiarTexto(texto, largo) {
+  return String(texto ?? '')
+    .replace(/[\u0000-\u001F\u007F]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, largo);
+}
+
+/** Parte la frase en pedazos que a Google le entren, cortando entre palabras. */
+function partirFrase(texto) {
+  if (texto.length <= VOZ_TROZO) return [texto];
+  const pedazos = [];
+  let queda = texto;
+  while (queda.length > VOZ_TROZO) {
+    const tope = queda.lastIndexOf(' ', VOZ_TROZO);
+    // Una palabra sola más larga que el trozo entero se corta a lo bruto: es
+    // eso o no decir nada.
+    const corte = tope > 40 ? tope : VOZ_TROZO;
+    pedazos.push(queda.slice(0, corte).trim());
+    queda = queda.slice(corte).trim();
+  }
+  if (queda) pedazos.push(queda);
+  return pedazos;
+}
+
+/* Las frases ya pedidas. Es un Map y no un objeto porque el orden de inserción
+   decide cuál se tira cuando se llena: la más vieja sin usar. */
+const CACHE_VOZ = new Map();
+const CACHE_MAXIMO = 60;
+
+async function pedirleAGoogle(texto, idioma) {
+  const url = `${VOZ_GOOGLE}?ie=UTF-8&client=tw-ob&ttsspeed=1` +
+              `&tl=${encodeURIComponent(idioma)}&textlen=${texto.length}` +
+              `&q=${encodeURIComponent(texto)}`;
+
+  /* Sin estas dos cabeceras Google contesta 403. Es el mismo pedido que hace
+     el botón del altavoz del traductor. */
+  const r = await fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+                    '(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+      Referer: 'https://translate.google.com/',
+    },
+  });
+  if (!r.ok) throw new Error(`Google contestó ${r.status}`);
+  return Buffer.from(await r.arrayBuffer());
+}
+
+async function sintetizar(texto, idioma) {
+  const clave = `${idioma}|${texto}`;
+  const guardado = CACHE_VOZ.get(clave);
+  if (guardado) {
+    CACHE_VOZ.delete(clave);          // vuelve a ser la más nueva
+    CACHE_VOZ.set(clave, guardado);
+    return guardado;
+  }
+
+  const pedazos = [];
+  for (const parte of partirFrase(texto)) pedazos.push(await pedirleAGoogle(parte, idioma));
+  const mp3 = Buffer.concat(pedazos);
+
+  CACHE_VOZ.set(clave, mp3);
+  if (CACHE_VOZ.size > CACHE_MAXIMO) CACHE_VOZ.delete(CACHE_VOZ.keys().next().value);
+  return mp3;
+}
+
+async function atenderVoz(url, respuesta) {
+  const texto = limpiarTexto(url.searchParams.get('q'), VOZ_LARGO);
+  const idioma = url.searchParams.get('idioma') || 'es';
+
+  if (!texto || !IDIOMA.test(idioma)) {
+    respuesta.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' })
+             .end('falta el texto, o el idioma no sirve');
+    return;
+  }
+
+  try {
+    const mp3 = await sintetizar(texto, idioma);
+    respuesta.writeHead(200, {
+      'Content-Type': 'audio/mpeg',
+      'Content-Length': mp3.length,
+      // Que el teléfono la guarde también: la misma consigna se repite toda la
+      // clase y por el túnel cada viaje se nota.
+      'Cache-Control': 'public, max-age=86400',
+    });
+    respuesta.end(mp3);
+  } catch (e) {
+    /* Sin internet esto falla, y falla justo en el aula rural que es donde
+       importa. Se contesta con un error claro y la cara cae sola a la voz del
+       propio navegador, que no necesita red. */
+    console.error(`Voz: ${e.message}`);
+    respuesta.writeHead(502, { 'Content-Type': 'text/plain; charset=utf-8' })
+             .end(`no se pudo traer la voz: ${e.message}`);
+  }
+}
+
+/** Lo último que se mandó a la pantalla del ejercicio, con el mismo criterio
+    que la expresión: una cara que recarga tiene que volver a donde estaba y no
+    quedarse mostrando una palabra vieja ni ninguna. */
+let tarjetaActual = null;
+
+// ═════════════════════════════════════════════════════════════════════════
 //  HTTP + WEBSOCKET
 // ═════════════════════════════════════════════════════════════════════════
 
@@ -308,6 +452,13 @@ const TIPOS = {
 
 const servidor = http.createServer((pedido, respuesta) => {
   const url = new URL(pedido.url, 'http://local');
+
+  /* La voz no es un archivo de la carpeta: se trae de Google y se guarda. Va
+     antes que nada para que no la busque el servidor de archivos. */
+  if (url.pathname === '/voz') {
+    atenderVoz(url, respuesta);
+    return;
+  }
 
   let relativo;
   if (url.pathname === '/') relativo = 'index.html';
@@ -416,6 +567,48 @@ wss.on('connection', (socket) => {
       return;
     }
 
+    /* Lo que Piko tiene que decir. El puente no baja el audio para mandárselo:
+       le pasa a la cara la dirección de la que colgarlo, y la cara la pide
+       cuando le toca sonar. Así la voz entra por el mismo `<audio>` que ya
+       sabe mover la boca, sin un camino nuevo que mantener. */
+    if (mensaje.t === 'decir' && typeof mensaje.texto === 'string') {
+      const texto = limpiarTexto(mensaje.texto, VOZ_LARGO);
+      if (!texto) return;
+      const idioma = IDIOMA.test(mensaje.idioma || '') ? mensaje.idioma : 'es';
+      const id = limpiarTexto(mensaje.id, 40) || null;
+      const donde = `/voz?idioma=${encodeURIComponent(idioma)}&q=${encodeURIComponent(texto)}`;
+      difundir({ t: 'voz', id, url: donde, texto, idioma }, 'cara');
+      difundir({ t: 'serie', dir: 'out', linea: `🗣 ${texto}` }, 'control');
+      return;
+    }
+
+    /* La cara avisa cuando terminó de hablar. Sin esto, el ejercicio del panel
+       tendría que adivinar cuánto dura cada frase, y adivinaría mal: entre que
+       la manda y que suena está lo que tarde Google en contestar, que por el
+       internet de una escuela puede ser un segundo o cinco. */
+    if (mensaje.t === 'vozfin') {
+      difundir({ t: 'vozfin', id: limpiarTexto(mensaje.id, 40) || null }, 'control');
+      return;
+    }
+
+    /* La tarjeta del ejercicio: la palabra que aparece en la pantalla del
+       robot, al lado de la cara. Mandar `null` la saca. */
+    if (mensaje.t === 'tarjeta') {
+      const t = mensaje.tarjeta;
+      const texto = t && typeof t.texto === 'string' ? limpiarTexto(t.texto, TARJETA_LARGO) : '';
+      tarjetaActual = texto
+        ? {
+            texto,
+            sub: limpiarTexto(t.sub, TARJETA_SUB_LARGO),
+            estado: ESTADOS_TARJETA.includes(t.estado) ? t.estado : 'neutro',
+          }
+        : null;
+      // A todos y no sólo a la cara: un segundo panel mirando tiene que ver en
+      // qué paso va el ejercicio, igual que ve la expresión puesta.
+      difundir({ t: 'tarjeta', tarjeta: tarjetaActual });
+      return;
+    }
+
     if (mensaje.t === 'callar') {
       difundir({ t: 'callar' }, 'cara');
     }
@@ -438,6 +631,7 @@ wss.on('connection', (socket) => {
       caras: catalogo.caras,
       sonidos: catalogo.sonidos,
       expresion: expresionActual,
+      tarjeta: tarjetaActual,
     }));
     avisarEstado();
   });

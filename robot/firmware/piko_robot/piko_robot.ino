@@ -25,6 +25,7 @@
  *     PA <pasos> <rpm>        motor a pasos: gira el teléfono. Relativo, con signo
  *     PARA                    frena todo, ya
  *     LED <i|-1> <r> <g> <b>  un píxel de 0 a 7, o todos con -1
+ *     TIRA <0|1|-1> <r> <g> <b>  una tira entera: A, B, o las dos
  *     BRILLO <0..255>         brillo global de las dos tiras
  *     PING                    prueba de vida
  *
@@ -73,6 +74,55 @@ const uint8_t PIN_TIRA_A = 27;
 const uint8_t PIN_TIRA_B = 28;
 const uint8_t PIN_SERVO  = 29;
 
+// ── El servo, según cómo haya quedado montado ────────────────────────────
+
+/**
+ * 1 si el servo quedó al revés: las alas suben cuando deberían bajar.
+ *
+ * Se arregla acá y no desarmando porque el eje del servo tiene dientes: el
+ * brazo sólo entra en unas pocas posiciones, y casi nunca en la que uno
+ * necesita. Invertir el ángulo cuesta una resta y no toca el mecanismo.
+ */
+#define SERVO_INVERTIDO 1
+
+/**
+ * Hasta dónde puede moverse, en grados de los que pide el panel.
+ *
+ * El rango de 0 a 180 es del servo, no del robot: una vez montadas las alas,
+ * la pieza choca mucho antes. Un servo trabado contra un tope no falla
+ * ruidosamente — sigue empujando, tira hasta 700 mA y se calienta hasta
+ * romperse. Achicar estos dos números es lo que lo impide.
+ */
+const uint8_t SERVO_MIN = 0;
+const uint8_t SERVO_MAX = 101;
+
+/**
+ * La ventana de pulso, en microsegundos. Esto es lo que decide cuánto gira de
+ * tope a tope.
+ *
+ * La biblioteca de Arduino usa 544 a 2400 por defecto, que es conservador: casi
+ * todos estos servos llegan más lejos. Ensanchar la ventana da unos grados
+ * extra en cada extremo sin cambiar nada del cableado ni del panel — el ángulo
+ * 0 sigue siendo 0, sólo que ahora empuja más.
+ *
+ * **Hasta acá y no más.** Por debajo de 500 o por encima de 2500 se le está
+ * pidiendo al servo que pase su propio tope interno, y ahí no falla
+ * ruidosamente: zumba, sigue empujando, tira hasta 700 mA y se calienta hasta
+ * romperse. Si en el extremo zumba y no se mueve, achicá estos números.
+ */
+const uint16_t SERVO_PULSO_MIN = 500;
+const uint16_t SERVO_PULSO_MAX = 2500;
+
+/** Traduce lo que pide el panel a lo que hay que escribirle al servo. */
+static uint8_t anguloReal(uint8_t pedido) {
+  const uint8_t acotado = constrain(pedido, SERVO_MIN, SERVO_MAX);
+#if SERVO_INVERTIDO
+  return 180 - acotado;
+#else
+  return acotado;
+#endif
+}
+
 // ═════════════════════════════════════════════════════════════════════════
 //  CONSTANTES
 // ═════════════════════════════════════════════════════════════════════════
@@ -89,11 +139,49 @@ const uint8_t LEDS_TOTAL    = LEDS_POR_TIRA * 2;
 const unsigned long MS_HOMBRE_MUERTO = 500;
 const unsigned long MS_TELEMETRIA    = 250;
 
+/**
+ * Cómo se energizan las bobinas. Esto decide cuánta fuerza tiene el motor.
+ *
+ *   1 = pasos completos. Siempre dos bobinas a la vez, así que da el torque
+ *       máximo del motor. 2048 pasos por vuelta.
+ *   0 = medios pasos. Alterna una bobina y dos, lo que duplica la resolución
+ *       —4096 por vuelta— y suaviza el movimiento, pero en los pasos de una
+ *       sola bobina tiene bastante menos fuerza.
+ *
+ * Está en medios pasos porque así es como quedó funcionando en la placa, con
+ * el movimiento más suave — y suavidad importa cuando lo que gira es la cara.
+ *
+ * El interruptor queda por si algún día el motor zumba sin avanzar con carga:
+ * el 28BYJ-48 tiene apenas unos 34 mN·m, y pasar a pasos completos es la única
+ * forma de ganarle fuerza sin cambiar de motor. Ojo que también cambia la
+ * cuenta —2048 por vuelta en vez de 4096— y hay que ajustar el panel.
+ */
+#define PASO_COMPLETO 0
+
+#if PASO_COMPLETO
+const uint16_t PASOS_POR_VUELTA = 2048;
+#else
+const uint16_t PASOS_POR_VUELTA = 4096;
+#endif
+
+/**
+ * Dejar las bobinas energizadas al terminar el giro.
+ *
+ * En 0 el motor queda suelto: no consume ni se calienta, pero tampoco sostiene
+ * la posición. Si el teléfono no está centrado sobre el eje, su propio peso lo
+ * va a hacer girar solo — y ahí hay que poner 1, a cambio de unos 250 mA
+ * permanentes y de que el motor se ponga tibio.
+ *
+ * Antes de recurrir a esto conviene equilibrar el montaje: que el centro de
+ * masa del teléfono caiga sobre el eje resuelve el problema sin gastar
+ * corriente ni calentar nada.
+ */
+#define SOSTENER_PASOS 0
+
 /* El 28BYJ-48 con su reductora no pasa de unas 15 rpm en el eje de salida.
    Pedirle más no lo hace girar más rápido: lo hace zumbar quieto y perder
-   pasos. Y son 4096 medios pasos por vuelta, no 2048 — ése es el número en
-   pasos enteros, y acá se mueve en medios. */
-const uint16_t PASOS_POR_VUELTA = 4096;
+   pasos. Y con carga conviene ir más lento todavía — un motor a pasos tiene
+   más fuerza cuanto más despacio va. */
 const uint16_t RPM_MAX = 15;
 
 // ═════════════════════════════════════════════════════════════════════════
@@ -129,17 +217,24 @@ static void apagarBobinas() {
 }
 
 /**
- * Medios pasos. Cada renglón dice qué bobinas quedan energizadas.
+ * La secuencia de bobinas. Cada renglón dice cuáles quedan energizadas.
  *
- * Media paso en vez de paso entero porque el 28BYJ-48 tiene vueltas de sobra
- * para permitírselo: se gana suavidad y algo de torque a cambio del doble de
- * pulsos, que a estas velocidades no cuesta nada. Y suavidad importa: esto
- * mueve el teléfono que hace de cara, y un tirón se ve.
+ * En pasos completos son cuatro estados y **los cuatro tienen dos bobinas
+ * prendidas**, que es de donde sale el torque. En medios pasos son ocho y se
+ * intercalan estados de una sola bobina: más resolución y más suavidad, pero
+ * en esos estados la fuerza cae bastante — y con un teléfono colgado del eje,
+ * ahí es donde el motor zumba sin llegar a girar.
  */
-const uint8_t SECUENCIA[8] = {
+#if PASO_COMPLETO
+const uint8_t SECUENCIA[] = { 0b1100, 0b0110, 0b0011, 0b1001 };
+#else
+const uint8_t SECUENCIA[] = {
   0b1000, 0b1100, 0b0100, 0b0110,
   0b0010, 0b0011, 0b0001, 0b1001
 };
+#endif
+
+const uint8_t FASES = sizeof(SECUENCIA);
 
 static void pararTodo() {
   pasosRestantes = 0;
@@ -160,13 +255,21 @@ static void atenderPaso() {
   if (ahora - ultimoPasoUs < intervaloPasoUs) return;
   ultimoPasoUs = ahora;
 
-  faseULN = (faseULN + (sentidoPaso > 0 ? 1 : 7)) & 7;
+  /* Sumar FASES−1 es restar 1 en módulo FASES. Las dos direcciones usan la
+     misma aritmética, así que el motor no puede ser más fuerte hacia un lado
+     que hacia el otro: si eso pasa, la causa es mecánica. */
+  faseULN = (faseULN + (sentidoPaso > 0 ? 1 : FASES - 1)) % FASES;
   for (uint8_t i = 0; i < 4; i++)
     digitalWrite(PIN_ULN[i], (SECUENCIA[faseULN] >> (3 - i)) & 1);
 
-  /* Al terminar se sueltan las bobinas: un motor a pasos energizado consume y
-     calienta aunque esté quieto, y acá no hace falta que sostenga posición. */
-  if (--pasosRestantes == 0) apagarBobinas();
+  if (--pasosRestantes == 0) {
+#if !SOSTENER_PASOS
+    /* Se sueltan las bobinas: un motor a pasos energizado consume y calienta
+       aunque esté quieto. Con SOSTENER_PASOS en 1 se quedan prendidas para
+       aguantar el peso del teléfono. */
+    apagarBobinas();
+#endif
+  }
 }
 
 // ═════════════════════════════════════════════════════════════════════════
@@ -188,6 +291,27 @@ static void atenderPaso() {
 static void atenderLeds() {
   if (sucioA) { tiraA.show(); sucioA = false; }
   if (sucioB) { tiraB.show(); sucioB = false; }
+}
+
+/**
+ * Pintar una tira entera de un saque.
+ *
+ * Existe además de `LED` porque los efectos del panel cambian módulos
+ * completos muchas veces por segundo, y hacerlo de a un píxel serían cuatro
+ * órdenes en vez de una — por el túnel, cuatro veces el tráfico y cuatro veces
+ * el ruido en la consola.
+ *
+ *   0 = tira A     1 = tira B     -1 = las dos
+ */
+static void pintarTira(int8_t cual, uint8_t r, uint8_t g, uint8_t b) {
+  if (cual <= 0) {
+    for (uint8_t k = 0; k < LEDS_POR_TIRA; k++) tiraA.setPixelColor(k, tiraA.Color(r, g, b));
+    sucioA = true;
+  }
+  if (cual != 0) {
+    for (uint8_t k = 0; k < LEDS_POR_TIRA; k++) tiraB.setPixelColor(k, tiraB.Color(r, g, b));
+    sucioB = true;
+  }
 }
 
 static void pintarLed(int16_t i, uint8_t r, uint8_t g, uint8_t b) {
@@ -240,8 +364,11 @@ static void ejecutar(char* l) {
   if (!strcmp(cmd, "SV")) {
     long a;
     if (!siguienteEntero(a) || a < 0 || a > 180) { err("SV fuera de rango"); return; }
+    /* Se guarda lo que pidió el panel, no lo que se le escribió al servo: la
+       telemetría tiene que hablar el mismo idioma que la orden, o depurar
+       desde el otro lado se vuelve un acertijo. */
     anguloServo = (uint8_t)a;
-    servo.write(anguloServo);
+    servo.write(anguloReal(anguloServo));
     ok("SV");
     return;
   }
@@ -267,6 +394,17 @@ static void ejecutar(char* l) {
     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) { err("LED color"); return; }
     pintarLed((int16_t)i, (uint8_t)r, (uint8_t)g, (uint8_t)b);
     ok("LED");
+    return;
+  }
+
+  if (!strcmp(cmd, "TIRA")) {
+    long t, r, g, b;
+    if (!siguienteEntero(t) || !siguienteEntero(r) ||
+        !siguienteEntero(g) || !siguienteEntero(b)) { err("TIRA faltan datos"); return; }
+    if (t < -1 || t > 1) { err("TIRA indice"); return; }
+    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) { err("TIRA color"); return; }
+    pintarTira((int8_t)t, (uint8_t)r, (uint8_t)g, (uint8_t)b);
+    ok("TIRA");
     return;
   }
 
@@ -322,8 +460,8 @@ void setup() {
   apagarBobinas();
 
   Serial.println(F("PASO servo"));
-  servo.attach(PIN_SERVO);
-  servo.write(anguloServo);
+  servo.attach(PIN_SERVO, SERVO_PULSO_MIN, SERVO_PULSO_MAX);
+  servo.write(anguloReal(anguloServo));
 
   Serial.println(F("PASO leds"));
   tiraA.begin();

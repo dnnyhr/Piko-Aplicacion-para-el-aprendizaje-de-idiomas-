@@ -4,118 +4,326 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Piko — control del robot</title>
-<meta name="theme-color" content="#0F5D3D">
+<meta name="theme-color" content="#063D22">
+
+<!-- Fredoka. Se baja de Google como en la landing; sin red cae al tipo del
+     sistema y el panel funciona igual, que es lo que tiene que pasar cuando
+     lo único que hay es el cable USB. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════════════════════════════════
+   Un control de juguete, pensado para un pulgar.
+
+   La idea que ordena todo esto: la página no es un formulario, es la carcasa
+   de un control. El fondo verde oscuro es el plástico, los bloques crema son
+   la placa de botones, y cada botón tiene una sombra sólida abajo que se
+   aplasta al apretarlo. Eso último no es adorno — en un teléfono no hay
+   cursor ni estado «hover», así que el hundido es la única confirmación de
+   que el dedo dio en el blanco.
+
+   Todo mide al menos 56 píxeles de alto. Por debajo de eso, un dedo falla.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 :root{
   --verde-piko:#0F5D3D;
   --verde-hondo:#0A4530;
+  --verde-noche:#063D22;
   --verde-bosque:#197249;
   --verde-pasto:#97C137;
   --cielo:#60C5FA;
   --papel:#F7F0E4;
   --papel-hondo:#ECE1CC;
+  --papel-sombra:#D6C9AF;
   --copete:#E97927;
   --pico:#E8A429;
+  --pico-hondo:#B07715;
   --grafito:#16241D;
   --alarma:#C0392B;
-  --radio:14px;
+  --alarma-hondo:#8E2A1F;
+  --radio:16px;
 }
-*{box-sizing:border-box}
-body{
-  margin:0; background:var(--papel); color:var(--grafito);
-  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
-  font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
-  padding-bottom:2rem;
-}
-h1,h2{margin:0; font-weight:650; letter-spacing:-.01em}
-.wrap{width:min(1080px,94vw); margin-inline:auto}
 
-/* ---------- barra superior ---------- */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--verde-hondo);
+  color:var(--grafito);
+  font-family:Fredoka,"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+  /* Sitio para la parada, que va fija abajo y al alcance del pulgar. */
+  padding-bottom:calc(5.5rem + env(safe-area-inset-bottom, 0px));
+}
+h1,h2{margin:0; font-weight:700; letter-spacing:-.01em}
+
+.wrap{width:min(720px,100%); margin-inline:auto; padding:0 .7rem}
+
+/* ---------- la tira de estado ---------- */
 header{
-  background:var(--verde-piko); color:var(--papel);
-  padding:.9rem 0; position:sticky; top:0; z-index:10;
-  box-shadow:0 4px 14px rgba(10,69,48,.22);
+  background:var(--verde-noche);
+  color:var(--papel);
+  position:sticky; top:0; z-index:20;
+  padding:.55rem 0 .5rem;
+  padding-top:calc(.55rem + env(safe-area-inset-top, 0px));
+  box-shadow:0 3px 0 rgba(0,0,0,.25);
 }
-.barra{display:flex; align-items:center; gap:.7rem; flex-wrap:wrap}
-.barra h1{font-size:1.1rem; margin-right:auto}
+.barra{display:flex; align-items:center; gap:.4rem; flex-wrap:wrap}
+.barra h1{font-size:1rem; margin-right:auto; letter-spacing:.02em}
 .chip{
-  display:inline-flex; align-items:center; gap:.45rem;
-  background:rgba(255,255,255,.13); border-radius:999px;
-  padding:.3rem .8rem; font-size:.8rem; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:.35rem;
+  background:rgba(255,255,255,.1); border-radius:999px;
+  padding:.25rem .6rem; font-size:.72rem; white-space:nowrap;
 }
-.punto{width:9px; height:9px; border-radius:50%; background:var(--alarma); flex:none}
+.punto{width:8px; height:8px; border-radius:50%; background:var(--alarma); flex:none}
 .punto.si{background:var(--verde-pasto)}
 .punto.late{animation:latir .4s ease-out}
-@keyframes latir{from{transform:scale(1.9); opacity:.4} to{transform:scale(1); opacity:1}}
+@keyframes latir{from{transform:scale(2); opacity:.35} to{transform:scale(1); opacity:1}}
 
-/* ---------- parada ---------- */
-.parada{
-  width:100%; margin:1.2rem 0; padding:1.1rem;
-  background:var(--alarma); color:#fff; border:none; border-radius:var(--radio);
-  font-size:1.15rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
-  cursor:pointer; box-shadow:0 6px 0 #8E2A1F;
+/* ---------- los bloques ---------- */
+main{padding-top:.8rem}
+.bloque{
+  background:var(--papel);
+  border-radius:var(--radio);
+  padding:.85rem .85rem 1rem;
+  margin-bottom:.7rem;
+  box-shadow:0 4px 0 rgba(0,0,0,.22);
 }
-.parada:active{transform:translateY(4px); box-shadow:0 2px 0 #8E2A1F}
+.bloque h2{
+  font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--verde-bosque); margin-bottom:.7rem;
+  display:flex; align-items:center; gap:.45rem;
+}
+.bloque h2::before{
+  content:""; width:16px; height:4px; border-radius:2px;
+  background:var(--pico); flex:none;
+}
+.nota{font-size:.74rem; color:#6B7A70; margin:.7rem 0 0; line-height:1.4}
 
-/* ---------- tarjetas ---------- */
-.rejilla{display:grid; grid-template-columns:repeat(auto-fit,minmax(310px,1fr)); gap:1rem}
-.tarjeta{background:#fff; border-radius:var(--radio); padding:1.1rem 1.2rem 1.3rem;
-  box-shadow:0 8px 22px rgba(10,69,48,.08)}
-.tarjeta h2{
-  font-size:.76rem; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--verde-bosque); margin-bottom:.9rem;
-  display:flex; align-items:center; gap:.5rem;
+/* ---------- las teclas ---------- */
+/* La sombra sólida abajo y el hundido al apretar son lo que hace que se
+   sientan como teclas de verdad. En un teléfono es la única confirmación
+   que hay, porque no existe el «hover». */
+button{
+  font:inherit; cursor:pointer; border:none;
+  border-radius:12px;
+  font-weight:650;
+  transition:transform .05s, box-shadow .05s;
+  touch-action:manipulation;
 }
-.tarjeta h2::before{content:""; width:20px; height:3px; border-radius:2px; background:var(--pico); flex:none}
-.tarjeta .nota{font-size:.78rem; color:#6B7A70; margin:.7rem 0 0}
+.tecla{
+  min-height:56px; padding:.7rem .6rem;
+  background:var(--papel-hondo); color:var(--grafito);
+  box-shadow:0 4px 0 var(--papel-sombra);
+  font-size:.95rem;
+}
+.tecla:active{transform:translateY(4px); box-shadow:0 0 0 var(--papel-sombra)}
+.tecla--verde{background:var(--verde-piko); color:var(--papel); box-shadow:0 4px 0 var(--verde-noche)}
+.tecla--verde:active{box-shadow:0 0 0 var(--verde-noche)}
+.tecla--ambar{background:var(--pico); color:var(--grafito); box-shadow:0 4px 0 var(--pico-hondo)}
+.tecla--ambar:active{box-shadow:0 0 0 var(--pico-hondo)}
 
-label{display:block; font-size:.83rem; color:#3B4C42; margin-bottom:.3rem}
-.valor{float:right; font-variant-numeric:tabular-nums; font-weight:650; color:var(--verde-piko)}
-input[type=range]{width:100%; accent-color:var(--verde-piko); margin:.1rem 0 .9rem}
-input[type=number]{
-  width:100%; padding:.5rem .65rem; border:2px solid var(--papel-hondo);
-  border-radius:10px; font:inherit; font-size:.95rem; background:var(--papel);
-}
-input:focus{outline:none; border-color:var(--verde-pasto)}
-
-button{font:inherit; cursor:pointer}
-.btn{
-  border:none; border-radius:10px; padding:.55rem .9rem; font-size:.9rem; font-weight:600;
-  background:var(--papel-hondo); color:var(--grafito); transition:transform .06s;
-}
-.btn:active{transform:scale(.96)}
-.btn--verde{background:var(--verde-piko); color:var(--papel)}
-.btn--ambar{background:var(--pico); color:var(--grafito)}
 .fila{display:flex; gap:.5rem; flex-wrap:wrap}
-.fila>*{flex:1 1 auto}
+.fila>*{flex:1 1 0; min-width:0}
 
-.sostener{touch-action:none; user-select:none; -webkit-user-select:none;
-  background:var(--verde-bosque); color:var(--papel); padding:.8rem}
-.sostener.activo{background:var(--copete)}
+/* ---------- la cruz de dirección ---------- */
+/* Es el control que más se va a usar, así que va primero y grande. La cruz
+   funciona porque el dedo no tiene que leer: la posición del botón ya dice
+   para dónde manda. */
+.cruz{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-areas:
+    ".      arriba  ."
+    "izq    centro  der";
+  gap:.5rem;
+  background:var(--verde-noche);
+  padding:.55rem; border-radius:var(--radio);
+}
+.cruz .rumbo{min-height:64px; font-size:1rem}
+.rumbo[data-celda="arriba"]{grid-area:arriba}
+.rumbo[data-celda="izq"]{grid-area:izq}
+.rumbo[data-celda="centro"]{grid-area:centro}
+.rumbo[data-celda="der"]{grid-area:der}
+.rumbo .flecha{display:block; font-size:1.5rem; line-height:1}
+.rumbo .rotulo{display:block; font-size:.66rem; font-weight:500; opacity:.8; margin-top:.1rem}
+.rumbo.corriendo{background:var(--copete); box-shadow:0 4px 0 #A9531A}
 
-/* caras */
-.caras{display:grid; grid-template-columns:repeat(auto-fit,minmax(104px,1fr)); gap:.45rem}
-.cara{padding:.6rem .3rem; font-size:.85rem; background:var(--papel-hondo); border:none; border-radius:10px}
-.cara.puesta{background:var(--verde-piko); color:var(--papel)}
+/* ---------- las acciones ---------- */
+.acciones{display:grid; grid-template-columns:1fr 1fr; gap:.5rem}
+.preset{
+  min-height:64px; padding:.65rem .6rem;
+  background:var(--verde-piko); color:var(--papel);
+  box-shadow:0 4px 0 var(--verde-noche);
+  text-align:left; font-size:.95rem;
+}
+.preset:active{transform:translateY(4px); box-shadow:0 0 0 var(--verde-noche)}
+.preset small{display:block; font-weight:400; font-size:.68rem; opacity:.72; margin-top:.15rem}
+.preset.corriendo{background:var(--copete); box-shadow:0 4px 0 #A9531A}
+.preset--corte{background:var(--papel-hondo); color:var(--grafito); box-shadow:0 4px 0 var(--papel-sombra)}
+.preset--corte:active{box-shadow:0 0 0 var(--papel-sombra)}
 
-/* leds */
-.leds{display:grid; grid-template-columns:repeat(4,1fr); gap:.5rem; margin-bottom:.8rem}
-.led{display:flex; flex-direction:column; align-items:center; gap:.3rem; font-size:.72rem; color:#3B4C42}
-.led input[type=color]{
-  width:100%; height:40px; padding:0; border:2px solid var(--papel-hondo);
-  border-radius:10px; background:none; cursor:pointer;
+/* ---------- expresiones ---------- */
+.caras{display:grid; grid-template-columns:repeat(auto-fit,minmax(90px,1fr)); gap:.45rem}
+.cara{
+  min-height:52px; padding:.55rem .3rem; font-size:.82rem;
+  background:var(--papel-hondo); color:var(--grafito);
+  box-shadow:0 3px 0 var(--papel-sombra);
+}
+.cara:active{transform:translateY(3px); box-shadow:0 0 0 var(--papel-sombra)}
+.cara.puesta{background:var(--verde-piko); color:var(--papel); box-shadow:0 3px 0 var(--verde-noche)}
+
+/* ---------- luces ---------- */
+.modulos{display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin-bottom:.6rem}
+.modulo{display:flex; flex-direction:column; gap:.3rem; font-size:.72rem; color:#3B4C42}
+.modulo input[type=color]{
+  width:100%; height:64px; padding:0; cursor:pointer;
+  border:3px solid var(--papel-sombra); border-radius:12px; background:none;
+}
+.colores{display:grid; grid-template-columns:repeat(4,1fr); gap:.45rem}
+.colores .tecla{font-size:.8rem; padding:.7rem .25rem}
+.efectos{display:grid; grid-template-columns:repeat(auto-fit,minmax(94px,1fr)); gap:.45rem}
+.efecto{min-height:50px; font-size:.85rem}
+.efecto.puesto{background:var(--verde-piko); color:var(--papel); box-shadow:0 4px 0 var(--verde-noche)}
+
+/* ---------- deslizadores ---------- */
+label{display:block; font-size:.76rem; color:#3B4C42; margin:.5rem 0 .2rem}
+.valor{float:right; font-variant-numeric:tabular-nums; font-weight:700; color:var(--verde-piko)}
+input[type=range]{
+  width:100%; margin:.2rem 0 .5rem;
+  accent-color:var(--verde-piko);
+  height:34px;   /* pista gorda: en un teléfono una fina es imposible de agarrar */
+}
+input[type=number]{
+  width:100%; padding:.7rem .6rem; font:inherit; font-size:1rem;
+  border:3px solid var(--papel-sombra); border-radius:12px; background:#fff;
+}
+input:focus-visible{outline:3px solid var(--verde-pasto); outline-offset:1px}
+button:focus-visible{outline:3px solid var(--verde-pasto); outline-offset:2px}
+
+.sostener{touch-action:none; user-select:none; -webkit-user-select:none}
+.sostener.activo{background:var(--copete); color:var(--papel); box-shadow:0 4px 0 #A9531A}
+
+/* ---------- sonidos ---------- */
+#listaSonidos{display:flex; flex-direction:column; gap:.4rem; max-height:230px; overflow-y:auto}
+#listaSonidos .tecla{text-align:left}
+.vacio{font-size:.8rem; color:#6B7A70; font-style:italic; margin:0}
+
+/* ---------- lo que dice y el ejercicio ---------- */
+/* Los campos de texto son los primeros de este panel que se escriben en vez de
+   apretarse, así que van con el mismo grosor de borde y de alto que las teclas:
+   un formulario metido en un control de juguete se ve pegado con cinta. */
+textarea, input[type=text]{
+  width:100%; padding:.7rem .6rem; font:inherit; font-size:1rem;
+  border:3px solid var(--papel-sombra); border-radius:12px; background:#fff;
+  resize:vertical;
+}
+select{
+  width:100%; min-height:56px; padding:.6rem .5rem; font:inherit; font-size:.95rem;
+  border:3px solid var(--papel-sombra); border-radius:12px; background:#fff;
 }
 
-#listaSonidos{display:flex; flex-direction:column; gap:.4rem; max-height:190px; overflow-y:auto}
-.vacio{font-size:.85rem; color:#6B7A70; font-style:italic; margin:0}
+/* Las frases a mano son etiquetas y no teclas: son muchas y cortas, y en fila
+   ocupan lo que cada una necesita. Igual llegan a 44 píxeles de alto, que es lo
+   mínimo que un dedo acierta. */
+.frases{display:flex; flex-wrap:wrap; gap:.4rem}
+.frase{
+  display:inline-flex; align-items:center; gap:.4rem;
+  min-height:44px; padding:.4rem .85rem; font-size:.85rem; font-weight:500;
+  background:var(--papel-hondo); color:var(--grafito);
+  border-radius:999px; box-shadow:0 3px 0 var(--papel-sombra);
+  text-align:left;
+}
+.frase:active{transform:translateY(3px); box-shadow:0 0 0 var(--papel-sombra)}
+.frase .borrar{
+  font-size:1rem; line-height:1; opacity:.45; padding:0 .15rem;
+}
+.frase .borrar:hover{opacity:1}
+
+/* En qué paso va el ejercicio. No es adorno: el maestro está mirando al chico,
+   no al teléfono, y cuando vuelve la vista tiene que saber en un vistazo si
+   Piko está hablando o esperando. */
+.paso{
+  display:flex; align-items:center; gap:.5rem;
+  margin:.75rem 0 0; padding:.6rem .7rem; border-radius:10px;
+  background:var(--verde-noche); color:var(--papel); font-size:.82rem;
+}
+.paso b{font-weight:650}
+
+button:disabled{opacity:.4; cursor:default; transform:translateY(4px); box-shadow:none}
+button:disabled:active{transform:translateY(4px)}
+
+/* ---------- lo de ajustar y lo de mirar ---------- */
+/* El control fino del motor y la consola no se usan jugando: se usan cuando
+   algo anda mal. Van plegados para que no compitan por el pulgar. */
+details.plegable{
+  background:var(--papel); border-radius:var(--radio);
+  margin-bottom:.7rem; box-shadow:0 4px 0 rgba(0,0,0,.22);
+  overflow:hidden;
+}
+details.plegable > summary{
+  padding:.9rem .85rem; cursor:pointer; list-style:none;
+  font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--verde-bosque); font-weight:700;
+  display:flex; align-items:center; gap:.45rem;
+}
+details.plegable > summary::-webkit-details-marker{display:none}
+details.plegable > summary::before{content:"▸"; font-size:.9rem; letter-spacing:0}
+details.plegable[open] > summary::before{content:"▾"}
+details.plegable > .cuerpo{padding:0 .85rem 1rem}
 
 .consola{
-  background:var(--verde-hondo); color:#CFE8D8; border-radius:var(--radio);
-  padding:.8rem 1rem; margin-top:1rem; height:200px; overflow-y:auto;
-  font-family:ui-monospace,"Cascadia Code",Consolas,monospace; font-size:.78rem; line-height:1.55;
+  background:var(--verde-noche); color:#CFE8D8; border-radius:12px;
+  padding:.7rem .8rem; height:210px; overflow-y:auto;
+  font-family:ui-monospace,"Cascadia Code",Consolas,monospace;
+  font-size:.74rem; line-height:1.5;
 }
 .consola div{white-space:pre-wrap; word-break:break-word}
 .ent{color:#9FD4B4} .sal{color:var(--pico)} .mal{color:#FF9C8F}
+
+/* ---------- la parada, fija al alcance del pulgar ---------- */
+/* Arriba no sirve: cuando algo se está moviendo mal, la mano ya está abajo
+   sosteniendo el teléfono, y estirarse hasta el encabezado cuesta un segundo
+   que es justo el que no hay. */
+.parada{
+  position:fixed; left:0; right:0; bottom:0; z-index:30;
+  margin:0; width:100%;
+  padding:1.05rem 1rem;
+  padding-bottom:calc(1.05rem + env(safe-area-inset-bottom, 0px));
+  border-radius:0;
+  background:var(--alarma); color:#fff;
+  font-size:1.05rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+  box-shadow:0 -4px 0 var(--alarma-hondo), 0 -14px 26px rgba(0,0,0,.28);
+}
+.parada:active{background:#A63125; box-shadow:0 -4px 0 var(--alarma-hondo)}
+
+@media (prefers-reduced-motion:reduce){
+  button{transition:none}
+  .punto.late{animation:none}
+}
+
+/* ---------- pantallas grandes ---------- */
+/* En una PC el control de un juguete estirado a mil píxeles se ve absurdo.
+   Se mantiene angosto y se pone en dos columnas, sin perder el tamaño de los
+   botones: sirven igual para el mouse. */
+@media (min-width:760px){
+  .wrap{width:min(1000px,100%); padding:0 1rem}
+  .doble{display:grid; grid-template-columns:1fr 1fr; gap:.7rem; align-items:start; margin-bottom:.7rem}
+  .doble > *{margin-bottom:0}
+  .acciones{grid-template-columns:repeat(3,1fr)}
+  /* Una cruz de un metro de ancho no es una cruz. Se queda del tamaño de una
+     mano aunque el bloque que la contiene sea más largo. */
+  .cruz{max-width:420px; margin-inline:auto}
+  .parada{
+    position:sticky; bottom:.9rem;
+    width:min(968px,calc(100% - 2rem)); margin:1rem auto 0;
+    border-radius:var(--radio);
+  }
+  body{padding-bottom:1.5rem}
+}
 </style>
 </head>
 <body>
@@ -132,75 +340,175 @@ button{font:inherit; cursor:pointer}
 
 <main class="wrap">
 
-  <button class="parada" id="btnParada">Parada de emergencia</button>
+  <section class="bloque">
+    <h2>Ejercicio (simulación)</h2>
+    <div class="fila">
+      <div style="flex:2 1 0">
+        <label>Palabra</label>
+        <input type="text" id="palabra" value="Naksa" autocomplete="off" spellcheck="false">
+      </div>
+      <div>
+        <label>Voz de la palabra</label>
+        <select id="idiomaPalabra"></select>
+      </div>
+    </div>
+    <label>Consigna</label>
+    <input type="text" id="consigna" value="Di esta palabra" autocomplete="off">
 
-  <div class="rejilla">
+    <div class="fila" style="margin-top:.7rem">
+      <button class="tecla tecla--verde" id="btnPresentar">▶ Presentar el ejercicio</button>
+    </div>
+    <div class="fila" style="margin-top:.5rem">
+      <button class="tecla" id="btnPronunciar">Pronunciar la palabra</button>
+      <button class="tecla" id="btnEsperar">Esperar la respuesta</button>
+    </div>
+    <div class="fila" style="margin-top:.5rem">
+      <button class="tecla tecla--verde" id="btnBien">✓ Lo dijo</button>
+      <button class="tecla tecla--ambar" id="btnMal">↻ Casi</button>
+    </div>
+    <button class="tecla" id="btnTerminar" style="width:100%;margin-top:.5rem">Terminar</button>
 
-    <section class="tarjeta">
-      <h2>Expresiones</h2>
-      <div class="caras" id="caras"><p class="vacio">Buscando…</p></div>
-      <p class="nota" id="notaCara">La cara se abre en <b>/cara</b> desde el teléfono del robot.</p>
-    </section>
+    <p class="paso"><span class="punto" id="pEjercicio"></span><b id="pasoEjercicio">sin ejercicio</b></p>
+    <p class="nota">La palabra aparece en la pantalla del robot y Piko dice la
+      consigna. Quién acertó y quién no lo decide el maestro con las dos teclas
+      de abajo: el robot todavía no escucha, y esta simulación es para ver el
+      ejercicio entero antes de que lo haga.</p>
+  </section>
 
-    <section class="tarjeta">
-      <h2>Alas, cola y cuerpo</h2>
+  <section class="bloque">
+    <h2>Lo que dice</h2>
+    <textarea id="frase" rows="2" placeholder="Escribí lo que tiene que decir…"></textarea>
+    <div class="fila" style="margin-top:.5rem">
+      <div style="flex:1 1 0"><select id="idiomaVoz"></select></div>
+      <button class="tecla tecla--verde" style="flex:2 1 0" id="btnDecir">Decir</button>
+    </div>
+    <div class="fila" style="margin-top:.5rem">
+      <button class="tecla" id="btnGuardarFrase">Guardar</button>
+      <button class="tecla" id="btnProbarAca">Probar acá</button>
+      <button class="tecla" id="btnCallarVoz">Callar</button>
+    </div>
+    <label>Frases a mano</label>
+    <div class="frases" id="frases"></div>
+    <p class="nota">La voz la pone el traductor de Google y sale por el teléfono
+      del robot, que es donde está la cara y donde el pico se mueve con lo que
+      suena. Las lenguas originarias no están en Google: escritas como suenan y
+      leídas con la voz en español quedan más cerca que con cualquier otra.
+      Sin internet, Piko cae a la voz del propio teléfono.</p>
+  </section>
+
+  <section class="bloque">
+    <h2>Hacia dónde mira</h2>
+    <div class="cruz" id="rumbo"></div>
+    <p class="nota">Gira la cara y mueve la luz al ala contraria. «Centrar» lo
+      devuelve al frente según la cuenta del panel: si el motor quedó torcido,
+      se endereza a mano.</p>
+  </section>
+
+  <section class="bloque">
+    <h2>Qué hace</h2>
+    <div class="acciones" id="presets"></div>
+    <p class="nota">Cada botón encadena cara, movimiento y luces. Corren en este
+      navegador y no en la placa: si se corta la conexión se cortan solas, que es
+      lo que hay que querer cuando algo se mueve. Cualquier botón corta la
+      secuencia anterior; la parada también.</p>
+  </section>
+
+  <section class="bloque">
+    <h2>Expresiones</h2>
+    <div class="caras" id="caras"><p class="vacio">Buscando…</p></div>
+    <p class="nota" id="notaCara">La cara se abre en <b>/cara</b> desde el teléfono del robot.</p>
+  </section>
+
+  <div class="doble">
+
+    <section class="bloque">
+      <h2>Alas y cuerpo</h2>
       <label>Ángulo <span class="valor" id="vServo">90°</span></label>
       <input type="range" id="servo" min="0" max="180" value="90">
       <div class="fila">
-        <button class="btn" data-servo="30">Abajo</button>
-        <button class="btn" data-servo="90">Centro</button>
-        <button class="btn" data-servo="150">Arriba</button>
+        <button class="tecla" data-servo="0" data-reposo>Abajo</button>
+        <button class="tecla" data-servo="90">Centro</button>
+        <button class="tecla" data-servo="150">Arriba</button>
       </div>
       <div class="fila" style="margin-top:.5rem">
-        <button class="btn sostener" id="aletear">Aletear ✦</button>
+        <button class="tecla tecla--verde sostener" id="aletear">Aletear ✦<br><small style="font-weight:400;opacity:.75">mantené apretado</small></button>
       </div>
     </section>
 
-    <section class="tarjeta">
-      <h2>Girar la cara</h2>
-      <fieldset class="fila" style="border:none; margin:0 0 .8rem; padding:0">
-        <div style="flex:1"><label>Medios pasos</label><input type="number" id="pasos" value="1024" min="1" max="999999"></div>
-        <div style="flex:1"><label>RPM</label><input type="number" id="rpm" value="10" min="1" max="15"></div>
-      </fieldset>
-      <div class="fila">
-        <button class="btn btn--verde" id="paIzq">↺ Izquierda</button>
-        <button class="btn btn--verde" id="paDer">Derecha ↻</button>
-      </div>
-      <p class="nota">4096 medios pasos es una vuelta entera; 1024 es un cuarto.
-        Arriba de 15 rpm zumba en vez de girar.</p>
-    </section>
-
-    <section class="tarjeta">
+    <section class="bloque">
       <h2>Luces</h2>
-      <div class="leds" id="leds"></div>
-      <label>Brillo <span class="valor" id="vBrillo">60</span></label>
-      <input type="range" id="brillo" min="0" max="255" value="60">
-      <div class="fila">
-        <button class="btn btn--ambar" data-todos="#E8A429">Ámbar</button>
-        <button class="btn" data-todos="#97C137">Verde</button>
-        <button class="btn" data-todos="#60C5FA">Cielo</button>
-        <button class="btn" data-todos="#000000">Apagar</button>
+      <div class="modulos">
+        <div class="modulo">
+          <span>Ala izquierda</span>
+          <input type="color" id="colorA" value="#ffffff">
+        </div>
+        <div class="modulo">
+          <span>Ala derecha</span>
+          <input type="color" id="colorB" value="#ffffff">
+        </div>
       </div>
-    </section>
-
-    <section class="tarjeta">
-      <h2>Sonidos</h2>
-      <div id="listaSonidos"><p class="vacio">Buscando…</p></div>
-      <button class="btn" id="btnCallar" style="width:100%;margin-top:.7rem">Callar</button>
-      <p class="nota">Suenan en el teléfono del robot, que es donde está la cara.</p>
+      <div class="colores">
+        <button class="tecla" data-ambas="#ffffff">Blanco</button>
+        <button class="tecla tecla--ambar" data-ambas="#e8a429">Ámbar</button>
+        <button class="tecla" data-ambas="#60c5fa">Cielo</button>
+        <button class="tecla" data-ambas="#000000">Apagar</button>
+      </div>
+      <label>Brillo <span class="valor" id="vBrillo">120</span></label>
+      <input type="range" id="brillo" min="0" max="255" value="120">
+      <label>Efectos</label>
+      <div class="efectos" id="efectos"></div>
+      <p class="nota">Los dos módulos, no luz por luz. Arrancan en blanco.</p>
     </section>
 
   </div>
 
-  <div class="consola" id="consola"></div>
+  <section class="bloque">
+    <h2>Sonidos</h2>
+    <div id="listaSonidos"><p class="vacio">Buscando…</p></div>
+    <button class="tecla" id="btnCallar" style="width:100%;margin-top:.6rem">Callar</button>
+    <p class="nota">Suenan en el teléfono del robot, que es donde está la cara.</p>
+  </section>
+
+  <details class="plegable">
+    <summary>Girar la cara a mano</summary>
+    <div class="cuerpo">
+      <div class="fila">
+        <div><label>Medios pasos</label><input type="number" id="pasos" value="1024" min="1" max="999999"></div>
+        <div><label>RPM</label><input type="number" id="rpm" value="10" min="1" max="15"></div>
+      </div>
+      <div class="fila" style="margin-top:.6rem">
+        <button class="tecla tecla--verde" id="paIzq">↺ Izquierda</button>
+        <button class="tecla tecla--verde" id="paDer">Derecha ↻</button>
+      </div>
+      <p class="nota">4096 medios pasos es una vuelta entera; 1024 es un cuarto.
+        Arriba de 15 rpm zumba en vez de girar, y con el teléfono montado conviene
+        ir más despacio: un motor a pasos tiene más fuerza cuanto más lento va.</p>
+    </div>
+  </details>
+
+  <details class="plegable">
+    <summary>Consola</summary>
+    <div class="cuerpo">
+      <div class="consola" id="consola"></div>
+    </div>
+  </details>
+
 </main>
 
+<!-- Sólo para «probar acá»: la voz de verdad sale por el teléfono del robot. -->
+<audio id="vozPanel"></audio>
+
+<button class="parada" id="btnParada">Parada de emergencia</button>
+
 <script src="piko.js"></script>
+<script src="vigilia.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 
 let ws = null;
 let vivo = false;
+let huboPlaca = false;
+let hayCara = false;
 
 function log(texto, clase) {
   const c = $('consola');
@@ -247,12 +555,29 @@ function conectar() {
     const m = JSON.parse(e.data);
 
     if (m.t === 'estado') {
+      /* Apenas aparece la placa se le manda el estado de reposo: blanco en las
+         dos alas y el brillo del panel. Si no, el firmware arranca con lo suyo
+         y los controles de acá mienten hasta que alguien toque algo. */
+      if (m.conectado && !huboPlaca) {
+        huboPlaca = true;
+        setTimeout(() => {
+          mandar(`BRILLO ${$('brillo').value}`);
+          ponerEfecto('fijo');
+        }, 150);
+      }
+      if (!m.conectado) huboPlaca = false;
+
       $('pSerie').classList.toggle('si', m.conectado);
       $('txtSerie').textContent = m.conectado ? m.puerto : 'sin placa';
+      hayCara = m.caras > 0;
       $('pCara').classList.toggle('si', m.caras > 0);
       $('txtCara').textContent = m.caras > 0 ? `cara ×${m.caras}` : 'sin cara';
       return;
     }
+
+    /* La cara terminó de decir una frase: sigue el que la estaba esperando.
+       Sin esto el ejercicio encadenaría a ciegas y Piko se pisaría solo. */
+    if (m.t === 'vozfin') { const soltar = esperandoVoz.get(m.id); if (soltar) soltar(); return; }
 
     if (m.t === 'catalogo') { pintarCaras(m.caras); pintarSonidos(m.sonidos); if (m.expresion) marcar(m.expresion); return; }
     if (m.t === 'expresion') { marcar(m.nombre); return; }
@@ -276,6 +601,11 @@ setInterval(() => { if (vivo) ws.send(JSON.stringify({ t: 'hb' })); }, 200);
 // ── Parada ───────────────────────────────────────────────────────────────
 
 function parar() {
+  // Primero se corta la secuencia: si no, el paso siguiente volvería a mover
+  // el motor un instante después de haber frenado. Y el ejercicio con ella, o
+  // seguiría hablando y mandando expresiones sobre un robot ya frenado.
+  cortarSecuencia();
+  cortarEjercicio();
   mandar('PARA');
   document.querySelectorAll('.sostener').forEach((b) => b.classList.remove('activo'));
 }
@@ -303,9 +633,7 @@ function pintarCaras(caras) {
     b.className = 'cara';
     b.dataset.nombre = cara.nombre;
     b.textContent = cara.nombre;
-    b.addEventListener('click', () => {
-      if (vivo) ws.send(JSON.stringify({ t: 'expresion', nombre: cara.nombre }));
-    });
+    b.addEventListener('click', () => { cortarSecuencia(); ponerExpresion(cara.nombre); });
     cont.appendChild(b);
   }
 }
@@ -314,6 +642,10 @@ function marcar(nombre) {
   document.querySelectorAll('.cara').forEach((b) => {
     b.classList.toggle('puesta', b.dataset.nombre === nombre);
   });
+}
+
+function ponerExpresion(nombre) {
+  if (vivo) ws.send(JSON.stringify({ t: 'expresion', nombre }));
 }
 
 // ── Servo ────────────────────────────────────────────────────────────────
@@ -361,9 +693,7 @@ let aleteo = null;
     clearInterval(aleteo);
     aleteo = null;
     b.classList.remove('activo');
-    mandar('SV 90');
-    $('servo').value = 90;
-    $('vServo').textContent = '90°';
+    ponerServo(ALAS_ABAJO);
   };
   b.addEventListener('pointerdown', arrancar);
   b.addEventListener('pointerup', soltar);
@@ -376,42 +706,52 @@ let aleteo = null;
 function girar(signo) {
   const pasos = Math.min(999999, Math.max(1, Number($('pasos').value) || 1024));
   const rpm = Math.min(15, Math.max(1, Number($('rpm').value) || 10));
-  mandar(`PA ${signo * pasos} ${rpm}`);
+  cortarSecuencia();
+  moverCara(signo * pasos, rpm);
 }
 $('paDer').addEventListener('click', () => girar(1));
 $('paIzq').addEventListener('click', () => girar(-1));
 
-// ── Luces ────────────────────────────────────────────────────────────────
+// ── Luces, por módulo ────────────────────────────────────────────────────
 
-const COLOR_INICIAL = ['#E8A429', '#97C137', '#60C5FA', '#E97927',
-                       '#E8A429', '#97C137', '#60C5FA', '#E97927'];
+/* Las dos tiras, con el nombre que tienen puesto en el robot. Si al conectarlas
+   quedaron cruzadas, se arregla dando vuelta estos dos números — es más rápido
+   que mover los cables de datos del 27 y el 28. */
+const ALA_IZQ = 0;
+const ALA_DER = 1;
 
-function mandarLed(i, hex) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  mandar(`LED ${i} ${r} ${g} ${b}`);
+const IZQ = () => $('colorA').value;
+const DER = () => $('colorB').value;
+
+function aRGB(hex, escala = 1) {
+  const n = (i) => Math.round(parseInt(hex.slice(i, i + 2), 16) * escala);
+  return [n(1), n(3), n(5)];
 }
 
-COLOR_INICIAL.forEach((color, i) => {
-  const caja = document.createElement('div');
-  caja.className = 'led';
-  const entrada = document.createElement('input');
-  entrada.type = 'color';
-  entrada.value = color;
-  entrada.addEventListener('input', () => acelerado(() => mandarLed(i, entrada.value)));
-  entrada.addEventListener('change', () => mandarLed(i, entrada.value));
-  const etiqueta = document.createElement('span');
-  etiqueta.textContent = i < 4 ? `A${i}` : `B${i - 4}`;
-  caja.append(entrada, etiqueta);
-  $('leds').appendChild(caja);
-});
+/** Pinta una tira entera. `escala` baja la intensidad de esa tira sola — el
+    brillo del chip es global para las dos y no serviría para eso. */
+function pintarTira(cual, hex, escala = 1) {
+  const [r, g, b] = aRGB(hex, escala);
+  mandar(`TIRA ${cual} ${r} ${g} ${b}`);
+}
 
-document.querySelectorAll('[data-todos]').forEach((b) => {
+function pintarAmbas(hex, escala = 1) {
+  const [r, g, b] = aRGB(hex, escala);
+  mandar(`TIRA -1 ${r} ${g} ${b}`);
+}
+
+$('colorA').addEventListener('input', () => acelerado(() => pintarTira(ALA_IZQ, IZQ())));
+$('colorA').addEventListener('change', () => { cortarEfecto(); pintarTira(ALA_IZQ, IZQ()); });
+$('colorB').addEventListener('input', () => acelerado(() => pintarTira(ALA_DER, DER())));
+$('colorB').addEventListener('change', () => { cortarEfecto(); pintarTira(ALA_DER, DER()); });
+
+document.querySelectorAll('[data-ambas]').forEach((b) => {
   b.addEventListener('click', () => {
-    const hex = b.dataset.todos;
-    document.querySelectorAll('.led input').forEach((e) => { e.value = hex; });
-    mandarLed(-1, hex);
+    const hex = b.dataset.ambas;
+    cortarEfecto();
+    $('colorA').value = hex;
+    $('colorB').value = hex;
+    pintarAmbas(hex);
   });
 });
 
@@ -420,6 +760,617 @@ $('brillo').addEventListener('input', (e) => {
   acelerado(() => mandar(`BRILLO ${e.target.value}`));
 });
 $('brillo').addEventListener('change', (e) => mandar(`BRILLO ${e.target.value}`));
+
+// ── Efectos ──────────────────────────────────────────────────────────────
+
+/**
+ * Los efectos son un reloj que va repintando las tiras.
+ *
+ * Van por módulo y no por luz suelta: cada ala son cuatro LEDs pegados que a
+ * un metro se leen como una sola luz, así que darles colores distintos no se
+ * nota y cuadruplica el tráfico por el túnel.
+ */
+let relojEfecto = null;
+let efectoPuesto = 'fijo';
+
+function hsl(h, s, l) {
+  h = ((h % 360) + 360) % 360;
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+  const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x]
+                  : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+  const q = (v) => Math.round((v + m) * 255).toString(16).padStart(2, '0');
+  return `#${q(r)}${q(g)}${q(b)}`;
+}
+
+const EFECTOS = {
+  fijo: {
+    nombre: 'Fijo',
+    arrancar() { pintarTira(ALA_IZQ, IZQ()); pintarTira(ALA_DER, DER()); },
+  },
+  arcoiris: {
+    nombre: 'Arcoíris',
+    arrancar() {
+      let tono = 0;
+      relojEfecto = setInterval(() => {
+        tono = (tono + 6) % 360;
+        // Las dos alas en contrapunto: media vuelta de rueda entre una y otra.
+        pintarTira(ALA_IZQ, hsl(tono, 1, 0.5));
+        pintarTira(ALA_DER, hsl(tono + 180, 1, 0.5));
+      }, 70);
+    },
+  },
+  respirar: {
+    nombre: 'Respirar',
+    arrancar() {
+      let paso = 0;
+      relojEfecto = setInterval(() => {
+        paso += 0.08;
+        // Seno, no diente de sierra: el ojo lee la subida lineal como un salto.
+        const k = 0.15 + 0.85 * (Math.sin(paso) * 0.5 + 0.5);
+        pintarTira(ALA_IZQ, IZQ(), k);
+        pintarTira(ALA_DER, DER(), k);
+      }, 60);
+    },
+  },
+  destello: {
+    nombre: 'Destello',
+    arrancar() {
+      let encendida = 0;
+      relojEfecto = setInterval(() => {
+        encendida ^= 1;
+        pintarTira(ALA_IZQ, IZQ(), encendida ? 1 : 0.08);
+        pintarTira(ALA_DER, DER(), encendida ? 0.08 : 1);
+      }, 260);
+    },
+  },
+  apagado: {
+    nombre: 'Apagar',
+    arrancar() { pintarAmbas('#000000'); },
+  },
+};
+
+function cortarEfecto() {
+  if (relojEfecto) { clearInterval(relojEfecto); relojEfecto = null; }
+}
+
+function ponerEfecto(nombre) {
+  cortarEfecto();
+  const e = EFECTOS[nombre];
+  if (!e) return;
+  efectoPuesto = nombre;
+  document.querySelectorAll('.efecto').forEach((b) => {
+    b.classList.toggle('puesto', b.dataset.efecto === nombre);
+  });
+  e.arrancar();
+}
+
+for (const [clave, efecto] of Object.entries(EFECTOS)) {
+  const b = document.createElement('button');
+  b.className = 'tecla efecto' + (clave === 'fijo' ? ' puesto' : '');
+  b.dataset.efecto = clave;
+  b.textContent = efecto.nombre;
+  b.addEventListener('click', () => ponerEfecto(clave));
+  $('efectos').appendChild(b);
+}
+
+// ── Secuencias ───────────────────────────────────────────────────────────
+
+/**
+ * Una secuencia es una lista de pasos con esperas entre medio.
+ *
+ * Corre acá, en el navegador, y no en el firmware. Eso no es comodidad: el
+ * hombre muerto del Arduino frena los motores si deja de llegar el latido, y el
+ * latido lo manda esta página. Una secuencia viviendo en la placa seguiría
+ * moviendo el servo aunque se cayera el túnel, justo cuando ya nadie mira.
+ *
+ * Cada paso puede traer cualquier combinación de:
+ *
+ *   cara    la expresión que se muestra en el teléfono
+ *   servo   ángulo, de 0 a 180
+ *   pasos   medios pasos del motor, con signo
+ *   efecto  uno de los efectos de luz
+ *   tiras   [{ala, color, escala}] para pintar cada ala por separado
+ *   brillo  brillo global
+ *   ms      cuánto esperar antes del paso siguiente
+ *
+ * Las que traen `celda` van a la cruz de dirección en vez de a la lista de
+ * acciones. La cruz existe porque mirar a un lado es lo que más se va a
+ * apretar, y ahí el dedo no tiene que leer: la posición ya dice para dónde.
+ */
+const dormir = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/* Cuánto giró la cara desde el centro, para poder volver. Es una cuenta del
+   panel, no una medición: si el hombre muerto corta un giro a la mitad, esto
+   queda creyendo que se completó. Por eso «Centrar» es una ayuda, no una
+   garantía — si quedó torcida, se endereza a mano. */
+let posicionCara = 0;
+
+function moverCara(pasos, rpm = 10) {
+  posicionCara += pasos;
+  mandar(`PA ${pasos} ${rpm}`);
+}
+
+const AZUL = '#3fa9ff';
+const BLANCO = '#ffffff';
+
+const SECUENCIAS = {
+  /* Mirar a un lado ilumina el ala contraria. La idea es la de un foco: si Piko
+     mira a la izquierda, lo que queda iluminado es lo que deja atrás, y el
+     contraste empuja la mirada del que observa hacia donde Piko está mirando. */
+  izquierda: {
+    nombre: 'Mirar izquierda', detalle: 'cara, giro y luz al lado opuesto',
+    celda: 'izq', flecha: '◀', rotulo: 'Izquierda',
+    pasos: [
+      { cara: 'izquierda', efecto: 'fijo' },
+      { tiras: [{ ala: ALA_IZQ, color: AZUL, escala: 0.15 },
+                { ala: ALA_DER, color: AZUL, escala: 1 }] },
+      { pasos: -420, ms: 900 },
+    ],
+  },
+  derecha: {
+    nombre: 'Mirar derecha', detalle: 'cara, giro y luz al lado opuesto',
+    celda: 'der', flecha: '▶', rotulo: 'Derecha',
+    pasos: [
+      { cara: 'derecha', efecto: 'fijo' },
+      { tiras: [{ ala: ALA_IZQ, color: AZUL, escala: 1 },
+                { ala: ALA_DER, color: AZUL, escala: 0.15 }] },
+      { pasos: 420, ms: 900 },
+    ],
+  },
+  arriba: {
+    nombre: 'Mirar arriba', detalle: 'levanta la vista',
+    celda: 'arriba', flecha: '▲', rotulo: 'Arriba',
+    pasos: [
+      { cara: 'arriba', efecto: 'fijo' },
+      { tiras: [{ ala: ALA_IZQ, color: BLANCO, escala: 1 },
+                { ala: ALA_DER, color: BLANCO, escala: 1 }], ms: 1400 },
+    ],
+  },
+  centrar: {
+    nombre: 'Centrar', detalle: 'vuelve al frente y a blanco',
+    celda: 'centro', flecha: '⦿', rotulo: 'Centrar',
+    pasos: [
+      { cara: 'enfrente', efecto: 'fijo', brillo: 120 },
+      { volverAlCentro: true, ms: 900 },
+      { tiras: [{ ala: ALA_IZQ, color: BLANCO, escala: 1 },
+                { ala: ALA_DER, color: BLANCO, escala: 1 }] },
+    ],
+  },
+
+  celebrar: {
+    nombre: 'Celebrar',
+    detalle: 'ojos cerrados, festejo y aleteo',
+    pasos: [
+      { cara: 'cerrados', ms: 260 },
+      { cara: 'celebracion', efecto: 'arcoiris', brillo: 200, ms: 260 },
+      { servo: 135, ms: 240 }, { servo: 55, ms: 240 },
+      { servo: 135, ms: 240 }, { servo: 55, ms: 240 },
+      { servo: 135, ms: 240 }, { servo: 55, ms: 240 },
+      { servo: 90, ms: 2200 },
+      { cara: 'enfrente', efecto: 'fijo', brillo: 120 },
+    ],
+  },
+  saludo: {
+    nombre: 'Saludar',
+    detalle: 'guiño y aleteo corto',
+    pasos: [
+      { cara: 'guino', efecto: 'fijo', ms: 200 },
+      { servo: 140, ms: 260 }, { servo: 70, ms: 260 },
+      { servo: 140, ms: 260 }, { servo: 90, ms: 700 },
+      { cara: 'enfrente' },
+    ],
+  },
+  pensar: {
+    nombre: 'Pensar',
+    detalle: 'mira arriba y respira la luz',
+    pasos: [
+      { cara: 'arriba', efecto: 'respirar', ms: 2600 },
+      { cara: 'enfrente', efecto: 'fijo' },
+    ],
+  },
+  hablar: {
+    nombre: 'Hablar',
+    detalle: 'abre y cierra el pico',
+    pasos: [
+      { cara: 'abierta', efecto: 'fijo', ms: 320 },
+      { cara: 'enfrente', ms: 200 },
+      { cara: 'abierta', ms: 320 },
+      { cara: 'enfrente', ms: 200 },
+      { cara: 'abierta', ms: 320 },
+      { cara: 'enfrente' },
+    ],
+  },
+  dormir: {
+    nombre: 'Dormir',
+    detalle: 'ojos cerrados y luz baja',
+    pasos: [
+      { cara: 'cerrados', efecto: 'fijo', ms: 100 },
+      { tiras: [{ ala: ALA_IZQ, color: AZUL, escala: 0.2 },
+                { ala: ALA_DER, color: AZUL, escala: 0.2 }] },
+      { servo: 90 },
+    ],
+  },
+};
+
+let secuenciaEnCurso = null;
+
+function marcarSecuencia(clave, corriendo) {
+  const b = document.querySelector(`[data-seq="${clave}"]`);
+  if (b) b.classList.toggle('corriendo', corriendo);
+}
+
+function cortarSecuencia() {
+  if (!secuenciaEnCurso) return;
+  marcarSecuencia(secuenciaEnCurso.clave, false);
+  secuenciaEnCurso = null;
+}
+
+/* El ángulo con el que las alas quedan en reposo, y el que da el botón
+   «Abajo». Con la ventana de pulso ensanchada del firmware, 0 es lo más abajo
+   que llega el servo; se deja un poco por encima para que las alas descansen
+   sin quedar forzadas contra el tope. Si hay que corregirlo, es este número y
+   nada más. */
+const ALAS_ABAJO = 10;
+
+/* El botón y el reposo de las secuencias son la misma posición, definida en un
+   solo lugar. El manejador lee `data-servo` recién al tocarlo, así que ponerlo
+   acá alcanza. */
+document.querySelector('[data-servo][data-reposo]').dataset.servo = ALAS_ABAJO;
+
+function ponerServo(a) {
+  mandar(`SV ${a}`);
+  $('servo').value = a;
+  $('vServo').textContent = `${a}°`;
+}
+
+function aplicarPaso(p) {
+  if (p.cara) ponerExpresion(p.cara);
+  if (p.efecto) ponerEfecto(p.efecto);
+  if (p.brillo !== undefined) mandar(`BRILLO ${p.brillo}`);
+  if (p.servo !== undefined) ponerServo(p.servo);
+  if (p.pasos !== undefined) moverCara(p.pasos);
+  if (p.volverAlCentro && posicionCara !== 0) moverCara(-posicionCara);
+  if (p.tiras) {
+    for (const t of p.tiras) {
+      pintarTira(t.ala, t.color, t.escala);
+      (t.ala === ALA_IZQ ? $('colorA') : $('colorB')).value = t.color;
+    }
+  }
+}
+
+async function correrSecuencia(clave) {
+  const sec = SECUENCIAS[clave];
+  if (!sec || !vivo) return;
+
+  cortarSecuencia();
+  const mia = { clave };
+  secuenciaEnCurso = mia;
+  marcarSecuencia(clave, true);
+  log(`▶ secuencia: ${sec.nombre}`, 'sal');
+
+  for (const paso of sec.pasos) {
+    // Entre paso y paso puede haber pasado cualquier cosa: otro botón, la
+    // parada de emergencia, o que se cayera el puente. Se comprueba siempre.
+    if (secuenciaEnCurso !== mia || !vivo) return;
+    aplicarPaso(paso);
+    if (paso.ms) await dormir(paso.ms);
+  }
+
+  if (secuenciaEnCurso !== mia) return;
+
+  /* Las alas bajan al terminar, siempre. Va acá y no como último paso de cada
+     preset por una razón práctica: así una secuencia nueva no puede olvidarse
+     de hacerlo, y no hay que repetir la misma línea ocho veces. */
+  ponerServo(ALAS_ABAJO);
+  cortarSecuencia();
+}
+
+/* Las que tienen `celda` arman la cruz; el resto, la lista de acciones. */
+for (const [clave, sec] of Object.entries(SECUENCIAS)) {
+  const b = document.createElement('button');
+  b.dataset.seq = clave;
+  if (sec.celda) {
+    b.className = 'tecla tecla--verde rumbo';
+    b.dataset.celda = sec.celda;
+    b.innerHTML = `<span class="flecha">${sec.flecha}</span><span class="rotulo">${sec.rotulo}</span>`;
+    $('rumbo').appendChild(b);
+  } else {
+    b.className = 'preset';
+    b.innerHTML = `${sec.nombre}<small>${sec.detalle}</small>`;
+    $('presets').appendChild(b);
+  }
+  b.addEventListener('click', () => correrSecuencia(clave));
+}
+
+(function () {
+  const b = document.createElement('button');
+  b.className = 'preset preset--corte';
+  b.innerHTML = 'Cortar<small>detiene la secuencia, el ejercicio y los efectos</small>';
+  b.addEventListener('click', () => { cortarSecuencia(); cortarEjercicio(); ponerEfecto('fijo'); });
+  $('presets').appendChild(b);
+})();
+
+// ── Lo que dice ──────────────────────────────────────────────────────────
+
+/**
+ * Decir algo es mandarle el texto al puente y esperar a que la cara avise que
+ * terminó de decirlo.
+ *
+ * Esperar el aviso importa más de lo que parece. El ejercicio encadena
+ * consigna, palabra y festejo, y si el panel calculara la duración con una
+ * cuenta de caracteres, Piko se pisaría a sí mismo cada vez que Google tarde
+ * en contestar — que por el internet de una escuela puede ser un segundo o
+ * cinco. El único que sabe cuándo dejó de sonar es el teléfono que lo está
+ * reproduciendo, así que lo dice él.
+ *
+ * Igual hay un plazo máximo: sin cara conectada nadie va a avisar nunca, y un
+ * ejercicio esperando para siempre a un teléfono que no está es peor que uno
+ * que sigue de largo.
+ */
+let nVoz = 0;
+const esperandoVoz = new Map();
+
+const IDIOMAS = [['es', 'Español'], ['en', 'Inglés'], ['pt', 'Portugués'], ['fr', 'Francés']];
+
+for (const sel of [$('idiomaVoz'), $('idiomaPalabra')]) {
+  for (const [clave, nombre] of IDIOMAS) {
+    const o = document.createElement('option');
+    o.value = clave;
+    o.textContent = nombre;
+    sel.appendChild(o);
+  }
+}
+
+function decir(texto, idioma = 'es') {
+  const frase = (texto || '').trim();
+  if (!frase) return Promise.resolve();
+  if (!vivo) { log('✗ sin puente: no se puede hablar', 'mal'); return Promise.resolve(); }
+
+  const id = `v${++nVoz}`;
+  ws.send(JSON.stringify({ t: 'decir', id, texto: frase, idioma }));
+
+  return new Promise((listo) => {
+    const estimado = 1200 + frase.length * 110;
+    const plazo = setTimeout(() => { esperandoVoz.delete(id); listo(); },
+                             hayCara ? estimado + 8000 : estimado);
+    esperandoVoz.set(id, () => { clearTimeout(plazo); esperandoVoz.delete(id); listo(); });
+  });
+}
+
+function callar() {
+  if (vivo) ws.send(JSON.stringify({ t: 'callar' }));
+  /* Las esperas se sueltan a mano: si quedaran colgadas, el ejercicio se
+     quedaría trabado esperando el final de algo que ya no va a sonar. El que
+     esperaba comprueba su propio testigo antes de seguir, así que soltarlas no
+     hace que la secuencia continúe — la deja terminar. */
+  for (const soltar of esperandoVoz.values()) soltar();
+  esperandoVoz.clear();
+}
+
+$('btnDecir').addEventListener('click', () => decir($('frase').value, $('idiomaVoz').value));
+$('btnCallarVoz').addEventListener('click', callar);
+
+/* Probar acá suena en el aparato del maestro y no en el robot. Sirve para
+   escribir una frase y escuchar cómo queda sin interrumpir la clase. */
+$('btnProbarAca').addEventListener('click', () => {
+  const texto = ($('frase').value || '').trim();
+  if (!texto) return;
+  const a = $('vozPanel');
+  a.src = `/voz?idioma=${encodeURIComponent($('idiomaVoz').value)}&q=${encodeURIComponent(texto)}`;
+  a.play().catch(() => log('✗ el navegador no dejó reproducir acá', 'mal'));
+});
+$('vozPanel').addEventListener('error', () => log('✗ no se pudo traer la voz de Google', 'mal'));
+
+// ── Las frases a mano ────────────────────────────────────────────────────
+
+/* Las de fábrica están copiadas de `app/src/ui/piko/frases.ts`, para que el
+   robot y la aplicación digan las mismas cosas y con el mismo tono. Ahí está
+   escrita la regla que importa: cuando el chico se equivoca, Piko nunca dice
+   «mal» ni «incorrecto» — reconoce el intento y muestra cómo es. */
+const FRASES_FIJAS = [
+  '¡Hola! Soy Piko.',
+  'Di esta palabra',
+  '¡Muy bien!',
+  'Casi. Escuchá cómo es:',
+  '¿Jugamos un rato?',
+  '¡Hasta luego!',
+];
+
+const LLAVE_FRASES = 'piko.frases';
+
+function frasesGuardadas() {
+  try { return JSON.parse(localStorage.getItem(LLAVE_FRASES)) || []; } catch { return []; }
+}
+
+function guardarFrases(lista) {
+  try { localStorage.setItem(LLAVE_FRASES, JSON.stringify(lista)); } catch { }
+}
+
+function pintarFrases() {
+  const cont = $('frases');
+  cont.textContent = '';
+  const guardadas = frasesGuardadas();
+
+  for (const texto of [...FRASES_FIJAS, ...guardadas]) {
+    const b = document.createElement('button');
+    b.className = 'frase';
+    b.textContent = texto;
+    b.addEventListener('click', () => decir(texto, $('idiomaVoz').value));
+
+    // Las de fábrica no se borran; las que agregó el maestro, sí.
+    if (guardadas.includes(texto)) {
+      const x = document.createElement('span');
+      x.className = 'borrar';
+      x.textContent = '×';
+      x.title = 'Borrar esta frase';
+      x.addEventListener('click', (e) => {
+        e.stopPropagation();               // borrar no es decir
+        guardarFrases(guardadas.filter((f) => f !== texto));
+        pintarFrases();
+      });
+      b.appendChild(x);
+    }
+    cont.appendChild(b);
+  }
+}
+
+$('btnGuardarFrase').addEventListener('click', () => {
+  const texto = ($('frase').value || '').trim();
+  if (!texto) return;
+  const lista = frasesGuardadas();
+  if (!lista.includes(texto) && !FRASES_FIJAS.includes(texto)) {
+    guardarFrases([...lista, texto]);
+    pintarFrases();
+  }
+});
+
+pintarFrases();
+
+// ── El ejercicio simulado ────────────────────────────────────────────────
+
+/**
+ * El ejercicio entero corre en este navegador: muestra la palabra, la dice,
+ * espera, festeja o vuelve a mostrarla.
+ *
+ * Lo que no hace es escuchar. Que Piko decida solo si el chico pronunció bien
+ * es otro problema —micrófono, reconocimiento, una lengua que ningún modelo
+ * conoce— y no hace falta resolverlo para ver si el ejercicio funciona. Acá el
+ * que escucha es el maestro y aprieta una de dos teclas; todo lo demás pasa
+ * igual que si lo hubiera decidido el robot. El día que haya reconocimiento, lo
+ * único que cambia es de dónde sale ese sí o ese no.
+ *
+ * Va con la misma disciplina que las secuencias: cada paso comprueba su propio
+ * testigo antes de seguir, así la parada de emergencia y cualquier otra tecla
+ * lo cortan de verdad y no una frase más tarde.
+ */
+
+const ACIERTO = ['¡Esa es!', '¡Bien ahí!', '¡Muy bien!', '¡Le atinaste!', '¡Así se hace!'];
+const INTENTO = ['Casi. Escuchá cómo es:', 'Buen intento. Es así:', 'Ya casi. Se dice:', 'La próxima sale. Es:'];
+const alAzar = (lista) => lista[Math.floor(Math.random() * lista.length)];
+
+let ejercicio = null;          // el testigo del ejercicio en curso, o null
+let palabraEnJuego = '';
+let idiomaEnJuego = 'es';
+
+function tarjeta(datos) {
+  if (vivo) ws.send(JSON.stringify({ t: 'tarjeta', tarjeta: datos }));
+}
+
+function paso(texto) {
+  $('pasoEjercicio').textContent = texto;
+  $('pEjercicio').classList.toggle('si', ejercicio !== null);
+  for (const id of ['btnPronunciar', 'btnEsperar', 'btnBien', 'btnMal', 'btnTerminar']) {
+    $(id).disabled = ejercicio === null;
+  }
+}
+
+function cortarEjercicio() {
+  if (!ejercicio) return;
+  ejercicio = null;
+  callar();                    // que no se quede hablando solo después del corte
+  paso('sin ejercicio');
+}
+
+function esperarRespuesta() {
+  if (!ejercicio) return;
+  paso('escuchando la respuesta');
+  tarjeta({ texto: palabraEnJuego, sub: 'Te escucho…', estado: 'escuchando' });
+  ponerExpresion('enfrente');
+  ponerEfecto('respirar');     // la luz que respira es la señal de que es tu turno
+}
+
+async function presentarEjercicio() {
+  const palabra = ($('palabra').value || '').trim();
+  if (!palabra) { log('✗ falta la palabra del ejercicio', 'mal'); return; }
+
+  cortarSecuencia();
+  cortarEjercicio();
+
+  palabraEnJuego = palabra;
+  idiomaEnJuego = $('idiomaPalabra').value;
+  const consigna = ($('consigna').value || '').trim() || 'Di esta palabra';
+
+  const mio = {};
+  ejercicio = mio;
+  log(`▶ ejercicio: ${palabraEnJuego}`, 'sal');
+
+  paso('presentando la palabra');
+  ponerExpresion('enfrente');
+  ponerEfecto('fijo');
+  tarjeta({ texto: palabraEnJuego, sub: '', estado: 'neutro' });
+
+  /* Un respiro antes de hablar: la palabra tiene que estar en pantalla cuando
+     se escucha «di esta palabra», y no aparecer con la frase ya empezada. */
+  await dormir(700);
+  if (ejercicio !== mio) return;
+
+  await decir(consigna, 'es');
+  if (ejercicio !== mio) return;
+
+  esperarRespuesta();
+}
+
+async function pronunciarPalabra() {
+  if (!ejercicio) return;
+  const mio = ejercicio;
+  paso('pronunciando la palabra');
+  await decir(palabraEnJuego, idiomaEnJuego);
+  if (ejercicio !== mio) return;
+  esperarRespuesta();
+}
+
+async function calificar(acierto) {
+  if (!ejercicio) return;
+  const mio = ejercicio;
+
+  if (acierto) {
+    const elogio = alAzar(ACIERTO);
+    paso('festejando');
+    tarjeta({ texto: palabraEnJuego, sub: elogio, estado: 'bien' });
+    /* El festejo no se espera: la voz y el aleteo tienen que ir juntos. La
+       secuencia corta lo que hubiera antes y deja las alas abajo al terminar. */
+    correrSecuencia('celebrar');
+    await decir(elogio, 'es');
+    if (ejercicio !== mio) return;
+    await decir(palabraEnJuego, idiomaEnJuego);
+    if (ejercicio !== mio) return;
+    paso('listo — cambiá la palabra o terminá');
+    return;
+  }
+
+  /* Nunca «mal» ni «incorrecto»: se reconoce el intento y se vuelve a mostrar
+     cómo es. La regla está escrita en `app/src/ui/piko/frases.ts` y vale igual
+     acá — el chico que está aprendiendo la lengua de su comunidad no necesita
+     que un robot le diga que la habla mal. */
+  const aliento = alAzar(INTENTO);
+  paso('mostrando cómo es');
+  tarjeta({ texto: palabraEnJuego, sub: aliento, estado: 'mal' });
+  ponerExpresion('enfrente');
+  ponerEfecto('fijo');
+  await decir(aliento, 'es');
+  if (ejercicio !== mio) return;
+  await decir(palabraEnJuego, idiomaEnJuego);
+  if (ejercicio !== mio) return;
+  esperarRespuesta();
+}
+
+function terminarEjercicio() {
+  cortarEjercicio();
+  tarjeta(null);
+  ponerExpresion('enfrente');
+  ponerEfecto('fijo');
+}
+
+$('btnPresentar').addEventListener('click', presentarEjercicio);
+$('btnPronunciar').addEventListener('click', pronunciarPalabra);
+$('btnEsperar').addEventListener('click', esperarRespuesta);
+$('btnBien').addEventListener('click', () => calificar(true));
+$('btnMal').addEventListener('click', () => calificar(false));
+$('btnTerminar').addEventListener('click', terminarEjercicio);
+
+paso('sin ejercicio');   // las teclas quedan apagadas hasta que haya uno
 
 // ── Sonidos ──────────────────────────────────────────────────────────────
 
@@ -435,8 +1386,7 @@ function pintarSonidos(lista) {
   }
   for (const archivo of lista) {
     const b = document.createElement('button');
-    b.className = 'btn';
-    b.style.textAlign = 'left';
+    b.className = 'tecla';
     b.textContent = `▶  ${archivo.replace(/\.[^.]+$/, '')}`;
     b.addEventListener('click', () => {
       if (vivo) ws.send(JSON.stringify({ t: 'sonido', archivo }));
@@ -445,7 +1395,21 @@ function pintarSonidos(lista) {
   }
 }
 
-$('btnCallar').addEventListener('click', () => { if (vivo) ws.send(JSON.stringify({ t: 'callar' })); });
+$('btnCallar').addEventListener('click', callar);
+
+/* Que el teléfono del maestro tampoco se duerma mientras maneja el robot: si
+   se apaga se corta el latido, salta el hombre muerto y Piko se frena solo en
+   mitad de una clase.
+   Sin el respaldo de video que sí lleva la cara. Acá no hace falta: esta página
+   se está tocando todo el tiempo, y ningún teléfono se duerme mientras alguien
+   le aprieta botones. La que se queda una hora sin que nadie la toque es la
+   cara, y ésa es la que necesita el rodeo. */
+Vigilia.empezar({
+  alCambiar(modo) {
+    if (modo === 'candado') log('— la pantalla se queda encendida —', 'ent');
+    else log('— la pantalla puede apagarse sola: abrilo por https —', 'mal');
+  },
+});
 
 conectar();
 </script>
