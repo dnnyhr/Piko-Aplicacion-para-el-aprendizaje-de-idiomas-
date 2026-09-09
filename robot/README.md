@@ -25,7 +25,8 @@ cara se entere.
 |---|---|
 | 4× WS2812 · pin 28 | **anda** |
 | 28BYJ-48 · PORT2 | **anda** — gira; falta confirmar que 4096 sea vuelta exacta |
-| Panel, puente y reparto de roles | **anda** — 27 comprobaciones automáticas |
+| Panel, puente y reparto de roles | **anda** — 44 comprobaciones automáticas |
+| Voz de Google y ejercicio simulado | **anda** — probado de punta a punta en el navegador, sin placa |
 | Cara en el navegador | **anda** — las ocho expresiones, con la mirada animada |
 | La boca sigue a la voz | **anda** — probada con una onda de sílabas medidas |
 | Que no se apague la pantalla | **a medias** — probado el respaldo de video; el candado, no |
@@ -236,6 +237,84 @@ menos que una cara inmóvil mientras suena una voz.
 La secuencia **Hablar** del panel sigue existiendo y es otra cosa: mueve la boca
 sin audio, para cuando Piko tiene que parecer que dice algo y no hay nada que
 reproducir.
+
+---
+
+## La voz
+
+Piko habla con la voz del traductor de Google, y el panel tiene una sección
+—**Lo que dice**— para escribirle cualquier frase. Suena en el teléfono del
+robot, como los sonidos, y con la misma boca: el pico se abre con la energía de
+la onda.
+
+El audio no lo baja el teléfono por su cuenta: se lo pide al puente, que lo trae
+de Google, lo guarda y lo sirve desde `/voz?q=...&idioma=es`. Da esa vuelta por
+tres motivos y ninguno es rodeo:
+
+- **La boca.** Para leer la onda hay que meter el audio en un `AnalyserNode`, y
+  un archivo de otro dominio sin permiso de CORS —el de Google no lo da— entra
+  al grafo como silencio: se escucharía la voz y la cara quedaría quieta.
+- **La caché.** En una clase, «Di esta palabra» suena cuarenta veces. Guardada
+  en el puente, treinta y nueve de esas veces no salen a internet.
+- **El largo.** Google corta cerca de los 200 caracteres. Partir la frase y
+  pegar los pedazos se hace una vez acá y no en cada teléfono.
+
+**Sin internet, la cara cae a la voz del propio teléfono** (`speechSynthesis`).
+Suena peor, pero un robot mudo en el aula sin señal es exactamente lo que no
+puede pasar. Ahí la boca va con el títere: el sistema no presta la onda.
+
+Las lenguas originarias no están en Google. Escritas como suenan y leídas con la
+voz en español quedan más cerca que con cualquier otra, así que el desplegable
+arranca en español y ahí se queda para miskitu, mayangna y rama.
+
+## El ejercicio simulado
+
+La primera actividad completa, manejada entera desde el panel:
+
+```
+  palabra en la pantalla   ──►  «Di esta palabra»  ──►  el chico responde
+                                                              │
+                        el maestro aprieta una de dos teclas ◄┘
+                                     │
+              ✓ ─────────────────────┴───────────────────── ↻
+       festejo, luces y elogio                 «casi, se dice…» y de nuevo
+```
+
+La palabra va en **una franja abajo, y la cara no se toca**: sigue entera y a
+pantalla completa. Correrla a un costado para hacerle lugar al texto se probó y
+se ve mal — la cara es el robot, y achicada deja de serlo.
+
+La franja es corta a propósito, un sexto de la pantalla, y queda por debajo del
+pico, que es lo que se mueve cuando Piko habla. Eso es lo que hace que la palabra
+se lea como algo que él está diciendo y no como un cartel: se le ve el pico
+moverse mientras suena. En una pantalla angosta las tres partes se apilan, que
+ahí sobra alto: parado, el dibujo es tan ancho que deja negro arriba y abajo y la
+franja se come el de abajo sin tapar nada.
+
+**Lo que el robot no hace es escuchar.** Que decida solo si el chico pronunció
+bien es otro problema —micrófono, reconocimiento, una lengua que ningún modelo
+conoce— y no hace falta resolverlo para ver si el ejercicio funciona. Acá el que
+escucha es el maestro y aprieta una de dos teclas; todo lo demás pasa igual que
+si lo hubiera decidido el robot. El día que haya reconocimiento, lo único que
+cambia es de dónde sale ese sí o ese no.
+
+Cuando el chico no acierta, **Piko no dice «mal» ni «incorrecto»**: reconoce el
+intento y vuelve a mostrar cómo es. La regla y las frases salen de
+[`app/src/ui/piko/frases.ts`](../app/src/ui/piko/frases.ts), para que el robot y
+la aplicación hablen igual. El que está aprendiendo la lengua de su comunidad no
+necesita que un robot le diga que la habla mal.
+
+Dos detalles del andamiaje:
+
+**La cara avisa cuando terminó de hablar.** El ejercicio encadena consigna,
+palabra y festejo, y si el panel calculara la duración con una cuenta de
+caracteres, Piko se pisaría a sí mismo cada vez que Google tarde en contestar.
+El único que sabe cuándo dejó de sonar es el teléfono, así que lo dice él —con
+un plazo máximo por si no hay ninguna cara conectada.
+
+**Se corta de verdad.** Cada paso comprueba su propio testigo antes de seguir,
+igual que las secuencias, así que la parada de emergencia y el botón «Cortar» lo
+detienen en el acto y no una frase más tarde.
 
 ---
 

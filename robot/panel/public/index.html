@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Piko — control del robot</title>
 <meta name="theme-color" content="#063D22">
+
+<!-- Fredoka. Se baja de Google como en la landing; sin red cae al tipo del
+     sistema y el panel funciona igual, que es lo que tiene que pasar cuando
+     lo único que hay es el cable USB. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════════════════════
    Un control de juguete, pensado para un pulgar.
@@ -44,7 +51,7 @@ body{
   margin:0;
   background:var(--verde-hondo);
   color:var(--grafito);
-  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-family:Fredoka,"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   font-size:16px; line-height:1.45;
   -webkit-font-smoothing:antialiased;
   -webkit-tap-highlight-color:transparent;
@@ -205,6 +212,50 @@ button:focus-visible{outline:3px solid var(--verde-pasto); outline-offset:2px}
 #listaSonidos .tecla{text-align:left}
 .vacio{font-size:.8rem; color:#6B7A70; font-style:italic; margin:0}
 
+/* ---------- lo que dice y el ejercicio ---------- */
+/* Los campos de texto son los primeros de este panel que se escriben en vez de
+   apretarse, así que van con el mismo grosor de borde y de alto que las teclas:
+   un formulario metido en un control de juguete se ve pegado con cinta. */
+textarea, input[type=text]{
+  width:100%; padding:.7rem .6rem; font:inherit; font-size:1rem;
+  border:3px solid var(--papel-sombra); border-radius:12px; background:#fff;
+  resize:vertical;
+}
+select{
+  width:100%; min-height:56px; padding:.6rem .5rem; font:inherit; font-size:.95rem;
+  border:3px solid var(--papel-sombra); border-radius:12px; background:#fff;
+}
+
+/* Las frases a mano son etiquetas y no teclas: son muchas y cortas, y en fila
+   ocupan lo que cada una necesita. Igual llegan a 44 píxeles de alto, que es lo
+   mínimo que un dedo acierta. */
+.frases{display:flex; flex-wrap:wrap; gap:.4rem}
+.frase{
+  display:inline-flex; align-items:center; gap:.4rem;
+  min-height:44px; padding:.4rem .85rem; font-size:.85rem; font-weight:500;
+  background:var(--papel-hondo); color:var(--grafito);
+  border-radius:999px; box-shadow:0 3px 0 var(--papel-sombra);
+  text-align:left;
+}
+.frase:active{transform:translateY(3px); box-shadow:0 0 0 var(--papel-sombra)}
+.frase .borrar{
+  font-size:1rem; line-height:1; opacity:.45; padding:0 .15rem;
+}
+.frase .borrar:hover{opacity:1}
+
+/* En qué paso va el ejercicio. No es adorno: el maestro está mirando al chico,
+   no al teléfono, y cuando vuelve la vista tiene que saber en un vistazo si
+   Piko está hablando o esperando. */
+.paso{
+  display:flex; align-items:center; gap:.5rem;
+  margin:.75rem 0 0; padding:.6rem .7rem; border-radius:10px;
+  background:var(--verde-noche); color:var(--papel); font-size:.82rem;
+}
+.paso b{font-weight:650}
+
+button:disabled{opacity:.4; cursor:default; transform:translateY(4px); box-shadow:none}
+button:disabled:active{transform:translateY(4px)}
+
 /* ---------- lo de ajustar y lo de mirar ---------- */
 /* El control fino del motor y la consola no se usan jugando: se usan cuando
    algo anda mal. Van plegados para que no compitan por el pulgar. */
@@ -288,6 +339,62 @@ details.plegable > .cuerpo{padding:0 .85rem 1rem}
 </header>
 
 <main class="wrap">
+
+  <section class="bloque">
+    <h2>Ejercicio (simulación)</h2>
+    <div class="fila">
+      <div style="flex:2 1 0">
+        <label>Palabra</label>
+        <input type="text" id="palabra" value="Naksa" autocomplete="off" spellcheck="false">
+      </div>
+      <div>
+        <label>Voz de la palabra</label>
+        <select id="idiomaPalabra"></select>
+      </div>
+    </div>
+    <label>Consigna</label>
+    <input type="text" id="consigna" value="Di esta palabra" autocomplete="off">
+
+    <div class="fila" style="margin-top:.7rem">
+      <button class="tecla tecla--verde" id="btnPresentar">▶ Presentar el ejercicio</button>
+    </div>
+    <div class="fila" style="margin-top:.5rem">
+      <button class="tecla" id="btnPronunciar">Pronunciar la palabra</button>
+      <button class="tecla" id="btnEsperar">Esperar la respuesta</button>
+    </div>
+    <div class="fila" style="margin-top:.5rem">
+      <button class="tecla tecla--verde" id="btnBien">✓ Lo dijo</button>
+      <button class="tecla tecla--ambar" id="btnMal">↻ Casi</button>
+    </div>
+    <button class="tecla" id="btnTerminar" style="width:100%;margin-top:.5rem">Terminar</button>
+
+    <p class="paso"><span class="punto" id="pEjercicio"></span><b id="pasoEjercicio">sin ejercicio</b></p>
+    <p class="nota">La palabra aparece en la pantalla del robot y Piko dice la
+      consigna. Quién acertó y quién no lo decide el maestro con las dos teclas
+      de abajo: el robot todavía no escucha, y esta simulación es para ver el
+      ejercicio entero antes de que lo haga.</p>
+  </section>
+
+  <section class="bloque">
+    <h2>Lo que dice</h2>
+    <textarea id="frase" rows="2" placeholder="Escribí lo que tiene que decir…"></textarea>
+    <div class="fila" style="margin-top:.5rem">
+      <div style="flex:1 1 0"><select id="idiomaVoz"></select></div>
+      <button class="tecla tecla--verde" style="flex:2 1 0" id="btnDecir">Decir</button>
+    </div>
+    <div class="fila" style="margin-top:.5rem">
+      <button class="tecla" id="btnGuardarFrase">Guardar</button>
+      <button class="tecla" id="btnProbarAca">Probar acá</button>
+      <button class="tecla" id="btnCallarVoz">Callar</button>
+    </div>
+    <label>Frases a mano</label>
+    <div class="frases" id="frases"></div>
+    <p class="nota">La voz la pone el traductor de Google y sale por el teléfono
+      del robot, que es donde está la cara y donde el pico se mueve con lo que
+      suena. Las lenguas originarias no están en Google: escritas como suenan y
+      leídas con la voz en español quedan más cerca que con cualquier otra.
+      Sin internet, Piko cae a la voz del propio teléfono.</p>
+  </section>
 
   <section class="bloque">
     <h2>Hacia dónde mira</h2>
@@ -388,6 +495,9 @@ details.plegable > .cuerpo{padding:0 .85rem 1rem}
 
 </main>
 
+<!-- Sólo para «probar acá»: la voz de verdad sale por el teléfono del robot. -->
+<audio id="vozPanel"></audio>
+
 <button class="parada" id="btnParada">Parada de emergencia</button>
 
 <script src="piko.js"></script>
@@ -398,6 +508,7 @@ const $ = (id) => document.getElementById(id);
 let ws = null;
 let vivo = false;
 let huboPlaca = false;
+let hayCara = false;
 
 function log(texto, clase) {
   const c = $('consola');
@@ -458,10 +569,15 @@ function conectar() {
 
       $('pSerie').classList.toggle('si', m.conectado);
       $('txtSerie').textContent = m.conectado ? m.puerto : 'sin placa';
+      hayCara = m.caras > 0;
       $('pCara').classList.toggle('si', m.caras > 0);
       $('txtCara').textContent = m.caras > 0 ? `cara ×${m.caras}` : 'sin cara';
       return;
     }
+
+    /* La cara terminó de decir una frase: sigue el que la estaba esperando.
+       Sin esto el ejercicio encadenaría a ciegas y Piko se pisaría solo. */
+    if (m.t === 'vozfin') { const soltar = esperandoVoz.get(m.id); if (soltar) soltar(); return; }
 
     if (m.t === 'catalogo') { pintarCaras(m.caras); pintarSonidos(m.sonidos); if (m.expresion) marcar(m.expresion); return; }
     if (m.t === 'expresion') { marcar(m.nombre); return; }
@@ -486,8 +602,10 @@ setInterval(() => { if (vivo) ws.send(JSON.stringify({ t: 'hb' })); }, 200);
 
 function parar() {
   // Primero se corta la secuencia: si no, el paso siguiente volvería a mover
-  // el motor un instante después de haber frenado.
+  // el motor un instante después de haber frenado. Y el ejercicio con ella, o
+  // seguiría hablando y mandando expresiones sobre un robot ya frenado.
   cortarSecuencia();
+  cortarEjercicio();
   mandar('PARA');
   document.querySelectorAll('.sostener').forEach((b) => b.classList.remove('activo'));
 }
@@ -969,10 +1087,290 @@ for (const [clave, sec] of Object.entries(SECUENCIAS)) {
 (function () {
   const b = document.createElement('button');
   b.className = 'preset preset--corte';
-  b.innerHTML = 'Cortar<small>detiene la secuencia y los efectos</small>';
-  b.addEventListener('click', () => { cortarSecuencia(); ponerEfecto('fijo'); });
+  b.innerHTML = 'Cortar<small>detiene la secuencia, el ejercicio y los efectos</small>';
+  b.addEventListener('click', () => { cortarSecuencia(); cortarEjercicio(); ponerEfecto('fijo'); });
   $('presets').appendChild(b);
 })();
+
+// ── Lo que dice ──────────────────────────────────────────────────────────
+
+/**
+ * Decir algo es mandarle el texto al puente y esperar a que la cara avise que
+ * terminó de decirlo.
+ *
+ * Esperar el aviso importa más de lo que parece. El ejercicio encadena
+ * consigna, palabra y festejo, y si el panel calculara la duración con una
+ * cuenta de caracteres, Piko se pisaría a sí mismo cada vez que Google tarde
+ * en contestar — que por el internet de una escuela puede ser un segundo o
+ * cinco. El único que sabe cuándo dejó de sonar es el teléfono que lo está
+ * reproduciendo, así que lo dice él.
+ *
+ * Igual hay un plazo máximo: sin cara conectada nadie va a avisar nunca, y un
+ * ejercicio esperando para siempre a un teléfono que no está es peor que uno
+ * que sigue de largo.
+ */
+let nVoz = 0;
+const esperandoVoz = new Map();
+
+const IDIOMAS = [['es', 'Español'], ['en', 'Inglés'], ['pt', 'Portugués'], ['fr', 'Francés']];
+
+for (const sel of [$('idiomaVoz'), $('idiomaPalabra')]) {
+  for (const [clave, nombre] of IDIOMAS) {
+    const o = document.createElement('option');
+    o.value = clave;
+    o.textContent = nombre;
+    sel.appendChild(o);
+  }
+}
+
+function decir(texto, idioma = 'es') {
+  const frase = (texto || '').trim();
+  if (!frase) return Promise.resolve();
+  if (!vivo) { log('✗ sin puente: no se puede hablar', 'mal'); return Promise.resolve(); }
+
+  const id = `v${++nVoz}`;
+  ws.send(JSON.stringify({ t: 'decir', id, texto: frase, idioma }));
+
+  return new Promise((listo) => {
+    const estimado = 1200 + frase.length * 110;
+    const plazo = setTimeout(() => { esperandoVoz.delete(id); listo(); },
+                             hayCara ? estimado + 8000 : estimado);
+    esperandoVoz.set(id, () => { clearTimeout(plazo); esperandoVoz.delete(id); listo(); });
+  });
+}
+
+function callar() {
+  if (vivo) ws.send(JSON.stringify({ t: 'callar' }));
+  /* Las esperas se sueltan a mano: si quedaran colgadas, el ejercicio se
+     quedaría trabado esperando el final de algo que ya no va a sonar. El que
+     esperaba comprueba su propio testigo antes de seguir, así que soltarlas no
+     hace que la secuencia continúe — la deja terminar. */
+  for (const soltar of esperandoVoz.values()) soltar();
+  esperandoVoz.clear();
+}
+
+$('btnDecir').addEventListener('click', () => decir($('frase').value, $('idiomaVoz').value));
+$('btnCallarVoz').addEventListener('click', callar);
+
+/* Probar acá suena en el aparato del maestro y no en el robot. Sirve para
+   escribir una frase y escuchar cómo queda sin interrumpir la clase. */
+$('btnProbarAca').addEventListener('click', () => {
+  const texto = ($('frase').value || '').trim();
+  if (!texto) return;
+  const a = $('vozPanel');
+  a.src = `/voz?idioma=${encodeURIComponent($('idiomaVoz').value)}&q=${encodeURIComponent(texto)}`;
+  a.play().catch(() => log('✗ el navegador no dejó reproducir acá', 'mal'));
+});
+$('vozPanel').addEventListener('error', () => log('✗ no se pudo traer la voz de Google', 'mal'));
+
+// ── Las frases a mano ────────────────────────────────────────────────────
+
+/* Las de fábrica están copiadas de `app/src/ui/piko/frases.ts`, para que el
+   robot y la aplicación digan las mismas cosas y con el mismo tono. Ahí está
+   escrita la regla que importa: cuando el chico se equivoca, Piko nunca dice
+   «mal» ni «incorrecto» — reconoce el intento y muestra cómo es. */
+const FRASES_FIJAS = [
+  '¡Hola! Soy Piko.',
+  'Di esta palabra',
+  '¡Muy bien!',
+  'Casi. Escuchá cómo es:',
+  '¿Jugamos un rato?',
+  '¡Hasta luego!',
+];
+
+const LLAVE_FRASES = 'piko.frases';
+
+function frasesGuardadas() {
+  try { return JSON.parse(localStorage.getItem(LLAVE_FRASES)) || []; } catch { return []; }
+}
+
+function guardarFrases(lista) {
+  try { localStorage.setItem(LLAVE_FRASES, JSON.stringify(lista)); } catch { }
+}
+
+function pintarFrases() {
+  const cont = $('frases');
+  cont.textContent = '';
+  const guardadas = frasesGuardadas();
+
+  for (const texto of [...FRASES_FIJAS, ...guardadas]) {
+    const b = document.createElement('button');
+    b.className = 'frase';
+    b.textContent = texto;
+    b.addEventListener('click', () => decir(texto, $('idiomaVoz').value));
+
+    // Las de fábrica no se borran; las que agregó el maestro, sí.
+    if (guardadas.includes(texto)) {
+      const x = document.createElement('span');
+      x.className = 'borrar';
+      x.textContent = '×';
+      x.title = 'Borrar esta frase';
+      x.addEventListener('click', (e) => {
+        e.stopPropagation();               // borrar no es decir
+        guardarFrases(guardadas.filter((f) => f !== texto));
+        pintarFrases();
+      });
+      b.appendChild(x);
+    }
+    cont.appendChild(b);
+  }
+}
+
+$('btnGuardarFrase').addEventListener('click', () => {
+  const texto = ($('frase').value || '').trim();
+  if (!texto) return;
+  const lista = frasesGuardadas();
+  if (!lista.includes(texto) && !FRASES_FIJAS.includes(texto)) {
+    guardarFrases([...lista, texto]);
+    pintarFrases();
+  }
+});
+
+pintarFrases();
+
+// ── El ejercicio simulado ────────────────────────────────────────────────
+
+/**
+ * El ejercicio entero corre en este navegador: muestra la palabra, la dice,
+ * espera, festeja o vuelve a mostrarla.
+ *
+ * Lo que no hace es escuchar. Que Piko decida solo si el chico pronunció bien
+ * es otro problema —micrófono, reconocimiento, una lengua que ningún modelo
+ * conoce— y no hace falta resolverlo para ver si el ejercicio funciona. Acá el
+ * que escucha es el maestro y aprieta una de dos teclas; todo lo demás pasa
+ * igual que si lo hubiera decidido el robot. El día que haya reconocimiento, lo
+ * único que cambia es de dónde sale ese sí o ese no.
+ *
+ * Va con la misma disciplina que las secuencias: cada paso comprueba su propio
+ * testigo antes de seguir, así la parada de emergencia y cualquier otra tecla
+ * lo cortan de verdad y no una frase más tarde.
+ */
+
+const ACIERTO = ['¡Esa es!', '¡Bien ahí!', '¡Muy bien!', '¡Le atinaste!', '¡Así se hace!'];
+const INTENTO = ['Casi. Escuchá cómo es:', 'Buen intento. Es así:', 'Ya casi. Se dice:', 'La próxima sale. Es:'];
+const alAzar = (lista) => lista[Math.floor(Math.random() * lista.length)];
+
+let ejercicio = null;          // el testigo del ejercicio en curso, o null
+let palabraEnJuego = '';
+let idiomaEnJuego = 'es';
+
+function tarjeta(datos) {
+  if (vivo) ws.send(JSON.stringify({ t: 'tarjeta', tarjeta: datos }));
+}
+
+function paso(texto) {
+  $('pasoEjercicio').textContent = texto;
+  $('pEjercicio').classList.toggle('si', ejercicio !== null);
+  for (const id of ['btnPronunciar', 'btnEsperar', 'btnBien', 'btnMal', 'btnTerminar']) {
+    $(id).disabled = ejercicio === null;
+  }
+}
+
+function cortarEjercicio() {
+  if (!ejercicio) return;
+  ejercicio = null;
+  callar();                    // que no se quede hablando solo después del corte
+  paso('sin ejercicio');
+}
+
+function esperarRespuesta() {
+  if (!ejercicio) return;
+  paso('escuchando la respuesta');
+  tarjeta({ texto: palabraEnJuego, sub: 'Te escucho…', estado: 'escuchando' });
+  ponerExpresion('enfrente');
+  ponerEfecto('respirar');     // la luz que respira es la señal de que es tu turno
+}
+
+async function presentarEjercicio() {
+  const palabra = ($('palabra').value || '').trim();
+  if (!palabra) { log('✗ falta la palabra del ejercicio', 'mal'); return; }
+
+  cortarSecuencia();
+  cortarEjercicio();
+
+  palabraEnJuego = palabra;
+  idiomaEnJuego = $('idiomaPalabra').value;
+  const consigna = ($('consigna').value || '').trim() || 'Di esta palabra';
+
+  const mio = {};
+  ejercicio = mio;
+  log(`▶ ejercicio: ${palabraEnJuego}`, 'sal');
+
+  paso('presentando la palabra');
+  ponerExpresion('enfrente');
+  ponerEfecto('fijo');
+  tarjeta({ texto: palabraEnJuego, sub: '', estado: 'neutro' });
+
+  /* Un respiro antes de hablar: la palabra tiene que estar en pantalla cuando
+     se escucha «di esta palabra», y no aparecer con la frase ya empezada. */
+  await dormir(700);
+  if (ejercicio !== mio) return;
+
+  await decir(consigna, 'es');
+  if (ejercicio !== mio) return;
+
+  esperarRespuesta();
+}
+
+async function pronunciarPalabra() {
+  if (!ejercicio) return;
+  const mio = ejercicio;
+  paso('pronunciando la palabra');
+  await decir(palabraEnJuego, idiomaEnJuego);
+  if (ejercicio !== mio) return;
+  esperarRespuesta();
+}
+
+async function calificar(acierto) {
+  if (!ejercicio) return;
+  const mio = ejercicio;
+
+  if (acierto) {
+    const elogio = alAzar(ACIERTO);
+    paso('festejando');
+    tarjeta({ texto: palabraEnJuego, sub: elogio, estado: 'bien' });
+    /* El festejo no se espera: la voz y el aleteo tienen que ir juntos. La
+       secuencia corta lo que hubiera antes y deja las alas abajo al terminar. */
+    correrSecuencia('celebrar');
+    await decir(elogio, 'es');
+    if (ejercicio !== mio) return;
+    await decir(palabraEnJuego, idiomaEnJuego);
+    if (ejercicio !== mio) return;
+    paso('listo — cambiá la palabra o terminá');
+    return;
+  }
+
+  /* Nunca «mal» ni «incorrecto»: se reconoce el intento y se vuelve a mostrar
+     cómo es. La regla está escrita en `app/src/ui/piko/frases.ts` y vale igual
+     acá — el chico que está aprendiendo la lengua de su comunidad no necesita
+     que un robot le diga que la habla mal. */
+  const aliento = alAzar(INTENTO);
+  paso('mostrando cómo es');
+  tarjeta({ texto: palabraEnJuego, sub: aliento, estado: 'mal' });
+  ponerExpresion('enfrente');
+  ponerEfecto('fijo');
+  await decir(aliento, 'es');
+  if (ejercicio !== mio) return;
+  await decir(palabraEnJuego, idiomaEnJuego);
+  if (ejercicio !== mio) return;
+  esperarRespuesta();
+}
+
+function terminarEjercicio() {
+  cortarEjercicio();
+  tarjeta(null);
+  ponerExpresion('enfrente');
+  ponerEfecto('fijo');
+}
+
+$('btnPresentar').addEventListener('click', presentarEjercicio);
+$('btnPronunciar').addEventListener('click', pronunciarPalabra);
+$('btnEsperar').addEventListener('click', esperarRespuesta);
+$('btnBien').addEventListener('click', () => calificar(true));
+$('btnMal').addEventListener('click', () => calificar(false));
+$('btnTerminar').addEventListener('click', terminarEjercicio);
+
+paso('sin ejercicio');   // las teclas quedan apagadas hasta que haya uno
 
 // ── Sonidos ──────────────────────────────────────────────────────────────
 
@@ -997,7 +1395,7 @@ function pintarSonidos(lista) {
   }
 }
 
-$('btnCallar').addEventListener('click', () => { if (vivo) ws.send(JSON.stringify({ t: 'callar' })); });
+$('btnCallar').addEventListener('click', callar);
 
 /* Que el teléfono del maestro tampoco se duerma mientras maneja el robot: si
    se apaga se corta el latido, salta el hombre muerto y Piko se frena solo en

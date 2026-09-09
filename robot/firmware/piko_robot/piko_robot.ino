@@ -94,7 +94,7 @@ const uint8_t PIN_SERVO  = 29;
  * romperse. Achicar estos dos números es lo que lo impide.
  */
 const uint8_t SERVO_MIN = 0;
-const uint8_t SERVO_MAX = 180;
+const uint8_t SERVO_MAX = 101;
 
 /**
  * La ventana de pulso, en microsegundos. Esto es lo que decide cuánto gira de

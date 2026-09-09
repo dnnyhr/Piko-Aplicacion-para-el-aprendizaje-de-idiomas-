@@ -100,6 +100,14 @@ console.log('\nLas dos páginas\n');
   comprobar('la cara analiza la onda del audio', htmlCara.includes('createMediaElementSource'));
   comprobar('y con eso le mueve la boca a Piko', htmlCara.includes('Piko.boca('));
 
+  comprobar('las dos páginas usan Fredoka',
+    html.includes('family=Fredoka') && htmlCara.includes('family=Fredoka'));
+  comprobar('el panel trae el ejercicio simulado',
+    html.includes('btnPresentar') && html.includes("t: 'tarjeta'"));
+  comprobar('la cara muestra la palabra al lado de Piko', htmlCara.includes('id="tarjeta"'));
+  comprobar('y sin red cae a la voz del propio teléfono',
+    htmlCara.includes('SpeechSynthesisUtterance'));
+
   const pikojs = await fetch(`http://localhost:${PUERTO}/piko.js`);
   const dibujo = await pikojs.text();
   comprobar('piko.js abre el pico por cantidad y no por sí o no',
@@ -155,6 +163,74 @@ console.log('\nReparto de expresiones\n');
   comprobar('una cara que llega tarde recibe la expresión puesta', cat && cat.expresion === '_prueba',
     cat && `expresion=${cat.expresion}`);
   tardia.close();
+}
+
+console.log('\nLa voz\n');
+
+{
+  /* No se prueba que Google conteste: eso necesita internet y la prueba tiene
+     que correr en la misma máquina sin red donde se prueba el resto. Lo que se
+     prueba es todo lo que está de este lado — que rechace lo que no sirve y que
+     el reparto llegue a la cara. */
+  const sinTexto = await fetch(`http://localhost:${PUERTO}/voz`);
+  comprobar('/voz sin texto contesta 400', sinTexto.status === 400, `dio ${sinTexto.status}`);
+
+  const idiomaRaro = await fetch(`http://localhost:${PUERTO}/voz?q=hola&idioma=;rm%20-rf`);
+  comprobar('/voz rechaza un idioma inventado', idiomaRaro.status === 400, `dio ${idiomaRaro.status}`);
+
+  control.send(JSON.stringify({ t: 'decir', id: 'v1', texto: 'Di esta palabra', idioma: 'es' }));
+  await esperar(250);
+  const voz = ultima(cara, 'voz');
+  comprobar('lo que dice llega a la cara', !!voz);
+  comprobar('y llega como dirección del mismo origen, no como archivo',
+    !!voz && voz.url.startsWith('/voz?') && voz.url.includes('Di%20esta%20palabra'),
+    voz && voz.url);
+  comprobar('el control lo ve en su consola',
+    control.recibidos.some((m) => m.t === 'serie' && m.linea.includes('Di esta palabra')));
+
+  const antes = cara.recibidos.filter((m) => m.t === 'voz').length;
+  control.send(JSON.stringify({ t: 'decir', texto: '   ' }));
+  await esperar(200);
+  comprobar('no dice nada cuando el texto está vacío',
+    cara.recibidos.filter((m) => m.t === 'voz').length === antes);
+
+  control.send(JSON.stringify({ t: 'decir', texto: 'a'.repeat(400) }));
+  await esperar(200);
+  comprobar('recorta una frase larguísima antes de mandarla',
+    ultima(cara, 'voz').texto.length === 300, `quedó en ${ultima(cara, 'voz').texto.length}`);
+
+  // El aviso de que terminó de hablar viaja al revés: de la cara al control.
+  cara.send(JSON.stringify({ t: 'vozfin', id: 'v1' }));
+  await esperar(250);
+  comprobar('la cara avisa al control cuando terminó de hablar',
+    ultima(control, 'vozfin')?.id === 'v1');
+}
+
+console.log('\nLa tarjeta del ejercicio\n');
+
+{
+  control.send(JSON.stringify({
+    t: 'tarjeta',
+    tarjeta: { texto: 'Naksa', sub: 'Te escucho…', estado: 'escuchando' },
+  }));
+  await esperar(250);
+  const t = ultima(cara, 'tarjeta');
+  comprobar('la palabra del ejercicio llega a la cara', t?.tarjeta?.texto === 'Naksa');
+  comprobar('con el estado en que va el ejercicio', t?.tarjeta?.estado === 'escuchando');
+
+  control.send(JSON.stringify({ t: 'tarjeta', tarjeta: { texto: 'Naksa', estado: 'inventado' } }));
+  await esperar(200);
+  comprobar('un estado que no existe cae en neutro',
+    ultima(cara, 'tarjeta')?.tarjeta?.estado === 'neutro');
+
+  const tardia = await cliente('cara');
+  comprobar('una cara que llega tarde ve la palabra puesta',
+    ultima(tardia, 'catalogo')?.tarjeta?.texto === 'Naksa');
+  tardia.close();
+
+  control.send(JSON.stringify({ t: 'tarjeta', tarjeta: null }));
+  await esperar(200);
+  comprobar('y se saca mandando null', ultima(cara, 'tarjeta')?.tarjeta === null);
 }
 
 console.log('\nLista blanca de órdenes\n');
