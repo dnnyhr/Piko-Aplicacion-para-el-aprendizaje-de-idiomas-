@@ -265,7 +265,7 @@ La mascota se llama **Piko**, y también le da nombre a la app. Piko es un choco
 
 - [x] Definición del reto y las dos rutas de solución
 - [x] Guion y producción del video de presentación
-- [ ] Prototipo funcional para la demo de HN10
+- [x] Prototipo funcional para la demo de HN10
 - [ ] Piloto en comunidad real
 - [ ] *Visión futura:* diálogo generado y respuestas del robot vía un LLM liviano con RAG, alimentado con diccionarios y literatura de las lenguas en peligro e inglés
 
