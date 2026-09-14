@@ -260,7 +260,7 @@ La mascota se llama **Piko**, y también le da nombre a la app. Piko es un choco
 </h2>
 
 <div align="center">
-<img src="https://img.shields.io/badge/Progreso%20general-40%25-2F6B4F?style=for-the-badge&labelColor=1F4E5F" alt="progreso"/>
+<img src="https://img.shields.io/badge/Progreso%20general-60%25-2F6B4F?style=for-the-badge&labelColor=1F4E5F" alt="progreso"/>
 </div>
 
 - [x] Definición del reto y las dos rutas de solución
