@@ -14,6 +14,14 @@
 
 const RESEND = 'https://api.resend.com/emails';
 
+// Qué suele significar cada error de Resend, para que el panel lo diga claro.
+const PISTAS = {
+  401: 'Resend no aceptó la API key: revisá RESEND_API_KEY.',
+  403: 'Resend lo rechazó: revisá la API key y que el dominio del remitente esté verificado.',
+  422: 'Resend no aceptó los datos: revisá CORREO_REMITENTE (tiene que ser de un dominio verificado).',
+  429: 'Demasiados envíos seguidos: probá de nuevo en un minuto.',
+};
+
 // Direcciones que son de un puesto, no de una persona: no sirven para adivinar un nombre.
 const GENERICOS = new Set([
   'admin', 'administracion', 'contacto', 'contact', 'hola', 'hello', 'info', 'informacion',
@@ -52,7 +60,7 @@ const escapar = (s) =>
  * salen las imágenes (en PNG: Gmail y Outlook no muestran SVG).
  */
 export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
-  const saludo = nombre ? `¡Gracias, ${nombre}!` : '¡Gracias por tu respuesta!';
+  const saludo = nombre ? `¡Tuani, ${nombre}!` : '¡Tuani, gracias por responder!';
   const titulo = encuesta ?? 'nuestra encuesta';
   const img = (archivo) => `${base}/img/${archivo}`;
   const e = { saludo: escapar(saludo), titulo: escapar(titulo), enlace: escapar(enlace), base: escapar(base) };
@@ -61,9 +69,9 @@ export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
   const cuerpo = "'Nunito Sans', 'Segoe UI', Helvetica, Arial, sans-serif";
 
   const puntos = [
-    ['#97C137', 'Lecciones cortas tipo juego en miskito, mayangna, rama, garífuna e inglés.'],
-    ['#60C5FA', 'Funciona sin internet, también en clase con tus compañeros.'],
-    ['#D9531C', 'Y muy pronto, Pikobot: el robot que guía, escucha y corrige con IA.'],
+    ['#97C137', 'Lecciones cortitas tipo juego en miskito, mayangna, rama, garífuna e inglés.'],
+    ['#60C5FA', 'Funciona sin internet: en el aula, en la casa o en el camino.'],
+    ['#D9531C', 'Y ya viene Pikobot: el robot que guía, escucha y corrige con IA.'],
   ];
 
   const html = `<!doctype html>
@@ -86,7 +94,7 @@ export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
 </style>
 </head>
 <body style="margin:0;padding:0;background:#F7F0E4;">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#F7F0E4;">Tus respuestas ya están con el equipo. Acá está tu enlace para descargar Piko.&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#F7F0E4;">Dale pues: acá está tu enlace para descargar Piko. ¡Gracias por echarnos la mano!&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F7F0E4;">
 <tr><td align="center" style="padding:24px 12px 32px;">
 
@@ -98,8 +106,8 @@ export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
     <tr><td class="relleno" style="padding:34px 44px 8px;font-family:${cuerpo};color:#33453B;">
       <p style="margin:0 0 10px;font-family:${cuerpo};font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#197249;">Encuesta · ${e.titulo}</p>
       <h1 class="titulo" style="margin:0 0 16px;font-family:${fuente};font-size:34px;line-height:40px;font-weight:700;color:#16241D;">${e.saludo}</h1>
-      <p style="margin:0 0 14px;font-size:17px;line-height:27px;">Tus respuestas ya están con el equipo. Las vamos a leer una por una: lo que más pidan es lo primero que vamos a construir.</p>
-      <p style="margin:0 0 24px;font-size:17px;line-height:27px;">Pediste probar Piko antes que nadie, así que acá la tenés:</p>
+      <p style="margin:0 0 14px;font-size:17px;line-height:27px;">Ya tenemos tus respuestas y las vamos a leer una por una. Lo que más pidan es lo primero que vamos a construir, así que gracias por echarnos la mano.</p>
+      <p style="margin:0 0 24px;font-size:17px;line-height:27px;">Dijiste que querías probar Piko antes que nadie. ¡Dale pues! Acá la tenés:</p>
     </td></tr>
 
     <tr><td align="center" style="padding:0 44px 10px;">
@@ -108,12 +116,12 @@ export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
           <a href="${e.enlace}" target="_blank" style="display:inline-block;padding:16px 36px;font-family:${fuente};font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#0A4530;text-decoration:none;">Descargar Piko</a>
         </td>
       </tr></table>
-      <p style="margin:14px 0 0;font-family:${cuerpo};font-size:13px;line-height:20px;color:#6B7A70;">¿El botón no abre? Copiá este enlace:<br><a href="${e.enlace}" style="color:#0F5D3D;word-break:break-all;">${e.enlace}</a></p>
+      <p style="margin:14px 0 0;font-family:${cuerpo};font-size:13px;line-height:20px;color:#6B7A70;">¿El botón no te abre? Copiá este enlace:<br><a href="${e.enlace}" style="color:#0F5D3D;word-break:break-all;">${e.enlace}</a></p>
     </td></tr>
 
     <tr><td class="relleno" style="padding:28px 44px 8px;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F7F0E4;border-radius:18px;">
-        <tr><td style="padding:22px 24px 10px;font-family:${fuente};font-size:18px;font-weight:600;color:#0F5D3D;">Lo que vas a encontrar</td></tr>
+        <tr><td style="padding:22px 24px 10px;font-family:${fuente};font-size:18px;font-weight:600;color:#0F5D3D;">Lo que te espera adentro</td></tr>
         ${puntos
           .map(
             ([color, texto]) => `<tr><td style="padding:0 24px 14px;">
@@ -129,15 +137,16 @@ export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
     </td></tr>
 
     <tr><td class="relleno" style="padding:26px 44px 34px;font-family:${cuerpo};font-size:16px;line-height:25px;color:#33453B;">
-      <p style="margin:0 0 4px;">Con cariño,</p>
-      <p style="margin:0;font-family:${fuente};font-size:18px;font-weight:600;color:#0F5D3D;">Piko y el equipo MugiWare</p>
+      <p style="margin:0 0 4px;">Con cariño pinolero,</p>
+      <p style="margin:0;font-family:${fuente};font-size:18px;font-weight:600;color:#0F5D3D;">Piko, el chocoyito más hablantín de Nicaragua</p>
+      <p style="margin:2px 0 0;">y todo el equipo MugiWare</p>
       <p style="margin:6px 0 0;font-family:${fuente};font-size:15px;font-weight:600;color:#7BA22C;">el que repite, salva</p>
     </td></tr>
   </table>
 
   <table role="presentation" class="contenedor" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;">
     <tr><td class="relleno" style="padding:20px 44px 0;font-family:${cuerpo};font-size:12px;line-height:19px;color:#6B7A70;text-align:center;">
-      Recibís este correo porque dejaste tu dirección en la encuesta «${e.titulo}» y pediste probar la app. No te vamos a escribir de nuevo sin tu permiso.<br><br>
+      Te llegó este correo porque dejaste tu dirección en la encuesta «${e.titulo}» y pediste probar la app. No te vamos a volver a escribir sin tu permiso: palabra de chocoyo.<br><br>
       MugiWare · Jinotega, Nicaragua · <a href="https://piko.mugiware.com" style="color:#6B7A70;">piko.mugiware.com</a>
     </td></tr>
   </table>
@@ -149,21 +158,22 @@ export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
 
   const texto = `${saludo}
 
-Tus respuestas a «${titulo}» ya están con el equipo. Las vamos a leer una por una: lo que más pidan es lo primero que vamos a construir.
+Ya tenemos tus respuestas a «${titulo}» y las vamos a leer una por una. Lo que más pidan es lo primero que vamos a construir, así que gracias por echarnos la mano.
 
-Pediste probar Piko antes que nadie, así que acá la tenés:
+Dijiste que querías probar Piko antes que nadie. ¡Dale pues! Acá la tenés:
 
 Descargar Piko: ${enlace}
 
-Lo que vas a encontrar:
+Lo que te espera adentro:
 - ${puntos.map(([, t]) => t).join('\n- ')}
 
-Con cariño,
-Piko y el equipo MugiWare
+Con cariño pinolero,
+Piko, el chocoyito más hablantín de Nicaragua
+y todo el equipo MugiWare
 el que repite, salva
 
 —
-Recibís este correo porque dejaste tu dirección en la encuesta «${titulo}» y pediste probar la app. No te vamos a escribir de nuevo sin tu permiso.
+Te llegó este correo porque dejaste tu dirección en la encuesta «${titulo}» y pediste probar la app. No te vamos a volver a escribir sin tu permiso: palabra de chocoyo.
 MugiWare · Jinotega, Nicaragua · https://piko.mugiware.com
 `;
 
@@ -172,24 +182,40 @@ MugiWare · Jinotega, Nicaragua · https://piko.mugiware.com
 
 /**
  * Manda el correo de bienvenida de una respuesta y anota el resultado en D1.
- * Nunca lanza: si algo falla, queda en `correos` como "error" y la respuesta
- * de la encuesta ya está guardada igual.
+ * Sirve para el primer envío y para los reenvíos desde el panel: cada
+ * intento lleva su número, y con él su propia clave de idempotencia.
+ * Nunca lanza: devuelve { estado, detalle } y la respuesta de la encuesta
+ * ya está guardada igual.
  */
 export async function enviarBienvenida(env, { respuestaId, def, respuestas, base }) {
   const conf = def.correo;
   const para = String(respuestas[conf.pregunta] ?? '').trim();
-  if (!para) return;
+  if (!para) return { estado: 'sin-correo', detalle: 'Esta respuesta no dejó correo.' };
+
+  let intento = 1;
+  try {
+    const previo = await env.DB.prepare('SELECT intentos FROM correos WHERE respuesta_id = ?').bind(respuestaId).first();
+    if (previo) intento = (previo.intentos ?? 1) + 1;
+  } catch {
+    /* sin la migración 0003: se cuenta como primer intento */
+  }
 
   const anotar = async (estado, detalle, resendId = null) => {
+    const d = detalle ? String(detalle).slice(0, 500) : null;
     try {
       await env.DB.prepare(
-        'INSERT OR IGNORE INTO correos (respuesta_id, para, estado, detalle, resend_id) VALUES (?, ?, ?, ?, ?)',
+        `INSERT INTO correos (respuesta_id, para, estado, detalle, resend_id, intentos, actualizado_en)
+         VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+         ON CONFLICT (respuesta_id) DO UPDATE SET
+           para = excluded.para, estado = excluded.estado, detalle = excluded.detalle,
+           resend_id = excluded.resend_id, intentos = excluded.intentos, actualizado_en = excluded.actualizado_en`,
       )
-        .bind(respuestaId, para, estado, detalle ? String(detalle).slice(0, 500) : null, resendId)
+        .bind(respuestaId, para, estado, d, resendId, intento)
         .run();
     } catch (err) {
       console.error('No se pudo anotar el correo', err);
     }
+    return { estado, detalle: d, intentos: intento };
   };
 
   const faltan = ['RESEND_API_KEY', 'CORREO_REMITENTE', 'APP_DESCARGA_URL'].filter((k) => !env[k]);
@@ -210,8 +236,9 @@ export async function enviarBienvenida(env, { respuestaId, def, respuestas, base
       headers: {
         authorization: `Bearer ${env.RESEND_API_KEY}`,
         'content-type': 'application/json',
-        // Si la señal falla y el Worker reintenta, Resend no lo manda dos veces.
-        'idempotency-key': `bienvenida-${respuestaId}`,
+        // Un reintento automático del mismo intento no sale dos veces;
+        // un reenvío pedido desde el panel es otro intento y sí sale.
+        'idempotency-key': `bienvenida-${respuestaId}-${intento}`,
       },
       body: JSON.stringify({
         from: env.CORREO_REMITENTE,
@@ -220,12 +247,12 @@ export async function enviarBienvenida(env, { respuestaId, def, respuestas, base
         html: correo.html,
         text: correo.texto,
         ...(env.CORREO_RESPUESTA ? { reply_to: env.CORREO_RESPUESTA } : {}),
-        tags: [{ name: 'tipo', value: 'bienvenida' }],
+        tags: [{ name: 'tipo', value: intento > 1 ? 'reenvio' : 'bienvenida' }],
       }),
     });
     const r = await res.json().catch(() => ({}));
     if (res.ok) return anotar('enviado', null, r.id ?? null);
-    return anotar('error', `${res.status} ${r.message ?? r.name ?? ''}`.trim());
+    return anotar('error', `${res.status} · ${r.message ?? PISTAS[res.status] ?? r.name ?? 'Resend no pudo mandarlo.'}`);
   } catch (err) {
     return anotar('error', err?.message ?? String(err));
   }

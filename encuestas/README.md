@@ -72,14 +72,19 @@ respuesta: si Resend falla, la respuesta queda guardada igual.
   correo solo cuando tiene forma de nombre (`maria.lopez@…` → "Maria"); con
   números o direcciones de un puesto (`info@`, `ventas@`) saluda sin nombre.
 - **Registro.** Cada envío queda en la tabla `correos` con su estado
-  (`enviado`, `error` u `omitido`) y el resumen de `/admin` los cuenta.
+  (`enviado`, `error` u `omitido`), el motivo si falló y cuántos intentos van.
+- **Reenvíos desde `/admin`.** La sección *Correos* lista cada dirección con
+  su estado. "Intentar de nuevo" reenvía uno; "Reenviar los que no llegaron"
+  reintenta los fallidos y los que quedaron sin enviar, de a 20 y con una
+  pausa entre cada uno para no pasar el límite de Resend. Cada reenvío es un
+  intento nuevo (con su propia clave de idempotencia), así que sí sale.
 - **Plantilla:** `src/correo.js` (HTML y texto). La cabecera es
   `public/img/correo-cabecera.jpg`: los correos no muestran SVG.
 
 Para activarlo:
 
 ```bash
-npm run db:remoto                          # crea la tabla correos (migración 0002)
+npm run db:remoto                          # tabla correos (migraciones 0002 y 0003)
 npx wrangler secret put RESEND_API_KEY     # la API key de Resend
 ```
 

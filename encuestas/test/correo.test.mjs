@@ -129,10 +129,10 @@ test('si deja su correo, se manda el enlace por Resend, con su nombre', async ()
   const [l] = llamadas;
   assert.equal(l.url, 'https://api.resend.com/emails');
   assert.equal(l.opt.headers.authorization, 'Bearer re_prueba');
-  assert.equal(l.opt.headers['idempotency-key'], `bienvenida-${cuerpo.id}`);
+  assert.equal(l.opt.headers['idempotency-key'], `bienvenida-${cuerpo.id}-1`);
   assert.deepEqual(l.cuerpo.to, ['vale@correo.com']);
   assert.equal(l.cuerpo.from, CONFIG.CORREO_REMITENTE);
-  assert.match(l.cuerpo.html, /¡Gracias, Valeria!/);
+  assert.match(l.cuerpo.html, /¡Tuani, Valeria!/);
   assert.ok(l.cuerpo.html.includes(CONFIG.APP_DESCARGA_URL));
   assert.ok(l.cuerpo.html.includes('https://encuestas.test/img/correo-cabecera.jpg'));
   assert.match(l.cuerpo.text, /Descargar Piko: https:\/\/piko\.test\/descargar/);
@@ -144,7 +144,7 @@ test('si deja su correo, se manda el enlace por Resend, con su nombre', async ()
 test('sin nombre, lo adivina del correo cuando se puede', async () => {
   await llamar(`/api/admin/encuestas/${real.slug}`, { method: 'PUT', body: real, token: TOKEN });
   await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: respuesta({ correo: 'rosa.mejia@correo.com' }) });
-  assert.match(llamadas[0].cuerpo.html, /¡Gracias, Rosa!/);
+  assert.match(llamadas[0].cuerpo.html, /¡Tuani, Rosa!/);
 });
 
 test('reenviar la misma respuesta no manda el correo dos veces', async () => {
@@ -181,7 +181,53 @@ test('si Resend falla, la respuesta se guarda igual y queda el error anotado', a
   assert.equal(res.status, 201);
   const [c] = await correos();
   assert.equal(c.estado, 'error');
-  assert.match(c.detalle, /403 domain not verified/);
+  assert.match(c.detalle, /403 · domain not verified/);
   const r = await (await llamar(`/api/admin/encuestas/${real.slug}/resumen`, { token: TOKEN })).json();
   assert.deepEqual(r.correos, { error: 1 });
+});
+
+/* ------------------------------------------------- reenvíos desde el panel */
+
+test('el panel lista los correos y reenvía uno como un intento nuevo', async () => {
+  await llamar(`/api/admin/encuestas/${real.slug}`, { method: 'PUT', body: real, token: TOKEN });
+  const cuerpo = respuesta({ correo: 'ana@correo.com' });
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: cuerpo });
+
+  const { correos: lista } = await (await llamar(`/api/admin/encuestas/${real.slug}/correos`, { token: TOKEN })).json();
+  assert.equal(lista.length, 1);
+  assert.deepEqual([lista[0].para, lista[0].estado, lista[0].intentos], ['ana@correo.com', 'enviado', 1]);
+
+  const res = await llamar(`/api/admin/correos/${cuerpo.id}/reenviar`, { method: 'POST', token: TOKEN });
+  const r = await res.json();
+  assert.deepEqual([r.ok, r.estado, r.intentos], [true, 'enviado', 2]);
+  assert.equal(llamadas.length, 2);
+  assert.equal(llamadas[1].opt.headers['idempotency-key'], `bienvenida-${cuerpo.id}-2`);
+  assert.deepEqual(llamadas[1].cuerpo.tags, [{ name: 'tipo', value: 'reenvio' }]);
+});
+
+test('reenviar los que no llegaron: solo toca los fallidos u omitidos', async () => {
+  delete env.RESEND_API_KEY;
+  await llamar(`/api/admin/encuestas/${real.slug}`, { method: 'PUT', body: real, token: TOKEN });
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: respuesta({ correo: 'a@correo.com' }) });
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: respuesta({ correo: 'b@correo.com' }) });
+  env.RESEND_API_KEY = 're_prueba';
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: respuesta({ correo: 'c@correo.com' }) });
+  assert.equal(llamadas.length, 1);
+
+  const r = await (
+    await llamar(`/api/admin/encuestas/${real.slug}/correos/reenviar`, { method: 'POST', body: {}, token: TOKEN })
+  ).json();
+  assert.deepEqual([r.enviado, r.error, r.quedan], [2, 0, false]);
+  assert.deepEqual(llamadas.slice(1).map((l) => l.cuerpo.to[0]).sort(), ['a@correo.com', 'b@correo.com']);
+  const estados = (await correos()).map((c) => c.estado);
+  assert.deepEqual(estados, ['enviado', 'enviado', 'enviado']);
+});
+
+test('reenviar pide token y una respuesta con correo', async () => {
+  await llamar(`/api/admin/encuestas/${real.slug}`, { method: 'PUT', body: real, token: TOKEN });
+  const sin = respuesta({ whatsapp: '88881234' });
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: sin });
+  assert.equal((await llamar(`/api/admin/correos/${sin.id}/reenviar`, { method: 'POST' })).status, 401);
+  assert.equal((await llamar(`/api/admin/correos/${sin.id}/reenviar`, { method: 'POST', token: TOKEN })).status, 422);
+  assert.equal((await llamar(`/api/admin/correos/no-existe/reenviar`, { method: 'POST', token: TOKEN })).status, 404);
 });

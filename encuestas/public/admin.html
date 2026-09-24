@@ -33,6 +33,20 @@
   .pregunta h3 { font-size: 1.1rem; margin-bottom: 2px; }
   .meta { font-size: .85rem; color: var(--tinta-suave); margin: 0; }
   select.campo { margin: 0; width: 100%; }
+  .correos { margin: 0 0 24px; }
+  .correos h2 { font-size: 1.3rem; margin-bottom: 10px; }
+  .correos__cuenta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .correos .btn { margin-bottom: 8px; }
+  .correos__lista { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; }
+  .correo { background: var(--blanco); border: 2px solid var(--borde); border-radius: var(--radio-md); padding: 12px 14px; display: grid; gap: 6px; }
+  .correo__fila { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .correo__para { overflow-wrap: anywhere; }
+  .correo__detalle { color: var(--intento-tinta); }
+  .estado { font-family: Fredoka, sans-serif; font-weight: 600; font-size: .8rem; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+  .estado--enviado { background: #EDF8D9; color: #3F6B0E; }
+  .estado--error { background: var(--intento-fondo); color: var(--intento-tinta); }
+  .estado--omitido { background: var(--papel-hondo); color: var(--tinta); }
+  .btn--chico { min-height: 40px; padding: .45rem .9rem; font-size: .85rem; }
   @media (min-width: 640px) {
     .barra-dato { grid-template-columns: minmax(120px, 1fr) 2fr auto; gap: 10px; }
     .barra-dato__pista { grid-column: auto; grid-row: auto; }

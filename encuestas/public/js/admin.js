@@ -19,8 +19,11 @@ function h(tag, attrs = {}, ...hijos) {
 
 let token = sessionStorage.getItem(CLAVE) ?? '';
 
-async function api(ruta) {
-  const res = await fetch(ruta, { headers: { authorization: `Bearer ${token}` } });
+async function api(ruta, opciones = {}) {
+  const res = await fetch(ruta, {
+    ...opciones,
+    headers: { authorization: `Bearer ${token}`, ...(opciones.body ? { 'content-type': 'application/json' } : {}) },
+  });
   if (res.status === 401) throw new Error('Token inválido.');
   if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? `Error ${res.status}`);
   return res;
@@ -84,7 +87,85 @@ async function mostrar(slug) {
     return h('article', { class: 'pregunta' }, h('h3', {}, p.texto), h('p', { class: 'meta' }, `${p.id} · ${p.respondieron} personas`), cuerpo);
   });
 
-  cont.replaceChildren(cifras, ...bloques);
+  const correos = h('section', { class: 'correos', id: 'correos' });
+  cont.replaceChildren(cifras, correos, ...bloques);
+  mostrarCorreos(slug, correos);
+}
+
+/* ------------------------------------------------------------- correos */
+
+const ETIQUETA = { enviado: 'Enviado', error: 'Falló', omitido: 'Sin enviar' };
+const fecha = (iso) =>
+  new Date(iso.endsWith('Z') ? iso : `${iso}Z`).toLocaleString('es-NI', { dateStyle: 'short', timeStyle: 'short' });
+
+async function mostrarCorreos(slug, cont, mensaje = '') {
+  let lista;
+  try {
+    ({ correos: lista } = await (await api(`/api/admin/encuestas/${slug}/correos`)).json());
+  } catch (err) {
+    cont.replaceChildren(h('p', { class: 'meta' }, `Correos: ${err.message}`));
+    return;
+  }
+  if (!lista.length) {
+    cont.replaceChildren(h('h2', {}, 'Correos'), h('p', { class: 'meta' }, 'Todavía nadie dejó su correo.'));
+    return;
+  }
+
+  const cuenta = { enviado: 0, error: 0, omitido: 0 };
+  for (const c of lista) cuenta[c.estado] = (cuenta[c.estado] ?? 0) + 1;
+  const pendientes = cuenta.error + cuenta.omitido;
+  const aviso = h('p', { class: 'meta', role: 'status' }, mensaje);
+
+  const botonTodos = pendientes
+    ? h('button', { class: 'btn', type: 'button' }, `Reenviar los que no llegaron (${pendientes})`)
+    : null;
+  botonTodos?.addEventListener('click', async () => {
+    botonTodos.disabled = true;
+    aviso.textContent = 'Mandando… puede tardar unos segundos.';
+    let resultado;
+    try {
+      const r = await (await api(`/api/admin/encuestas/${slug}/correos/reenviar`, { method: 'POST', body: '{}' })).json();
+      resultado = `Enviados: ${r.enviado} · fallaron: ${r.error} · sin enviar: ${r.omitido}${r.quedan ? ' · quedan más: tocá de nuevo' : ''}`;
+    } catch (err) {
+      resultado = err.message;
+    }
+    mostrarCorreos(slug, cont, resultado);
+  });
+
+  cont.replaceChildren(
+    h('h2', {}, 'Correos con el enlace de descarga'),
+    h(
+      'div',
+      { class: 'correos__cuenta' },
+      ...['enviado', 'error', 'omitido'].map((k) => h('span', { class: `estado estado--${k}` }, `${ETIQUETA[k]}: ${cuenta[k]}`)),
+    ),
+    botonTodos,
+    aviso,
+    h('ul', { class: 'correos__lista' }, lista.map((c) => filaCorreo(slug, c, cont))),
+  );
+}
+
+function filaCorreo(slug, c, cont) {
+  const boton = h('button', { class: 'btn btn--papel btn--chico', type: 'button' }, c.estado === 'enviado' ? 'Reenviar' : 'Intentar de nuevo');
+  const estado = h('span', { class: `estado estado--${c.estado}` }, ETIQUETA[c.estado] ?? c.estado);
+  boton.addEventListener('click', async () => {
+    if (c.estado === 'enviado' && !confirm(`A ${c.para} ya le llegó. ¿Mandárselo otra vez?`)) return;
+    boton.disabled = true;
+    boton.textContent = 'Mandando…';
+    try {
+      await api(`/api/admin/correos/${c.respuesta_id}/reenviar`, { method: 'POST' });
+    } catch (err) {
+      alert(err.message);
+    }
+    mostrarCorreos(slug, cont);
+  });
+  return h(
+    'li',
+    { class: 'correo' },
+    h('div', { class: 'correo__fila' }, h('b', { class: 'correo__para' }, c.para), estado),
+    c.detalle ? h('p', { class: 'meta correo__detalle' }, c.detalle) : null,
+    h('div', { class: 'correo__fila' }, h('span', { class: 'meta' }, `${c.intentos > 1 ? `${c.intentos} intentos · ` : ''}${fecha(c.actualizado_en)}`), boton),
+  );
 }
 
 $('acceso').addEventListener('submit', (e) => {

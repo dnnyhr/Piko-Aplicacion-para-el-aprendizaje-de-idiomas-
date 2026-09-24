@@ -16,6 +16,9 @@
  *   GET  /api/admin/encuestas                  todas, con conteo (token)
  *   GET  /api/admin/encuestas/:slug/resumen    agregados por pregunta (token)
  *   GET  /api/admin/encuestas/:slug/csv        exportar (token)
+ *   GET  /api/admin/encuestas/:slug/correos    correos enviados y su estado (token)
+ *   POST /api/admin/encuestas/:slug/correos/reenviar   reenviar los que fallaron (token)
+ *   POST /api/admin/correos/:respuesta/reenviar         reenviar uno (token)
  */
 
 import { aFilas, preguntasDe, revisar, validarDefinicion } from '../public/js/reglas.js';
@@ -52,7 +55,7 @@ async function enrutar(request, env, ctx) {
 
   if (partes[0] !== 'api') return servirPagina(request, env, url, partes);
 
-  const [, a, b, c, d] = partes;
+  const [, a, b, c, d, e] = partes;
 
   if (a === 'salud' && m === 'GET') return json({ ok: true });
 
@@ -68,6 +71,9 @@ async function enrutar(request, env, ctx) {
     if (b === 'encuestas' && c && !d && m === 'PUT') return publicar(request, env, c);
     if (b === 'encuestas' && c && d === 'resumen' && m === 'GET') return resumen(env, c);
     if (b === 'encuestas' && c && d === 'csv' && m === 'GET') return exportarCsv(env, c);
+    if (b === 'encuestas' && c && d === 'correos' && !e && m === 'GET') return listarCorreos(env, c);
+    if (b === 'encuestas' && c && d === 'correos' && e === 'reenviar' && m === 'POST') return reenviarFallidos(request, env, c, url);
+    if (b === 'correos' && c && d === 'reenviar' && m === 'POST') return reenviarUno(env, c, url);
   }
 
   throw new ErrorHttp(404, 'Ruta no encontrada.');
@@ -454,6 +460,85 @@ async function exportarCsv(env, slug) {
       'cache-control': 'no-store',
     },
   });
+}
+
+/* ---------------------------------------------------------------- correos */
+
+async function listarCorreos(env, slug) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  let results = [];
+  try {
+    ({ results } = await env.DB.prepare(
+      `SELECT c.respuesta_id, c.para, c.estado, c.detalle, c.intentos, c.creado_en,
+              COALESCE(c.actualizado_en, c.creado_en) AS actualizado_en
+         FROM correos c JOIN respuestas r ON r.id = c.respuesta_id
+        WHERE r.encuesta_id = ?
+        ORDER BY COALESCE(c.actualizado_en, c.creado_en) DESC
+        LIMIT 500`,
+    )
+      .bind(e.id)
+      .all());
+  } catch {
+    throw new ErrorHttp(503, 'Falta la tabla de correos: corré `npm run db:remoto`.');
+  }
+  return json({ correos: results });
+}
+
+/** Vuelve a mandar el correo de una respuesta con la definición con que se contestó. */
+async function reenviar(env, respuestaId, base) {
+  const r = await env.DB.prepare(
+    `SELECT r.id, r.datos, v.definicion
+       FROM respuestas r
+       JOIN versiones_encuesta v ON v.encuesta_id = r.encuesta_id AND v.version = r.version
+      WHERE r.id = ?`,
+  )
+    .bind(respuestaId)
+    .first();
+  if (!r) throw new ErrorHttp(404, 'Esa respuesta no existe.');
+  const def = JSON.parse(r.definicion);
+  const { respuestas } = JSON.parse(r.datos);
+  if (!def.correo || !respuestas[def.correo.pregunta]) throw new ErrorHttp(422, 'Esta respuesta no dejó correo.');
+  return enviarBienvenida(env, { respuestaId, def, respuestas, base });
+}
+
+async function reenviarUno(env, respuestaId, url) {
+  const resultado = await reenviar(env, respuestaId, url.origin);
+  return json({ ok: resultado.estado === 'enviado', ...resultado });
+}
+
+// Resend acepta pocos envíos por segundo en el plan gratis: se mandan de a
+// uno, con una pausa, y de a tandas. El panel vuelve a pedir la siguiente.
+const TANDA = 20;
+const PAUSA_MS = 600;
+
+async function reenviarFallidos(request, env, slug, url) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  const cuerpo = await request.json().catch(() => ({}));
+  const estados = (Array.isArray(cuerpo.estados) ? cuerpo.estados : ['error', 'omitido']).filter((x) =>
+    ['error', 'omitido', 'enviado'].includes(x),
+  );
+  if (!estados.length) throw new ErrorHttp(400, 'Indicá qué estados reenviar.');
+
+  const { results } = await env.DB.prepare(
+    `SELECT c.respuesta_id FROM correos c JOIN respuestas r ON r.id = c.respuesta_id
+      WHERE r.encuesta_id = ? AND c.estado IN (${estados.map(() => '?').join(', ')})
+      ORDER BY c.creado_en
+      LIMIT ${TANDA + 1}`,
+  )
+    .bind(e.id, ...estados)
+    .all();
+
+  const cuenta = { enviado: 0, error: 0, omitido: 0 };
+  for (const [i, { respuesta_id }] of results.slice(0, TANDA).entries()) {
+    if (i) await new Promise((r) => setTimeout(r, PAUSA_MS));
+    const r = await reenviar(env, respuesta_id, url.origin).catch(() => ({ estado: 'error' }));
+    cuenta[r.estado] = (cuenta[r.estado] ?? 0) + 1;
+    // Si falta configurar Resend, los demás van a dar lo mismo: no tiene sentido seguir.
+    if (r.estado === 'omitido') break;
+  }
+  return json({ ...cuenta, quedan: results.length > TANDA });
 }
 
 export function celda(v) {
