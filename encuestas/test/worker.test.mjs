@@ -185,3 +185,28 @@ test('rutas desconocidas y JSON inválido', async () => {
   );
   assert.equal(res.status, 400);
 });
+
+test('las respuestas a preguntas que se sacaron siguen en el resumen y el CSV', async () => {
+  // v1 tenía una pregunta "contacto" que después se reemplazó
+  const v1 = structuredClone(real);
+  v1.secciones[4].preguntas = v1.secciones[4].preguntas.filter((p) => !['nombre', 'correo', 'whatsapp'].includes(p.id));
+  v1.secciones[4].preguntas.push({ id: 'contacto', tipo: 'texto', texto: '¿Cómo te avisamos?', max: 120 });
+  delete v1.correo;
+  await publicar(v1);
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: respuestaValida({ contacto: '+505 8888 1234' }) });
+
+  const r2 = await (await publicar(real)).json();
+  assert.equal(r2.version, 2);
+
+  const r = await (await llamar(`/api/admin/encuestas/${real.slug}/resumen`, { token: TOKEN })).json();
+  const contacto = r.preguntas.find((p) => p.id === 'contacto');
+  assert.ok(contacto, 'la pregunta vieja sigue en el resumen');
+  assert.equal(contacto.anterior, 1);
+  assert.deepEqual(contacto.textos.map((t) => t.texto), ['+505 8888 1234']);
+  assert.equal(r.preguntas.find((p) => p.id === 'correo').anterior, null);
+
+  const csv = await (await llamar(`/api/admin/encuestas/${real.slug}/csv`, { token: TOKEN })).text();
+  const [cabecera, fila] = csv.replace(/^\uFEFF/, '').trim().split('\r\n');
+  assert.ok(cabecera.split(',').includes('contacto'));
+  assert.ok(fila.includes('+505 8888 1234'));
+});

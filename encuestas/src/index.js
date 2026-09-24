@@ -156,6 +156,30 @@ async function cargar(env, slug) {
   return { ...fila, definicion: JSON.parse(fila.definicion) };
 }
 
+/**
+ * Todas las preguntas que tuvo la encuesta en cualquier versión: primero las
+ * de la versión actual, en su orden, y después las que se sacaron (marcadas
+ * con `anterior`: la última versión que las tuvo). Así, cambiar la encuesta
+ * nunca esconde respuestas viejas del resumen ni del CSV.
+ */
+async function preguntasHistoricas(env, e) {
+  const { results } = await env.DB.prepare(
+    'SELECT version, definicion FROM versiones_encuesta WHERE encuesta_id = ? ORDER BY version DESC',
+  )
+    .bind(e.id)
+    .all();
+  const vistas = new Set();
+  const lista = [];
+  for (const v of results) {
+    for (const p of preguntasDe(JSON.parse(v.definicion))) {
+      if (vistas.has(p.id)) continue;
+      vistas.add(p.id);
+      lista.push(v.version === e.version ? p : { ...p, anterior: v.version });
+    }
+  }
+  return lista;
+}
+
 async function obtenerEncuesta(env, slug, admin) {
   const e = await cargar(env, slug);
   // Un borrador solo lo ve quien tiene el token: sirve para revisarla antes de abrirla.
@@ -354,9 +378,9 @@ async function resumen(env, slug) {
     .bind(e.id)
     .all();
 
-  const preguntas = preguntasDe(e.definicion).map((p) => {
+  const preguntas = (await preguntasHistoricas(env, e)).map((p) => {
     const mias = conteos.filter((c) => c.pregunta === p.id);
-    const base = { id: p.id, tipo: p.tipo, texto: p.texto, respondieron: 0 };
+    const base = { id: p.id, tipo: p.tipo, texto: p.texto, respondieron: 0, anterior: p.anterior ?? null };
     if (p.tipo === 'unica' || p.tipo === 'multiple') {
       const opciones = p.opciones.map((o) => ({ id: o.id, texto: o.texto, n: mias.find((c) => c.opcion === o.id)?.n ?? 0 }));
       const otros = textos.filter((t) => t.pregunta === p.id && t.opcion).map((t) => t.texto);
@@ -441,7 +465,7 @@ async function exportarCsv(env, slug) {
     .all();
 
   const columnas = [];
-  for (const p of preguntasDe(e.definicion)) {
+  for (const p of await preguntasHistoricas(env, e)) {
     if (p.tipo === 'matriz') for (const f of p.filas) columnas.push({ titulo: `${p.id}.${f.id}`, leer: (d) => d.respuestas[p.id]?.[f.id] });
     else columnas.push({ titulo: p.id, leer: (d) => d.respuestas[p.id] });
     if ((p.opciones ?? []).some((o) => o.otro)) columnas.push({ titulo: `${p.id}.otro`, leer: (d) => d.otros?.[p.id] });

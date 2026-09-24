@@ -84,7 +84,7 @@ async function mostrar(slug) {
     } else if (p.textos) {
       cuerpo.push(p.textos.length ? h('ul', { class: 'textos' }, p.textos.map((t) => h('li', {}, t.texto))) : h('p', { class: 'meta' }, 'Sin respuestas todavía.'));
     }
-    return h('article', { class: 'pregunta' }, h('h3', {}, p.texto), h('p', { class: 'meta' }, `${p.id} · ${p.respondieron} personas`), cuerpo);
+    return h('article', { class: 'pregunta' }, h('h3', {}, p.texto), h('p', { class: 'meta' }, `${p.id} · ${p.respondieron} personas${p.anterior ? ` · pregunta de la versión ${p.anterior}, ya no está en la encuesta` : ''}`), cuerpo);
   });
 
   const correos = h('section', { class: 'correos', id: 'correos' });
