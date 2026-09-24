@@ -43,7 +43,7 @@
   //   CORREO_RESPUESTA  opcional: a dónde llegan las respuestas al correo
   "vars": {
     "CORREO_REMITENTE": "Piko <piko@mugiware.com>",
-    "APP_DESCARGA_URL": "https://piko.mugiware.com",
+    "APP_DESCARGA_URL": "https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/releases/latest/download/piko.apk",
     "CORREO_RESPUESTA": ""
   },
 
