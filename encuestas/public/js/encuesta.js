@@ -79,6 +79,101 @@ function piko(cara = 'saludo', clase = '') {
   return h('img', { class: `piko piko--${cara} ${clase}`, src: '/img/piko.svg', alt: 'Piko, el chocoyo', width: 178, height: 292 });
 }
 
+/* ---------------------------------------------------------- piezas de marca
+ * Las mismas de las publicaciones de Piko: cielo con el paisaje, confeti,
+ * destellos, sello verde, créditos de KronoX y Pikobot.
+ */
+
+// Posiciones del confeti de las piezas de Instagram, pasadas a porcentajes.
+const CONFETI = [
+  [7, 20, 'var(--amarillo)', 24], [14.5, 8, 'var(--rojo)', -38], [21.6, 30, 'var(--papel)', 12],
+  [28.6, 5, 'var(--naranja)', -16], [35.4, 34, 'var(--turquesa)', 42], [39.8, 7, 'var(--amarillo)', -28],
+  [46.9, 38, 'var(--rojo)', 18], [53.8, 12, 'var(--papel)', -44], [60.5, 42, 'var(--naranja)', 30],
+  [66, 8, 'var(--amarillo)', -12], [71.9, 46, 'var(--turquesa)', 36], [77.8, 16, 'var(--rojo)', -24],
+  [84.1, 40, 'var(--papel)', 14], [90.9, 14, 'var(--naranja)', -34], [96.5, 44, 'var(--amarillo)', 16],
+];
+
+const DESTELLOS = {
+  portada: [[8, 16], [88, 12], [70, 30], [14, 58]],
+  cabecera: [[86, 18], [62, 10]],
+  noche: [[10, 14], [88, 22], [76, 60], [18, 70]],
+  final: [[10, 12], [86, 9], [80, 44], [8, 50]],
+};
+
+/** Fondo de cielo: paisaje abajo, confeti arriba y destellos. `noche` no lleva paisaje. */
+function fondo(tipo) {
+  const piezas = [];
+  if (tipo !== 'noche') piezas.push(h('img', { class: 'cielo__escena', src: '/img/escena.svg', alt: '', 'aria-hidden': 'true' }));
+  if (tipo !== 'noche') {
+    piezas.push(
+      h('div', { class: 'confeti', 'aria-hidden': 'true' },
+        CONFETI.map(([x, y, c, r]) => h('i', { style: `left:${x}%;top:${y}px;background:${c};transform:rotate(${r}deg)` }))),
+    );
+  }
+  for (const [x, y] of DESTELLOS[tipo] ?? []) piezas.push(h('span', { class: 'destello', style: `left:${x}%;top:${y}%`, 'aria-hidden': 'true' }));
+  return piezas;
+}
+
+function sello() {
+  return h('div', { class: 'sello' }, h('img', { src: '/img/marca-clara.svg', alt: 'Piko', width: 770, height: 410 }), h('span', {}, 'el que repite, salva'));
+}
+
+function creditos() {
+  return h(
+    'div',
+    { class: 'creditos' },
+    h('small', {}, 'Rumbo a'),
+    h('img', { class: 'creditos__kronox', src: '/img/kronox.webp', alt: 'KronoX 2026', width: 520, height: 210 }),
+    h('span', { class: 'creditos__raya', 'aria-hidden': 'true' }),
+    h('img', { class: 'creditos__hackathon', src: '/img/hackathon-nicaragua.webp', alt: 'Hackathon Nicaragua' }),
+  );
+}
+
+// Copete de plumas de Pikobot, con los colores del chocoyo.
+const COPETE =
+  '<svg viewBox="0 0 300 130" aria-hidden="true"><g stroke="#fff" stroke-width="10" stroke-linejoin="round" paint-order="stroke">' +
+  '<ellipse cx="150" cy="62" rx="24" ry="58" fill="#E0332A" transform="rotate(-58 150 124)"/>' +
+  '<ellipse cx="150" cy="62" rx="24" ry="58" fill="#E0332A" transform="rotate(58 150 124)"/>' +
+  '<ellipse cx="150" cy="58" rx="26" ry="62" fill="#F0672A" transform="rotate(-29 150 124)"/>' +
+  '<ellipse cx="150" cy="58" rx="26" ry="62" fill="#F0672A" transform="rotate(29 150 124)"/>' +
+  '<ellipse cx="150" cy="54" rx="28" ry="66" fill="#F3C020"/>' +
+  '</g></svg>';
+
+/** Pikobot, el robot de aula, como en el carrusel. `cara`: enfrente | celebra. */
+function pikobot(cara = 'enfrente', { pupitre = false } = {}) {
+  const src = cara === 'celebra' ? '/img/robot-celebra.svg' : '/img/robot-cara.svg';
+  return h(
+    'div',
+    { class: 'pikobot', role: 'img', 'aria-label': 'Pikobot, el robot de aula de Piko' },
+    h(
+      'div',
+      { class: 'pikobot__cuerpo' },
+      h('span', { class: 'pikobot__ala pikobot__ala--izq' }),
+      h('span', { class: 'pikobot__ala pikobot__ala--der' }),
+      h(
+        'div',
+        { class: 'pikobot__marco' },
+        h(
+          'div',
+          { class: 'pikobot__carcasa' },
+          h('span', { class: 'pikobot__copete', html: COPETE }),
+          h('div', { class: 'pikobot__pantalla' }, h('img', { src, alt: '' })),
+        ),
+      ),
+      h('span', { class: 'pikobot__brillo' }),
+    ),
+    pupitre ? h('div', { class: 'pikobot__pupitre' }, h('i'), h('i'), h('i')) : null,
+    pupitre ? h('div', { class: 'pikobot__sombra' }) : null,
+  );
+}
+
+/** Pinta en verde la palabra que la definición pide resaltar en el título. */
+function tituloResaltado(titulo, resaltar) {
+  const i = resaltar ? titulo.indexOf(resaltar) : -1;
+  if (i < 0) return titulo;
+  return [titulo.slice(0, i), h('em', {}, resaltar), titulo.slice(i + resaltar.length)];
+}
+
 function mostrarBarra(visible, fraccion = 0, texto = '') {
   barra.hidden = !visible;
   progreso.style.width = `${Math.round(fraccion * 100)}%`;
@@ -236,26 +331,19 @@ async function abrirEncuesta(slug) {
     pantalla(
       h(
         'section',
-        { class: 'portada' },
-        h('img', { class: 'portada__escena', src: '/img/escena.svg', alt: '', 'aria-hidden': 'true' }),
+        { class: 'portada cielo' },
+        fondo('portada'),
         h(
           'div',
           { class: 'portada__grid' },
-          // Orden pensado para el teléfono: quién habla, qué pide y el botón,
-          // todo en la primera pantalla. En pantallas grandes el CSS pone a
-          // Piko a la derecha sin tocar este orden.
-          h('img', { class: 'portada__marca', src: '/img/marca.svg', alt: 'Piko', width: 770, height: 410 }),
+          h('div', { class: 'portada__cabeza' }, sello()),
+          // En el teléfono Piko se asoma sobre la tarjeta; en escritorio queda de pie a la derecha.
+          h('div', { class: 'portada__piko' }, h('div', { class: 'globo' }, h('p', {}, def.portada?.saludo ?? '¡Hola! Soy Piko.')), piko('saludo')),
           h(
             'div',
-            { class: 'portada__piko' },
-            piko('saludo'),
-            h('div', { class: 'globo' }, h('p', {}, def.portada?.saludo ?? '¡Hola! Soy Piko.')),
-          ),
-          h(
-            'div',
-            { class: 'portada__texto' },
-            h('p', { class: 'eyebrow' }, def.minutos ? `Encuesta · ${def.minutos} minutos` : 'Encuesta'),
-            h('h1', {}, def.titulo),
+            { class: 'papel portada__tarjeta' },
+            h('span', { class: 'pastilla' }, def.minutos ? `Encuesta · ${def.minutos} minutos` : 'Encuesta'),
+            h('h1', {}, tituloResaltado(def.titulo, def.portada?.resaltar)),
             h('p', { class: 'portada__bajada' }, def.portada?.texto ?? def.descripcion ?? ''),
             h(
               'div',
@@ -279,6 +367,12 @@ async function abrirEncuesta(slug) {
               h('li', {}, 'Anónima'),
               h('li', {}, 'Funciona con poca señal'),
             ),
+          ),
+          h(
+            'div',
+            { class: 'portada__pie' },
+            def.portada?.etiqueta ? h('div', { class: 'sticker sticker--derecha' }, h('span', {}, def.portada.etiqueta)) : null,
+            def.creditos === 'kronox' ? creditos() : null,
           ),
         ),
       ),
@@ -331,21 +425,34 @@ async function abrirEncuesta(slug) {
       ir(i + 1);
     };
 
-    pantalla(
+    // La parte del robot pasa a un escenario de noche: es el momento de Pikobot.
+    const esRobot = s.piko?.cara === 'robot';
+    const cabecera = h(
+      'header',
+      { class: `cabecera cielo${esRobot ? ' cielo--noche' : ''}` },
+      fondo(esRobot ? 'noche' : 'cabecera'),
       h(
-        'section',
-        { class: 'contenedor paso' },
+        'div',
+        { class: 'contenedor cabecera__fila' },
+        esRobot ? pikobot('enfrente') : piko(s.piko?.cara ?? 'feliz'),
         h(
           'div',
-          { class: 'charla' },
-          s.piko?.cara === 'robot'
-            ? h('div', { class: 'charla__robot' }, h('img', { src: '/img/robot-cara.svg', alt: 'La cara del robot Piko' }))
-            : piko(s.piko?.cara ?? 'feliz'),
-          h('div', {}, h('p', { class: 'eyebrow' }, `Parte ${i + 1} de ${total}`), h('h2', {}, s.titulo), s.piko?.dice ? h('div', { class: 'globo' }, h('p', {}, s.piko.dice)) : null),
+          { class: `papel${i % 2 ? ' papel--derecha' : ''}` },
+          h('span', { class: 'pastilla' }, `Parte ${i + 1} de ${total}`),
+          h('h2', {}, s.titulo),
+          s.piko?.dice ? h('p', { class: 'cabecera__dice' }, s.piko.dice) : null,
         ),
-        s.concepto ? dibujarConcepto(s.concepto) : null,
-        h('form', { novalidate: true, onsubmit: (e) => (e.preventDefault(), siguiente()) }, preguntas, h('button', { type: 'submit', hidden: true })),
       ),
+    );
+    const cuerpo = h(
+      'section',
+      { class: 'contenedor paso' },
+      s.concepto ? dibujarConcepto(s.concepto) : null,
+      h('form', { novalidate: true, onsubmit: (e) => (e.preventDefault(), siguiente()) }, preguntas, h('button', { type: 'submit', hidden: true })),
+    );
+
+    pantalla(
+      esRobot ? h('div', { class: 'noche' }, cabecera, cuerpo) : h('div', {}, cabecera, cuerpo),
       h(
         'nav',
         { class: 'pie', 'aria-label': 'Navegación de la encuesta' },
@@ -422,38 +529,49 @@ async function abrirEncuesta(slug) {
     pantalla(
       h(
         'section',
-        { class: 'contenedor centro' },
-        piko('celebra'),
-        h('h1', {}, def.final?.titulo ?? '¡Gracias!'),
-        h('p', {}, def.final?.texto ?? ''),
-        h(
-          'p',
-          { class: 'pendiente', 'data-pendiente': true, hidden: !enCola },
-          'Sin señal ahora: tu respuesta está guardada en el teléfono y se envía sola cuando vuelva.',
-        ),
+        { class: 'final cielo' },
+        fondo('final'),
         h(
           'div',
-          { class: 'final__compartir' },
-          h('p', {}, def.final?.compartir ?? '¿Conocés a alguien que debería contestarla?'),
+          { class: 'final__grid' },
+          h('div', { class: 'final__duo' }, piko('celebra'), pikobot('celebra')),
           h(
             'div',
-            { class: 'final__acciones' },
-            h('a', { class: 'btn', href: `https://wa.me/?text=${encodeURIComponent(textoCompartir)}`, target: '_blank', rel: 'noopener' }, 'WhatsApp'),
-            botonCompartir,
+            { class: 'papel' },
+            h('span', { class: 'pastilla' }, '¡Respuesta enviada!'),
+            h('h1', {}, def.final?.titulo ?? '¡Gracias!'),
+            h('p', {}, def.final?.texto ?? ''),
+            h(
+              'p',
+              { class: 'pendiente', style: 'margin-top:12px', 'data-pendiente': true, hidden: !enCola },
+              'Sin señal ahora: tu respuesta está guardada en el teléfono y se envía sola cuando vuelva.',
+            ),
           ),
-        ),
-        h(
-          'button',
-          {
-            class: 'btn btn--fantasma',
-            type: 'button',
-            style: 'margin-top:18px',
-            onclick: () => {
-              estado = nuevo();
-              ir(-1);
+          h(
+            'div',
+            { class: 'final__compartir' },
+            h('p', {}, def.final?.compartir ?? '¿Conocés a alguien que debería contestarla?'),
+            h(
+              'div',
+              { class: 'final__acciones' },
+              h('a', { class: 'btn', href: `https://wa.me/?text=${encodeURIComponent(textoCompartir)}`, target: '_blank', rel: 'noopener' }, 'WhatsApp'),
+              botonCompartir,
+            ),
+          ),
+          h(
+            'button',
+            {
+              class: 'btn btn--fantasma final__otra',
+              type: 'button',
+              onclick: () => {
+                estado = nuevo();
+                ir(-1);
+              },
             },
-          },
-          'Otra persona va a responder en este teléfono',
+            'Otra persona va a responder en este teléfono',
+          ),
+          sello(),
+          def.creditos === 'kronox' ? creditos() : null,
         ),
       ),
     );
@@ -466,30 +584,33 @@ async function abrirEncuesta(slug) {
 /* ------------------------------------------------------ piezas de pregunta */
 
 function dibujarConcepto(c) {
-  const iconos = { guia: 'guia', escucha: 'escucha', corrige: 'corrige' };
+  const pilares = c.pilares ?? [];
   return h(
     'aside',
     { class: 'concepto', 'aria-label': c.titulo },
+    pikobot('enfrente', { pupitre: true }),
+    pilares.length ? h('div', { class: 'sticker' }, h('span', {}, pilares.map((p) => p.titulo).join(' · '))) : null,
     h(
       'div',
-      { class: 'concepto__cabeza' },
-      h('div', { class: 'concepto__cara' }, h('img', { src: '/img/robot-cara.svg', alt: 'La cara del robot Piko en su pantalla' })),
-      h('div', {}, h('h3', {}, c.titulo), h('p', {}, c.texto)),
+      { class: 'papel papel--derecha concepto__titulo' },
+      h('span', { class: 'pastilla' }, c.nombre ? `Conocé a ${c.nombre}` : 'La idea'),
+      h('h3', {}, tituloResaltado(c.titulo, c.resaltar)),
+      h('p', {}, c.texto),
     ),
     h(
       'ul',
       { class: 'pilares' },
-      (c.pilares ?? []).map((p) =>
+      pilares.map((p) =>
         h(
           'li',
           { class: `pilar pilar--${p.id}` },
-          h('span', { class: 'pilar__icono', html: ICONO[iconos[p.id]] ?? ICONO.corrige, 'aria-hidden': 'true' }),
+          h('span', { class: 'pilar__icono', html: ICONO[p.id] ?? ICONO.corrige, 'aria-hidden': 'true' }),
           h('b', {}, p.titulo),
           h('span', {}, p.texto),
         ),
       ),
     ),
-    h('p', { class: 'concepto__ia' }, 'La inteligencia artificial corre en una computadora del aula: no depende de internet.'),
+    c.nota ? h('p', { class: 'concepto__ia' }, c.nota) : null,
   );
 }
 

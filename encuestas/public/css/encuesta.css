@@ -6,6 +6,9 @@
  * (640px tablet, 960px escritorio), nunca al revés. Casi todas las personas
  * que van a contestar lo van a hacer desde un teléfono con el pulgar.
  *
+ * Las piezas de marca (cielo, confeti, Pikobot) vienen de las publicaciones
+ * de Instagram del equipo; la gramática de los controles viene de la app.
+ *
  * Misma paleta y tipografías que la landing (web/index.html) y la app
  * (app/src/ui/tokens.ts). Misma gramática que la app: superficies planas,
  * bordes redondos, botones con un "labio" inferior que se hunde al tocarlos.
@@ -19,6 +22,13 @@
   --verde-hoja: #61A66B;
   --verde-pasto: #97C137;
   --verde-pasto-hondo: #7BA22C;
+  --cielo-alto: #4FBBF7;
+  --cielo-medio: #7FD1F8;
+  --naranja: #F0672A;
+  --amarillo: #F3C020;
+  --rojo: #E0332A;
+  --turquesa: #2FA3B8;
+  --noche: #08304B;
   --cielo: #60C5FA;
   --cielo-hondo: #3AA8E0;
   --nube: #DDF1FC;
@@ -138,49 +148,6 @@ main { outline: none; }
 .btn--fantasma:active:not(:disabled) { transform: none; }
 .btn svg { width: 20px; height: 20px; flex: none; }
 
-/* ------------------------------------------------------------------ portada */
-
-/* Teléfono: todo en una columna y el botón dentro de la primera pantalla. */
-.portada {
-  position: relative; isolation: isolate; overflow: hidden;
-  min-height: 100svh;
-  padding: max(16px, env(safe-area-inset-top)) 0 max(28px, env(safe-area-inset-bottom));
-}
-.portada__escena {
-  position: absolute; inset: auto 0 0 0; z-index: -2;
-  width: 100%; height: 42%; object-fit: cover; object-position: center bottom;
-}
-.portada::after {
-  content: ""; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(180deg, var(--papel) 0%, var(--papel) 50%, rgba(247,240,228,.82) 72%, rgba(247,240,228,.55) 100%);
-}
-.portada__grid {
-  width: min(1180px, 100% - 2 * var(--gutter)); margin-inline: auto;
-  display: grid; grid-template-columns: 1fr; gap: 14px;
-}
-.portada__marca { width: 96px; height: auto; }
-
-.portada__piko { display: grid; grid-template-columns: 88px 1fr; gap: 14px; align-items: center; }
-.portada__piko .piko { width: 88px; }
-.portada__piko .globo::before { /* colita a la izquierda, hacia Piko */
-  content: ""; position: absolute; left: -11px; top: calc(50% - 9px);
-  width: 18px; height: 18px; background: var(--blanco);
-  border-left: 2px solid var(--borde); border-bottom: 2px solid var(--borde);
-  transform: rotate(45deg); border-bottom-left-radius: 4px;
-}
-
-.portada h1 { font-size: clamp(1.9rem, 8.5vw, 3.4rem); margin-bottom: .6rem; }
-.portada__bajada { font-size: 1rem; color: var(--tinta); margin-bottom: 1.2rem; }
-.portada__acciones { display: grid; gap: 6px; }
-.portada__acciones .btn--siguiente { width: 100%; }
-.portada__meta { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0 0; padding: 0; list-style: none; }
-.portada__meta li {
-  font-family: Fredoka, sans-serif; font-weight: 500; font-size: .8rem;
-  background: var(--blanco); color: var(--verde);
-  border: 2px solid rgba(15, 93, 61, .14);
-  padding: .2rem .75rem; border-radius: 999px;
-}
-
 /* ----------------------------------------------------------- Piko y su globo */
 
 .piko { height: auto; filter: drop-shadow(0 12px 14px rgba(10, 69, 48, .22)); transform-origin: 50% 90%; }
@@ -209,22 +176,6 @@ main { outline: none; }
 }
 .globo p { margin: 0; }
 
-/* Encabezado de cada sección: Piko chico a la izquierda, lo que dice a la derecha. */
-.charla { display: grid; grid-template-columns: 60px 1fr; gap: 12px; align-items: start; margin: 18px 0 16px; }
-.charla .piko { width: 60px; }
-.charla h2 { font-size: 1.45rem; margin-bottom: 0; }
-.charla .globo { margin-top: 10px; font-size: .95rem; }
-.charla .globo::before {
-  content: ""; position: absolute; left: -9px; top: 16px;
-  width: 14px; height: 14px; background: var(--blanco);
-  border-left: 2px solid var(--borde); border-bottom: 2px solid var(--borde);
-  transform: rotate(45deg); border-bottom-left-radius: 3px;
-}
-.charla__robot {
-  width: 60px; aspect-ratio: 1; border-radius: 16px; overflow: hidden;
-  border: 3px solid var(--verde-hondo); background: #111; box-shadow: 0 3px 0 var(--verde-hondo);
-}
-.charla__robot img { width: 100%; height: 100%; object-fit: cover; }
 
 /* -------------------------------------------------------------------- pasos */
 
@@ -330,31 +281,6 @@ textarea.campo { min-height: 110px; }
 }
 .matriz__leyenda b { color: var(--verde); font-weight: 700; }
 
-/* Concepto del robot: guía, escucha y corrige con IA. */
-.concepto {
-  margin: 0 0 16px; padding: 16px; border-radius: var(--radio-xl);
-  background: var(--verde-hondo); color: #EAF3EE;
-  box-shadow: var(--sombra);
-}
-.concepto__cabeza { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 14px; }
-.concepto__cara { border-radius: 14px; overflow: hidden; border: 3px solid #0E3A2A; aspect-ratio: 647 / 302; background: #111; max-width: 240px; }
-.concepto__cara img { width: 100%; height: 100%; object-fit: cover; }
-.concepto h3 { font-size: 1.3rem; color: var(--blanco); margin-bottom: 6px; }
-.concepto p { margin: 0; color: #B9CDBF; font-size: .95rem; }
-.pilares { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.pilar {
-  display: grid; grid-template-columns: 40px 1fr; gap: 0 12px; align-items: start;
-  background: rgba(255,255,255,.06); border: 2px solid rgba(255,255,255,.1); border-radius: var(--radio-md); padding: 12px;
-}
-.pilar__icono { grid-row: span 2; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; }
-.pilar__icono svg { width: 22px; height: 22px; }
-.pilar--guia .pilar__icono { background: var(--verde-pasto); color: var(--verde-hondo); }
-.pilar--escucha .pilar__icono { background: var(--cielo); color: var(--nube-tinta); }
-.pilar--corrige .pilar__icono { background: var(--pico); color: #5C3D02; }
-.pilar b { display: block; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 1.08rem; color: var(--blanco); }
-.pilar span { font-size: .9rem; color: #B9CDBF; line-height: 1.4; display: block; }
-.concepto__ia { margin-top: 12px !important; font-size: .85rem !important; display: flex; gap: 8px; align-items: flex-start; }
-.concepto__ia::before { content: "IA"; flex: none; font-family: Fredoka, sans-serif; font-weight: 700; font-size: .72rem; background: var(--cielo); color: var(--nube-tinta); border-radius: 6px; padding: 1px 6px; margin-top: 2px; }
 
 /* Pie fijo con la navegación: al alcance del pulgar. */
 .pie {
@@ -369,14 +295,226 @@ textarea.campo { min-height: 110px; }
 .pie__aviso { grid-area: aviso; font-size: .88rem; color: var(--intento-tinta); font-weight: 700; margin: 0; text-align: center; }
 .pie__aviso:empty { display: none; }
 
-/* ---------------------------------------------------------- lista y final */
+
+/* ============================================================ piezas de marca
+ * Las mismas piezas de las publicaciones de Piko (carrusel y panorámica de
+ * Instagram): cielo con el paisaje, confeti arriba, destellos amarillos, un
+ * borde de puntos ámbar, tarjetas de papel apenas inclinadas, la etiqueta
+ * naranja con sombra verde, el sello verde de la marca y Pikobot.
+ */
+
+/* Cielo: degradado + paisaje abajo + velo arriba + borde de puntos. */
+.cielo { position: relative; isolation: isolate; overflow: hidden; background: linear-gradient(180deg, var(--cielo-alto) 0%, var(--cielo-medio) 52%, var(--nube) 100%); }
+.cielo__escena { position: absolute; left: 50%; bottom: -8px; z-index: -3; width: max(760px, 130%); max-width: none; transform: translateX(-50%); }
+.cielo::before { /* velo azul arriba, como en las piezas */
+  content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none;
+  background: linear-gradient(180deg, rgba(11,74,115,.30) 0%, rgba(11,74,115,.06) 32%, rgba(11,74,115,0) 50%);
+}
+.cielo::after { /* borde de puntos ámbar que se desvanece hacia el centro */
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image: radial-gradient(rgba(240,168,30,.7) 38%, transparent 39%);
+  background-size: 12px 12px;
+  -webkit-mask-image: radial-gradient(62% 70% at 50% 46%, transparent 78%, rgba(0,0,0,.3) 90%, #000 100%);
+          mask-image: radial-gradient(62% 70% at 50% 46%, transparent 78%, rgba(0,0,0,.3) 90%, #000 100%);
+}
+
+.confeti { position: absolute; inset: 0 0 auto 0; height: 90px; z-index: -1; pointer-events: none; }
+.confeti i { position: absolute; display: block; width: 14px; height: 8px; border-radius: 2px; }
+.destello {
+  position: absolute; z-index: -1; width: 26px; aspect-ratio: 1; background: var(--amarillo); pointer-events: none;
+  clip-path: polygon(50% 0%, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0% 50%, 40% 40%);
+  animation: titilar 2.8s ease-in-out infinite;
+}
+.destello:nth-of-type(2n) { animation-delay: -1.2s; }
+.destello:nth-of-type(3n) { animation-delay: -2s; background: var(--papel); }
+@keyframes titilar { 0%,100% { transform: scale(1) rotate(0); opacity: .95; } 50% { transform: scale(.7) rotate(20deg); opacity: .6; } }
+
+/* Tarjeta de papel inclinada: donde va lo que hay que leer. */
+.papel {
+  background: var(--papel); color: var(--grafito);
+  border-radius: 22px; padding: 22px 18px 20px;
+  box-shadow: 0 18px 36px rgba(3,26,44,.32);
+  transform: rotate(-1.2deg);
+}
+.papel--derecha { transform: rotate(1deg); }
+.pastilla {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: "Nunito Sans", sans-serif; font-weight: 700; font-size: .72rem;
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--verde); background: rgba(15,93,61,.12);
+  padding: 6px 12px; border-radius: 999px;
+}
+.pastilla--noche { color: var(--cielo-alto); background: rgba(79,187,247,.14); }
+
+/* Etiqueta naranja con sombra verde dura. La sombra va en el padre: clip-path la cortaría. */
+.sticker { display: inline-block; filter: drop-shadow(5px 5px 0 var(--verde)); transform: rotate(-2deg); }
+.sticker span {
+  display: block; padding: .28em .5em;
+  font-family: Fredoka, sans-serif; font-weight: 700; font-size: 1.15rem; line-height: 1.1; letter-spacing: -.01em;
+  color: var(--papel); background: var(--naranja);
+  clip-path: polygon(1% 6%, 99% 0%, 100% 92%, 2% 100%);
+}
+.sticker--derecha { transform: rotate(2deg); }
+
+/* Sello de la marca: el logotipo claro sobre verde, con borde de papel. */
+.sello {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 8px 14px 7px; border: 4px solid var(--papel); border-radius: 8px;
+  background: linear-gradient(168deg, #157048 0%, var(--verde) 58%, #0B4A31 100%);
+  box-shadow: 0 10px 22px rgba(3,26,44,.35); transform: rotate(-2deg);
+}
+.sello img { width: 74px; height: auto; }
+.sello span { font-family: Fredoka, sans-serif; font-weight: 600; font-size: .72rem; color: var(--verde-pasto); white-space: nowrap; }
+
+/* Créditos: rumbo a KronoX 2026. */
+.creditos {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px 14px;
+  padding: 10px 14px; border-radius: 18px;
+  background: rgba(8,48,75,.62); backdrop-filter: blur(6px); color: var(--papel);
+}
+.creditos small { font-family: "Nunito Sans", sans-serif; font-weight: 700; font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; }
+.creditos__kronox { width: 132px; height: auto; filter: drop-shadow(0 6px 10px rgba(3,26,44,.4)); }
+.creditos__hackathon { width: 56px; height: auto; opacity: .95; }
+.creditos__raya { width: 2px; align-self: stretch; background: rgba(247,240,228,.3); border-radius: 2px; }
+
+/* ------------------------------------------------------------------ portada */
+
+.portada { min-height: 100svh; padding: max(14px, env(safe-area-inset-top)) 0 max(18px, env(safe-area-inset-bottom)); display: flex; }
+.portada__grid {
+  width: min(1180px, 100% - 2 * var(--gutter)); margin-inline: auto;
+  display: grid; grid-template-columns: 1fr; gap: 14px; align-content: start;
+}
+.portada__cabeza { display: flex; justify-content: space-between; align-items: flex-start; }
+.portada__piko { display: flex; align-items: flex-end; justify-content: flex-end; gap: 10px; margin-bottom: -34px; position: relative; z-index: 1; }
+.portada__piko .piko { width: 82px; filter: drop-shadow(0 12px 14px rgba(3,26,44,.3)); }
+.portada__piko .globo { max-width: 230px; margin-bottom: 44px; font-size: .95rem; }
+.portada__piko .globo::after { /* colita hacia Piko, a la derecha */
+  content: ""; position: absolute; right: -10px; bottom: 16px;
+  width: 16px; height: 16px; background: var(--blanco);
+  border-right: 2px solid var(--borde); border-top: 2px solid var(--borde);
+  transform: rotate(45deg); border-top-right-radius: 3px;
+}
+.portada__tarjeta h1 { font-size: clamp(2rem, 9vw, 3.3rem); margin: 12px 0 8px; }
+.portada__tarjeta h1 em { font-style: normal; color: var(--verde); }
+.portada__bajada { font-size: .98rem; color: var(--tinta); margin-bottom: 16px; }
+.portada__acciones { display: grid; gap: 6px; }
+.portada__acciones .btn--siguiente { width: 100%; }
+.portada__meta { display: flex; flex-wrap: wrap; gap: .4rem; margin: 14px 0 0; padding: 0; list-style: none; }
+.portada__meta li {
+  font-family: Fredoka, sans-serif; font-weight: 500; font-size: .82rem;
+  background: var(--blanco); color: var(--grafito);
+  border: 2px solid rgba(15,93,61,.18); padding: .2rem .7rem; border-radius: 12px;
+}
+.portada__pie { display: grid; justify-items: center; gap: 22px; padding-top: 18px; }
+
+/* ------------------------------------------------------------------ Pikobot
+ * El robot de aula tal como aparece en las piezas: carcasa verde con borde
+ * blanco, copete de plumas, pantalla con la cara, alas y (opcional) pupitre.
+ * Todo en em: cambiar --t lo escala entero sin romper proporciones.
+ */
+.pikobot { --t: 8px; font-size: var(--t); position: relative; width: 26em; margin-inline: auto; margin-top: 3.8em; }
+.pikobot__cuerpo { position: relative; width: 26em; animation: flotar 3.4s ease-in-out infinite; }
+.pikobot__ala {
+  position: absolute; top: 4.6em; width: 4.8em; height: 8.4em; z-index: 0;
+  background: linear-gradient(200deg, var(--verde-bosque) 0%, var(--verde) 70%);
+  border: .45em solid var(--blanco);
+}
+.pikobot__ala--izq { left: -3.3em; border-radius: 60% 30% 40% 70% / 50%; transform-origin: 100% 30%; transform: rotate(-24deg); }
+.pikobot__ala--der { right: -3.3em; border-radius: 30% 60% 70% 40% / 50%; transform-origin: 0% 30%; transform: rotate(24deg); background: linear-gradient(160deg, var(--verde-bosque) 0%, var(--verde) 70%); }
+.pikobot__marco { position: relative; z-index: 2; background: var(--blanco); border-radius: 1.7em; padding: .5em; }
+.pikobot__carcasa { position: relative; background: var(--verde-hoja); border: .3em solid var(--verde-bosque); border-radius: 1.2em; padding: .8em; }
+.pikobot__copete { position: absolute; left: 50%; top: -3.9em; width: 15em; transform: translateX(-50%); z-index: 0; }
+.pikobot__copete svg { display: block; width: 100%; height: auto; }
+.pikobot__pantalla { position: relative; z-index: 2; border-radius: .6em; overflow: hidden; background: var(--grafito); aspect-ratio: 647 / 302; }
+.pikobot__pantalla img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pikobot__brillo { position: absolute; left: 1.5em; right: 1.5em; bottom: -2.2em; height: 3em; z-index: -1; background: radial-gradient(closest-side, rgba(143,216,255,.55), rgba(143,216,255,0)); }
+.pikobot__pupitre { position: relative; width: 31em; margin: 1.1em 0 0 -2.5em; background: var(--blanco); border-radius: 1.3em; padding: .5em; }
+.pikobot__pupitre i { display: block; }
+.pikobot__pupitre i:nth-child(1) { height: 1.3em; background: #5C3A24; border-radius: .7em .7em 0 0; }
+.pikobot__pupitre i:nth-child(2) { height: 4.3em; background: repeating-linear-gradient(180deg, #EFE3CC 0 .25em, #DCCBAE .25em .5em); border-left: .9em solid #4A2E1C; border-right: .5em solid #4A2E1C; }
+.pikobot__pupitre i:nth-child(3) { height: 1.1em; background: #4A2E1C; border-radius: 0 0 .8em .8em; }
+.pikobot__sombra { width: 28em; height: 2.6em; margin: -1em auto 0 -1em; background: radial-gradient(closest-side, rgba(3,26,44,.4), rgba(3,26,44,0)); }
+@keyframes flotar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-.8em); } }
+
+/* ------------------------------------------------------- cabecera de sección */
+
+.cabecera { padding: 18px 0 64px; }
+.cabecera .cielo__escena { width: max(700px, 120%); bottom: -46px; }
+.cabecera__fila { display: grid; grid-template-columns: 70px 1fr; gap: 12px; align-items: end; }
+.cabecera__fila .piko { width: 70px; align-self: end; margin-bottom: -40px; filter: drop-shadow(0 10px 12px rgba(3,26,44,.3)); }
+.cabecera__fila .pikobot { --t: 2.9px; width: 26em; margin: 3.9em 0 -2.6em; align-self: end; }
+.cabecera .papel { padding: 14px 14px 14px; }
+.cabecera h2 { font-size: 1.5rem; margin: 8px 0 6px; }
+.cabecera__dice { margin: 0; font-family: Fredoka, sans-serif; font-weight: 500; font-size: .98rem; line-height: 1.3; color: var(--tinta); }
+
+.paso { padding-top: 18px; }
+
+/* ----------------------------------------------- escenario nocturno: Pikobot */
+
+/* La textura va en una capa fija del tamaño de la pantalla: repetida en mosaico se le ven las uniones. */
+.noche { position: relative; isolation: isolate; background: var(--noche); color: var(--papel); min-height: 100svh; }
+.noche::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: url("/img/papel-azul.webp") center / cover no-repeat;
+}
+.cielo--noche { background: transparent; }
+.cielo--noche::before { background: radial-gradient(60% 80% at 50% 110%, rgba(143,216,255,.22), rgba(143,216,255,0) 70%); }
+.cielo--noche::after { display: none; }
+.cielo--noche .papel { background: var(--papel); }
+
+.concepto { display: grid; gap: 18px; margin: 0 0 22px; justify-items: center; text-align: center; }
+.concepto .pikobot { --t: 9px; }
+.concepto__titulo { width: 100%; }
+.concepto__titulo h3 { font-size: 1.55rem; line-height: 1.08; margin: 8px 0 6px; }
+.concepto__titulo h3 em { font-style: normal; color: var(--verde); }
+.concepto__titulo p { margin: 0; color: var(--tinta); font-size: .95rem; }
+.pilares { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 0; padding: 0; list-style: none; width: 100%; text-align: left; }
+.pilar {
+  display: grid; grid-template-columns: 46px 1fr; gap: 2px 12px; align-items: start;
+  background: var(--papel); color: var(--grafito); border-radius: 18px; padding: 14px;
+  box-shadow: 0 12px 24px rgba(3,26,44,.35);
+}
+.pilar:nth-child(1) { transform: rotate(-1deg); }
+.pilar:nth-child(2) { transform: rotate(.8deg); }
+.pilar:nth-child(3) { transform: rotate(-.6deg); }
+.pilar__icono { grid-row: span 2; width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; box-shadow: 0 3px 0 rgba(0,0,0,.15); }
+.pilar__icono svg { width: 24px; height: 24px; }
+.pilar--guia .pilar__icono { background: var(--verde-pasto); color: var(--verde-hondo); }
+.pilar--escucha .pilar__icono { background: var(--cielo); color: var(--nube-tinta); }
+.pilar--corrige .pilar__icono { background: var(--naranja); color: var(--papel); }
+.pilar b { display: block; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 1.15rem; color: var(--verde); }
+.pilar > span:last-child { font-size: .92rem; color: var(--tinta); line-height: 1.4; display: block; }
+.concepto__ia {
+  display: flex; gap: 10px; align-items: flex-start; text-align: left; margin: 4px 0 0;
+  font-size: .88rem; color: #CFE3EE; max-width: 44ch;
+}
+.concepto__ia::before { content: "IA"; flex: none; font-family: Fredoka, sans-serif; font-weight: 700; font-size: .75rem; background: var(--cielo); color: var(--nube-tinta); border-radius: 6px; padding: 1px 7px; margin-top: 2px; }
+.noche .pregunta { box-shadow: 0 var(--labio) 0 rgba(0,0,0,.25), 0 14px 30px rgba(3,26,44,.3); border-color: transparent; }
+.noche .pregunta--error { border-color: var(--intento); }
+
+/* -------------------------------------------------------------------- final */
+
+.final { min-height: 100svh; padding: 26px 0 max(26px, env(safe-area-inset-bottom)); }
+.final__grid { width: min(760px, 100% - 2 * var(--gutter)); margin-inline: auto; display: grid; gap: 18px; justify-items: center; text-align: center; }
+.final__duo { display: flex; align-items: flex-end; justify-content: center; gap: 0; margin-top: 4px; }
+.final__duo .piko { width: 104px; margin-right: -6px; position: relative; z-index: 1; filter: drop-shadow(0 12px 14px rgba(3,26,44,.3)); }
+.final__duo .pikobot { --t: 5.4px; margin: 3.9em 0 0; }
+.final .papel { width: 100%; }
+.final h1 { font-size: clamp(1.7rem, 7.4vw, 2.6rem); margin: 10px 0 8px; }
+.final .papel > p { color: var(--tinta); margin-bottom: 0; }
+.final__compartir { width: 100%; padding: 16px; border-radius: 20px; background: rgba(247,240,228,.94); box-shadow: 0 12px 26px rgba(3,26,44,.25); }
+.final__compartir p { margin: 0 0 12px; color: var(--tinta); }
+.final__acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.final__acciones .btn { min-width: 0; padding-inline: .5rem; letter-spacing: .03em; }
+.final__otra { white-space: normal; text-align: center; color: var(--grafito) !important; background: rgba(247,240,228,.8) !important; border-radius: 999px; padding-inline: 16px !important; }
+
+/* ------------------------------------------------ lista, avisos y cargando */
 
 .centro { text-align: center; padding: 32px 0 56px; }
 .centro .piko { width: 120px; margin: 0 auto 14px; }
 .centro h1 { font-size: clamp(1.6rem, 7vw, 2.6rem); margin-bottom: 10px; }
 .centro p { color: var(--tinta); max-width: 52ch; margin-inline: auto; }
 .centro > .btn { margin-top: 8px; }
-
 .tarjetas { display: grid; gap: 12px; margin-top: 22px; text-align: left; }
 .tarjeta {
   display: block; text-decoration: none; color: inherit;
@@ -388,24 +526,18 @@ textarea.campo { min-height: 110px; }
 .tarjeta:active { transform: translateY(var(--labio)); box-shadow: 0 0 0 var(--borde-hondo); }
 .tarjeta h2 { font-size: 1.2rem; color: var(--verde); margin-bottom: 4px; }
 .tarjeta p { margin: 0; color: var(--tinta); font-size: .95rem; }
-
-.final__compartir {
-  margin: 22px auto 0; max-width: 520px; padding: 16px;
-  background: var(--blanco); border: 2px dashed var(--borde-hondo); border-radius: var(--radio-lg);
-}
-.final__compartir p { margin-bottom: 12px; }
-.final__acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.final__acciones .btn { min-width: 0; padding-inline: .5rem; letter-spacing: .03em; }
 .pendiente {
   display: inline-flex; gap: 8px; align-items: center;
-  margin-top: 12px; padding: 8px 14px; border-radius: var(--radio-md);
+  margin: 0; padding: 8px 14px; border-radius: var(--radio-md);
   background: var(--intento-fondo); color: var(--intento-tinta); font-weight: 700; font-size: .9rem;
 }
-
 .cargando { min-height: 80svh; display: grid; place-content: center; justify-items: center; gap: 12px; color: var(--tinta-suave); font-family: Fredoka, sans-serif; text-align: center; padding: 16px; }
 .cargando__piko { width: 80px; animation: salto 1.2s ease-in-out infinite; }
-
 .aviso { padding: 16px; text-align: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .destello, .pikobot__cuerpo { animation: none !important; }
+}
 
 /* ================================================== tablet (640px en adelante) */
 
@@ -414,34 +546,40 @@ textarea.campo { min-height: 110px; }
   body { font-size: 17px; }
 
   .barra__marca img { width: 64px; }
+  .cielo::after { background-size: 18px 18px; }
+  .confeti i { width: 20px; height: 11px; }
+  .destello { width: 34px; }
+  .sticker span { font-size: 1.5rem; }
+  .sello img { width: 96px; }
+  .sello span { font-size: .85rem; }
 
-  .portada__marca { width: 130px; }
-  .portada__piko { grid-template-columns: 130px 1fr; }
-  .portada__piko .piko { width: 130px; }
-  .portada__piko .globo { max-width: 380px; font-size: 1.1rem; }
+  .portada__piko .piko { width: 110px; }
+  .portada__piko .globo { max-width: 320px; font-size: 1.05rem; }
+  .portada .papel { padding: 30px 30px 28px; }
   .portada__acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
   .portada__acciones .btn--siguiente { width: auto; min-width: 240px; }
-  .portada__bajada { font-size: 1.08rem; max-width: 52ch; }
+  .portada__bajada { font-size: 1.06rem; max-width: 52ch; }
 
-  .charla { grid-template-columns: 92px 1fr; gap: 18px; margin: 28px 0 22px; }
-  .charla .piko, .charla__robot { width: 92px; }
-  .charla h2 { font-size: 2rem; }
-  .charla .globo { font-size: 1.05rem; }
+  .cabecera { padding: 26px 0 80px; }
+  .cabecera__fila { grid-template-columns: 110px 1fr; gap: 20px; }
+  .cabecera__fila .piko { width: 110px; margin-bottom: -56px; }
+  .cabecera__fila .pikobot { --t: 4.2px; }
+  .cabecera .papel { padding: 18px 22px; }
+  .cabecera h2 { font-size: 2rem; }
+  .cabecera__dice { font-size: 1.08rem; }
 
   .pregunta { padding: 20px; margin-bottom: 18px; }
   .pregunta legend, .pregunta__titulo { font-size: 1.2rem; }
   .opciones { grid-template-columns: repeat(2, 1fr); gap: 10px 12px; }
-
   .escala--larga .escala__botones { display: flex; gap: 4px; }
-
   .matriz__fila { grid-template-columns: 1fr minmax(240px, 300px); gap: 8px 16px; align-items: center; padding: 10px 12px; }
   .matriz__leyenda { position: static; padding-inline: 12px; }
 
-  .concepto { padding: 22px; }
-  .concepto__cabeza { grid-template-columns: 170px 1fr; gap: 18px; align-items: center; }
-  .pilares { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .pilar { display: block; padding: 14px; }
-  .pilar__icono { margin-bottom: 8px; }
+  .concepto .pikobot { --t: 12px; }
+  .concepto__titulo h3 { font-size: 2rem; }
+  .pilares { grid-template-columns: repeat(3, 1fr); }
+  .pilar { display: block; padding: 16px; }
+  .pilar__icono { margin-bottom: 10px; }
 
   .pie__fila { display: flex; justify-content: space-between; gap: 12px; }
   .pie__fila > .btn--papel { padding-inline: 1.2rem; }
@@ -450,37 +588,34 @@ textarea.campo { min-height: 110px; }
 
   .centro { padding: 56px 0 80px; }
   .centro .piko { width: 170px; }
+  .final__duo .piko { width: 150px; }
+  .final__duo .pikobot { --t: 8px; }
   .final__acciones { display: flex; justify-content: center; }
+  .creditos__kronox { width: 170px; }
+  .creditos__hackathon { width: 70px; }
 }
 
 /* ============================================= escritorio (960px en adelante) */
 
 @media (min-width: 960px) {
-  /* Como la landing: el texto a la izquierda, Piko de pie sobre el paisaje a la derecha. */
-  .portada { display: flex; align-items: flex-end; padding: 40px 0 0; }
-  .portada__escena { inset: 0; height: 100%; }
-  .portada::after {
-    background: linear-gradient(105deg, rgba(247,240,228,.96) 0%, rgba(247,240,228,.88) 40%, rgba(247,240,228,0) 70%);
-  }
+  /* Como la panorámica: la tarjeta a la izquierda, Piko de pie sobre las colinas a la derecha. */
+  .portada { align-items: stretch; padding-top: 32px; }
+  .cielo__escena { width: 100%; }
   .portada__grid {
-    grid-template-columns: 1.1fr .9fr;
-    grid-template-areas: "marca piko" "texto piko";
-    grid-template-rows: auto 1fr;
-    column-gap: 32px; align-items: end;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+    grid-template-areas: "cabeza cabeza" "tarjeta piko" "pie piko";
+    grid-template-rows: auto auto 1fr;
+    column-gap: 48px; row-gap: 22px;
   }
-  .portada__marca { grid-area: marca; width: 200px; align-self: start; }
-  .portada__texto { grid-area: texto; padding-bottom: 12vh; }
-  .portada h1 { max-width: 14ch; }
+  .portada__cabeza { grid-area: cabeza; }
+  .portada__tarjeta { grid-area: tarjeta; align-self: start; }
   .portada__piko {
-    grid-area: piko; position: relative;
-    display: flex; flex-direction: column-reverse; align-items: center; justify-content: flex-end;
-    gap: 20px; align-self: end;
+    grid-area: piko; flex-direction: column; align-items: center; justify-content: flex-end;
+    margin: 0; padding-top: 6vh; gap: 14px;
   }
-  .portada__piko .piko { width: min(300px, 80%); filter: drop-shadow(0 22px 26px rgba(10,69,48,.28)); }
-  .portada__piko .globo { align-self: flex-start; }
-  .portada__piko .globo::before { /* la colita pasa a apuntar hacia abajo */
-    left: auto; right: 64px; top: auto; bottom: -11px;
-    border-left: 0; border-right: 2px solid var(--borde);
-    border-bottom-left-radius: 0; border-bottom-right-radius: 4px;
-  }
+  .portada__piko .piko { width: min(290px, 72%); }
+  .portada__piko .globo { margin: 0; align-self: flex-start; }
+  .portada__piko .globo::after { right: auto; left: 60%; bottom: -10px; transform: rotate(135deg); }
+  .portada__pie { grid-area: pie; justify-items: start; align-self: end; padding-bottom: 12px; }
+  .confeti { height: 120px; }
 }
