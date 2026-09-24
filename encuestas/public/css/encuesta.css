@@ -59,7 +59,7 @@
   --alto-pie: 84px;
   --alto-barra: 38px;
   /* Espacio de la muesca o barra de estado. Se cuenta una sola vez: donde el
-     contenedor ya lo reserva (la vista previa), --seguro-arriba vale 0 y la
+     contenedor ya lo reserva (por ejemplo, dentro de otra app), --seguro-arriba vale 0 y la
      barra se pega debajo con --barra-top. */
   --seguro-arriba: env(safe-area-inset-top, 0px);
   --barra-top: 0px;
