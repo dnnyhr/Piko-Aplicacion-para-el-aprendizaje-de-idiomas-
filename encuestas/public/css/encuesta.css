@@ -24,7 +24,7 @@
   --verde-pasto-hondo: #7BA22C;
   --cielo-alto: #4FBBF7;
   --cielo-medio: #7FD1F8;
-  --naranja: #F0672A;
+  --naranja: #D9531C; /* el #F0672A de las piezas, oscurecido para que el texto claro se lea */
   --amarillo: #F3C020;
   --rojo: #E0332A;
   --turquesa: #2FA3B8;
@@ -37,6 +37,7 @@
   --papel-hondo: #ECE1CC;
   --blanco: #FFFFFF;
   --copete: #E97927;
+  --copete-hondo: #B4500F;
   --pico: #E8A429;
   --pico-hondo: #C08417;
   --grafito: #16241D;
@@ -184,7 +185,7 @@ main { outline: none; }
 
 .pregunta {
   margin: 0 0 14px; padding: 16px 14px;
-  background: var(--blanco);
+  background: var(--blanco); color: var(--grafito); /* propio: dentro de .noche el texto heredado es claro */
   border: 2px solid var(--borde); border-radius: var(--radio-lg);
   box-shadow: 0 var(--labio) 0 var(--borde);
   transition: border-color .2s, box-shadow .2s;
@@ -198,7 +199,7 @@ main { outline: none; }
 }
 .pregunta legend + * { clear: left; }
 .pregunta__ayuda { display: block; clear: left; font-size: .88rem; color: var(--tinta-suave); margin: 0 0 8px; }
-.pregunta__requerida { color: var(--copete); margin-left: 2px; }
+.pregunta__requerida { color: var(--copete-hondo); margin-left: 2px; }
 .pregunta--error { border-color: var(--intento); box-shadow: 0 var(--labio) 0 var(--pico-hondo); }
 .pregunta__error {
   display: flex; gap: 8px; align-items: center;
@@ -241,7 +242,7 @@ main { outline: none; }
 /* 16px mínimo en los campos: con menos, el navegador del teléfono hace zoom al tocarlos. */
 .campo {
   width: 100%; margin-top: 10px; padding: 12px 14px;
-  background: var(--papel); border: 2px solid var(--borde); border-radius: var(--radio-md);
+  background: var(--papel); color: var(--grafito); border: 2px solid var(--borde); border-radius: var(--radio-md);
   font-size: 16px; line-height: 1.5; resize: vertical;
 }
 .campo:focus { outline: none; border-color: var(--cielo); background: var(--blanco); }
