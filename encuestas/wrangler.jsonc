@@ -4,6 +4,15 @@
   "main": "src/index.js",
   "compatibility_date": "2026-06-01",
 
+  // Se publica solo en el dominio propio. La dirección *.workers.dev y las
+  // URLs de vista previa quedan apagadas a propósito: dejarlas explícitas evita
+  // que Cloudflare decida por defecto en cada deploy.
+  "routes": [
+    { "pattern": "encuestas.piko.mugiware.com", "custom_domain": true }
+  ],
+  "workers_dev": false,
+  "preview_urls": false,
+
   // La página (public/) se sirve como assets estáticos. Pasan primero por el
   // Worker /api/* y las páginas que se comparten (/ y /e/<slug>): ahí completa
   // la vista previa (Open Graph) con el dominio real y el título de la encuesta.
@@ -19,8 +28,10 @@
     {
       "binding": "DB",
       "database_name": "piko-encuestas",
-      // Reemplazar por el id que imprime `npx wrangler d1 create piko-encuestas`.
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      // El id de la base en Cloudflare. No es secreto: sin acceso a la cuenta
+      // no sirve para nada. Si se crea otra base, va el id que imprime
+      // `npx wrangler d1 create piko-encuestas`.
+      "database_id": "9a74726e-b2c0-40a4-b5fe-bdb0d7a272a7",
       "migrations_dir": "migrations"
     }
   ],
