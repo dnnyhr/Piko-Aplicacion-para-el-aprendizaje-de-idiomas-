@@ -6,6 +6,8 @@
  * definición guardada en `versiones_encuesta`, así una encuesta nueva es un
  * JSON nuevo y no código nuevo.
  *
+ *   GET  /  y  /e/:slug                        la página, con la vista previa
+ *                                              para compartir ya completa
  *   GET  /api/encuestas                        las abiertas
  *   GET  /api/encuestas/:slug                  definición vigente
  *   POST /api/encuestas/:slug/respuestas       guardar una respuesta
@@ -47,7 +49,7 @@ async function enrutar(request, env) {
   const partes = url.pathname.split('/').filter(Boolean).map(decodeURIComponent);
   const m = request.method;
 
-  if (partes[0] !== 'api') return env.ASSETS ? env.ASSETS.fetch(request) : new Response('No encontrado', { status: 404 });
+  if (partes[0] !== 'api') return servirPagina(request, env, url, partes);
 
   const [, a, b, c, d] = partes;
 
@@ -68,6 +70,53 @@ async function enrutar(request, env) {
   }
 
   throw new ErrorHttp(404, 'Ruta no encontrada.');
+}
+
+/* ----------------------------------------------------------------- página */
+
+/**
+ * WhatsApp, Facebook y X no ejecutan JavaScript ni aceptan direcciones
+ * relativas en og:image. Acá se completan las etiquetas Open Graph con el
+ * dominio desde el que se abrió la página (workers.dev o el propio) y, en
+ * /e/<slug>, con el título y la descripción de esa encuesta.
+ */
+async function servirPagina(request, env, url, partes) {
+  if (!env.ASSETS) return new Response('No encontrado', { status: 404 });
+
+  // /e/<slug> no existe como archivo: se sirve index.html. Se pide explícito
+  // porque los robots que arman la vista previa no navegan como un navegador.
+  const esEncuesta = partes[0] === 'e' && partes.length === 2;
+  const res = await env.ASSETS.fetch(esEncuesta ? new Request(new URL('/', url), request) : request);
+  if (!(res.headers.get('content-type') ?? '').includes('text/html') || typeof HTMLRewriter === 'undefined') return res;
+
+  let titulo = null;
+  let descripcion = null;
+  if (esEncuesta) {
+    try {
+      const e = await cargar(env, partes[1]);
+      if (e && e.estado !== 'borrador') {
+        titulo = e.definicion.titulo;
+        descripcion = e.definicion.descripcion || null;
+      }
+    } catch {
+      /* sin D1 la página se sirve igual, con los textos genéricos */
+    }
+  }
+
+  const absoluta = (el) => el.setAttribute('content', new URL(el.getAttribute('content') ?? '/', url.origin).href);
+  const poner = (valor) => ({ element: (el) => valor && el.setAttribute('content', valor) });
+
+  return new HTMLRewriter()
+    .on('meta[property="og:image"]', { element: absoluta })
+    .on('meta[name="twitter:image"]', { element: absoluta })
+    .on('meta[property="og:url"]', { element: (el) => el.setAttribute('content', url.origin + url.pathname) })
+    .on('meta[property="og:title"]', poner(titulo))
+    .on('meta[name="twitter:title"]', poner(titulo))
+    .on('meta[property="og:description"]', poner(descripcion))
+    .on('meta[name="twitter:description"]', poner(descripcion))
+    .on('meta[name="description"]', poner(descripcion))
+    .on('title', { element: (el) => titulo && el.setInnerContent(`${titulo} · Piko`) })
+    .transform(res);
 }
 
 /* ---------------------------------------------------------------- lectura */
