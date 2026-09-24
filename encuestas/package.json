@@ -1,0 +1,23 @@
+{
+  "name": "piko-encuestas",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Encuestas de Piko: Cloudflare Worker + D1, una sola página para muchas encuestas.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "wrangler dev",
+    "db:local": "wrangler d1 migrations apply piko-encuestas --local",
+    "db:remoto": "wrangler d1 migrations apply piko-encuestas --remote",
+    "validar": "node herramientas/publicar.mjs --validar",
+    "publicar": "node herramientas/publicar.mjs",
+    "deploy": "wrangler deploy",
+    "prueba": "node --test \"test/*.test.mjs\""
+  },
+  "devDependencies": {
+    "wrangler": "^4.138.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "piko-encuestas",
+  "main": "src/index.js",
+  "compatibility_date": "2026-06-01",
+
+  // La página (public/) se sirve como assets estáticos. Solo /api/* pasa por
+  // el Worker; cualquier otra ruta que no sea un archivo (/e/<slug>) cae en
+  // index.html, que decide qué encuesta mostrar.
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "piko-encuestas",
+      // Reemplazar por el id que imprime `npx wrangler d1 create piko-encuestas`.
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  // ADMIN_TOKEN es un secreto: `npx wrangler secret put ADMIN_TOKEN`.
+  // En local va en .dev.vars (ver .dev.vars.example).
+
+  "observability": { "enabled": true }
+}
