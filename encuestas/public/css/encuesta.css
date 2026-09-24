@@ -57,6 +57,12 @@
   --sombra: 0 18px 44px rgba(10, 69, 48, .14);
   --gutter: 16px;
   --alto-pie: 84px;
+  --alto-barra: 38px;
+  /* Espacio de la muesca o barra de estado. Se cuenta una sola vez: donde el
+     contenedor ya lo reserva (la vista previa), --seguro-arriba vale 0 y la
+     barra se pega debajo con --barra-top. */
+  --seguro-arriba: env(safe-area-inset-top, 0px);
+  --barra-top: 0px;
 }
 
 * { box-sizing: border-box; }
@@ -98,21 +104,21 @@ main { outline: none; }
 /* ------------------------------------------------------------ barra superior */
 
 .barra {
-  position: sticky; top: 0; z-index: 10;
-  display: flex; align-items: center; gap: 12px;
-  padding: 8px var(--gutter);
-  padding-top: max(8px, env(safe-area-inset-top));
+  position: sticky; top: var(--barra-top); z-index: 10;
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px var(--gutter);
+  padding-top: calc(6px + var(--seguro-arriba));
   background: rgba(247, 240, 228, .94);
   backdrop-filter: blur(8px);
   border-bottom: 2px solid var(--borde);
 }
-.barra__marca img { width: 52px; height: auto; }
+.barra__marca img { width: 44px; height: auto; display: block; }
 .barra__paso {
-  font-family: Fredoka, sans-serif; font-weight: 600; font-size: .85rem;
-  color: var(--tinta-suave); min-width: 2.6em; text-align: right;
+  font-family: Fredoka, sans-serif; font-weight: 600; font-size: .8rem;
+  color: var(--tinta-suave); min-width: 2.4em; text-align: right;
 }
 .progreso {
-  flex: 1; height: 14px; border-radius: 999px;
+  flex: 1; height: 12px; border-radius: 999px;
   background: var(--papel-hondo); overflow: hidden;
 }
 .progreso__relleno {
@@ -190,7 +196,7 @@ main { outline: none; }
   box-shadow: 0 var(--labio) 0 var(--borde);
   transition: border-color .2s, box-shadow .2s;
   min-width: 0;
-  scroll-margin: 72px 0 calc(var(--alto-pie) + 16px);
+  scroll-margin: calc(var(--alto-barra) + var(--seguro-arriba) + var(--barra-top) + 16px) 0 calc(var(--alto-pie) + 16px);
 }
 .pregunta legend, .pregunta__titulo {
   float: left; width: 100%; padding: 0;
@@ -278,7 +284,7 @@ textarea.campo { min-height: 110px; }
 .matriz__leyenda {
   display: flex; justify-content: space-between; gap: 12px;
   font-size: .8rem; color: var(--tinta-suave); padding: 0 4px;
-  position: sticky; top: 56px; z-index: 1; background: var(--blanco); padding-block: 6px;
+  position: sticky; top: calc(var(--alto-barra) + var(--seguro-arriba) + var(--barra-top)); z-index: 1; background: var(--blanco); padding-block: 6px;
 }
 .matriz__leyenda b { color: var(--verde); font-weight: 700; }
 
@@ -380,7 +386,7 @@ textarea.campo { min-height: 110px; }
 
 /* ------------------------------------------------------------------ portada */
 
-.portada { min-height: 100svh; padding: max(14px, env(safe-area-inset-top)) 0 max(18px, env(safe-area-inset-bottom)); display: flex; }
+.portada { min-height: 100svh; padding: calc(14px + var(--seguro-arriba)) 0 max(18px, env(safe-area-inset-bottom)); display: flex; }
 .portada__grid {
   width: min(1180px, 100% - 2 * var(--gutter)); margin-inline: auto;
   display: grid; grid-template-columns: 1fr; gap: 14px; align-content: start;
@@ -524,7 +530,7 @@ textarea.campo { min-height: 110px; }
   :root { --gutter: 24px; }
   body { font-size: 17px; }
 
-  .barra__marca img { width: 64px; }
+  .barra__marca img { width: 56px; }
   .cielo::after { background-size: 18px 18px; }
   .confeti i { width: 20px; height: 11px; }
   .destello { width: 34px; }
