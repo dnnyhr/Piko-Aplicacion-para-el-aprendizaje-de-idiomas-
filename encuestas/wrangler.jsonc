@@ -42,8 +42,8 @@
   //   APP_DESCARGA_URL  el enlace para descargar la app
   //   CORREO_RESPUESTA  opcional: a dónde llegan las respuestas al correo
   "vars": {
-    "CORREO_REMITENTE": "",
-    "APP_DESCARGA_URL": "",
+    "CORREO_REMITENTE": "Piko <piko@mugiware.com>",
+    "APP_DESCARGA_URL": "https://piko.mugiware.com",
     "CORREO_RESPUESTA": ""
   },
 
