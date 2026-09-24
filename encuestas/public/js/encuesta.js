@@ -129,9 +129,14 @@ function creditos() {
   );
 }
 
-/** Pikobot, el robot de aula: el SVG del equipo, tal cual. */
-function pikobot() {
-  return h('img', { class: 'pikobot', src: '/img/pikobot.svg', alt: 'Pikobot, el robot de aula de Piko', width: 720, height: 625 });
+/**
+ * Pikobot, el robot de aula: el SVG del equipo con alas, luces y caras
+ * animadas (lo genera herramientas/animar-pikobot.mjs). `festeja` usa la
+ * versión que aletea rápido y alterna caras felices.
+ */
+function pikobot(festeja = false) {
+  const src = festeja ? '/img/pikobot-celebra.svg' : '/img/pikobot-animado.svg';
+  return h('img', { class: 'pikobot', src, alt: 'Pikobot, el robot de aula de Piko', width: 720, height: 625 });
 }
 
 /** Pinta en verde la palabra que la definición pide resaltar en el título. */
@@ -501,7 +506,7 @@ async function abrirEncuesta(slug) {
         h(
           'div',
           { class: 'final__grid' },
-          h('div', { class: 'final__duo' }, piko('celebra'), pikobot()),
+          h('div', { class: 'final__duo' }, piko('celebra'), pikobot(true)),
           h(
             'div',
             { class: 'papel' },
