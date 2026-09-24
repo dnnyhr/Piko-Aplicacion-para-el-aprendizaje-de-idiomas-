@@ -4,14 +4,15 @@
   "main": "src/index.js",
   "compatibility_date": "2026-06-01",
 
-  // La página (public/) se sirve como assets estáticos. Solo /api/* pasa por
-  // el Worker; cualquier otra ruta que no sea un archivo (/e/<slug>) cae en
-  // index.html, que decide qué encuesta mostrar.
+  // La página (public/) se sirve como assets estáticos. Pasan primero por el
+  // Worker /api/* y las páginas que se comparten (/ y /e/<slug>): ahí completa
+  // la vista previa (Open Graph) con el dominio real y el título de la encuesta.
+  // Cualquier otra ruta que no sea un archivo cae en index.html.
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*"]
+    "run_worker_first": ["/api/*", "/", "/e/*"]
   },
 
   "d1_databases": [

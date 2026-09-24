@@ -59,6 +59,16 @@ npm run dev                         # http://localhost:8787
 PIKO_ENCUESTAS_URL=http://localhost:8787 PIKO_ENCUESTAS_TOKEN=cambiame-en-local npm run publicar
 ```
 
+## Vista previa al compartir
+
+Al pegar el enlace en WhatsApp, Facebook o X aparece `public/img/og.jpg`
+(1200×630) con el título de la encuesta. Esas apps no ejecutan JavaScript ni
+aceptan direcciones relativas, así que el Worker atiende `/` y `/e/<slug>`
+(ver `run_worker_first` en `wrangler.jsonc`) y completa las etiquetas Open
+Graph con el dominio desde el que se abrió la página y con el título y la
+descripción de esa encuesta. Funciona igual en `workers.dev` y en un dominio
+propio.
+
 ## Pikobot animado
 
 `public/img/pikobot.svg` es el dibujo del equipo y no se toca. Las versiones
