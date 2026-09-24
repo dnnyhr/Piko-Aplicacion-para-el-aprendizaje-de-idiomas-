@@ -55,3 +55,28 @@ jobs:
 
       - name: Comprobaciones del puente
         run: npm run prueba
+
+  encuestas:
+    name: Encuestas — Worker, D1 y definiciones
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: encuestas
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # node:sqlite hace de D1 en las pruebas
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: encuestas/package-lock.json
+
+      - run: npm ci
+
+      - name: Reglas y Worker contra D1 en memoria
+        run: npm run prueba
+
+      - name: Definiciones de encuestas
+        run: npm run validar

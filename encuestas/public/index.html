@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Encuestas de Piko</title>
+<meta name="description" content="Ayudanos a decidir qué tiene que tener Piko: la app para aprender lenguas y el robot que guía, escucha y corrige con IA.">
+<meta name="theme-color" content="#0F5D3D">
+<meta property="og:title" content="¿Qué le falta a Piko?">
+<meta property="og:description" content="Una encuesta de 6 minutos para decidir qué construimos primero en Piko.">
+<meta property="og:image" content="/img/piko.svg">
+<link rel="icon" type="image/png" href="/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/encuesta.css">
+<script type="module" src="/js/encuesta.js"></script>
+</head>
+<body>
+
+<header class="barra" id="barra" hidden>
+  <a class="barra__marca" href="/" aria-label="Piko — inicio"><img src="/img/marca.svg" alt="Piko" width="77" height="41"></a>
+  <div class="progreso" role="progressbar" aria-label="Avance de la encuesta" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="progreso__relleno" id="progreso"></div>
+  </div>
+  <span class="barra__paso" id="paso"></span>
+</header>
+
+<main id="app" tabindex="-1">
+  <div class="cargando" aria-live="polite">
+    <img class="cargando__piko" src="/img/piko.svg" alt="" width="89" height="146">
+    <p>Piko está buscando la encuesta…</p>
+  </div>
+</main>
+
+<noscript>
+  <p class="aviso">Para contestar la encuesta hace falta activar JavaScript.</p>
+</noscript>
+
+</body>
+</html>

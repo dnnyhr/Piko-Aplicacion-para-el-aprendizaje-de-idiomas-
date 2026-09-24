@@ -1,0 +1,869 @@
+{
+  "slug": "que-le-falta-a-piko",
+  "estado": "abierta",
+  "titulo": "¿Qué le falta a Piko?",
+  "descripcion": "Ayudanos a decidir qué tiene que tener Piko: la app para aprender lenguas y el robot que guía, escucha y corrige con inteligencia artificial.",
+  "minutos": 6,
+  "portada": {
+    "saludo": "¡Hola! Soy Piko, un chocoyo al que le encanta hablar.",
+    "texto": "Estoy aprendiendo a enseñar miskito, mayangna, rama, garífuna e inglés. Antes de crecer, quiero saber qué te gustaría encontrar en mí: en la app de tu teléfono y en el robot del aula. No hay respuestas buenas ni malas.",
+    "resaltar": "Piko",
+    "etiqueta": "Tu voz decide qué construimos"
+  },
+  "final": {
+    "titulo": "¡Chocoyazo! Gracias por ayudarme a crecer.",
+    "texto": "Vamos a leer cada respuesta. Lo que más pidan es lo primero que vamos a construir.",
+    "compartir": "¿Conocés a alguien que debería contestarla? Pasale el enlace: una lengua se salva entre muchos."
+  },
+  "secciones": [
+    {
+      "id": "vos",
+      "titulo": "Contanos de vos",
+      "piko": {
+        "cara": "saludo",
+        "dice": "Primero quiero conocerte un poquito. ¡Prometo que es rápido!"
+      },
+      "preguntas": [
+        {
+          "id": "rol",
+          "tipo": "unica",
+          "texto": "¿Quién sos en esta historia?",
+          "requerida": true,
+          "opciones": [
+            {
+              "id": "estudiante",
+              "texto": "Estudiante"
+            },
+            {
+              "id": "docente",
+              "texto": "Docente"
+            },
+            {
+              "id": "familia",
+              "texto": "Mamá, papá o tutor"
+            },
+            {
+              "id": "hablante",
+              "texto": "Hablante o sabedor de mi comunidad"
+            },
+            {
+              "id": "institucion",
+              "texto": "Trabajo en una escuela, ONG o institución"
+            },
+            {
+              "id": "otro",
+              "texto": "Otro",
+              "otro": true
+            }
+          ]
+        },
+        {
+          "id": "edad",
+          "tipo": "unica",
+          "texto": "¿Cuántos años tenés?",
+          "requerida": true,
+          "opciones": [
+            {
+              "id": "menos_12",
+              "texto": "Menos de 12"
+            },
+            {
+              "id": "12_17",
+              "texto": "12 a 17"
+            },
+            {
+              "id": "18_25",
+              "texto": "18 a 25"
+            },
+            {
+              "id": "26_40",
+              "texto": "26 a 40"
+            },
+            {
+              "id": "41_60",
+              "texto": "41 a 60"
+            },
+            {
+              "id": "mas_60",
+              "texto": "Más de 60"
+            }
+          ]
+        },
+        {
+          "id": "region",
+          "tipo": "unica",
+          "texto": "¿Dónde vivís?",
+          "opciones": [
+            {
+              "id": "raccn",
+              "texto": "Costa Caribe Norte"
+            },
+            {
+              "id": "raccs",
+              "texto": "Costa Caribe Sur"
+            },
+            {
+              "id": "norte",
+              "texto": "Norte (Jinotega, Matagalpa, Nueva Segovia…)"
+            },
+            {
+              "id": "pacifico",
+              "texto": "Pacífico (Managua, León, Granada…)"
+            },
+            {
+              "id": "centro",
+              "texto": "Centro (Boaco, Chontales…)"
+            },
+            {
+              "id": "fuera",
+              "texto": "Fuera de Nicaragua"
+            }
+          ]
+        },
+        {
+          "id": "lenguas_habla",
+          "tipo": "multiple",
+          "texto": "¿Qué lenguas hablás, aunque sea un poquito?",
+          "ayuda": "Marcá todas las que quieras.",
+          "requerida": true,
+          "opciones": [
+            {
+              "id": "espanol",
+              "texto": "Español"
+            },
+            {
+              "id": "miskito",
+              "texto": "Miskito"
+            },
+            {
+              "id": "mayangna",
+              "texto": "Mayangna"
+            },
+            {
+              "id": "rama",
+              "texto": "Rama"
+            },
+            {
+              "id": "garifuna",
+              "texto": "Garífuna"
+            },
+            {
+              "id": "kriol",
+              "texto": "Kriol / inglés criollo"
+            },
+            {
+              "id": "ingles",
+              "texto": "Inglés"
+            },
+            {
+              "id": "otra",
+              "texto": "Otra",
+              "otro": true
+            }
+          ]
+        },
+        {
+          "id": "lengua_aprender",
+          "tipo": "multiple",
+          "texto": "¿Qué lengua te gustaría aprender o reforzar con Piko?",
+          "ayuda": "Hasta 2.",
+          "requerida": true,
+          "max": 2,
+          "opciones": [
+            {
+              "id": "miskito",
+              "texto": "Miskito"
+            },
+            {
+              "id": "mayangna",
+              "texto": "Mayangna"
+            },
+            {
+              "id": "rama",
+              "texto": "Rama"
+            },
+            {
+              "id": "garifuna",
+              "texto": "Garífuna"
+            },
+            {
+              "id": "ingles",
+              "texto": "Inglés"
+            },
+            {
+              "id": "otra",
+              "texto": "Otra",
+              "otro": true
+            }
+          ]
+        },
+        {
+          "id": "motivo",
+          "tipo": "multiple",
+          "texto": "¿Por qué querés aprenderla?",
+          "ayuda": "Hasta 3.",
+          "max": 3,
+          "opciones": [
+            {
+              "id": "raices",
+              "texto": "Mantener viva la lengua de mi familia o mi comunidad"
+            },
+            {
+              "id": "mayores",
+              "texto": "Hablar con mis abuelos y los mayores"
+            },
+            {
+              "id": "escuela",
+              "texto": "Me lo piden en la escuela"
+            },
+            {
+              "id": "trabajo",
+              "texto": "Conseguir trabajo u oportunidades"
+            },
+            {
+              "id": "ensenar",
+              "texto": "Enseñársela a otras personas"
+            },
+            {
+              "id": "curiosidad",
+              "texto": "Por curiosidad, me gusta aprender"
+            },
+            {
+              "id": "otro",
+              "texto": "Otro motivo",
+              "otro": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "contexto",
+      "titulo": "Tu teléfono y tu señal",
+      "piko": {
+        "cara": "pensando",
+        "dice": "Yo funciono sin internet, pero quiero saber con qué cuento donde vivís."
+      },
+      "preguntas": [
+        {
+          "id": "telefono",
+          "tipo": "unica",
+          "texto": "¿Tenés un teléfono para aprender?",
+          "requerida": true,
+          "opciones": [
+            {
+              "id": "propio",
+              "texto": "Sí, tengo el mío"
+            },
+            {
+              "id": "compartido",
+              "texto": "Uso uno que compartimos en casa"
+            },
+            {
+              "id": "escuela",
+              "texto": "Solo en la escuela"
+            },
+            {
+              "id": "ninguno",
+              "texto": "No tengo acceso a uno"
+            }
+          ]
+        },
+        {
+          "id": "internet",
+          "tipo": "unica",
+          "texto": "¿Qué tan seguido tenés internet?",
+          "requerida": true,
+          "opciones": [
+            {
+              "id": "siempre",
+              "texto": "Casi siempre"
+            },
+            {
+              "id": "recargas",
+              "texto": "A veces, cuando hay recarga o señal"
+            },
+            {
+              "id": "casi_nunca",
+              "texto": "Casi nunca"
+            },
+            {
+              "id": "nunca",
+              "texto": "Nunca"
+            }
+          ]
+        },
+        {
+          "id": "cuando",
+          "tipo": "multiple",
+          "texto": "¿Cuándo te imaginás usando Piko?",
+          "opciones": [
+            {
+              "id": "clase",
+              "texto": "En clase"
+            },
+            {
+              "id": "casa",
+              "texto": "En la casa, después de clases"
+            },
+            {
+              "id": "familia",
+              "texto": "Con la familia, en las noches"
+            },
+            {
+              "id": "camino",
+              "texto": "En el camino o esperando"
+            },
+            {
+              "id": "finde",
+              "texto": "Los fines de semana"
+            }
+          ]
+        },
+        {
+          "id": "minutos",
+          "tipo": "unica",
+          "texto": "¿Cuánto tiempo al día le dedicarías?",
+          "opciones": [
+            {
+              "id": "5",
+              "texto": "5 minutos"
+            },
+            {
+              "id": "15",
+              "texto": "10 a 15 minutos"
+            },
+            {
+              "id": "30",
+              "texto": "20 a 30 minutos"
+            },
+            {
+              "id": "mas",
+              "texto": "Más de 30 minutos"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "app",
+      "titulo": "La app de Piko",
+      "piko": {
+        "cara": "feliz",
+        "dice": "Imaginemos juntos la app. ¿Qué tan útil te parecería cada cosa?"
+      },
+      "preguntas": [
+        {
+          "id": "app_funciones",
+          "tipo": "matriz",
+          "texto": "¿Qué tan útil te parecería…?",
+          "requerida": true,
+          "escala": {
+            "min": 1,
+            "max": 5,
+            "etiquetaMin": "No me sirve",
+            "etiquetaMax": "¡Lo quiero ya!"
+          },
+          "filas": [
+            {
+              "id": "juego",
+              "texto": "Lecciones cortas tipo juego"
+            },
+            {
+              "id": "offline",
+              "texto": "Que todo funcione sin internet"
+            },
+            {
+              "id": "aula",
+              "texto": "Jugar en clase contra mis compañeros"
+            },
+            {
+              "id": "diccionario",
+              "texto": "Diccionario con audio de hablantes de la comunidad"
+            },
+            {
+              "id": "pronunciar",
+              "texto": "Grabarme y escuchar cómo pronuncio"
+            },
+            {
+              "id": "cuentos",
+              "texto": "Cuentos, leyendas y canciones de la comunidad"
+            },
+            {
+              "id": "vida_diaria",
+              "texto": "Frases de la vida diaria: saludar, comprar, la familia"
+            },
+            {
+              "id": "rachas",
+              "texto": "Retos diarios, rachas y logros"
+            },
+            {
+              "id": "progreso",
+              "texto": "Ver mi avance, y que mi docente o familia lo vea"
+            },
+            {
+              "id": "conversar_ia",
+              "texto": "Conversar con Piko en la lengua, con IA que me responde"
+            }
+          ]
+        },
+        {
+          "id": "app_extras",
+          "tipo": "multiple",
+          "texto": "¿Qué más te gustaría hacer en la app?",
+          "ayuda": "Hasta 3.",
+          "max": 3,
+          "opciones": [
+            {
+              "id": "leer_escribir",
+              "texto": "Aprender a leer y escribir la lengua"
+            },
+            {
+              "id": "videos",
+              "texto": "Videos cortos de personas de la comunidad"
+            },
+            {
+              "id": "tarjetas",
+              "texto": "Juegos de memoria y tarjetas"
+            },
+            {
+              "id": "amigos",
+              "texto": "Practicar con amigos de otras comunidades"
+            },
+            {
+              "id": "aportar",
+              "texto": "Aportar palabras y audios de mi comunidad"
+            },
+            {
+              "id": "traductor",
+              "texto": "Traductor rápido español ↔ la lengua"
+            },
+            {
+              "id": "cultura",
+              "texto": "Comidas, fiestas e historia de cada pueblo"
+            },
+            {
+              "id": "recordatorios",
+              "texto": "Que Piko me recuerde practicar"
+            },
+            {
+              "id": "otro",
+              "texto": "Otra cosa",
+              "otro": true
+            }
+          ]
+        },
+        {
+          "id": "app_docente",
+          "tipo": "multiple",
+          "texto": "Como docente, ¿qué te ayudaría más?",
+          "ayuda": "Hasta 3.",
+          "max": 3,
+          "mostrarSi": {
+            "pregunta": "rol",
+            "en": [
+              "docente",
+              "institucion"
+            ]
+          },
+          "opciones": [
+            {
+              "id": "presets",
+              "texto": "Armar la clase en un minuto con temas listos"
+            },
+            {
+              "id": "rezagados",
+              "texto": "Ver quién se está quedando atrás"
+            },
+            {
+              "id": "crear",
+              "texto": "Crear mis propios ejercicios"
+            },
+            {
+              "id": "imprimir",
+              "texto": "Imprimir material para quien no tiene teléfono"
+            },
+            {
+              "id": "robot",
+              "texto": "Controlar a Pikobot desde mi teléfono"
+            },
+            {
+              "id": "reportes",
+              "texto": "Reportes para la dirección o el MINED"
+            },
+            {
+              "id": "otro",
+              "texto": "Otra cosa",
+              "otro": true
+            }
+          ]
+        },
+        {
+          "id": "app_familia",
+          "tipo": "multiple",
+          "texto": "Como familia, ¿qué te gustaría?",
+          "mostrarSi": {
+            "pregunta": "rol",
+            "en": [
+              "familia",
+              "hablante"
+            ]
+          },
+          "opciones": [
+            {
+              "id": "juntos",
+              "texto": "Un modo para aprender juntos en casa"
+            },
+            {
+              "id": "avance",
+              "texto": "Ver cómo va mi hijo o hija"
+            },
+            {
+              "id": "grabar",
+              "texto": "Grabar mi voz para que Piko la use al enseñar"
+            },
+            {
+              "id": "historias",
+              "texto": "Compartir historias de la familia en la lengua"
+            },
+            {
+              "id": "otro",
+              "texto": "Otra cosa",
+              "otro": true
+            }
+          ]
+        },
+        {
+          "id": "personalidad",
+          "tipo": "unica",
+          "texto": "¿Cómo querés que te hable Piko en la app?",
+          "opciones": [
+            {
+              "id": "bromista",
+              "texto": "Como un amigo bromista"
+            },
+            {
+              "id": "paciente",
+              "texto": "Como un maestro paciente"
+            },
+            {
+              "id": "abuelo",
+              "texto": "Como un abuelo que cuenta historias"
+            },
+            {
+              "id": "poco",
+              "texto": "Que hable poco y me deje practicar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "robot",
+      "titulo": "Pikobot, el robot del aula",
+      "piko": {
+        "cara": "robot",
+        "dice": "Te presento a Pikobot, mi versión de aula. No importa lo que ya existe: contanos cómo lo soñás."
+      },
+      "concepto": {
+        "nombre": "Pikobot",
+        "titulo": "Un robot que guía, escucha y corrige con IA",
+        "resaltar": "guía, escucha y corrige con IA",
+        "texto": "Vive en el aula, solo necesita corriente eléctrica y acompaña al docente donde no alcanzan los teléfonos para usar la app.",
+        "pilares": [
+          {
+            "id": "guia",
+            "titulo": "Guía",
+            "texto": "Dirige la actividad paso a paso, arma grupos y da los turnos."
+          },
+          {
+            "id": "escucha",
+            "titulo": "Escucha",
+            "texto": "Reconoce con inteligencia artificial lo que decís en la lengua."
+          },
+          {
+            "id": "corrige",
+            "titulo": "Corrige",
+            "texto": "Te dice cómo mejorar tu pronunciación, con paciencia y sin regañar."
+          }
+        ],
+        "nota": "La inteligencia artificial corre dentro de Pikobot: no depende de internet."
+      },
+      "preguntas": [
+        {
+          "id": "robot_interes",
+          "tipo": "escala",
+          "texto": "¿Qué tanto te gustaría aprender con Pikobot?",
+          "requerida": true,
+          "min": 1,
+          "max": 5,
+          "etiquetaMin": "Nada",
+          "etiquetaMax": "¡Muchísimo!"
+        },
+        {
+          "id": "robot_funciones",
+          "tipo": "matriz",
+          "texto": "¿Qué tan importante es que Pikobot pueda…?",
+          "requerida": true,
+          "escala": {
+            "min": 1,
+            "max": 5,
+            "etiquetaMin": "No hace falta",
+            "etiquetaMax": "Imprescindible"
+          },
+          "filas": [
+            {
+              "id": "guiar",
+              "texto": "Guiar la clase paso a paso"
+            },
+            {
+              "id": "escuchar",
+              "texto": "Escucharme y decirme si lo dije bien"
+            },
+            {
+              "id": "corregir",
+              "texto": "Corregirme mostrando cómo se dice"
+            },
+            {
+              "id": "conversar",
+              "texto": "Conversar libremente conmigo en la lengua"
+            },
+            {
+              "id": "historias",
+              "texto": "Contar historias y cantar canciones"
+            },
+            {
+              "id": "grupos",
+              "texto": "Armar grupos y dar los turnos"
+            },
+            {
+              "id": "recordar",
+              "texto": "Reconocerme y recordar cómo voy"
+            },
+            {
+              "id": "traducir",
+              "texto": "Traducir entre español y la lengua"
+            },
+            {
+              "id": "concurso",
+              "texto": "Hacer juegos y preguntas tipo concurso"
+            },
+            {
+              "id": "emociones",
+              "texto": "Moverse y mostrar emociones en su cara"
+            }
+          ]
+        },
+        {
+          "id": "robot_correccion",
+          "tipo": "unica",
+          "texto": "Cuando digo algo mal, prefiero que Pikobot…",
+          "requerida": true,
+          "opciones": [
+            {
+              "id": "al_momento",
+              "texto": "Me corrija al momento"
+            },
+            {
+              "id": "al_final",
+              "texto": "Me dé las correcciones al final de la actividad"
+            },
+            {
+              "id": "pistas",
+              "texto": "Me dé pistas para que lo descubra yo"
+            },
+            {
+              "id": "repetir",
+              "texto": "Repita la forma correcta sin decir que fallé"
+            }
+          ]
+        },
+        {
+          "id": "robot_confianza",
+          "tipo": "escala",
+          "texto": "¿Qué tan cómodo te sentís con que una IA escuche y analice tu voz?",
+          "requerida": true,
+          "min": 1,
+          "max": 5,
+          "etiquetaMin": "Nada cómodo",
+          "etiquetaMax": "Muy cómodo"
+        },
+        {
+          "id": "robot_garantias",
+          "tipo": "multiple",
+          "texto": "¿Qué te daría más confianza?",
+          "ayuda": "Hasta 3.",
+          "max": 3,
+          "opciones": [
+            {
+              "id": "sin_internet",
+              "texto": "Que funcione sin internet: mi voz no sale de Pikobot"
+            },
+            {
+              "id": "sin_grabar",
+              "texto": "Que no guarde grabaciones de mi voz"
+            },
+            {
+              "id": "luz",
+              "texto": "Que avise con una luz cuando está escuchando"
+            },
+            {
+              "id": "comunidad",
+              "texto": "Que la comunidad decida qué se enseña y cómo se pronuncia"
+            },
+            {
+              "id": "docente",
+              "texto": "Que el docente pueda revisar lo que hace"
+            },
+            {
+              "id": "explica",
+              "texto": "Que me explique por qué me corrige"
+            },
+            {
+              "id": "otro",
+              "texto": "Otra cosa",
+              "otro": true
+            }
+          ]
+        },
+        {
+          "id": "robot_voz",
+          "tipo": "unica",
+          "texto": "¿Con qué voz preferís que hable Pikobot?",
+          "opciones": [
+            {
+              "id": "comunidad",
+              "texto": "Grabada por personas de la comunidad"
+            },
+            {
+              "id": "sintetica",
+              "texto": "Una voz de computadora, si suena natural"
+            },
+            {
+              "id": "mezcla",
+              "texto": "Una mezcla de las dos"
+            },
+            {
+              "id": "igual",
+              "texto": "Me da igual"
+            }
+          ]
+        },
+        {
+          "id": "robot_donde",
+          "tipo": "multiple",
+          "texto": "¿Dónde te gustaría encontrarlo?",
+          "opciones": [
+            {
+              "id": "aula",
+              "texto": "En el aula"
+            },
+            {
+              "id": "biblioteca",
+              "texto": "En la biblioteca o la casa comunal"
+            },
+            {
+              "id": "casa",
+              "texto": "En la casa"
+            },
+            {
+              "id": "portatil",
+              "texto": "Uno portátil para llevar a donde sea"
+            },
+            {
+              "id": "eventos",
+              "texto": "En ferias y actividades culturales"
+            }
+          ]
+        },
+        {
+          "id": "robot_forma",
+          "tipo": "unica",
+          "texto": "¿Cómo te lo imaginás?",
+          "opciones": [
+            {
+              "id": "chocoyo",
+              "texto": "Con forma de chocoyo, como Piko"
+            },
+            {
+              "id": "pantalla",
+              "texto": "Un robot con una cara en pantalla"
+            },
+            {
+              "id": "peluche",
+              "texto": "Suave, como un peluche"
+            },
+            {
+              "id": "igual",
+              "texto": "No importa la forma, importa lo que hace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "idea",
+      "titulo": "Tu idea",
+      "piko": {
+        "cara": "guino",
+        "dice": "Últimas preguntas, ¡lo prometo! Esta es la parte que más me gusta."
+      },
+      "preguntas": [
+        {
+          "id": "una_cosa",
+          "tipo": "texto",
+          "texto": "Si pudieras agregarle una sola cosa a Piko —a la app o al robot—, ¿qué sería?",
+          "multilinea": true,
+          "max": 1000,
+          "placeholder": "Soñá en grande…"
+        },
+        {
+          "id": "preocupa",
+          "tipo": "texto",
+          "texto": "¿Hay algo que te preocupe o que no te gustaría ver en Piko?",
+          "multilinea": true,
+          "max": 1000
+        },
+        {
+          "id": "recomendar",
+          "tipo": "escala",
+          "texto": "¿Qué tan probable es que le recomiendes Piko a alguien?",
+          "min": 0,
+          "max": 10,
+          "etiquetaMin": "Nada probable",
+          "etiquetaMax": "Seguro que sí"
+        },
+        {
+          "id": "probar",
+          "tipo": "unica",
+          "texto": "¿Querés probar Piko antes que nadie?",
+          "opciones": [
+            {
+              "id": "si",
+              "texto": "¡Sí, cuenten conmigo!"
+            },
+            {
+              "id": "no",
+              "texto": "Por ahora no"
+            }
+          ]
+        },
+        {
+          "id": "contacto",
+          "tipo": "texto",
+          "texto": "¿Cómo te avisamos?",
+          "ayuda": "Un correo o un WhatsApp. Solo lo usamos para invitarte a probar Piko.",
+          "mostrarSi": {
+            "pregunta": "probar",
+            "en": [
+              "si"
+            ]
+          },
+          "max": 120,
+          "placeholder": "tu@correo.com o +505 …"
+        }
+      ]
+    }
+  ],
+  "creditos": "kronox"
+}

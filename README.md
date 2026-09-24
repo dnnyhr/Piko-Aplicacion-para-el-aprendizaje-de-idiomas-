@@ -217,6 +217,7 @@ simulador juega una clase entera sin un solo teléfono.</sub></p>
 | 🎨 Cambiar una pantalla, un ejercicio o el diseño | `app/src/ui/` · `app/src/features/` |
 | 🤖 Arreglar algo del robot físico | `robot/firmware/` (Arduino) · `robot/panel/` (el puente) |
 | 🌐 Editar el sitio piko.mugiware.com | `web/index.html` |
+| 📋 Crear o editar una encuesta | `encuestas/definiciones/` — ver [encuestas/README.md](encuestas/README.md) |
 | 📖 Entender por qué se decidió algo así | `docs/decisiones.md` |
 
 <div align="center">
