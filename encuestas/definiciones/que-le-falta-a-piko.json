@@ -485,7 +485,7 @@
             },
             {
               "id": "robot",
-              "texto": "Controlar el robot desde mi teléfono"
+              "texto": "Controlar a Pikobot desde mi teléfono"
             },
             {
               "id": "reportes",
@@ -569,7 +569,7 @@
         "nombre": "Pikobot",
         "titulo": "Un robot que guía, escucha y corrige con IA",
         "resaltar": "guía, escucha y corrige con IA",
-        "texto": "Vive en el aula, solo necesita corriente eléctrica y acompaña al docente cuando no alcanzan los teléfonos.",
+        "texto": "Vive en el aula, solo necesita corriente eléctrica y acompaña al docente en cada clase.",
         "pilares": [
           {
             "id": "guia",
@@ -587,7 +587,7 @@
             "texto": "Te dice cómo mejorar tu pronunciación, con paciencia y sin regañar."
           }
         ],
-        "nota": "La inteligencia artificial corre en una computadora del aula: no depende de internet."
+        "nota": "La inteligencia artificial corre dentro de Pikobot: no depende de internet."
       },
       "preguntas": [
         {
@@ -697,7 +697,7 @@
           "opciones": [
             {
               "id": "sin_internet",
-              "texto": "Que funcione sin internet: mi voz no sale del aula"
+              "texto": "Que funcione sin internet: mi voz no sale de Pikobot"
             },
             {
               "id": "sin_grabar",
