@@ -129,42 +129,9 @@ function creditos() {
   );
 }
 
-// Copete de plumas de Pikobot, con los colores del chocoyo.
-const COPETE =
-  '<svg viewBox="0 0 300 130" aria-hidden="true"><g stroke="#fff" stroke-width="10" stroke-linejoin="round" paint-order="stroke">' +
-  '<ellipse cx="150" cy="62" rx="24" ry="58" fill="#E0332A" transform="rotate(-58 150 124)"/>' +
-  '<ellipse cx="150" cy="62" rx="24" ry="58" fill="#E0332A" transform="rotate(58 150 124)"/>' +
-  '<ellipse cx="150" cy="58" rx="26" ry="62" fill="#F0672A" transform="rotate(-29 150 124)"/>' +
-  '<ellipse cx="150" cy="58" rx="26" ry="62" fill="#F0672A" transform="rotate(29 150 124)"/>' +
-  '<ellipse cx="150" cy="54" rx="28" ry="66" fill="#F3C020"/>' +
-  '</g></svg>';
-
-/** Pikobot, el robot de aula, como en el carrusel. `cara`: enfrente | celebra. */
-function pikobot(cara = 'enfrente', { pupitre = false } = {}) {
-  const src = cara === 'celebra' ? '/img/robot-celebra.svg' : '/img/robot-cara.svg';
-  return h(
-    'div',
-    { class: 'pikobot', role: 'img', 'aria-label': 'Pikobot, el robot de aula de Piko' },
-    h(
-      'div',
-      { class: 'pikobot__cuerpo' },
-      h('span', { class: 'pikobot__ala pikobot__ala--izq' }),
-      h('span', { class: 'pikobot__ala pikobot__ala--der' }),
-      h(
-        'div',
-        { class: 'pikobot__marco' },
-        h(
-          'div',
-          { class: 'pikobot__carcasa' },
-          h('span', { class: 'pikobot__copete', html: COPETE }),
-          h('div', { class: 'pikobot__pantalla' }, h('img', { src, alt: '' })),
-        ),
-      ),
-      h('span', { class: 'pikobot__brillo' }),
-    ),
-    pupitre ? h('div', { class: 'pikobot__pupitre' }, h('i'), h('i'), h('i')) : null,
-    pupitre ? h('div', { class: 'pikobot__sombra' }) : null,
-  );
+/** Pikobot, el robot de aula: el SVG del equipo, tal cual. */
+function pikobot() {
+  return h('img', { class: 'pikobot', src: '/img/pikobot.svg', alt: 'Pikobot, el robot de aula de Piko', width: 720, height: 625 });
 }
 
 /** Pinta en verde la palabra que la definición pide resaltar en el título. */
@@ -434,7 +401,7 @@ async function abrirEncuesta(slug) {
       h(
         'div',
         { class: 'contenedor cabecera__fila' },
-        esRobot ? pikobot('enfrente') : piko(s.piko?.cara ?? 'feliz'),
+        esRobot ? pikobot() : piko(s.piko?.cara ?? 'feliz'),
         h(
           'div',
           { class: `papel${i % 2 ? ' papel--derecha' : ''}` },
@@ -534,7 +501,7 @@ async function abrirEncuesta(slug) {
         h(
           'div',
           { class: 'final__grid' },
-          h('div', { class: 'final__duo' }, piko('celebra'), pikobot('celebra')),
+          h('div', { class: 'final__duo' }, piko('celebra'), pikobot()),
           h(
             'div',
             { class: 'papel' },
@@ -588,7 +555,7 @@ function dibujarConcepto(c) {
   return h(
     'aside',
     { class: 'concepto', 'aria-label': c.titulo },
-    pikobot('enfrente', { pupitre: true }),
+    pikobot(),
     pilares.length ? h('div', { class: 'sticker' }, h('span', {}, pilares.map((p) => p.titulo).join(' · '))) : null,
     h(
       'div',
