@@ -569,7 +569,7 @@
         "nombre": "Pikobot",
         "titulo": "Un robot que guía, escucha y corrige con IA",
         "resaltar": "guía, escucha y corrige con IA",
-        "texto": "Vive en el aula, solo necesita corriente eléctrica y acompaña al docente en cada clase.",
+        "texto": "Vive en el aula, solo necesita corriente eléctrica y acompaña al docente donde no alcanzan los teléfonos para usar la app.",
         "pilares": [
           {
             "id": "guia",
