@@ -59,6 +59,21 @@ npm run dev                         # http://localhost:8787
 PIKO_ENCUESTAS_URL=http://localhost:8787 PIKO_ENCUESTAS_TOKEN=cambiame-en-local npm run publicar
 ```
 
+## Pikobot animado
+
+`public/img/pikobot.svg` es el dibujo del equipo y no se toca. Las versiones
+animadas (alas que aletean, luces que laten y la pantalla cambiando de cara
+con las expresiones de `robot/panel/public/caras/`) se generan desde ahí:
+
+```bash
+node herramientas/animar-pikobot.mjs
+```
+
+Salen `pikobot-animado.svg` (mira a los lados, parpadea, guiña, festeja) y
+`pikobot-celebra.svg` (para la pantalla final). El guion de expresiones está
+al principio del script. Si el teléfono pide menos movimiento, Pikobot se
+queda quieto mirando de frente.
+
 ## Rutas
 
 | Ruta | Qué es |
