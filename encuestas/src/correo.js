@@ -13,6 +13,7 @@
  */
 
 const RESEND = 'https://api.resend.com/emails';
+const ESPERA_MS = 10_000;
 
 // Qué suele significar cada error de Resend, para que el panel lo diga claro.
 const PISTAS = {
@@ -220,27 +221,49 @@ export async function enviarBienvenida(env, { respuestaId, def, respuestas, base
     return { estado, detalle: d, intentos: intento };
   };
 
-  const faltan = ['RESEND_API_KEY', 'CORREO_REMITENTE', 'APP_DESCARGA_URL'].filter((k) => !env[k]);
-  if (faltan.length) return anotar('omitido', `Falta configurar: ${faltan.join(', ')}`);
-
   const nombre = limpiarNombre(respuestas[conf.nombre]) ?? nombreDesdeCorreo(para);
-  const correo = armarCorreo({
+  const r = await mandarDescarga(env, {
+    para,
     nombre,
-    enlace: env.APP_DESCARGA_URL,
     base,
     encuesta: def.titulo,
-    asunto: conf.asunto ?? 'Tu enlace para descargar Piko',
+    asunto: conf.asunto,
+    clave: `bienvenida-${respuestaId}-${intento}`,
+    tipo: intento > 1 ? 'reenvio' : 'bienvenida',
+  });
+  return anotar(r.estado, r.detalle, r.resendId);
+}
+
+/**
+ * Manda el correo con el enlace de descarga a una dirección. No anota nada:
+ * devuelve { estado: enviado | error | omitido, detalle, resendId } y quien
+ * lo llama decide dónde guardarlo (respuestas de la encuesta o contactos
+ * agregados a mano). `clave` es la clave de idempotencia de Resend: un
+ * reintento con la misma clave no sale dos veces.
+ */
+export async function mandarDescarga(env, { para, nombre, base, encuesta, asunto, clave, tipo = 'bienvenida', espera = ESPERA_MS }) {
+  const faltan = ['RESEND_API_KEY', 'CORREO_REMITENTE', 'APP_DESCARGA_URL'].filter((k) => !env[k]);
+  if (faltan.length) return { estado: 'omitido', detalle: `Falta configurar: ${faltan.join(', ')}`, resendId: null };
+
+  const correo = armarCorreo({
+    nombre: nombre ?? null,
+    enlace: env.APP_DESCARGA_URL,
+    base,
+    encuesta,
+    asunto: asunto ?? 'Tu enlace para descargar Piko',
   });
 
   try {
     const res = await fetch(RESEND, {
       method: 'POST',
+      // Si Resend no contesta, no dejar colgado al panel ni al Worker.
+      signal: AbortSignal.timeout(espera),
       headers: {
         authorization: `Bearer ${env.RESEND_API_KEY}`,
         'content-type': 'application/json',
         // Un reintento automático del mismo intento no sale dos veces;
         // un reenvío pedido desde el panel es otro intento y sí sale.
-        'idempotency-key': `bienvenida-${respuestaId}-${intento}`,
+        'idempotency-key': clave,
       },
       body: JSON.stringify({
         from: env.CORREO_REMITENTE,
@@ -249,13 +272,18 @@ export async function enviarBienvenida(env, { respuestaId, def, respuestas, base
         html: correo.html,
         text: correo.texto,
         ...(env.CORREO_RESPUESTA ? { reply_to: env.CORREO_RESPUESTA } : {}),
-        tags: [{ name: 'tipo', value: intento > 1 ? 'reenvio' : 'bienvenida' }],
+        tags: [{ name: 'tipo', value: tipo }],
       }),
     });
     const r = await res.json().catch(() => ({}));
-    if (res.ok) return anotar('enviado', null, r.id ?? null);
-    return anotar('error', `${res.status} · ${r.message ?? PISTAS[res.status] ?? r.name ?? 'Resend no pudo mandarlo.'}`);
+    if (res.ok) return { estado: 'enviado', detalle: null, resendId: r.id ?? null };
+    return {
+      estado: 'error',
+      detalle: `${res.status} · ${r.message ?? PISTAS[res.status] ?? r.name ?? 'Resend no pudo mandarlo.'}`,
+      resendId: null,
+    };
   } catch (err) {
-    return anotar('error', err?.message ?? String(err));
+    const tiempo = err?.name === 'TimeoutError' || err?.name === 'AbortError';
+    return { estado: 'error', detalle: tiempo ? 'Resend no respondió a tiempo: probá de nuevo.' : err?.message ?? String(err), resendId: null };
   }
 }

@@ -19,10 +19,15 @@
  *   GET  /api/admin/encuestas/:slug/correos    correos enviados y su estado (token)
  *   POST /api/admin/encuestas/:slug/correos/reenviar   reenviar los que fallaron (token)
  *   POST /api/admin/correos/:respuesta/reenviar         reenviar uno (token)
+ *   GET  /api/admin/encuestas/:slug/contactos  contactos agregados a mano (token)
+ *   POST /api/admin/encuestas/:slug/contactos  agregar contactos, uno por línea (token)
+ *   POST /api/admin/contactos/:id/enviar       mandar el enlace a uno (token)
+ *   DELETE /api/admin/contactos/:id            borrar uno (token)
  */
 
 import { aFilas, preguntasDe, revisar, validarDefinicion } from '../public/js/reglas.js';
-import { enviarBienvenida } from './correo.js';
+import { enviarBienvenida, limpiarNombre, mandarDescarga, nombreDesdeCorreo } from './correo.js';
+import { leerContactos, MAX_LINEAS } from './contactos.js';
 
 /** Respuestas por huella y por día antes de responder 429. Un aula comparte IP. */
 const LIMITE_DIARIO = 60;
@@ -74,6 +79,10 @@ async function enrutar(request, env, ctx) {
     if (b === 'encuestas' && c && d === 'correos' && !e && m === 'GET') return listarCorreos(env, c);
     if (b === 'encuestas' && c && d === 'correos' && e === 'reenviar' && m === 'POST') return reenviarFallidos(request, env, c, url);
     if (b === 'correos' && c && d === 'reenviar' && m === 'POST') return reenviarUno(env, c, url);
+    if (b === 'encuestas' && c && d === 'contactos' && !e && m === 'GET') return listarContactos(env, c);
+    if (b === 'encuestas' && c && d === 'contactos' && !e && m === 'POST') return agregarContactos(request, env, c, url);
+    if (b === 'contactos' && c && d === 'enviar' && m === 'POST') return enviarAContacto(env, c, url);
+    if (b === 'contactos' && c && !d && m === 'DELETE') return borrarContacto(env, c);
   }
 
   throw new ErrorHttp(404, 'Ruta no encontrada.');
@@ -563,6 +572,121 @@ async function reenviarFallidos(request, env, slug, url) {
     if (r.estado === 'omitido') break;
   }
   return json({ ...cuenta, quedan: results.length > TANDA });
+}
+
+/* -------------------------------------------------- contactos a mano */
+
+const SIN_TABLA_CONTACTOS = 'Falta la tabla de contactos: corré `npm run db:remoto`.';
+
+async function listarContactos(env, slug) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  try {
+    const { results } = await env.DB.prepare(
+      `SELECT id, nombre, correo, telefono, correo_estado, correo_detalle, correo_intentos,
+              creado_en, correo_actualizado_en
+         FROM contactos WHERE encuesta_id = ? ORDER BY creado_en DESC LIMIT 1000`,
+    )
+      .bind(e.id)
+      .all();
+    return json({ contactos: results });
+  } catch {
+    throw new ErrorHttp(503, SIN_TABLA_CONTACTOS);
+  }
+}
+
+/** Manda el enlace de descarga a un contacto y guarda el resultado en su fila. */
+async function mandarAContacto(env, e, contacto, base) {
+  const intento = (contacto.correo_intentos ?? 0) + 1;
+  const r = await mandarDescarga(env, {
+    para: contacto.correo,
+    nombre: limpiarNombre(contacto.nombre) ?? nombreDesdeCorreo(contacto.correo),
+    base,
+    encuesta: e.definicion.titulo,
+    asunto: e.definicion.correo?.asunto,
+    clave: `contacto-${contacto.id}-${intento}`,
+    tipo: 'contacto',
+  });
+  await env.DB.prepare(
+    `UPDATE contactos SET correo_estado = ?, correo_detalle = ?, correo_resend_id = ?, correo_intentos = ?,
+            correo_actualizado_en = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+      WHERE id = ?`,
+  )
+    .bind(r.estado, r.detalle ? String(r.detalle).slice(0, 500) : null, r.resendId, intento, contacto.id)
+    .run();
+  return { ...r, intentos: intento };
+}
+
+async function agregarContactos(request, env, slug, url) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  const cuerpo = await leerJson(request);
+  const { contactos, invalidas, recortado } = leerContactos(cuerpo.texto);
+  if (!contactos.length && !invalidas.length) throw new ErrorHttp(400, 'Pegá al menos un correo o un número.');
+
+  const nuevos = [];
+  let repetidos = 0;
+  try {
+    for (const c of contactos) {
+      const id = crypto.randomUUID();
+      // INSERT OR IGNORE + índices únicos: el mismo correo o número no entra dos veces.
+      const r = await env.DB.prepare(
+        'INSERT OR IGNORE INTO contactos (id, encuesta_id, nombre, correo, telefono) VALUES (?, ?, ?, ?, ?)',
+      )
+        .bind(id, e.id, c.nombre, c.correo, c.telefono)
+        .run();
+      if (r.meta.changes > 0) nuevos.push({ id, ...c, correo_intentos: 0 });
+      else repetidos++;
+    }
+  } catch {
+    throw new ErrorHttp(503, SIN_TABLA_CONTACTOS);
+  }
+
+  const cuenta = { enviado: 0, error: 0, omitido: 0 };
+  let sinEnviar = 0;
+  if (cuerpo.enviar) {
+    const conCorreo = nuevos.filter((c) => c.correo);
+    for (const [i, c] of conCorreo.entries()) {
+      // Mismo cuidado que en los reenvíos: de a tandas y con pausa, por el límite de Resend.
+      if (i >= TANDA) {
+        sinEnviar = conCorreo.length - TANDA;
+        break;
+      }
+      if (i) await new Promise((r) => setTimeout(r, PAUSA_MS));
+      const r = await mandarAContacto(env, e, c, url.origin);
+      cuenta[r.estado]++;
+      if (r.estado === 'omitido') {
+        sinEnviar = conCorreo.length - i - 1;
+        break;
+      }
+    }
+  }
+
+  return json({ agregados: nuevos.length, repetidos, invalidas, recortado, maxLineas: MAX_LINEAS, ...cuenta, sinEnviar }, 201);
+}
+
+async function enviarAContacto(env, id, url) {
+  let c;
+  try {
+    c = await env.DB.prepare(
+      `SELECT c.*, e.slug FROM contactos c JOIN encuestas e ON e.id = c.encuesta_id WHERE c.id = ?`,
+    )
+      .bind(id)
+      .first();
+  } catch {
+    throw new ErrorHttp(503, SIN_TABLA_CONTACTOS);
+  }
+  if (!c) throw new ErrorHttp(404, 'Ese contacto no existe.');
+  if (!c.correo) throw new ErrorHttp(422, 'Este contacto no tiene correo, solo número.');
+  const e = await cargar(env, c.slug);
+  const r = await mandarAContacto(env, e, c, url.origin);
+  return json({ ok: r.estado === 'enviado', ...r });
+}
+
+async function borrarContacto(env, id) {
+  const r = await env.DB.prepare('DELETE FROM contactos WHERE id = ?').bind(id).run();
+  if (!r.meta.changes) throw new ErrorHttp(404, 'Ese contacto no existe.');
+  return json({ ok: true });
 }
 
 export function celda(v) {

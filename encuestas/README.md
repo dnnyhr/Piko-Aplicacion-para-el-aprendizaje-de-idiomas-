@@ -81,10 +81,22 @@ respuesta: si Resend falla, la respuesta queda guardada igual.
 - **Plantilla:** `src/correo.js` (HTML y texto). La cabecera es
   `public/img/correo-cabecera.jpg`: los correos no muestran SVG.
 
+- **Contactos agregados a mano.** En `/admin`, la sección *Contactos agregados
+  a mano* sirve para los que dejaron su correo o número antes de que
+  existiera el correo automático (por ejemplo en la pregunta "contacto" de
+  una versión anterior) o por fuera de la encuesta. "Traer los contactos
+  viejos de la encuesta" llena el cuadro con lo que la gente escribió en
+  preguntas de versiones anteriores que tenga pinta de correo o número; se
+  revisa y se agrega. Uno por línea, con nombre opcional (`Ana López,
+  ana@correo.com`); los repetidos no entran dos veces y, si se marca la
+  casilla, a los que tienen correo les llega el enlace. Van en la tabla
+  `contactos` (migración 0004), aparte de las respuestas: no cuentan en las
+  estadísticas.
+
 Para activarlo:
 
 ```bash
-npm run db:remoto                          # tabla correos (migraciones 0002 y 0003)
+npm run db:remoto                          # tablas correos y contactos (migraciones 0002 a 0004)
 npx wrangler secret put RESEND_API_KEY     # la API key de Resend
 ```
 

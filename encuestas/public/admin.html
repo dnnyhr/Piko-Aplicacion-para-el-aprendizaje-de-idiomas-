@@ -47,6 +47,12 @@
   .estado--error { background: var(--intento-fondo); color: var(--intento-tinta); }
   .estado--omitido { background: var(--papel-hondo); color: var(--tinta); }
   .btn--chico { min-height: 40px; padding: .45rem .9rem; font-size: .85rem; }
+  .correo__acciones { display: flex; gap: 6px; align-items: center; }
+  .contactos__form { margin-bottom: 8px; }
+  .contactos__form .campo { font-family: inherit; }
+  .contactos__form > .btn--chico { margin-top: 4px; white-space: normal; text-align: left; }
+  .contactos__check { display: flex; gap: 8px; align-items: flex-start; margin: 12px 0; font-size: .95rem; cursor: pointer; }
+  .contactos__check input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--verde); flex: none; }
   @media (min-width: 640px) {
     .barra-dato { grid-template-columns: minmax(120px, 1fr) 2fr auto; gap: 10px; }
     .barra-dato__pista { grid-column: auto; grid-row: auto; }

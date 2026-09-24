@@ -231,3 +231,18 @@ test('reenviar pide token y una respuesta con correo', async () => {
   assert.equal((await llamar(`/api/admin/correos/${sin.id}/reenviar`, { method: 'POST', token: TOKEN })).status, 422);
   assert.equal((await llamar(`/api/admin/correos/no-existe/reenviar`, { method: 'POST', token: TOKEN })).status, 404);
 });
+
+test('si Resend no contesta, no se cuelga: queda como error para reintentar', async () => {
+  globalThis.fetch = (url, opt) =>
+    new Promise((_, rechazar) => opt.signal.addEventListener('abort', () => rechazar(opt.signal.reason)));
+  const { mandarDescarga } = await import('../src/correo.js');
+  // En Node el temporizador de AbortSignal.timeout no mantiene vivo el proceso de prueba.
+  const vivo = setTimeout(() => {}, 5000);
+  const r = await mandarDescarga(
+    { ...CONFIG },
+    { para: 'ana@correo.com', base: 'https://e.test', encuesta: 'T', clave: 'k', espera: 50 },
+  );
+  assert.equal(r.estado, 'error');
+  clearTimeout(vivo);
+  assert.match(r.detalle, /no respondió a tiempo/);
+});

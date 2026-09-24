@@ -88,8 +88,142 @@ async function mostrar(slug) {
   });
 
   const correos = h('section', { class: 'correos', id: 'correos' });
-  cont.replaceChildren(cifras, correos, ...bloques);
+  const contactos = h('section', { class: 'correos', id: 'contactos' });
+  cont.replaceChildren(cifras, correos, contactos, ...bloques);
   mostrarCorreos(slug, correos);
+  mostrarContactos(slug, contactos);
+}
+
+/* ------------------------------------------------- contactos a mano */
+
+const ETIQUETA_CONTACTO = { enviado: 'Enlace enviado', error: 'Falló', omitido: 'Sin enviar' };
+
+async function mostrarContactos(slug, cont, mensaje = '') {
+  const texto = h('textarea', {
+    class: 'campo',
+    id: 'contactos-texto',
+    rows: '5',
+    placeholder: 'Uno por línea. Por ejemplo:\nAna López, ana@correo.com\n+505 8888 1234\nCarlos, carlos@correo.com, 8888-5555',
+  });
+  const enviar = h('input', { type: 'checkbox', id: 'contactos-enviar', checked: '' });
+  // Trae al cuadro lo que la gente escribió en preguntas de texto de versiones
+  // anteriores que tengan pinta de contacto (un correo o un número), para
+  // revisarlo antes de agregarlo.
+  const traer = h('button', { class: 'btn btn--papel btn--chico', type: 'button' }, 'Traer los contactos viejos de la encuesta');
+  traer.addEventListener('click', async () => {
+    traer.disabled = true;
+    try {
+      const r = await (await api(`/api/admin/encuestas/${slug}/resumen`)).json();
+      const pareceContacto = (t) => /@/.test(t) || /\d[\d\s().-]{6,}\d/.test(t);
+      const viejos = r.preguntas
+        .filter((p) => p.anterior && p.textos)
+        .flatMap((p) => p.textos.map((t) => t.texto.trim()))
+        .filter(pareceContacto);
+      const unicos = [...new Set(viejos)];
+      texto.value = unicos.join('\n');
+      traer.textContent = unicos.length
+        ? `Se trajeron ${unicos.length}: revisalos y tocá "Agregar contactos"`
+        : 'No hay contactos viejos en la encuesta';
+    } catch (err) {
+      traer.textContent = err.message;
+    }
+  });
+  const boton = h('button', { class: 'btn', type: 'submit' }, 'Agregar contactos');
+  const aviso = h('p', { class: 'meta', role: 'status' }, mensaje);
+
+  const form = h(
+    'form',
+    { class: 'pregunta contactos__form' },
+    h('label', { class: 'pregunta__titulo', for: 'contactos-texto' }, 'Agregar contactos a mano'),
+    h('span', { class: 'pregunta__ayuda' }, 'Para los que dejaron su correo o número antes (por ejemplo en la pregunta "contacto" de la versión anterior) o por fuera de la encuesta. Uno por línea; el nombre es opcional. Los repetidos no se agregan dos veces.'),
+    traer,
+    texto,
+    h('label', { class: 'contactos__check' }, enviar, ' Mandarles el enlace de descarga a los que tengan correo'),
+    boton,
+  );
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    if (!texto.value.trim()) return;
+    boton.disabled = true;
+    boton.textContent = enviar.checked ? 'Agregando y mandando…' : 'Agregando…';
+    let resultado;
+    try {
+      const r = await (
+        await api(`/api/admin/encuestas/${slug}/contactos`, { method: 'POST', body: JSON.stringify({ texto: texto.value, enviar: enviar.checked }) })
+      ).json();
+      const partes = [`Agregados: ${r.agregados}`];
+      if (r.repetidos) partes.push(`ya estaban: ${r.repetidos}`);
+      if (enviar.checked) partes.push(`correos enviados: ${r.enviado}`, `fallaron: ${r.error}`);
+      if (r.omitido) partes.push('no se mandaron: falta configurar Resend');
+      if (r.sinEnviar) partes.push(`quedaron ${r.sinEnviar} sin mandar: usá "Mandar enlace" en cada uno`);
+      if (r.invalidas.length) partes.push(`no se entendieron ${r.invalidas.length} líneas: ${r.invalidas.join(' / ')}`);
+      if (r.recortado) partes.push(`solo se leen las primeras ${r.maxLineas} líneas`);
+      resultado = partes.join(' · ');
+    } catch (err) {
+      resultado = err.message;
+    }
+    mostrarContactos(slug, cont, resultado);
+  });
+
+  let lista = [];
+  let error = '';
+  try {
+    ({ contactos: lista } = await (await api(`/api/admin/encuestas/${slug}/contactos`)).json());
+  } catch (err) {
+    error = err.message;
+  }
+
+  cont.replaceChildren(
+    ...[
+    h('h2', {}, 'Contactos agregados a mano'),
+    form,
+    aviso,
+    error ? h('p', { class: 'meta' }, error) : null,
+    lista.length ? h('ul', { class: 'correos__lista' }, lista.map((c) => filaContacto(slug, c, cont))) : null,
+    ].filter(Boolean),
+  );
+}
+
+function filaContacto(slug, c, cont) {
+  const acciones = h('div', { class: 'correo__acciones' });
+  if (c.correo) {
+    const mandar = h('button', { class: 'btn btn--papel btn--chico', type: 'button' }, c.correo_estado === 'enviado' ? 'Reenviar' : 'Mandar enlace');
+    mandar.addEventListener('click', async () => {
+      if (c.correo_estado === 'enviado' && !confirm(`A ${c.correo} ya le llegó. ¿Mandárselo otra vez?`)) return;
+      mandar.disabled = true;
+      mandar.textContent = 'Mandando…';
+      try {
+        await api(`/api/admin/contactos/${c.id}/enviar`, { method: 'POST' });
+      } catch (err) {
+        alert(err.message);
+      }
+      mostrarContactos(slug, cont);
+    });
+    acciones.append(mandar);
+  }
+  const borrar = h('button', { class: 'btn btn--fantasma btn--chico', type: 'button' }, 'Borrar');
+  borrar.addEventListener('click', async () => {
+    if (!confirm(`¿Borrar a ${c.nombre ?? c.correo ?? c.telefono}?`)) return;
+    try {
+      await api(`/api/admin/contactos/${c.id}`, { method: 'DELETE' });
+    } catch (err) {
+      alert(err.message);
+    }
+    mostrarContactos(slug, cont);
+  });
+  acciones.append(borrar);
+
+  const estado = c.correo
+    ? h('span', { class: `estado estado--${c.correo_estado ?? 'omitido'}` }, ETIQUETA_CONTACTO[c.correo_estado] ?? 'Sin enviar')
+    : h('span', { class: 'estado estado--omitido' }, 'Solo número');
+  return h(
+    'li',
+    { class: 'correo' },
+    h('div', { class: 'correo__fila' }, h('b', { class: 'correo__para' }, c.nombre ?? c.correo ?? c.telefono), estado),
+    h('p', { class: 'meta correo__para' }, [c.correo, c.telefono].filter(Boolean).join(' · ')),
+    c.correo_detalle ? h('p', { class: 'meta correo__detalle' }, c.correo_detalle) : null,
+    h('div', { class: 'correo__fila' }, h('span', { class: 'meta' }, `${c.correo_intentos > 1 ? `${c.correo_intentos} intentos · ` : ''}${fecha(c.correo_actualizado_en ?? c.creado_en)}`), acciones),
+  );
 }
 
 /* ------------------------------------------------------------- correos */
@@ -132,7 +266,9 @@ async function mostrarCorreos(slug, cont, mensaje = '') {
     mostrarCorreos(slug, cont, resultado);
   });
 
+  // replaceChildren convierte null en el texto "null": se filtran los vacíos.
   cont.replaceChildren(
+    ...[
     h('h2', {}, 'Correos con el enlace de descarga'),
     h(
       'div',
@@ -142,6 +278,7 @@ async function mostrarCorreos(slug, cont, mensaje = '') {
     botonTodos,
     aviso,
     h('ul', { class: 'correos__lista' }, lista.map((c) => filaCorreo(slug, c, cont))),
+    ].filter(Boolean),
   );
 }
 
