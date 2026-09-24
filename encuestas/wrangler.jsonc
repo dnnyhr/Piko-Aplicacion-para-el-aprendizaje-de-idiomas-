@@ -36,8 +36,21 @@
     }
   ],
 
-  // ADMIN_TOKEN es un secreto: `npx wrangler secret put ADMIN_TOKEN`.
-  // En local va en .dev.vars (ver .dev.vars.example).
+  // Correo automático con el enlace de descarga (ver src/correo.js).
+  // Vacío = no se manda y queda anotado como "omitido" en la tabla correos.
+  //   CORREO_REMITENTE  una dirección de un dominio verificado en Resend
+  //   APP_DESCARGA_URL  el enlace para descargar la app
+  //   CORREO_RESPUESTA  opcional: a dónde llegan las respuestas al correo
+  "vars": {
+    "CORREO_REMITENTE": "",
+    "APP_DESCARGA_URL": "",
+    "CORREO_RESPUESTA": ""
+  },
+
+  // Secretos (no van en este archivo):
+  //   ADMIN_TOKEN     `npx wrangler secret put ADMIN_TOKEN`
+  //   RESEND_API_KEY  `npx wrangler secret put RESEND_API_KEY`
+  // En local van en .dev.vars (ver .dev.vars.example).
 
   "observability": { "enabled": true }
 }

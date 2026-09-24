@@ -59,6 +59,41 @@ npm run dev                         # http://localhost:8787
 PIKO_ENCUESTAS_URL=http://localhost:8787 PIKO_ENCUESTAS_TOKEN=cambiame-en-local npm run publicar
 ```
 
+## Correo con el enlace de descarga
+
+Si la persona deja su correo al final de la encuesta, el Worker le manda al
+instante un correo con el enlace para descargar la app (vía
+[Resend](https://resend.com)). El correo sale después de guardar la
+respuesta: si Resend falla, la respuesta queda guardada igual.
+
+- **Una vez por respuesta.** Reenviar la misma respuesta no manda otro correo,
+  y a Resend le llega una clave de idempotencia por si hay reintentos.
+- **Personalizado.** Si escribió su nombre, lo usa. Si no, lo intenta sacar del
+  correo solo cuando tiene forma de nombre (`maria.lopez@…` → "Maria"); con
+  números o direcciones de un puesto (`info@`, `ventas@`) saluda sin nombre.
+- **Registro.** Cada envío queda en la tabla `correos` con su estado
+  (`enviado`, `error` u `omitido`) y el resumen de `/admin` los cuenta.
+- **Plantilla:** `src/correo.js` (HTML y texto). La cabecera es
+  `public/img/correo-cabecera.jpg`: los correos no muestran SVG.
+
+Para activarlo:
+
+```bash
+npm run db:remoto                          # crea la tabla correos (migración 0002)
+npx wrangler secret put RESEND_API_KEY     # la API key de Resend
+```
+
+y en `wrangler.jsonc`, dentro de `vars`, `CORREO_REMITENTE` (una dirección de
+un dominio verificado en Resend, por ejemplo `Piko <piko@mugiware.com>`) y
+`APP_DESCARGA_URL`. Después `npm run deploy`. Mientras falte algo, no se manda
+nada y el motivo queda en la tabla `correos`.
+
+Para ver cómo salieron:
+
+```bash
+npx wrangler d1 execute piko-encuestas --remote --command "SELECT estado, detalle, creado_en FROM correos ORDER BY creado_en DESC LIMIT 20"
+```
+
 ## Vista previa al compartir
 
 Al pegar el enlace en WhatsApp, Facebook o X aparece `public/img/og.jpg`

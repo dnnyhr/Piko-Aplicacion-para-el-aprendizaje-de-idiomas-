@@ -19,15 +19,16 @@
  */
 
 import { aFilas, preguntasDe, revisar, validarDefinicion } from '../public/js/reglas.js';
+import { enviarBienvenida } from './correo.js';
 
 /** Respuestas por huella y por día antes de responder 429. Un aula comparte IP. */
 const LIMITE_DIARIO = 60;
 const CUERPO_MAX = 64 * 1024;
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     try {
-      return await enrutar(request, env);
+      return await enrutar(request, env, ctx);
     } catch (err) {
       if (err instanceof ErrorHttp) return json({ error: err.message, ...err.extra }, err.status);
       console.error(err);
@@ -44,7 +45,7 @@ class ErrorHttp extends Error {
   }
 }
 
-async function enrutar(request, env) {
+async function enrutar(request, env, ctx) {
   const url = new URL(request.url);
   const partes = url.pathname.split('/').filter(Boolean).map(decodeURIComponent);
   const m = request.method;
@@ -58,7 +59,7 @@ async function enrutar(request, env) {
   if (a === 'encuestas') {
     if (!b && m === 'GET') return listarAbiertas(env);
     if (b && !c && m === 'GET') return obtenerEncuesta(env, b, esAdmin(request, env));
-    if (b && c === 'respuestas' && !d && m === 'POST') return guardarRespuesta(request, env, b, url);
+    if (b && c === 'respuestas' && !d && m === 'POST') return guardarRespuesta(request, env, b, url, ctx);
   }
 
   if (a === 'admin') {
@@ -162,7 +163,7 @@ async function obtenerEncuesta(env, slug, admin) {
 
 /* ------------------------------------------------------------- respuestas */
 
-async function guardarRespuesta(request, env, slug, url) {
+async function guardarRespuesta(request, env, slug, url, ctx) {
   const cuerpo = await leerJson(request);
   const e = await cargar(env, slug);
   if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
@@ -220,6 +221,14 @@ async function guardarRespuesta(request, env, slug, url) {
     );
     const filas = aFilas(def, r.limpias, r.otros);
     if (filas.length) await env.DB.batch(filas.map((f) => insertar.bind(id, f.pregunta, f.fila, f.opcion, f.numero, f.texto)));
+
+    // Si dejó su correo, le llega el enlace de descarga. Va después de
+    // responder (waitUntil): la persona no espera a Resend.
+    if (def.correo && r.limpias[def.correo.pregunta]) {
+      const tarea = enviarBienvenida(env, { respuestaId: id, def, respuestas: r.limpias, base: url.origin });
+      if (ctx?.waitUntil) ctx.waitUntil(tarea);
+      else await tarea;
+    }
   }
 
   return json({ ok: true, id }, 201);
@@ -391,9 +400,23 @@ async function resumen(env, slug) {
     if (fila && p.tipo !== 'texto') p.respondieron = fila.n;
   }
 
+  let correos = null;
+  try {
+    const { results } = await env.DB.prepare(
+      `SELECT c.estado, COUNT(*) AS n FROM correos c JOIN respuestas r ON r.id = c.respuesta_id
+        WHERE r.encuesta_id = ? GROUP BY c.estado`,
+    )
+      .bind(e.id)
+      .all();
+    correos = Object.fromEntries(results.map((x) => [x.estado, x.n]));
+  } catch {
+    /* sin la migración 0002 todavía: no hay tabla de correos */
+  }
+
   return json({
     slug: e.slug,
     titulo: e.definicion.titulo,
+    correos,
     estado: e.estado,
     version: e.version,
     respuestas: total.n,

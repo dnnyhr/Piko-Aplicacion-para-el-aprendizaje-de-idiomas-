@@ -15,6 +15,11 @@
     "texto": "Vamos a leer cada respuesta. Lo que más pidan es lo primero que vamos a construir.",
     "compartir": "¿Conocés a alguien que debería contestarla? Pasale el enlace: una lengua se salva entre muchos."
   },
+  "correo": {
+    "pregunta": "correo",
+    "nombre": "nombre",
+    "asunto": "Tu enlace para descargar Piko 🦜"
+  },
   "secciones": [
     {
       "id": "vos",
@@ -849,10 +854,26 @@
           ]
         },
         {
-          "id": "contacto",
+          "id": "nombre",
           "tipo": "texto",
-          "texto": "¿Cómo te avisamos?",
-          "ayuda": "Un correo o un WhatsApp. Solo lo usamos para invitarte a probar Piko.",
+          "texto": "¿Cómo te llamás?",
+          "ayuda": "Para saludarte por tu nombre. Es opcional.",
+          "mostrarSi": {
+            "pregunta": "probar",
+            "en": [
+              "si"
+            ]
+          },
+          "max": 60,
+          "placeholder": "Tu nombre",
+          "autocompletar": "given-name"
+        },
+        {
+          "id": "correo",
+          "tipo": "texto",
+          "formato": "correo",
+          "texto": "Tu correo",
+          "ayuda": "Te mandamos al instante el enlace para descargar la app. No lo usamos para nada más.",
           "mostrarSi": {
             "pregunta": "probar",
             "en": [
@@ -860,7 +881,22 @@
             ]
           },
           "max": 120,
-          "placeholder": "tu@correo.com o +505 …"
+          "placeholder": "tu@correo.com"
+        },
+        {
+          "id": "whatsapp",
+          "tipo": "texto",
+          "formato": "telefono",
+          "texto": "Tu WhatsApp o teléfono",
+          "ayuda": "Opcional. Para avisarte de novedades si no usás correo.",
+          "mostrarSi": {
+            "pregunta": "probar",
+            "en": [
+              "si"
+            ]
+          },
+          "max": 25,
+          "placeholder": "+505 8888 8888"
         }
       ]
     }

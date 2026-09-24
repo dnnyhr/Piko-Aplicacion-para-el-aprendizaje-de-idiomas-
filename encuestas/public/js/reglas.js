@@ -22,6 +22,21 @@ const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ID = /^[a-z0-9_]+$/;
 const TEXTO_MAX = 2000;
 
+/** Formatos que puede pedir una pregunta de texto. */
+export const FORMATOS = ['correo', 'telefono'];
+
+/** Un correo razonable: algo@dominio.tld, sin espacios. No intenta ser el RFC entero. */
+export function esCorreo(v) {
+  return typeof v === 'string' && v.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
+}
+
+/** Un teléfono: dígitos con +, espacios, guiones o paréntesis; de 8 a 15 dígitos. */
+export function esTelefono(v) {
+  if (typeof v !== 'string' || !/^\+?[\d\s().-]+$/.test(v.trim())) return false;
+  const digitos = v.replace(/\D/g, '').length;
+  return digitos >= 8 && digitos <= 15;
+}
+
 /** Todas las preguntas de la encuesta, en orden, sin las secciones. */
 export function preguntasDe(def) {
   return (def.secciones ?? []).flatMap((s) => s.preguntas ?? []);
@@ -100,6 +115,8 @@ export function revisarPregunta(p, valor, otro) {
       if (typeof valor !== 'string') return 'Escribí tu respuesta.';
       const max = p.max ?? TEXTO_MAX;
       if (valor.length > max) return `Máximo ${max} caracteres.`;
+      if (p.formato === 'correo' && !esCorreo(valor)) return 'Revisá el correo: tiene que ser como nombre@correo.com.';
+      if (p.formato === 'telefono' && !esTelefono(valor)) return 'Revisá el número: entre 8 y 15 dígitos, puede empezar con +505.';
       break;
     }
     default:
@@ -220,6 +237,8 @@ export function validarDefinicion(def) {
         }
         if ((p.opciones ?? []).filter((o) => o.otro).length > 1) e.push(`${q}: solo una opción "otro".`);
       }
+      if (p.formato && (p.tipo !== 'texto' || !FORMATOS.includes(p.formato)))
+        e.push(`${q}: formato "${p.formato}" no existe (solo en texto: ${FORMATOS.join(', ')}).`);
       if (p.tipo === 'escala' && !(Number.isInteger(p.min) && Number.isInteger(p.max) && p.min < p.max))
         e.push(`${q}: la escala necesita min < max enteros.`);
       if (p.tipo === 'matriz') {
@@ -246,6 +265,11 @@ export function validarDefinicion(def) {
       }
       anteriores.set(p.id, p);
     }
+  }
+  if (def.correo) {
+    const p = anteriores.get(def.correo.pregunta);
+    if (!p || p.formato !== 'correo') e.push(`correo.pregunta: "${def.correo.pregunta}" tiene que ser una pregunta de texto con formato "correo".`);
+    if (def.correo.nombre && !anteriores.has(def.correo.nombre)) e.push(`correo.nombre: la pregunta "${def.correo.nombre}" no existe.`);
   }
   return e;
 }

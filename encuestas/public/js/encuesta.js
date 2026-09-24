@@ -701,7 +701,16 @@ function dibujarPregunta(p, estado, alCambiar) {
         pintar(e.target.value);
         set(e.target.value);
       },
-      ...(p.multilinea ? { rows: 4 } : { type: 'text' }),
+      // El teclado correcto en el teléfono y el autocompletado del navegador.
+      ...(p.multilinea
+        ? { rows: 4 }
+        : {
+            type: p.formato === 'correo' ? 'email' : p.formato === 'telefono' ? 'tel' : 'text',
+            inputmode: p.formato === 'correo' ? 'email' : p.formato === 'telefono' ? 'tel' : null,
+            autocomplete: p.autocompletar ?? (p.formato === 'correo' ? 'email' : p.formato === 'telefono' ? 'tel' : null),
+            autocapitalize: p.formato ? 'off' : null,
+            spellcheck: p.formato ? 'false' : null,
+          }),
     });
     campo.value = estado.respuestas[p.id] ?? '';
     pintar(campo.value);
