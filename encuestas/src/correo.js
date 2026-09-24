@@ -116,7 +116,8 @@ export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
           <a href="${e.enlace}" target="_blank" style="display:inline-block;padding:16px 36px;font-family:${fuente};font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#0A4530;text-decoration:none;">Descargar Piko</a>
         </td>
       </tr></table>
-      <p style="margin:14px 0 0;font-family:${cuerpo};font-size:13px;line-height:20px;color:#6B7A70;">¿El botón no te abre? Copiá este enlace:<br><a href="${e.enlace}" style="color:#0F5D3D;word-break:break-all;">${e.enlace}</a></p>
+      <p style="margin:14px 0 0;font-family:${cuerpo};font-size:14px;line-height:21px;color:#33453B;">Es para Android y pesa bastante: si podés, bajala con WiFi.</p>
+      <p style="margin:10px 0 0;font-family:${cuerpo};font-size:13px;line-height:20px;color:#6B7A70;">¿El botón no te abre? Copiá este enlace:<br><a href="${e.enlace}" style="color:#0F5D3D;word-break:break-all;">${e.enlace}</a></p>
     </td></tr>
 
     <tr><td class="relleno" style="padding:28px 44px 8px;">
@@ -163,6 +164,7 @@ Ya tenemos tus respuestas a «${titulo}» y las vamos a leer una por una. Lo que
 Dijiste que querías probar Piko antes que nadie. ¡Dale pues! Acá la tenés:
 
 Descargar Piko: ${enlace}
+(Es para Android y pesa bastante: si podés, bajala con WiFi.)
 
 Lo que te espera adentro:
 - ${puntos.map(([, t]) => t).join('\n- ')}
