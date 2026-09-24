@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resultados · Encuestas de Piko</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F5D3D">
+<link rel="icon" type="image/png" href="/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/encuesta.css">
+<style>
+  .admin { padding: 28px 0 80px; }
+  .admin__cabeza { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+  .admin__cabeza img { width: 72px; }
+  .admin__cabeza h1 { font-size: 1.6rem; }
+  .fila-acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0 22px; }
+  .cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 22px; }
+  .cifra { background: var(--verde-hondo); color: #EAF3EE; border-radius: var(--radio-lg); padding: 16px; }
+  .cifra b { display: block; font-family: Fredoka, sans-serif; font-size: 2rem; color: #fff; line-height: 1.1; }
+  .cifra span { font-size: .85rem; color: #A9BFB2; }
+  .barras { display: grid; gap: 8px; margin-top: 12px; }
+  /* Mobile first: en el teléfono la barra va debajo de su etiqueta. */
+  .barra-dato { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; font-size: .92rem; }
+  .barra-dato__pista { grid-column: 1 / -1; grid-row: 2; }
+  .barra-dato__pista { height: 14px; border-radius: 999px; background: var(--papel-hondo); overflow: hidden; }
+  .barra-dato__relleno { height: 100%; border-radius: 999px; background: var(--verde-pasto); }
+  .barra-dato__n { font-family: Fredoka, sans-serif; font-weight: 600; color: var(--verde); min-width: 5.5em; text-align: right; }
+  .textos { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; max-height: 420px; overflow: auto; }
+  .textos li { background: var(--papel); border-radius: var(--radio-sm); padding: 10px 12px; font-size: .95rem; }
+  .pregunta h3 { font-size: 1.1rem; margin-bottom: 2px; }
+  .meta { font-size: .85rem; color: var(--tinta-suave); margin: 0; }
+  select.campo { margin: 0; width: 100%; }
+  @media (min-width: 640px) {
+    .barra-dato { grid-template-columns: minmax(120px, 1fr) 2fr auto; gap: 10px; }
+    .barra-dato__pista { grid-column: auto; grid-row: auto; }
+    select.campo { width: auto; min-width: 240px; }
+  }
+</style>
+<script type="module" src="/js/admin.js"></script>
+</head>
+<body>
+<main class="contenedor admin">
+  <header class="admin__cabeza">
+    <img src="/img/piko.svg" alt="" class="piko">
+    <div>
+      <p class="eyebrow" style="margin:0 0 4px">Solo para el equipo</p>
+      <h1>Resultados de las encuestas</h1>
+    </div>
+  </header>
+
+  <form id="acceso" class="pregunta">
+    <label class="pregunta__titulo" for="token">Token de administración</label>
+    <span class="pregunta__ayuda">Es el secreto <code>ADMIN_TOKEN</code> del Worker. Se guarda solo en esta pestaña.</span>
+    <input id="token" class="campo" type="password" autocomplete="current-password" required>
+    <p class="pregunta__error" id="acceso-error"></p>
+    <button class="btn" type="submit" style="margin-top:12px">Entrar</button>
+  </form>
+
+  <section id="panel" hidden>
+    <div class="fila-acciones">
+      <select id="encuesta" class="campo" aria-label="Encuesta"></select>
+      <button id="csv" class="btn btn--papel" type="button">Descargar CSV</button>
+      <button id="salir" class="btn btn--fantasma" type="button">Salir</button>
+    </div>
+    <div id="resumen"></div>
+  </section>
+</main>
+</body>
+</html>

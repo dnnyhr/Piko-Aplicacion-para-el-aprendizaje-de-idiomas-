@@ -1,0 +1,486 @@
+/*
+ * Estilos de las encuestas de Piko.
+ *
+ * MOBILE FIRST: todo lo que no está dentro de un @media es para un teléfono
+ * de gama baja de ~360px. Las pantallas grandes se agregan con min-width
+ * (640px tablet, 960px escritorio), nunca al revés. Casi todas las personas
+ * que van a contestar lo van a hacer desde un teléfono con el pulgar.
+ *
+ * Misma paleta y tipografías que la landing (web/index.html) y la app
+ * (app/src/ui/tokens.ts). Misma gramática que la app: superficies planas,
+ * bordes redondos, botones con un "labio" inferior que se hunde al tocarlos.
+ * El error es ámbar, nunca rojo: Piko pide, no regaña.
+ */
+
+:root {
+  --verde: #0F5D3D;
+  --verde-hondo: #0A4530;
+  --verde-bosque: #197249;
+  --verde-hoja: #61A66B;
+  --verde-pasto: #97C137;
+  --verde-pasto-hondo: #7BA22C;
+  --cielo: #60C5FA;
+  --cielo-hondo: #3AA8E0;
+  --nube: #DDF1FC;
+  --nube-tinta: #0B3D57;
+  --papel: #F7F0E4;
+  --papel-hondo: #ECE1CC;
+  --blanco: #FFFFFF;
+  --copete: #E97927;
+  --pico: #E8A429;
+  --pico-hondo: #C08417;
+  --grafito: #16241D;
+  --tinta: #33453B;
+  --tinta-suave: #6B7A70;
+  --borde: #E3DACA;
+  --borde-hondo: #CFC3AD;
+  --intento: #E8A429;
+  --intento-fondo: #FDF2DC;
+  --intento-tinta: #8A5A08;
+
+  --radio-sm: 10px;
+  --radio-md: 16px;
+  --radio-lg: 20px;
+  --radio-xl: 24px;
+  --labio: 4px;
+  --sombra: 0 18px 44px rgba(10, 69, 48, .14);
+  --gutter: 16px;
+  --alto-pie: 84px;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--papel);
+  color: var(--grafito);
+  font-family: "Nunito Sans", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+h1, h2, h3 {
+  font-family: Fredoka, "Nunito Sans", sans-serif;
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -.01em;
+  margin: 0;
+  text-wrap: balance;
+}
+p { margin: 0 0 1rem; }
+img { max-width: 100%; display: block; }
+button, input, textarea, select { font: inherit; color: inherit; }
+main { outline: none; }
+[hidden] { display: none !important; }
+
+.eyebrow {
+  font-family: Fredoka, sans-serif; font-weight: 600; font-size: .74rem;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--verde-bosque);
+  display: flex; align-items: center; gap: .5rem; margin: 0 0 .5rem;
+}
+.eyebrow::before { content: ""; width: 20px; height: 3px; border-radius: 2px; background: var(--pico); flex: none; }
+
+.contenedor { width: min(760px, 100% - 2 * var(--gutter)); margin-inline: auto; }
+
+/* ------------------------------------------------------------ barra superior */
+
+.barra {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px var(--gutter);
+  padding-top: max(8px, env(safe-area-inset-top));
+  background: rgba(247, 240, 228, .94);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--borde);
+}
+.barra__marca img { width: 52px; height: auto; }
+.barra__paso {
+  font-family: Fredoka, sans-serif; font-weight: 600; font-size: .85rem;
+  color: var(--tinta-suave); min-width: 2.6em; text-align: right;
+}
+.progreso {
+  flex: 1; height: 14px; border-radius: 999px;
+  background: var(--papel-hondo); overflow: hidden;
+}
+.progreso__relleno {
+  height: 100%; width: 0; border-radius: 999px;
+  background: var(--verde-pasto);
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .08), inset 0 4px 0 rgba(255, 255, 255, .35);
+  transition: width .38s ease;
+}
+
+/* ------------------------------------------------------------------ botones */
+
+.btn {
+  --fondo: var(--verde-pasto); --labio-color: var(--verde-pasto-hondo); --texto: var(--verde-hondo);
+  appearance: none; border: 0; cursor: pointer;
+  font-family: Fredoka, sans-serif; font-weight: 600; font-size: 1rem;
+  letter-spacing: .06em; text-transform: uppercase; text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  min-height: 52px; padding: .75rem 1.2rem;
+  border-radius: var(--radio-md);
+  background: var(--fondo); color: var(--texto);
+  box-shadow: 0 var(--labio) 0 var(--labio-color);
+  transform: translateY(0);
+  transition: transform .06s ease, box-shadow .06s ease, opacity .2s;
+  touch-action: manipulation;
+}
+.btn:active:not(:disabled) { transform: translateY(var(--labio)); box-shadow: 0 0 0 var(--labio-color); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn:focus-visible { outline: 3px solid var(--cielo); outline-offset: 3px; }
+.btn--papel { --fondo: var(--blanco); --labio-color: var(--borde-hondo); --texto: var(--verde); border: 2px solid var(--borde); }
+.btn--fantasma {
+  background: transparent; box-shadow: none; color: var(--tinta-suave);
+  text-transform: none; letter-spacing: 0; padding-inline: .8rem; min-height: 44px;
+}
+.btn--fantasma:active:not(:disabled) { transform: none; }
+.btn svg { width: 20px; height: 20px; flex: none; }
+
+/* ------------------------------------------------------------------ portada */
+
+/* Teléfono: todo en una columna y el botón dentro de la primera pantalla. */
+.portada {
+  position: relative; isolation: isolate; overflow: hidden;
+  min-height: 100svh;
+  padding: max(16px, env(safe-area-inset-top)) 0 max(28px, env(safe-area-inset-bottom));
+}
+.portada__escena {
+  position: absolute; inset: auto 0 0 0; z-index: -2;
+  width: 100%; height: 42%; object-fit: cover; object-position: center bottom;
+}
+.portada::after {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, var(--papel) 0%, var(--papel) 50%, rgba(247,240,228,.82) 72%, rgba(247,240,228,.55) 100%);
+}
+.portada__grid {
+  width: min(1180px, 100% - 2 * var(--gutter)); margin-inline: auto;
+  display: grid; grid-template-columns: 1fr; gap: 14px;
+}
+.portada__marca { width: 96px; height: auto; }
+
+.portada__piko { display: grid; grid-template-columns: 88px 1fr; gap: 14px; align-items: center; }
+.portada__piko .piko { width: 88px; }
+.portada__piko .globo::before { /* colita a la izquierda, hacia Piko */
+  content: ""; position: absolute; left: -11px; top: calc(50% - 9px);
+  width: 18px; height: 18px; background: var(--blanco);
+  border-left: 2px solid var(--borde); border-bottom: 2px solid var(--borde);
+  transform: rotate(45deg); border-bottom-left-radius: 4px;
+}
+
+.portada h1 { font-size: clamp(1.9rem, 8.5vw, 3.4rem); margin-bottom: .6rem; }
+.portada__bajada { font-size: 1rem; color: var(--tinta); margin-bottom: 1.2rem; }
+.portada__acciones { display: grid; gap: 6px; }
+.portada__acciones .btn--siguiente { width: 100%; }
+.portada__meta { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+.portada__meta li {
+  font-family: Fredoka, sans-serif; font-weight: 500; font-size: .8rem;
+  background: var(--blanco); color: var(--verde);
+  border: 2px solid rgba(15, 93, 61, .14);
+  padding: .2rem .75rem; border-radius: 999px;
+}
+
+/* ----------------------------------------------------------- Piko y su globo */
+
+.piko { height: auto; filter: drop-shadow(0 12px 14px rgba(10, 69, 48, .22)); transform-origin: 50% 90%; }
+.piko--saludo { animation: saludo 2.6s ease-in-out infinite; }
+.piko--feliz { animation: salto 1.8s ease-in-out infinite; }
+.piko--pensando { animation: ladeo 3.2s ease-in-out infinite; }
+.piko--guino { animation: ladeo 2.2s ease-in-out infinite reverse; }
+.piko--celebra { animation: celebra 1s ease-in-out infinite; }
+
+@keyframes saludo { 0%,100% { transform: rotate(0); } 15% { transform: rotate(-6deg); } 30% { transform: rotate(5deg); } 45% { transform: rotate(0); } }
+@keyframes salto { 0%,100% { transform: translateY(0); } 40% { transform: translateY(-8px); } 60% { transform: translateY(0); } }
+@keyframes ladeo { 0%,100% { transform: rotate(0); } 50% { transform: rotate(-7deg); } }
+@keyframes celebra { 0%,100% { transform: translateY(0) rotate(0); } 25% { transform: translateY(-12px) rotate(-5deg); } 50% { transform: translateY(0) rotate(0); } 75% { transform: translateY(-6px) rotate(5deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .piko, .progreso__relleno, .paso, .cargando__piko { animation: none !important; transition: none !important; }
+}
+
+.globo {
+  position: relative;
+  background: var(--blanco); color: var(--grafito);
+  border: 2px solid var(--borde); border-radius: var(--radio-lg);
+  box-shadow: 0 var(--labio) 0 var(--borde-hondo);
+  padding: 10px 14px;
+  font-family: Fredoka, sans-serif; font-weight: 500; font-size: 1rem; line-height: 1.3;
+}
+.globo p { margin: 0; }
+
+/* Encabezado de cada sección: Piko chico a la izquierda, lo que dice a la derecha. */
+.charla { display: grid; grid-template-columns: 60px 1fr; gap: 12px; align-items: start; margin: 18px 0 16px; }
+.charla .piko { width: 60px; }
+.charla h2 { font-size: 1.45rem; margin-bottom: 0; }
+.charla .globo { margin-top: 10px; font-size: .95rem; }
+.charla .globo::before {
+  content: ""; position: absolute; left: -9px; top: 16px;
+  width: 14px; height: 14px; background: var(--blanco);
+  border-left: 2px solid var(--borde); border-bottom: 2px solid var(--borde);
+  transform: rotate(45deg); border-bottom-left-radius: 3px;
+}
+.charla__robot {
+  width: 60px; aspect-ratio: 1; border-radius: 16px; overflow: hidden;
+  border: 3px solid var(--verde-hondo); background: #111; box-shadow: 0 3px 0 var(--verde-hondo);
+}
+.charla__robot img { width: 100%; height: 100%; object-fit: cover; }
+
+/* -------------------------------------------------------------------- pasos */
+
+.paso { padding-bottom: calc(var(--alto-pie) + 40px); animation: entrar .28s ease both; }
+@keyframes entrar { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.pregunta {
+  margin: 0 0 14px; padding: 16px 14px;
+  background: var(--blanco);
+  border: 2px solid var(--borde); border-radius: var(--radio-lg);
+  box-shadow: 0 var(--labio) 0 var(--borde);
+  transition: border-color .2s, box-shadow .2s;
+  min-width: 0;
+  scroll-margin: 72px 0 calc(var(--alto-pie) + 16px);
+}
+.pregunta legend, .pregunta__titulo {
+  float: left; width: 100%; padding: 0;
+  font-family: Fredoka, sans-serif; font-weight: 600; font-size: 1.12rem; line-height: 1.25;
+  color: var(--grafito); margin-bottom: 4px;
+}
+.pregunta legend + * { clear: left; }
+.pregunta__ayuda { display: block; clear: left; font-size: .88rem; color: var(--tinta-suave); margin: 0 0 8px; }
+.pregunta__requerida { color: var(--copete); margin-left: 2px; }
+.pregunta--error { border-color: var(--intento); box-shadow: 0 var(--labio) 0 var(--pico-hondo); }
+.pregunta__error {
+  display: flex; gap: 8px; align-items: center;
+  margin: 12px 0 0; padding: 8px 12px; border-radius: var(--radio-sm);
+  background: var(--intento-fondo); color: var(--intento-tinta);
+  font-weight: 700; font-size: .9rem;
+}
+.pregunta__error:empty { display: none; }
+
+/* Opciones: una por fila en el teléfono, blancos de toque de 52px o más. */
+.opciones { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+.opcion { position: relative; display: block; cursor: pointer; touch-action: manipulation; }
+.opcion input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.opcion__cuerpo {
+  display: flex; align-items: center; gap: 12px;
+  min-height: 52px; padding: 10px 12px;
+  background: var(--blanco); color: var(--grafito);
+  border: 2px solid var(--borde); border-radius: var(--radio-md);
+  box-shadow: 0 var(--labio) 0 var(--borde-hondo);
+  font-family: Fredoka, sans-serif; font-weight: 500; font-size: 1rem; line-height: 1.25;
+  transition: transform .06s ease, box-shadow .06s ease, background .12s, border-color .12s;
+}
+.opcion:active .opcion__cuerpo { transform: translateY(var(--labio)); box-shadow: 0 0 0 var(--borde-hondo); }
+.opcion__marca {
+  flex: none; width: 24px; height: 24px; border-radius: 8px;
+  border: 2px solid var(--borde-hondo); background: var(--blanco);
+  display: grid; place-items: center;
+}
+.opcion input[type="radio"] + .opcion__cuerpo .opcion__marca { border-radius: 50%; }
+.opcion__marca svg { width: 14px; height: 14px; opacity: 0; transform: scale(.4); transition: .15s; }
+.opcion input:checked + .opcion__cuerpo {
+  background: var(--nube); border-color: var(--cielo); color: var(--nube-tinta);
+  box-shadow: 0 var(--labio) 0 var(--cielo-hondo);
+}
+.opcion input:checked + .opcion__cuerpo .opcion__marca { background: var(--cielo-hondo); border-color: var(--cielo-hondo); }
+.opcion input:checked + .opcion__cuerpo .opcion__marca svg { opacity: 1; transform: none; }
+.opcion input:focus-visible + .opcion__cuerpo { outline: 3px solid var(--cielo); outline-offset: 2px; }
+.opcion input:disabled + .opcion__cuerpo { opacity: .5; cursor: default; }
+
+/* 16px mínimo en los campos: con menos, el navegador del teléfono hace zoom al tocarlos. */
+.campo {
+  width: 100%; margin-top: 10px; padding: 12px 14px;
+  background: var(--papel); border: 2px solid var(--borde); border-radius: var(--radio-md);
+  font-size: 16px; line-height: 1.5; resize: vertical;
+}
+.campo:focus { outline: none; border-color: var(--cielo); background: var(--blanco); }
+textarea.campo { min-height: 110px; }
+.campo--otro { margin-top: 12px; }
+.contador { display: block; text-align: right; font-size: .8rem; color: var(--tinta-suave); margin-top: 4px; }
+
+/* Escala: botones numerados que se reparten el ancho. La de 0–10 va en dos filas. */
+.escala { margin-top: 10px; }
+.escala__botones { display: flex; gap: 6px; }
+.escala__botones .opcion { flex: 1; min-width: 0; }
+.escala__botones .opcion__cuerpo {
+  justify-content: center; min-height: 48px; padding: 6px 0;
+  font-weight: 600; font-size: 1.1rem;
+}
+.escala__etiquetas { display: flex; justify-content: space-between; gap: 12px; margin-top: 8px; font-size: .82rem; color: var(--tinta-suave); }
+.escala--larga .escala__botones { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px 6px; }
+.escala--larga .escala__botones .opcion__cuerpo { border-radius: var(--radio-sm); min-height: 46px; }
+
+/* Matriz: en el teléfono, cada fila es su enunciado con su escala debajo. */
+.matriz { margin-top: 8px; display: grid; gap: 8px; }
+.matriz__fila {
+  display: grid; grid-template-columns: 1fr; gap: 8px;
+  padding: 10px; border-radius: var(--radio-md); background: var(--papel);
+  border: 2px solid transparent; transition: border-color .15s, background .15s;
+}
+.matriz__fila--hecha { background: #EEF6E3; }
+.matriz__fila--falta { border-color: var(--intento); background: var(--intento-fondo); }
+.matriz__texto { font-weight: 700; line-height: 1.3; font-size: .98rem; }
+.matriz__fila .escala { margin-top: 0; }
+.matriz__fila .escala__botones .opcion__cuerpo { min-height: 44px; font-size: 1rem; box-shadow: 0 3px 0 var(--borde-hondo); }
+.matriz__fila .escala__botones .opcion input:checked + .opcion__cuerpo { box-shadow: 0 3px 0 var(--cielo-hondo); }
+.matriz__leyenda {
+  display: flex; justify-content: space-between; gap: 12px;
+  font-size: .8rem; color: var(--tinta-suave); padding: 0 4px;
+  position: sticky; top: 56px; z-index: 1; background: var(--blanco); padding-block: 6px;
+}
+.matriz__leyenda b { color: var(--verde); font-weight: 700; }
+
+/* Concepto del robot: guía, escucha y corrige con IA. */
+.concepto {
+  margin: 0 0 16px; padding: 16px; border-radius: var(--radio-xl);
+  background: var(--verde-hondo); color: #EAF3EE;
+  box-shadow: var(--sombra);
+}
+.concepto__cabeza { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 14px; }
+.concepto__cara { border-radius: 14px; overflow: hidden; border: 3px solid #0E3A2A; aspect-ratio: 647 / 302; background: #111; max-width: 240px; }
+.concepto__cara img { width: 100%; height: 100%; object-fit: cover; }
+.concepto h3 { font-size: 1.3rem; color: var(--blanco); margin-bottom: 6px; }
+.concepto p { margin: 0; color: #B9CDBF; font-size: .95rem; }
+.pilares { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.pilar {
+  display: grid; grid-template-columns: 40px 1fr; gap: 0 12px; align-items: start;
+  background: rgba(255,255,255,.06); border: 2px solid rgba(255,255,255,.1); border-radius: var(--radio-md); padding: 12px;
+}
+.pilar__icono { grid-row: span 2; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; }
+.pilar__icono svg { width: 22px; height: 22px; }
+.pilar--guia .pilar__icono { background: var(--verde-pasto); color: var(--verde-hondo); }
+.pilar--escucha .pilar__icono { background: var(--cielo); color: var(--nube-tinta); }
+.pilar--corrige .pilar__icono { background: var(--pico); color: #5C3D02; }
+.pilar b { display: block; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 1.08rem; color: var(--blanco); }
+.pilar span { font-size: .9rem; color: #B9CDBF; line-height: 1.4; display: block; }
+.concepto__ia { margin-top: 12px !important; font-size: .85rem !important; display: flex; gap: 8px; align-items: flex-start; }
+.concepto__ia::before { content: "IA"; flex: none; font-family: Fredoka, sans-serif; font-weight: 700; font-size: .72rem; background: var(--cielo); color: var(--nube-tinta); border-radius: 6px; padding: 1px 6px; margin-top: 2px; }
+
+/* Pie fijo con la navegación: al alcance del pulgar. */
+.pie {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  background: rgba(247, 240, 228, .97); backdrop-filter: blur(8px);
+  border-top: 2px solid var(--borde);
+  padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+}
+.pie__fila { display: grid; grid-template-columns: 56px 1fr; grid-template-areas: "aviso aviso" "atras siguiente"; gap: 8px 10px; align-items: center; }
+.pie__fila > .btn--papel { grid-area: atras; padding-inline: 0; }
+.pie__fila > .btn--siguiente { grid-area: siguiente; }
+.pie__aviso { grid-area: aviso; font-size: .88rem; color: var(--intento-tinta); font-weight: 700; margin: 0; text-align: center; }
+.pie__aviso:empty { display: none; }
+
+/* ---------------------------------------------------------- lista y final */
+
+.centro { text-align: center; padding: 32px 0 56px; }
+.centro .piko { width: 120px; margin: 0 auto 14px; }
+.centro h1 { font-size: clamp(1.6rem, 7vw, 2.6rem); margin-bottom: 10px; }
+.centro p { color: var(--tinta); max-width: 52ch; margin-inline: auto; }
+.centro > .btn { margin-top: 8px; }
+
+.tarjetas { display: grid; gap: 12px; margin-top: 22px; text-align: left; }
+.tarjeta {
+  display: block; text-decoration: none; color: inherit;
+  padding: 16px; background: var(--blanco);
+  border: 2px solid var(--borde); border-radius: var(--radio-lg);
+  box-shadow: 0 var(--labio) 0 var(--borde-hondo);
+  transition: transform .06s, box-shadow .06s;
+}
+.tarjeta:active { transform: translateY(var(--labio)); box-shadow: 0 0 0 var(--borde-hondo); }
+.tarjeta h2 { font-size: 1.2rem; color: var(--verde); margin-bottom: 4px; }
+.tarjeta p { margin: 0; color: var(--tinta); font-size: .95rem; }
+
+.final__compartir {
+  margin: 22px auto 0; max-width: 520px; padding: 16px;
+  background: var(--blanco); border: 2px dashed var(--borde-hondo); border-radius: var(--radio-lg);
+}
+.final__compartir p { margin-bottom: 12px; }
+.final__acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.final__acciones .btn { min-width: 0; padding-inline: .5rem; letter-spacing: .03em; }
+.pendiente {
+  display: inline-flex; gap: 8px; align-items: center;
+  margin-top: 12px; padding: 8px 14px; border-radius: var(--radio-md);
+  background: var(--intento-fondo); color: var(--intento-tinta); font-weight: 700; font-size: .9rem;
+}
+
+.cargando { min-height: 80svh; display: grid; place-content: center; justify-items: center; gap: 12px; color: var(--tinta-suave); font-family: Fredoka, sans-serif; text-align: center; padding: 16px; }
+.cargando__piko { width: 80px; animation: salto 1.2s ease-in-out infinite; }
+
+.aviso { padding: 16px; text-align: center; }
+
+/* ================================================== tablet (640px en adelante) */
+
+@media (min-width: 640px) {
+  :root { --gutter: 24px; }
+  body { font-size: 17px; }
+
+  .barra__marca img { width: 64px; }
+
+  .portada__marca { width: 130px; }
+  .portada__piko { grid-template-columns: 130px 1fr; }
+  .portada__piko .piko { width: 130px; }
+  .portada__piko .globo { max-width: 380px; font-size: 1.1rem; }
+  .portada__acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .portada__acciones .btn--siguiente { width: auto; min-width: 240px; }
+  .portada__bajada { font-size: 1.08rem; max-width: 52ch; }
+
+  .charla { grid-template-columns: 92px 1fr; gap: 18px; margin: 28px 0 22px; }
+  .charla .piko, .charla__robot { width: 92px; }
+  .charla h2 { font-size: 2rem; }
+  .charla .globo { font-size: 1.05rem; }
+
+  .pregunta { padding: 20px; margin-bottom: 18px; }
+  .pregunta legend, .pregunta__titulo { font-size: 1.2rem; }
+  .opciones { grid-template-columns: repeat(2, 1fr); gap: 10px 12px; }
+
+  .escala--larga .escala__botones { display: flex; gap: 4px; }
+
+  .matriz__fila { grid-template-columns: 1fr minmax(240px, 300px); gap: 8px 16px; align-items: center; padding: 10px 12px; }
+  .matriz__leyenda { position: static; padding-inline: 12px; }
+
+  .concepto { padding: 22px; }
+  .concepto__cabeza { grid-template-columns: 170px 1fr; gap: 18px; align-items: center; }
+  .pilares { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .pilar { display: block; padding: 14px; }
+  .pilar__icono { margin-bottom: 8px; }
+
+  .pie__fila { display: flex; justify-content: space-between; gap: 12px; }
+  .pie__fila > .btn--papel { padding-inline: 1.2rem; }
+  .pie__fila > .btn--siguiente { min-width: 200px; }
+  .pie__aviso { flex: 1; }
+
+  .centro { padding: 56px 0 80px; }
+  .centro .piko { width: 170px; }
+  .final__acciones { display: flex; justify-content: center; }
+}
+
+/* ============================================= escritorio (960px en adelante) */
+
+@media (min-width: 960px) {
+  /* Como la landing: el texto a la izquierda, Piko de pie sobre el paisaje a la derecha. */
+  .portada { display: flex; align-items: flex-end; padding: 40px 0 0; }
+  .portada__escena { inset: 0; height: 100%; }
+  .portada::after {
+    background: linear-gradient(105deg, rgba(247,240,228,.96) 0%, rgba(247,240,228,.88) 40%, rgba(247,240,228,0) 70%);
+  }
+  .portada__grid {
+    grid-template-columns: 1.1fr .9fr;
+    grid-template-areas: "marca piko" "texto piko";
+    grid-template-rows: auto 1fr;
+    column-gap: 32px; align-items: end;
+  }
+  .portada__marca { grid-area: marca; width: 200px; align-self: start; }
+  .portada__texto { grid-area: texto; padding-bottom: 12vh; }
+  .portada h1 { max-width: 14ch; }
+  .portada__piko {
+    grid-area: piko; position: relative;
+    display: flex; flex-direction: column-reverse; align-items: center; justify-content: flex-end;
+    gap: 20px; align-self: end;
+  }
+  .portada__piko .piko { width: min(300px, 80%); filter: drop-shadow(0 22px 26px rgba(10,69,48,.28)); }
+  .portada__piko .globo { align-self: flex-start; }
+  .portada__piko .globo::before { /* la colita pasa a apuntar hacia abajo */
+    left: auto; right: 64px; top: auto; bottom: -11px;
+    border-left: 0; border-right: 2px solid var(--borde);
+    border-bottom-left-radius: 0; border-bottom-right-radius: 4px;
+  }
+}
