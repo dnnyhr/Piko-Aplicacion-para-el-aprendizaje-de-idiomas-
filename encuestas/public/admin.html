@@ -195,8 +195,8 @@
   </header>
 
   <form id="acceso" class="pregunta">
-    <label class="pregunta__titulo" for="token">Token de administración</label>
-    <span class="pregunta__ayuda">Es el secreto <code>ADMIN_TOKEN</code> del Worker. Se guarda solo en esta pestaña.</span>
+    <label class="pregunta__titulo" for="token">Contraseña del panel</label>
+    <span class="pregunta__ayuda">Se olvida sola al cerrar esta pestaña.</span>
     <input id="token" class="campo" type="password" autocomplete="current-password" required>
     <p class="pregunta__error" id="acceso-error"></p>
     <button class="btn" type="submit" style="margin-top:12px">Entrar</button>
@@ -205,7 +205,7 @@
   <section id="panel" hidden>
     <div class="fila-acciones">
       <select id="encuesta" class="campo" aria-label="Encuesta"></select>
-      <button id="csv" class="btn btn--papel btn--chico" type="button">Descargar CSV</button>
+      <button id="csv" class="btn btn--papel btn--chico" type="button">Descargar respuestas</button>
       <button id="salir" class="btn btn--fantasma btn--chico" type="button">Salir</button>
     </div>
     <div id="kpis" class="kpis"></div>

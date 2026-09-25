@@ -58,9 +58,31 @@ test('sin token no cuenta como intento: quien contesta la encuesta no se bloquea
   assert.equal((await llamar('/api/admin/encuestas', { token: TOKEN })).status, 200);
 });
 
-test('un ADMIN_TOKEN corto no abre el panel y dice cómo cambiarlo', async () => {
+test('un ADMIN_TOKEN corto no abre el panel, sin nombrar nada técnico en pantalla', async () => {
   env.ADMIN_TOKEN = 'corto123';
   const res = await llamar('/api/admin/encuestas', { token: 'corto123' });
   assert.equal(res.status, 503);
-  assert.match((await res.json()).error, /al menos 16 caracteres.*wrangler secret put ADMIN_TOKEN/);
+  const { error } = await res.json();
+  assert.equal(error, 'El panel todavía no está listo para usarse.');
+});
+
+test('el panel dice los motivos de los correos sin variables ni códigos', async () => {
+  const { detalleAmigable } = await import('../src/correo.js');
+  const casos = {
+    'Falta configurar: RESEND_API_KEY, APP_DESCARGA_URL': 'El envío de correos todavía no está configurado.',
+    '403 · The mugiware.com domain is not verified.': 'El servicio de correo rechazó el envío: hay que revisar su configuración.',
+    '401 · Resend no aceptó la API key: revisá RESEND_API_KEY.': 'El servicio de correo rechazó el envío: hay que revisar su configuración.',
+    '429 · Too many requests': 'Demasiados envíos seguidos: probá de nuevo en un minuto.',
+    'Resend no respondió a tiempo: probá de nuevo.': 'El servicio de correo no respondió a tiempo: probá de nuevo.',
+    '500 · internal': 'No se pudo mandar: probá de nuevo.',
+    'A esta dirección ya se le mandó el enlace hoy.': 'A esta dirección ya se le mandó el enlace hoy.',
+  };
+  for (const [crudo, amigable] of Object.entries(casos)) assert.equal(detalleAmigable(crudo), amigable);
+  assert.equal(detalleAmigable(null), null);
+});
+
+test('la pantalla de entrada del panel no habla de tokens ni del Worker', () => {
+  const html = readFileSync(new URL('../public/admin.html', import.meta.url), 'utf8').replace(/<style>[\s\S]*?<\/style>/, '');
+  const visible = html.replace(/<[^>]+>/g, ' ');
+  assert.doesNotMatch(visible, /ADMIN_TOKEN|Worker|Token|CSV/);
 });

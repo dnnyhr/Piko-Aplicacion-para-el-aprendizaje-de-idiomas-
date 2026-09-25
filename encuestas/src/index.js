@@ -27,7 +27,7 @@
  */
 
 import { aFilas, preguntasDe, revisar, validarDefinicion } from '../public/js/reglas.js';
-import { enviarBienvenida, limpiarNombre, mandarDescarga, nombreDesdeCorreo } from './correo.js';
+import { detalleAmigable, enviarBienvenida, limpiarNombre, mandarDescarga, nombreDesdeCorreo } from './correo.js';
 import { leerContactos, MAX_LINEAS } from './contactos.js';
 
 /** Intentos fallidos de token por IP antes de bloquearla, y por cuánto tiempo. */
@@ -348,7 +348,7 @@ async function tokenValido(request, env) {
     console.error('Falta la tabla intentos_admin: corré npm run db:remoto', err);
   }
   if (fallidos >= INTENTOS_ADMIN) {
-    throw new ErrorHttp(429, `Demasiados intentos con un token equivocado. Esperá ${BLOQUEO_MIN} minutos.`, {}, { 'retry-after': String(BLOQUEO_MIN * 60) });
+    throw new ErrorHttp(429, `Demasiados intentos con una contraseña equivocada. Esperá ${BLOQUEO_MIN} minutos.`, {}, { 'retry-after': String(BLOQUEO_MIN * 60) });
   }
 
   if (igualSeguro(dado, token)) return true;
@@ -365,11 +365,12 @@ async function tokenValido(request, env) {
 }
 
 async function exigirAdmin(request, env) {
-  if (!env.ADMIN_TOKEN) throw new ErrorHttp(503, 'Falta configurar ADMIN_TOKEN en el Worker.');
-  if (env.ADMIN_TOKEN.length < TOKEN_MIN) {
-    throw new ErrorHttp(503, `ADMIN_TOKEN es muy corto: tiene que tener al menos ${TOKEN_MIN} caracteres. Cambialo con: npx wrangler secret put ADMIN_TOKEN`);
+  // El detalle técnico va al registro del Worker (wrangler tail), no a la pantalla.
+  if (!env.ADMIN_TOKEN || env.ADMIN_TOKEN.length < TOKEN_MIN) {
+    console.error(`ADMIN_TOKEN falta o tiene menos de ${TOKEN_MIN} caracteres: npx wrangler secret put ADMIN_TOKEN`);
+    throw new ErrorHttp(503, 'El panel todavía no está listo para usarse.');
   }
-  if (!(await tokenValido(request, env))) throw new ErrorHttp(401, 'Token inválido.');
+  if (!(await tokenValido(request, env))) throw new ErrorHttp(401, 'Contraseña incorrecta.');
 }
 
 function igualSeguro(a, b) {
@@ -607,10 +608,11 @@ async function listarCorreos(env, slug) {
     )
       .bind(e.id)
       .all());
-  } catch {
-    throw new ErrorHttp(503, 'Falta la tabla de correos: corré `npm run db:remoto`.');
+  } catch (err) {
+    console.error('listarCorreos (¿falta npm run db:remoto?)', err);
+    throw new ErrorHttp(503, 'No se pudo cargar la lista de correos. Probá de nuevo en un rato.');
   }
-  return json({ correos: results });
+  return json({ correos: results.map((c) => ({ ...c, detalle: detalleAmigable(c.detalle) })) });
 }
 
 /** Vuelve a mandar el correo de una respuesta con la definición con que se contestó. */
@@ -671,7 +673,6 @@ async function reenviarFallidos(request, env, slug, url) {
 
 /* -------------------------------------------------- contactos a mano */
 
-const SIN_TABLA_CONTACTOS = 'Falta la tabla de contactos: corré `npm run db:remoto`.';
 
 async function listarContactos(env, slug) {
   const e = await cargar(env, slug);
@@ -684,12 +685,11 @@ async function listarContactos(env, slug) {
     )
       .bind(e.id)
       .all();
-    return json({ contactos: results });
+    return json({ contactos: results.map((c) => ({ ...c, correo_detalle: detalleAmigable(c.correo_detalle) })) });
   } catch (err) {
-    // Distinguir "no existe la tabla" de cualquier otro error, y mostrar el real.
+    // El error real (por ejemplo, falta correr npm run db:remoto) queda en el registro.
     console.error('listarContactos', err);
-    const msg = String(err?.message ?? err);
-    throw new ErrorHttp(503, /no such table/i.test(msg) ? SIN_TABLA_CONTACTOS : `No se pudo leer la lista de contactos: ${msg}`);
+    throw new ErrorHttp(503, 'No se pudo cargar la lista de contactos. Probá de nuevo en un rato.');
   }
 }
 
@@ -738,8 +738,7 @@ async function agregarContactos(request, env, slug, url) {
     }
   } catch (err) {
     console.error('agregarContactos', err);
-    const msg = String(err?.message ?? err);
-    throw new ErrorHttp(503, /no such table/i.test(msg) ? SIN_TABLA_CONTACTOS : `No se pudo guardar: ${msg}`);
+    throw new ErrorHttp(503, 'No se pudieron guardar los contactos. Probá de nuevo en un rato.');
   }
 
   const cuenta = { enviado: 0, error: 0, omitido: 0 };
@@ -820,8 +819,9 @@ async function enviarAContacto(env, id, url) {
     )
       .bind(id)
       .first();
-  } catch {
-    throw new ErrorHttp(503, SIN_TABLA_CONTACTOS);
+  } catch (err) {
+    console.error('enviarAContacto', err);
+    throw new ErrorHttp(503, 'No se pudo leer ese contacto. Probá de nuevo en un rato.');
   }
   if (!c) throw new ErrorHttp(404, 'Ese contacto no existe.');
   if (!c.correo) throw new ErrorHttp(422, 'Este contacto no tiene correo, solo número.');

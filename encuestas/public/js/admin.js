@@ -35,7 +35,7 @@ async function api(ruta, opciones = {}) {
     ...opciones,
     headers: { authorization: `Bearer ${token}`, ...(opciones.body ? { 'content-type': 'application/json' } : {}) },
   });
-  if (res.status === 401) throw new Error('Token inválido.');
+  if (res.status === 401) throw new Error('Contraseña incorrecta.');
   if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? `Error ${res.status}`);
   return res;
 }
@@ -928,7 +928,7 @@ function formularioContactos(abierto, recargar) {
       const partes = [`Agregados: ${r.agregados}`];
       if (r.repetidos) partes.push(`ya estaban: ${r.repetidos}`);
       if (enviar.checked) partes.push(`correos enviados: ${r.enviado}`, `fallaron: ${r.error}`);
-      if (r.omitido) partes.push('no se mandaron: falta configurar Resend');
+      if (r.omitido) partes.push('no se mandaron: el envío de correos todavía no está configurado');
       if (r.sinEnviar) partes.push(`quedaron ${r.sinEnviar} sin mandar: usá "Mandar enlace" en cada uno`);
       if (r.invalidas.length) partes.push(`no se entendieron ${r.invalidas.length} líneas: ${r.invalidas.join(' / ')}`);
       if (r.recortado) partes.push(`solo se leen las primeras ${r.maxLineas} líneas`);

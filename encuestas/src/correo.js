@@ -15,6 +15,21 @@
 
 const RESEND = 'https://api.resend.com/emails';
 const ESPERA_MS = 10_000;
+/**
+ * El motivo de un correo, dicho para el panel: sin nombres de variables ni
+ * códigos. En la base queda el detalle técnico, para revisarlo desde la consola.
+ */
+export function detalleAmigable(detalle) {
+  if (!detalle) return null;
+  const d = String(detalle);
+  if (/^Falta configurar/.test(d)) return 'El envío de correos todavía no está configurado.';
+  if (/no respondió a tiempo/.test(d)) return 'El servicio de correo no respondió a tiempo: probá de nuevo.';
+  if (/^429\b/.test(d)) return 'Demasiados envíos seguidos: probá de nuevo en un minuto.';
+  if (/^(401|403|422)\b/.test(d)) return 'El servicio de correo rechazó el envío: hay que revisar su configuración.';
+  if (/^\d{3}\b|RESEND|Resend|API|CORREO_|APP_DESCARGA|fetch|Error/.test(d)) return 'No se pudo mandar: probá de nuevo.';
+  return d;
+}
+
 /** Tope de correos automáticos por día si no se configura CORREOS_POR_DIA (el plan gratis de Resend manda 100). */
 const TOPE_DIARIO = 100;
 
