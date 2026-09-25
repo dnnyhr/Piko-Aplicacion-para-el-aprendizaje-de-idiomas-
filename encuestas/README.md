@@ -116,8 +116,8 @@ npx wrangler d1 execute piko-encuestas --remote --command "SELECT estado, detall
 Al pegar el enlace en WhatsApp, Facebook o X aparece la imagen de la encuesta
 (`imagen` en su definición; si no tiene, `public/img/og.jpg`) con su título.
 La lista `/e/` usa `public/img/og-encuestas.jpg`. Esas apps no ejecutan JavaScript ni
-aceptan direcciones relativas, así que el Worker atiende `/` y `/e/<slug>`
-y `/e/` (ver `run_worker_first` en `wrangler.jsonc`) y completa las etiquetas Open
+aceptan direcciones relativas, así que el Worker atiende `/`, `/e/` y
+`/e/<slug>` (ver `run_worker_first` en `wrangler.jsonc`) y completa las etiquetas Open
 Graph con el dominio desde el que se abrió la página y con el título y la
 descripción de esa encuesta. Funciona igual en `workers.dev` y en un dominio
 propio.
