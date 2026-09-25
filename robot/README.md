@@ -19,6 +19,28 @@ Los dos teléfonos nunca se hablan entre sí: los dos hablan con el puente, y el
 puente reparte. Así puede haber dos maestros mirando, o ninguno, sin que la
 cara se entere.
 
+```
+robot/
+├── firmware/            sketches de Arduino
+│   ├── piko_robot/      el de verdad: protocolo serie, motores y luces
+│   └── probar_*/ …      uno por módulo, para diagnosticar de a uno
+└── panel/               el puente, en Node
+    ├── server.js        serie ↔ WebSocket, voz y archivos
+    ├── consola.mjs      monitor serie por línea de comandos
+    ├── prueba-puente.mjs  las comprobaciones automáticas
+    └── public/          el panel (index.html), la cara (cara.html), caras y sonidos
+```
+
+**Qué hace falta:** Node 22 o más nuevo para el puente, y
+[`arduino-cli`](https://arduino.github.io/arduino-cli/) (o el IDE de Arduino)
+con las bibliotecas **Servo** y **Adafruit NeoPixel** para el firmware.
+
+**En esta página:** [Qué está probado](#qué-está-probado-en-la-placa) ·
+[Cableado](#cableado) · [Correr el puente](#correr-el-puente) ·
+[Las caras](#las-caras) · [Los sonidos](#los-sonidos) · [La voz](#la-voz) ·
+[El ejercicio simulado](#el-ejercicio-simulado) · [El protocolo](#el-protocolo) ·
+[Probar de a uno](#probar-de-a-uno) · [Abrirlo a internet](#abrirlo-a-internet)
+
 ## Qué está probado en la placa
 
 | Subsistema | Estado |
@@ -100,16 +122,19 @@ Cara:     http://localhost:4700/cara
 El puerto serie se detecta solo. Si tenés varios cacharros USB:
 
 ```bash
-node server.js --listar
+npm run puertos                          # lista los puertos (= node server.js --listar)
+node server.js --puerto COM5             # fija el puerto serie
+node server.js --http 4800               # cambia el puerto HTTP
 ```
 
 > Si el puerto no abre, casi siempre es que el Monitor Serie del IDE de Arduino
 > lo tiene tomado. Cerralo — no se puede compartir.
 
-Y la prueba, que no necesita ni placa ni teléfonos:
+Y la prueba, que no necesita ni placa ni teléfonos (CI la corre en cada pull
+request):
 
 ```bash
-npm run prueba
+npm run prueba      # 44 comprobaciones del puente
 ```
 
 ---
@@ -375,8 +400,12 @@ para saber si el problema es el módulo o el firmware completo.
 Se compilan igual, cambiando la última carpeta:
 
 ```bash
+arduino-cli lib install Servo "Adafruit NeoPixel"     # una sola vez
 arduino-cli compile --fqbn arduino:avr:mega robot/firmware/probar_leds
+arduino-cli upload  --fqbn arduino:avr:mega -p COM5 robot/firmware/probar_leds
 ```
+
+Cerrá el puente antes de subir: mientras corre tiene tomado el puerto serie.
 
 Para hablarles por serie sin abrir el IDE, y sin averiguar en qué puerto quedó
 la placa esta vez:

@@ -8,7 +8,8 @@ Escribí a **entitydh@gmail.com** con el asunto `[SEGURIDAD] Piko`. Incluí:
 
 - Qué encontraste y qué impacto tendría.
 - Cómo reproducirlo.
-- Qué parte del proyecto afecta: la app, el aula en red, el robot o el panel.
+- Qué parte del proyecto afecta: la app, el aula en red, el robot, el panel o
+  las encuestas.
 
 Respondemos en un plazo de **7 días**. Somos un equipo pequeño y esto no es
 nuestro trabajo de tiempo completo, así que agradecemos la paciencia. Te vamos
@@ -33,8 +34,17 @@ consideramos un problema y qué no.
   socket TCP. Nos importa que un dispositivo dentro de esa red no pueda
   suplantar al maestro, alterar el progreso de otro estudiante, ni tumbar la
   clase con paquetes mal formados.
-- **El puente del robot.** El panel expone un servidor HTTP local. Nos importa
-  que no se pueda usar para alcanzar nada más allá del robot.
+- **El puente del robot.** El panel expone un servidor HTTP local, y puede
+  abrirse a internet por un túnel. Nos importa que no se pueda usar para
+  alcanzar nada más allá del robot, y que nadie de afuera pueda moverlo. El
+  túnel debe ir siempre detrás de Cloudflare Access (ver
+  [robot/README.md](robot/README.md#abrirlo-a-internet)).
+- **Las encuestas.** Son la única parte con un servidor público
+  (`encuestas.piko.mugiware.com`) y guardan datos de contacto que la gente deja
+  voluntariamente. Nos importa que nadie pueda leer respuestas sin el token del
+  panel, usar la encuesta para mandar correos a direcciones ajenas, ni inyectar
+  scripts en la página o fórmulas en el CSV. Las defensas que ya tiene están en
+  [encuestas/README.md](encuestas/README.md#seguridad).
 - **Paquetes de contenido.** El contenido es data que viene de fuera. Un `.json`
   malicioso no debería poder ejecutar nada ni romper la app.
 
@@ -56,6 +66,8 @@ vulnerabilidad y queremos saberlo.
 
 ## Datos que Piko guarda
 
+### La app
+
 Todo queda en el dispositivo, en SQLite. No hay servidor, no hay nube, no hay
 telemetría, y nada sale del teléfono salvo hacia el aula local durante la clase.
 
@@ -63,10 +75,28 @@ Lo que se guarda de un estudiante es su nombre de pila —el que el maestro pone
 en la lista— y su progreso de aprendizaje. Nada más: ni apellidos, ni
 direcciones, ni fotos, ni audio.
 
+### El robot
+
+El puente no guarda datos de estudiantes. Guarda en caché el audio de las
+frases que dice Piko, que pide a la voz de Google: el texto de esas frases sale
+a internet cuando hay conexión.
+
+### Las encuestas
+
+Guardan en Cloudflare D1 las respuestas, y sólo si la persona los escribe, su
+nombre, correo o teléfono. No se guarda la IP: para frenar abusos se guarda un
+hash de IP y navegador que cambia cada día. Las pueden contestar también
+estudiantes, incluso menores de 12 años: por eso los datos de contacto son
+siempre opcionales, y el CSV que se descarga del panel hay que tratarlo como
+dato personal. Los detalles están en
+[encuestas/README.md](encuestas/README.md#privacidad).
+
 ---
 
 <sub>**English:** report vulnerabilities privately to entitydh@gmail.com with
 the subject `[SEGURIDAD] Piko`. We respond within 7 days. Note the threat model
 above: Piko has no accounts and no encryption on the classroom LAN by design —
 access control is physical, and all data stays on-device. Anything that breaks
-those assumptions is a vulnerability we want to hear about.</sub>
+those assumptions is a vulnerability we want to hear about. The surveys
+(`encuestas/`) are the one server-side component; see its README for the
+defenses already in place.</sub>

@@ -9,20 +9,33 @@
 
 ## Cómo lo probaste
 
-<!-- Marcá lo que corriste. Los tres primeros los corre CI igual. -->
+<!-- Marcá lo que corriste, según la parte que tocaste. Los comandos con
+     `npm run` los corre CI igual. -->
 
+**App** (`app/`)
 - [ ] `npm test` pasa
 - [ ] `npm run typecheck` pasa
 - [ ] `npm run validate:packs` pasa
 - [ ] `npm run sim` — si tocaste el aula en red, la sincronización o el protocolo
 - [ ] Probado en un teléfono real — si tocaste la interfaz
 
+**Robot** (`robot/`)
+- [ ] `npm run prueba` pasa en `robot/panel`
+- [ ] Probado con la placa — si tocaste el firmware o el protocolo serie
+
+**Encuestas** (`encuestas/`)
+- [ ] `npm run prueba` y `npm run validar` pasan
+- [ ] Probado en un teléfono — si tocaste la página
+
+**Documentación**
+- [ ] Actualicé el README o `docs/` si el cambio afecta cómo se usa o cómo funciona algo
+
 ## Restricciones
 
 <!-- Estas cuatro definen el producto. Confirmá que tu cambio las respeta,
      o explicá por qué no aplica. -->
 
-- [ ] No introduce ninguna dependencia de internet
+- [ ] No hace que nada del aula (app o robot) dependa de internet
 - [ ] El progreso sigue perteneciendo al estudiante, no al dispositivo
 - [ ] No pinta el error de rojo ni baja el XP
 - [ ] `app/src/core/` sigue sin importar React Native

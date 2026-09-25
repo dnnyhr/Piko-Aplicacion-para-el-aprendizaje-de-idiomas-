@@ -6,6 +6,9 @@ conectan a su hotspot para jugar entre sí.
 
 ## Arrancar
 
+Hace falta **Node 22 o más nuevo** (las pruebas de persistencia usan
+`node:sqlite`). Todos los comandos se corren desde esta carpeta.
+
 ```bash
 npm install
 ```
@@ -113,6 +116,14 @@ Ver [content/README.md](content/README.md). Hoy sólo hay inglés. Las cuatro
 lenguas indígenas tienen el formato listo y esperan material de hablantes
 nativos — el validador rechaza a propósito la síntesis de voz en esas lenguas,
 para que nadie termine enseñando una pronunciación inventada.
+
+## Más documentación
+
+| Documento | Para qué |
+|---|---|
+| [docs/desarrollo.md](../docs/desarrollo.md) | Guía completa: navegador, simulador, teléfono, APK y prueba de aceptación en el aula |
+| [docs/arquitectura.md](../docs/arquitectura.md) | Protocolo del aula, sincronización, semáforo, base local |
+| [docs/decisiones.md](../docs/decisiones.md) | Por qué está hecho así — conviene leerlo antes de "simplificar" algo |
 
 ## Detalles que no son obvios
 

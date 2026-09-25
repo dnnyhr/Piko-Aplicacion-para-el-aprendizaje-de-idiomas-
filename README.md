@@ -24,7 +24,7 @@
 
 <br><br>
 
-<img src="https://readme-typing-svg.demolab.com?font=Georgia&size=20&pause=1600&color=2F6B4F&center=true&vCenter=true&width=650&lines=Un+loro+repite+lo+que+escucha...;Miskito+%C2%B7+Mayangna+%C2%B7+Rama+%C2%B7+Gar%C3%ADfuna+%C2%B7+Ingles;Rescatando+lenguas%2C+abriendo+puertas." alt="tagline" />
+<img src="https://readme-typing-svg.demolab.com?font=Georgia&size=20&pause=1600&color=2F6B4F&center=true&vCenter=true&width=650&lines=Un+loro+repite+lo+que+escucha...;Miskito+%C2%B7+Mayangna+%C2%B7+Rama+%C2%B7+Gar%C3%ADfuna+%C2%B7+Ingl%C3%A9s;Rescatando+lenguas%2C+abriendo+puertas." alt="tagline" />
 
 <br><br>
 
@@ -39,6 +39,7 @@
 <a href="#nuestra-solución-dos-rutas-un-mismo-destino">Nuestra solución</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#cómo-funciona">Cómo funciona</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#el-mapa-del-repositorio">El mapa del repositorio</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+<a href="#probarlo">Probarlo</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#identidad">Identidad</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#roadmap">Roadmap</a>&nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#contribuir">Contribuir</a>&nbsp;&nbsp;·&nbsp;&nbsp;
@@ -151,13 +152,15 @@ Dos caminos distintos. **El mismo destino: que estas lenguas sigan vivas.**
 
 <br>
 
-**El robot** se construye sobre Arduino, que controla el cuerpo y los sensores, mientras una pequeña computadora en el aula se encarga del procesamiento más pesado — es más económico tener una sola por aula que un dispositivo potente por estudiante.
+**El robot** se construye sobre una placa Arduino (un Makeblock MegaPi) que mueve el cuerpo y las luces, mientras una pequeña computadora en el aula se encarga del procesamiento más pesado — es más económico tener una sola por aula que un dispositivo potente por estudiante. **La cara de Piko es un teléfono** montado en el robot, que muestra sus expresiones y habla.
 
-**Formación de grupos:** el robot arma los grupos combinando estudiantes de distintos niveles (peer teaching) y los rota entre sesiones, para que el más avanzado de cada grupo refuerce lo aprendido enseñando a los demás, y nadie trabaje siempre con las mismas personas.
+**Lo que ya funciona (prototipo):** el maestro maneja a Piko desde el navegador de su teléfono — expresiones, luces, movimientos y frases habladas — y corre el primer ejercicio completo: Piko muestra una palabra, pide «Di esta palabra», y festeja o vuelve a mostrar cómo se dice. Por ahora **quien escucha es el maestro** y aprieta una de dos teclas; el día que haya reconocimiento de voz, sólo cambia de dónde sale ese sí o ese no. Los detalles están en [robot/README.md](robot/README.md).
 
-**Evaluación de pronunciación:** cada grupo manda a un representante a hablar con el robot, que corre un modelo de reconocimiento de voz liviano en la computadora del aula. No intenta entender oraciones completas — detecta si el estudiante dijo las palabras clave esperadas y con qué claridad, que es justo lo necesario para dar una retroalimentación útil sin exigir un modelo pesado.
+**Lo que viene:**
 
-**Configuración y conexión:** el profesor arma la sesión desde la app y se la envía al robot por la misma red WiFi del hotspot. El robot guarda esa configuración, así que si la conexión se corta a mitad de clase, sigue funcionando con los últimos datos que recibió.
+- **Formación de grupos:** el robot arma los grupos combinando estudiantes de distintos niveles (peer teaching) y los rota entre sesiones, para que el más avanzado de cada grupo refuerce lo aprendido enseñando a los demás, y nadie trabaje siempre con las mismas personas.
+- **Evaluación de pronunciación:** cada grupo manda a un representante a hablar con el robot, que corre un modelo de reconocimiento de voz liviano en la computadora del aula. No intenta entender oraciones completas — detecta si el estudiante dijo las palabras clave esperadas y con qué claridad, que es justo lo necesario para dar una retroalimentación útil sin exigir un modelo pesado.
+- **Configuración desde la app:** el profesor arma la sesión en la app y se la envía al robot por la misma red WiFi del hotspot. El robot guarda esa configuración, así que si la conexión se corta a mitad de clase, sigue funcionando con los últimos datos que recibió.
 
 <br>
 
@@ -170,8 +173,8 @@ Dos caminos distintos. **El mismo destino: que estas lenguas sigan vivas.**
 &nbsp;El mapa del repositorio
 </h2>
 
-Piko no es una sola cosa — son tres puertas que salen del mismo tronco: la
-app, el robot y el sitio. Así se abre cada una por dentro:
+Piko no es una sola cosa — son cuatro puertas que salen del mismo tronco: la
+app, el robot, el sitio y las encuestas. Así se abre cada una por dentro:
 
 ```mermaid
 flowchart TD
@@ -180,6 +183,7 @@ flowchart TD
     RAIZ --> APP["📱 app/<br/><sub>la aplicación</sub>"]
     RAIZ --> ROBOT["🤖 robot/<br/><sub>el acompañante de aula</sub>"]
     RAIZ --> WEB["🌐 web/<br/><sub>piko.mugiware.com</sub>"]
+    RAIZ --> ENC["📋 encuestas/<br/><sub>encuestas.piko.mugiware.com</sub>"]
     RAIZ --> DOCS["📖 docs/<br/><sub>por qué se construyó así</sub>"]
 
     APP --> CORE["🧠 src/core/<br/><sub>protocolo · sync · progreso</sub>"]
@@ -190,15 +194,18 @@ flowchart TD
     ROBOT --> FIRM["⚙️ firmware/<br/><sub>Arduino: motores y luces</sub>"]
     ROBOT --> PANEL["🌉 panel/<br/><sub>puente Node ↔ navegador</sub>"]
 
+    ENC --> DEF["🗂️ definiciones/<br/><sub>una encuesta = un JSON</sub>"]
+    ENC --> WORKER["☁️ src/ · public/<br/><sub>Cloudflare Worker + D1</sub>"]
+
     classDef raiz fill:#0F5D3D,stroke:#0A4530,color:#fff,font-weight:bold
     classDef puerta fill:#2F6B4F,stroke:#1F4E5F,color:#fff
     classDef nucleo fill:#E7B84C,stroke:#B9860F,color:#16241D,font-weight:bold
     classDef hoja fill:#F7F0E4,stroke:#97C137,color:#16241D
 
     class RAIZ raiz
-    class APP,ROBOT,WEB,DOCS puerta
+    class APP,ROBOT,WEB,ENC,DOCS puerta
     class CORE nucleo
-    class RESTO,CONTENT,TESTS,FIRM,PANEL hoja
+    class RESTO,CONTENT,TESTS,FIRM,PANEL,DEF,WORKER hoja
 ```
 
 <p align="center"><sub>🧠 <code>src/core/</code> es el único cuarto con una regla de la casa: no entra ni
@@ -218,6 +225,7 @@ simulador juega una clase entera sin un solo teléfono.</sub></p>
 | 🤖 Arreglar algo del robot físico | `robot/firmware/` (Arduino) · `robot/panel/` (el puente) |
 | 🌐 Editar el sitio piko.mugiware.com | `web/index.html` |
 | 📋 Crear o editar una encuesta | `encuestas/definiciones/` — ver [encuestas/README.md](encuestas/README.md) |
+| 🧪 Correr las pruebas antes de mandar un cambio | Ver [Probarlo](#probarlo), más abajo |
 | 📖 Entender por qué se decidió algo así | `docs/decisiones.md` |
 
 <div align="center">
@@ -227,10 +235,47 @@ simulador juega una clase entera sin un solo teléfono.</sub></p>
 | [docs/arquitectura.md](docs/arquitectura.md) | Cómo está organizado el código, el protocolo del aula y la sincronización |
 | [docs/tecnologias.md](docs/tecnologias.md) | Qué se usa y por qué se eligió sobre las alternativas |
 | [docs/decisiones.md](docs/decisiones.md) | Registro de decisiones, con su contexto y sus consecuencias |
-| [docs/desarrollo.md](docs/desarrollo.md) | Correr, probar y compilar el APK |
+| [docs/desarrollo.md](docs/desarrollo.md) | Correr, probar y compilar el APK, el panel del robot y las encuestas |
+| [app/README.md](app/README.md) | La app en resumen: arrancarla, verificarla sin teléfono, cómo está armada |
 | [app/content/README.md](app/content/README.md) | Formato de los paquetes de contenido |
+| [robot/README.md](robot/README.md) | El acompañante de aula: cableado, puente, caras, voz y protocolo serie |
+| [encuestas/README.md](encuestas/README.md) | Las encuestas: ponerlas en marcha, crear una nueva y juntar palabras para la app |
 
 </div>
+
+<br>
+
+<h2 id="probarlo">
+<img src="https://api.iconify.design/mdi/play-circle-outline.svg?color=%232F6B4F" width="26" height="26" valign="middle"/>
+&nbsp;Probarlo
+</h2>
+
+Hace falta **Node 22 o más nuevo** (las pruebas usan `node:sqlite`). Cada parte
+se instala y se prueba por separado:
+
+```bash
+# La app
+cd app && npm install
+npm test                 # 121 pruebas del núcleo y la persistencia
+npm run typecheck
+npm run validate:packs
+npm run web              # la interfaz y la práctica en solitario, en el navegador
+npm run sim -- --students 8 --rondas 2   # un aula entera sobre TCP, sin teléfonos
+
+# El panel del robot (no necesita la placa para probarse)
+cd robot/panel && npm install
+npm run prueba           # 44 comprobaciones del puente
+npm start                # http://localhost:4700 (control) y /cara
+
+# Las encuestas
+cd encuestas && npm install
+npm run prueba           # el Worker completo contra un D1 en memoria
+npm run validar          # las definiciones de definiciones/
+```
+
+El aula en red necesita sockets TCP nativos, así que no corre en Expo Go ni en
+el navegador: para los teléfonos hace falta un *development build*. Todo el
+detalle está en [docs/desarrollo.md](docs/desarrollo.md).
 
 <br>
 
@@ -267,6 +312,12 @@ La mascota se llama **Piko**, y también le da nombre a la app. Piko es un choco
 - [x] Definición del reto y las dos rutas de solución
 - [x] Guion y producción del video de presentación
 - [x] Prototipo funcional para la demo de HN10
+- [x] App: los tres ejercicios, el aula en red local y el progreso que sigue al estudiante
+- [x] Robot: prototipo de control desde el navegador, cara animada, voz y primer ejercicio
+- [x] Encuestas para escuchar a la comunidad y juntar palabras de hablantes ([Tu lengua en Piko](https://encuestas.piko.mugiware.com/e/tu-lengua))
+- [ ] Contenido en miskito, mayangna, rama y garífuna, revisado por hablantes
+- [ ] Robot: reconocimiento de voz y formación de grupos
+- [ ] Presets de aula guardados e importación de listas de estudiantes
 - [ ] Piloto en comunidad real
 - [ ] *Visión futura:* diálogo generado y respuestas del robot vía un LLM liviano con RAG, alimentado con diccionarios y literatura de las lenguas en peligro e inglés
 
@@ -295,8 +346,8 @@ audio a tener una pronunciación inventada por una máquina.
 
 | | |
 |---|---|
-| <img src="https://api.iconify.design/mdi/translate.svg?color=%232F6B4F" width="18"/> **¿Hablás una de estas lenguas?** | Abrí un [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml). No hace falta saber programar ni usar Git — escribí las palabras en texto plano y nosotros las convertimos. |
-| <img src="https://api.iconify.design/mdi/code-braces.svg?color=%231F4E5F" width="18"/> **¿Querés aportar código?** | Todo está en [CONTRIBUTING.md](CONTRIBUTING.md): cómo correr el proyecto, las 121 pruebas, el simulador de aula y las restricciones que no son negociables. |
+| <img src="https://api.iconify.design/mdi/translate.svg?color=%232F6B4F" width="18"/> **¿Hablás una de estas lenguas?** | Contestá [Tu lengua en Piko](https://encuestas.piko.mugiware.com/e/tu-lengua) desde el teléfono, o abrí un [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml). No hace falta saber programar ni usar Git — escribí las palabras en texto plano y nosotros las convertimos. |
+| <img src="https://api.iconify.design/mdi/code-braces.svg?color=%231F4E5F" width="18"/> **¿Querés aportar código?** | Todo está en [CONTRIBUTING.md](CONTRIBUTING.md): cómo correr el proyecto, las pruebas de cada parte, el simulador de aula y las restricciones que no son negociables. |
 
 </div>
 

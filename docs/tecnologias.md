@@ -4,7 +4,11 @@ Todas las elecciones responden a las mismas tres restricciones: **sin
 internet**, **teléfonos de gama baja**, y **un equipo chico con una fecha
 encima**.
 
-## El stack
+La mayor parte de este documento es sobre la app. El robot y las encuestas
+tienen su propio stack, resumido en [El robot](#el-robot) y
+[Las encuestas](#las-encuestas) al final.
+
+## El stack de la app
 
 | Pieza | Versión | Para qué |
 |---|---|---|
@@ -131,3 +135,38 @@ progreso no persiste entre recargas.
 
 El simulador merece una mención aparte: además de servir para desarrollar sin
 teléfonos, es el **plan B de la demostración** si falla un equipo.
+
+## El robot
+
+| Pieza | Para qué |
+|---|---|
+| Makeblock MegaPi (ATmega2560) | La placa: motor a pasos, servo y LEDs. Se compila como un Arduino Mega |
+| 28BYJ-48 + ULN2003 | Motor a pasos que gira la cara |
+| WS2812 | Las dos tiras de LEDs |
+| Node 22 | El puente entre la placa y los navegadores |
+| serialport 13 | Habla con la placa por USB |
+| ws 8 | WebSocket entre el puente, el panel del maestro y la cara |
+| Web Audio, Wake Lock | En la cara: la boca que sigue a la voz, y que la pantalla no se apague |
+| Cloudflare Tunnel + Access | Para abrir el panel fuera de la red local, sólo al equipo |
+
+El panel y la cara son HTML y JavaScript sin compilar, servidos por el mismo
+puente: no hay paso de build. El porqué de cada detalle está en
+[robot/README.md](../robot/README.md).
+
+## Las encuestas
+
+| Pieza | Para qué |
+|---|---|
+| Cloudflare Workers | La API y la página, en `encuestas.piko.mugiware.com` |
+| Cloudflare D1 | Las respuestas (SQLite administrado) |
+| Wrangler 4 | Desarrollo local, migraciones y despliegue |
+| Resend | El correo con el enlace de descarga de la app |
+| `node:test` + `node:sqlite` | Las pruebas, con un D1 falso en memoria |
+
+**Por qué Workers + D1.** No hay servidor que mantener, el plan gratuito
+alcanza de sobra para el volumen de una encuesta comunitaria, y D1 es SQLite:
+las preguntas de «¿cuántos pidieron X?» son un `GROUP BY`. Y al ser SQLite, las
+pruebas corren contra `node:sqlite` en la computadora, sin cuenta de Cloudflare.
+
+La página es HTML, CSS y JavaScript sin framework ni paso de build, pensada
+para 360 px y poca señal. Detalles en [encuestas/README.md](../encuestas/README.md).

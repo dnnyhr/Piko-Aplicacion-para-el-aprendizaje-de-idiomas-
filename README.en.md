@@ -43,7 +43,7 @@ buys nothing.
 
 **Differential sync.** When a student's progress changes, only the delta travels
 — never the whole history. A student who drops off and rejoins resumes exactly
-where they were. A device that has never seen that student receives a
+where they were. A device that has never seen that student receives an
 already-projected state of fixed size, not the event log.
 
 **Progress belongs to the student, not the device.** A child can play on a
@@ -55,13 +55,22 @@ goes down, and the mascot shows the right answer with an encouraging phrase. A
 child learning their own community's language does not need an app telling them
 they speak it badly.
 
-**The classroom companion** is built on an Arduino-class board that drives the
-body and sensors, while a single small computer per classroom handles the
-heavier processing — one machine per room is far cheaper than a capable device
-per student. It forms mixed-level groups for peer teaching, rotates them between
-sessions, and runs a lightweight speech model that checks whether the expected
-key words were said and how clearly — which is what useful feedback actually
-requires, without a heavy model.
+**The classroom companion** is built on an Arduino-class board (a Makeblock
+MegaPi) that drives the body and the lights, while a single small computer per
+classroom handles the heavier processing — one machine per room is far cheaper
+than a capable device per student. **Its face is a phone** mounted on the robot,
+showing animated expressions and speaking.
+
+*Working today (prototype):* the teacher drives Piko from their phone's browser
+— expressions, lights, movement and spoken phrases — and runs the first complete
+exercise: Piko shows a word, asks the child to say it, and either celebrates or
+shows again how it is said. For now **the teacher is the one who listens** and
+presses one of two keys. See [`robot/README.md`](robot/README.md) (Spanish).
+
+*Planned:* forming mixed-level groups for peer teaching and rotating them
+between sessions, and a lightweight speech model on the classroom computer that
+checks whether the expected key words were said and how clearly — which is what
+useful feedback actually requires, without a heavy model.
 
 ---
 
@@ -80,8 +89,10 @@ Garífuna, the build fails. We would rather ship no audio than a pronunciation
 invented by a machine.
 
 **This is the project's real risk, and the contribution we most need.** If you
-speak one of these languages, or work with people who do, see
-[CONTRIBUTING.md](CONTRIBUTING.md) — no coding required.
+speak one of these languages, or work with people who do, fill in the
+[*Tu lengua en Piko*](https://encuestas.piko.mugiware.com/e/tu-lengua) survey
+(Spanish, phone-friendly) or see [CONTRIBUTING.md](CONTRIBUTING.md) — no coding
+required.
 
 ---
 
@@ -92,9 +103,15 @@ app/        The mobile app (Expo / React Native + TypeScript)
   src/core/   ⚠ PURE TypeScript — not one React Native import
   content/    Language packs as JSON data, not code
 robot/      Classroom companion: Arduino firmware + Node control bridge
-web/        Landing page
+web/        Landing page (piko.mugiware.com)
+encuestas/  Community surveys on Cloudflare Workers + D1
+            (encuestas.piko.mugiware.com) — also collects vocabulary
+            from native speakers for the language packs
 docs/       Architecture, technology choices, decision log
 ```
+
+The surveys are the only part of the project that runs on a server. They live
+outside the classroom: nothing in the app or the robot depends on them.
 
 **The rule that holds the architecture together:** `app/src/core/` never imports
 React Native. The classroom protocol, the differential sync, the progress engine
@@ -103,6 +120,8 @@ seconds, and why the same session logic runs identically in the simulator and on
 a low-end phone — only the injected transport changes.
 
 ## Running it
+
+All three parts need **Node 22+** (the tests use `node:sqlite`).
 
 ```bash
 cd app
@@ -124,6 +143,14 @@ converges. A whole classroom, tested without a single device.
 The network classroom needs native TCP sockets, so it does not run in Expo Go or
 in a browser — a development build is required. See [`app/README.md`](app/README.md).
 
+The robot bridge and the surveys have their own checks, which CI also runs:
+
+```bash
+cd robot/panel && npm install && npm run prueba   # 44 bridge checks, no board needed
+cd encuestas && npm install && npm run prueba     # Worker against an in-memory D1
+npm run validar                                   # survey definitions
+```
+
 ## Documentation
 
 | Document | About |
@@ -131,8 +158,12 @@ in a browser — a development build is required. See [`app/README.md`](app/READ
 | [docs/arquitectura.md](docs/arquitectura.md) | Code layout, classroom protocol, synchronization |
 | [docs/tecnologias.md](docs/tecnologias.md) | What is used and why, over the alternatives |
 | [docs/decisiones.md](docs/decisiones.md) | Decision log, with context and consequences |
-| [docs/desarrollo.md](docs/desarrollo.md) | Running, testing, building the APK |
+| [docs/desarrollo.md](docs/desarrollo.md) | Running, testing, building the APK, the robot bridge and the surveys |
 | [app/content/README.md](app/content/README.md) | Content pack format |
+| [robot/README.md](robot/README.md) | Classroom companion: wiring, bridge, faces, voice, serial protocol |
+| [encuestas/README.md](encuestas/README.md) | Surveys: deploying, writing a new one, turning answers into packs |
+
+All documentation is in Spanish.
 
 ## Contributing
 

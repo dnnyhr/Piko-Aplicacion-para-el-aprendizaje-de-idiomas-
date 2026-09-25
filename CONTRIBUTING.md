@@ -20,10 +20,18 @@ tratando de conservarla.
 
 ### Si hablás una de estas lenguas, o trabajás con quienes la hablan
 
-No hace falta que toques código ni que sepas usar Git. Abrí un
-[aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml)
-y escribí las palabras y frases ahí mismo, en texto plano. Nosotros nos
-encargamos de convertirlo al formato de la aplicación.
+No hace falta que toques código ni que sepas usar Git. Hay dos caminos:
+
+- **Desde el teléfono:** contestá [Tu lengua en Piko](https://encuestas.piko.mugiware.com/e/tu-lengua).
+  Te va mostrando palabras y frases en español y escribís cómo se dicen en tu
+  lengua. Podés hacer una parte o todas, y seguir otro día.
+- **En GitHub:** abrí un
+  [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml)
+  y escribí las palabras y frases ahí mismo, en texto plano.
+
+En los dos casos nosotros nos encargamos de convertirlo al formato de la
+aplicación, y antes de que llegue a un aula lo confirma alguien que habla la
+lengua.
 
 Lo que sirve:
 
@@ -58,12 +66,23 @@ inventada por una máquina.
 
 ### Preparar el entorno
 
+Hace falta **Node 22 o más nuevo** (las pruebas usan `node:sqlite`). El
+repositorio tiene tres proyectos independientes; instalá el de la parte que vas
+a tocar:
+
+| Si tocás… | Carpeta | Guía |
+|---|---|---|
+| La app | `app/` | [docs/desarrollo.md](docs/desarrollo.md) |
+| El robot | `robot/panel/` y `robot/firmware/` | [robot/README.md](robot/README.md) |
+| Las encuestas | `encuestas/` | [encuestas/README.md](encuestas/README.md) |
+
 ```bash
-cd app
-npm install
+cd app && npm install
 ```
 
 ### Antes de mandar cualquier cambio
+
+En la app:
 
 ```bash
 npm test              # 121 pruebas sobre el núcleo puro y la persistencia
@@ -71,7 +90,20 @@ npm run typecheck     # app + herramientas de Node
 npm run validate:packs
 ```
 
-Los tres tienen que pasar. CI los corre igual en cada pull request.
+En el robot (`robot/panel/`):
+
+```bash
+npm run prueba        # 44 comprobaciones del puente, sin placa
+```
+
+En las encuestas (`encuestas/`):
+
+```bash
+npm run prueba        # reglas y Worker completo contra un D1 en memoria
+npm run validar       # las definiciones de encuestas
+```
+
+Todos tienen que pasar: CI corre los mismos en cada pull request.
 
 ### Probar el aula sin tener teléfonos
 
@@ -101,8 +133,10 @@ está en el archivo equivocado. Los detalles están en
 Piko está diseñado para un contexto muy específico, y estas decisiones son parte
 del producto, no descuidos:
 
-- **Nada puede depender de internet.** No hay servidor, no hay nube, no hay
-  cuentas. Si una función necesita conexión para funcionar, no entra.
+- **Nada en el aula puede depender de internet.** La app no tiene servidor,
+  ni nube, ni cuentas. Si una función de la app o del robot necesita conexión
+  para funcionar en clase, no entra. (Las encuestas son la excepción: corren en
+  un servidor, pero fuera del aula, y nada en el aula depende de ellas.)
 - **El progreso pertenece al estudiante, no al aparato.** Un niño tiene que
   poder jugar hoy en un teléfono prestado y mañana en otro sin perder nada.
 - **Piko refuerza, no regaña.** El error nunca se pinta de rojo y el XP jamás
@@ -113,8 +147,18 @@ del producto, no descuidos:
 
 ### Estilo
 
-El código y los comentarios están en español, igual que la documentación. Segui
+El código y los comentarios están en español, igual que la documentación. Seguí
 la convención que ya ves en los archivos vecinos.
+
+Los mensajes de commit también van en español, y describen el cambio desde lo
+que se nota: *«Encuestas: el aviso de "¿hacer las que faltan?" tapa la
+pantalla»* dice más que *«fix modal»*. Si el cambio es de una sola parte,
+empezá con su nombre (`Encuestas:`, `Robot:`, `App:`).
+
+Si tu cambio modifica cómo se usa o cómo funciona algo, actualizá también la
+documentación que lo describe — el README de esa parte o `docs/`. Si es una
+decisión de diseño que alguien podría querer deshacer más adelante, sumala a
+[docs/decisiones.md](docs/decisiones.md).
 
 ---
 

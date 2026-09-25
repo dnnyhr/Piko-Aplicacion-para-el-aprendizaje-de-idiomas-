@@ -4,6 +4,17 @@ Cada entrada dice qué se decidió, por qué, y qué costo tiene. Las que llevan
 🩹 salieron de encontrar un fallo, y conviene leerlas antes de "simplificar"
 lo que arreglan.
 
+Las decisiones no se borran: cuando una deja de valer, se marca como
+**reemplazada** y se agrega una nueva que diga qué cambió. Así queda el porqué
+de cada vuelta.
+
+| # | Decisión | Parte |
+|---|---|---|
+| 1–14 | Núcleo puro, red, progreso, ejercicios, contenido y compilación | App |
+| 15 | ~~El robot queda fuera de alcance~~ — reemplazada por la 16 | Robot |
+| 16–18 | El robot: proyecto aparte, la cara es un teléfono, el maestro escucha | Robot |
+| 19 | Las encuestas corren en un servidor, fuera del aula | Encuestas |
+
 ---
 
 ## 1. El núcleo no importa React Native
@@ -241,21 +252,104 @@ solitario; el aula se prueba con el simulador o con teléfonos.
 
 ---
 
-## 15. El robot queda fuera de alcance
+## 15. ~~El robot queda fuera de alcance~~ — reemplazada por la 16
 
 **Contexto.** El documento del proyecto describe una segunda ruta con un robot
 físico que evalúa pronunciación.
 
-**Decisión.** No se construye nada del robot en esta aplicación.
+**Decisión original.** No se construye nada del robot en esta aplicación.
 
 **Por qué.** La ruta con teléfonos ya es un proyecto completo, y la fecha es la
 que es.
+
+**Qué cambió.** La parte que valía se mantiene: la app no tiene código del
+robot. Pero el robot sí se construyó, como proyecto aparte — ver la 16.
+
+---
+
+## 16. El robot es un proyecto aparte, en `robot/`
+
+**Contexto.** Una vez que la app estuvo andando, hubo tiempo para la Ruta 2.
+
+**Decisión.** El robot vive en su propia carpeta, con su firmware y su puente
+en Node, sin compartir código con la app. Lo único que comparten son las
+frases de Piko (`app/src/ui/piko/frases.ts`), que el panel lee directamente.
+
+**Por qué.** Son plataformas que no se parecen en nada — una placa por USB y un
+navegador contra un teléfono con React Native — y meterlos en el mismo paquete
+sólo sumaría dependencias a los dos. Las frases sí se comparten porque ahí vive
+una regla de producto (la 8), y el robot tiene que hablar igual que la app.
+
+**Costo.** Dos lugares donde mirar, cada uno con su `npm install` y sus
+pruebas. CI corre los dos.
+
+---
+
+## 17. La cara del robot es un teléfono
+
+**Contexto.** El robot necesita expresiones que se lean desde el fondo del
+aula, y hablar.
+
+**Decisión.** La cara es una página web (`/cara`) abierta en un teléfono montado
+en el robot. La placa no sabe nada de expresiones: sólo mueve el motor, el servo
+y las luces.
+
+**Por qué.** Primero se probó con una pantalla OLED monocroma de 128×64
+conectada a la placa: las caras eran mapas de bits dentro del firmware, así que
+cada expresión nueva exigía volver a cargarlo, y de lejos se veía poco. Un
+teléfono ya trae pantalla a color, parlante y navegador; las caras pasan a ser
+un dibujo con estados que se anima solo, y se cambian sin tocar la placa.
+
+**Costo.** Hay que pelear con el navegador para que no apague la pantalla ni
+salga de pantalla completa — ver «Que la pantalla no se apague» en
+[robot/README.md](../robot/README.md).
+
+---
+
+## 18. En el ejercicio del robot, por ahora escucha el maestro
+
+**Contexto.** El robot tiene que decidir si el chico pronunció bien.
+
+**Decisión.** El maestro escucha y aprieta una de dos teclas; todo lo demás —
+festejo, luces, «casi, se dice…» — pasa igual que si lo hubiera decidido el
+robot.
+
+**Por qué.** Reconocer pronunciación en una lengua que ningún modelo conoce es
+un problema aparte, y no hace falta resolverlo para saber si el ejercicio
+funciona en el aula. Cuando haya reconocimiento, lo único que cambia es de dónde
+sale ese sí o ese no.
+
+---
+
+## 19. Las encuestas corren en un servidor, fuera del aula
+
+**Contexto.** Hace falta escuchar a maestros y familias, y sobre todo juntar
+palabras de hablantes nativos para las cuatro lenguas vacías (la 10).
+
+**Decisión.** Un Cloudflare Worker con D1 en
+`encuestas.piko.mugiware.com`, en su propia carpeta. Cada encuesta es un JSON;
+lo que escriben los hablantes se revisa y confirma en un panel y se exporta en
+el formato de los paquetes de la app.
+
+**Por qué.** Quien contesta una encuesta está en su casa o en su trabajo, no en
+el aula, y ahí sí puede haber algo de señal. La regla de «nada depende de
+internet» es para el aula, y se sigue cumpliendo: ni la app ni el robot
+dependen de las encuestas. Aun así, la página está hecha para la señal que hay —
+guarda a cada toque y manda cuando vuelve la conexión.
+
+**Costo.** Es la única parte con un servidor, y por lo tanto con datos
+personales fuera de un teléfono (correos y nombres opcionales). Está cubierto
+en [SECURITY.md](../SECURITY.md) y en «Seguridad» y «Privacidad» de
+[encuestas/README.md](../encuestas/README.md). Las palabras nunca pasan
+directo a la app: siempre las confirma alguien que habla la lengua.
 
 ---
 
 ## Pendientes conocidos
 
-- **El contenido de las cuatro lenguas indígenas.** El riesgo principal.
+- **El contenido de las cuatro lenguas indígenas.** El riesgo principal. *Tu
+  lengua en Piko* ya está juntando palabras; faltan las grabaciones para los
+  ejercicios de escucha.
 - **Presets de aula guardados** e importación de listas por archivo.
 - **Compartir el APK por Bluetooth** desde la propia aplicación: requiere un
   módulo nativo pequeño que lea la ruta del paquete instalado y lance el
@@ -264,3 +358,5 @@ que es.
   alcanza con la puerta de enlace y el barrido de subred.
 - **Probar en dispositivos reales.** Hace falta un mínimo de dos teléfonos
   Android.
+- **Robot:** probar el servo y la segunda tira de LEDs, armarlo entero, y
+  que en el aula la cara entre por la red local y no por el túnel.

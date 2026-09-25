@@ -20,7 +20,8 @@ npm run validate:packs
 | `rma` | Rama | ⬜ Vacío — necesita hablantes |
 | `cab` | Garífuna | ⬜ Vacío — necesita hablantes |
 
-Los códigos son ISO 639-3.
+Los códigos son ISO 639-3. Inglés tiene hoy 6 paquetes con 43 ítems
+(saludos, números, familia, colores, animales y escuela).
 
 > **Las cuatro lenguas indígenas están vacías a propósito.** El vocabulario y la
 > pronunciación tienen que venir de hablantes nativos o de material lingüístico
@@ -91,6 +92,8 @@ El sonido sale de una de dos fuentes:
 
 - **`tts` + `ttsLang`** — síntesis de voz del sistema. **Sólo válido para inglés.**
 - **`audio`** — ruta relativa dentro de `content/audio/`, p. ej. `miq/saludos/naksa.m4a`.
+  La carpeta todavía no existe porque no hay grabaciones: se crea con la
+  primera. El validador comprueba que cada archivo referenciado esté.
 
 Android no tiene voces sintéticas para miskito, mayangna, rama ni garífuna, y
 hacerlas "hablar" con una voz en español enseñaría una pronunciación falsa. Por
@@ -98,6 +101,9 @@ eso el validador **rechaza** `tts` en cualquier idioma que no sea inglés: esos
 paquetes necesitan grabaciones de hablantes reales.
 
 Para que el APK siga siendo liviano, las grabaciones van en mono a unos 24 kbps.
+
+`gloss` es el significado en español, que se revela después de responder. Es
+obligatorio en `listen` y en `build`.
 
 ### `build` — construcción de oraciones por bloques
 
@@ -120,4 +126,26 @@ oración usa "is" dos veces, hay que ofrecer dos bloques "is".
 
 1. Crear `packs/<lang>/<tema>.json` siguiendo el formato de arriba.
 2. Importarlo en `content/index.ts` y agregarlo al arreglo `PACKS`.
-3. Correr `npm run validate:packs`.
+3. Correr `npm run validate:packs`. Avisa también si quedó un archivo en
+   `packs/` sin registrar en el índice.
+
+El contrato completo —qué campos son obligatorios y qué se valida— está en
+[`src/core/content/schema.ts`](../src/core/content/schema.ts).
+
+## Paquetes que vienen de las encuestas
+
+La encuesta [*Tu lengua en Piko*](../../encuestas/README.md#palabras-para-la-app)
+junta palabras y frases escritas por hablantes. Desde su panel, lo que un
+hablante confirmó se descarga ya en este formato: un paquete `choice` por tema
+y uno `build` con frases.
+
+Esos paquetes entran por el mismo camino que cualquier otro — se copian a
+`packs/<lang>/`, se registran en `index.ts` y se validan — y conviene
+revisarlos antes: los distractores y la dificultad (siempre `1`) los arma el
+exportador, no una persona, y sus `id` usan guiones (`miq-saludos`) en lugar de
+la convención `<lang>.<tema>.<nivel>`. Lo que no traen son ejercicios `listen`, porque para eso hacen
+falta grabaciones.
+
+Si un paquete viene de otra fuente, anotá de dónde en el pull request (ver
+[CONTRIBUTING.md](../../CONTRIBUTING.md)): estas lenguas varían entre
+comunidades y el maestro tiene que poder saber de dónde sale lo que enseña.

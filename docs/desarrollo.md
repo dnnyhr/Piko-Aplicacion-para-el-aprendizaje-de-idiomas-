@@ -1,6 +1,27 @@
 # Desarrollo
 
-Todos los comandos se corren desde `app/`.
+## Requisitos
+
+- **Node 22 o más nuevo.** Las pruebas de la app y de las encuestas usan
+  `node:sqlite`, que no existe en versiones anteriores. Es la misma versión que
+  usa CI.
+- **Git.**
+- Sólo para compilar el APK: una cuenta de Expo (gratis). Ver [En el
+  teléfono](#3-en-el-teléfono).
+- Sólo para el robot: [`arduino-cli`](https://arduino.github.io/arduino-cli/) o
+  el IDE de Arduino, y la placa. El panel se prueba sin placa.
+
+Cada parte del repositorio es un proyecto de Node independiente, con su propio
+`npm install`:
+
+| Carpeta | Qué es | Sección |
+|---|---|---|
+| `app/` | La aplicación | 1 a 4 |
+| `robot/panel/` | El puente y el panel del robot | [5](#5-el-panel-del-robot) |
+| `encuestas/` | Las encuestas | [6](#6-las-encuestas) |
+
+Salvo que se diga otra cosa, los comandos de las secciones 1 a 4 se corren
+desde `app/`:
 
 ```bash
 cd app && npm install
@@ -189,6 +210,62 @@ Con dos teléfonos y el *development build* instalado:
 
 ---
 
+## 5. El panel del robot
+
+```bash
+cd robot/panel
+npm install
+npm run prueba      # 44 comprobaciones del puente: no hace falta la placa
+npm start           # http://localhost:4700 (control) y http://localhost:4700/cara
+```
+
+El puerto serie se detecta solo; `npm run puertos` los lista si hay varios. Con
+`node server.js --puerto COM5 --http 4800` se fijan a mano. Si el puerto no
+abre, casi siempre es el Monitor Serie del IDE de Arduino que lo tiene tomado.
+
+El firmware se compila con:
+
+```bash
+arduino-cli compile --fqbn arduino:avr:mega robot/firmware/piko_robot
+```
+
+Cableado, sketches de prueba, el túnel y todo lo demás: [robot/README.md](../robot/README.md).
+
+---
+
+## 6. Las encuestas
+
+```bash
+cd encuestas
+npm install
+npm run prueba      # reglas y Worker completo contra un D1 en memoria
+npm run validar     # revisa las definiciones de definiciones/
+
+cp .dev.vars.example .dev.vars
+npm run db:local
+npm run dev         # http://localhost:8787
+```
+
+Crear una encuesta, publicarla y el despliegue en Cloudflare:
+[encuestas/README.md](../encuestas/README.md).
+
+---
+
+## Qué corre CI
+
+En cada pull request y en cada push a `main`, [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
+corre tres trabajos, con Node 22:
+
+| Trabajo | Comandos |
+|---|---|
+| App | `npm test` · `npm run typecheck` · `npm run validate:packs` |
+| Robot | `npm run prueba` (en `robot/panel`) |
+| Encuestas | `npm run prueba` · `npm run validar` (en `encuestas`) |
+
+Conviene correr localmente los de la parte que tocaste antes de abrir el PR.
+
+---
+
 ## Agregar contenido
 
 Ver [../app/content/README.md](../app/content/README.md) para el formato
@@ -226,4 +303,6 @@ Los cambios se ven al instante en el navegador, sin recompilar.
   funciones nuevas, para que el equipo lea el código en su idioma.
 - **Ningún texto le dice al estudiante que se equivocó.** Ver la decisión 8 en
   [decisiones.md](decisiones.md).
-- Antes de subir cambios: `npm run typecheck && npm test`.
+- Antes de subir cambios, los mismos comandos que corre CI para la parte que
+  tocaste — ver [Qué corre CI](#qué-corre-ci). En la app:
+  `npm test && npm run typecheck && npm run validate:packs`.
