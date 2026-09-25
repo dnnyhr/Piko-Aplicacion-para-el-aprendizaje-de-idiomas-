@@ -281,7 +281,7 @@ function graficaPregunta(p) {
   if (p.tipo === 'traducir') {
     const conRespuesta = p.items.filter((i) => i.n > 0);
     return [
-      h('p', { class: 'meta', style: 'margin:0 0 10px' }, `Las ${Math.min(10, conRespuesta.length)} con más respuestas, de ${p.items.length}. A cada persona le tocan ${p.cuantas} al azar.`),
+      h('p', { class: 'meta', style: 'margin:0 0 10px' }, `Las ${Math.min(10, conRespuesta.length)} con más respuestas, de ${p.items.length}. Cada persona elige hacer ${p.cuantas} o todas.`),
       barras(conRespuesta.slice().sort((a, b) => b.n - a.n).slice(0, 10), p.respondieron),
       h('p', { style: 'margin:12px 0 0' }, h('a', { href: '#palabras', onclick: (e) => { e.preventDefault(); estado.palabrasFiltro.pregunta = p.id; irA('palabras'); } }, 'Ver y confirmar en Palabras →')),
     ];

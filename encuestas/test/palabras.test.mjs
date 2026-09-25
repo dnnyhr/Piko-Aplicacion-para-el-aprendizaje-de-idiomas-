@@ -32,8 +32,9 @@ test('traducir: las que quedan en blanco no cuentan, y no se aceptan cosas fuera
   assert.deepEqual(limpiarTraducciones({ agua: '  li ', sol: '   ', luna: 'x' }), { agua: 'li', luna: 'x' });
   const seccion = def.secciones[1];
   assert.equal(revisar(def, { palabras: { agua: 'li', inventada: 'x' } }, {}, seccion).errores.palabras, 'Hay una palabra que no está en la lista.');
-  const once = Object.fromEntries(palabras.banco.slice(0, 11).map((b) => [b.id, 'x']));
-  assert.match(revisar(def, { palabras: once }, {}, seccion).errores.palabras, /10 como máximo/);
+  // Quien elige "todas" puede escribir el banco entero.
+  const todas = Object.fromEntries(palabras.banco.map((b) => [b.id, 'x']));
+  assert.ok(revisar(def, { palabras: todas }, {}, seccion).ok);
   const r = revisar(def, { palabras: { agua: ' li ', sol: '' } }, {}, seccion);
   assert.ok(r.ok);
   assert.deepEqual(r.limpias.palabras, { agua: 'li' });

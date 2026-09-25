@@ -447,6 +447,10 @@ async function abrirEncuesta(slug, siNoExiste = null) {
         primero?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
+      // Una pregunta puede querer decir algo antes de pasar (traducir ofrece hacer todas).
+      for (const [id, b] of bloques) {
+        if (b.antesDeSeguir && !b.el.hidden && b.antesDeSeguir() === false) return;
+      }
       ir(i + 1);
     };
 
@@ -620,12 +624,19 @@ function nombreLengua(def, p, estado) {
 }
 
 /**
- * Traducir: a cada persona le tocan `cuantas` cosas del banco, al azar. La
- * muestra se guarda con la respuesta en el teléfono, así al volver a abrir
- * la encuesta le siguen tocando las mismas.
+ * Traducir. La persona elige cuánto hacer:
+ *   - "Una parte": `cuantas` del banco. Son distintas para cada persona (así
+ *     entre todos se cubre el banco) y se guardan en el teléfono, así al
+ *     volver a abrir la encuesta le tocan las mismas. Al tocar "Siguiente" se
+ *     le pregunta si quiere responder las que faltan.
+ *   - "Todas": el banco entero, agrupado por tema.
+ * Devuelve el cuerpo y `antesDeSeguir`, que la sección llama antes de pasar
+ * a la siguiente: si devuelve false, la sección se queda.
  */
 function dibujarTraducir(p, estado, set, lengua) {
   estado.muestras ??= {};
+  estado.modos ??= {};
+  estado.ofrecidas ??= {};
   const ids = new Set(p.banco.map((b) => b.id));
   let muestra = estado.muestras[p.id];
   if (!Array.isArray(muestra) || muestra.length !== p.cuantas || muestra.some((id) => !ids.has(id))) {
@@ -633,17 +644,15 @@ function dibujarTraducir(p, estado, set, lengua) {
   }
   const valor = () => estado.respuestas[p.id] ?? {};
   const frases = (p.max ?? 120) > 100;
-  const cuenta = h('p', { class: 'traducir__cuenta', 'aria-live': 'polite' });
-  const contar = () => {
-    const n = Object.values(valor()).filter((v) => v.trim()).length;
-    cuenta.textContent = `${n} de ${muestra.length} escritas`;
-    cuenta.classList.toggle('traducir__cuenta--lista', n === muestra.length);
-  };
+  const cosa = frases ? ['frase', 'frases'] : ['palabra', 'palabras'];
+  const total = p.banco.length;
+  const caja = h('div', { class: 'traducir-caja' });
+  const escritas = (lista) => lista.filter((id) => (valor()[id] ?? '').trim()).length;
 
-  const items = muestra.map((id, i) => {
-    const b = p.banco.find((x) => x.id === id);
-    const campoId = `t-${p.id}-${id}`;
-    const campo = h('input', {
+  const campo = (b, siguiente) => {
+    const campoId = `t-${p.id}-${b.id}`;
+    const item = h('div', { class: `traducir__item${(valor()[b.id] ?? '').trim() ? ' traducir__item--hecho' : ''}` });
+    const input = h('input', {
       class: 'campo traducir__campo',
       id: campoId,
       type: 'text',
@@ -654,40 +663,160 @@ function dibujarTraducir(p, estado, set, lengua) {
       autocorrect: 'off',
       autocapitalize: frases ? 'sentences' : 'none',
       spellcheck: 'false',
-      enterkeyhint: i === muestra.length - 1 ? 'done' : 'next',
-      value: valor()[id] ?? '',
+      enterkeyhint: 'next',
+      value: valor()[b.id] ?? '',
       oninput: (e) => {
         const nuevo = { ...valor() };
-        if (e.target.value.trim()) nuevo[id] = e.target.value;
-        else delete nuevo[id];
+        if (e.target.value.trim()) nuevo[b.id] = e.target.value;
+        else delete nuevo[b.id];
         set(Object.keys(nuevo).length ? nuevo : undefined);
         item.classList.toggle('traducir__item--hecho', Boolean(e.target.value.trim()));
         contar();
       },
       onkeydown: (e) => {
-        // Enter pasa a la siguiente palabra en vez de mandar el formulario.
+        // Enter pasa a la siguiente en vez de mandar el formulario.
         if (e.key !== 'Enter') return;
         e.preventDefault();
-        const siguiente = items[i + 1]?.querySelector('input');
-        if (siguiente) siguiente.focus();
+        const otro = siguiente();
+        if (otro) otro.focus();
         else e.target.blur();
       },
     });
-    const item = h(
-      'div',
-      { class: `traducir__item${(valor()[id] ?? '').trim() ? ' traducir__item--hecho' : ''}` },
+    item.append(
       h(
         'label',
         { class: 'traducir__es', for: campoId },
-        p.temas && b.tema ? h('span', { class: 'traducir__tema' }, p.temas[b.tema]) : null,
+        p.temas && b.tema && estado.modos[p.id] !== 'todo' ? h('span', { class: 'traducir__tema' }, p.temas[b.tema]) : null,
         h('span', { class: `traducir__palabra${frases ? ' traducir__palabra--frase' : ''}` }, frases ? b.texto : `“${b.texto}”`),
       ),
-      campo,
+      input,
     );
     return item;
-  });
-  contar();
-  return [cuenta, h('div', { class: 'traducir' }, items)];
+  };
+
+  // Una lista de campos donde Enter salta al siguiente.
+  const lista = (banco) => {
+    const items = [];
+    banco.forEach((b, i) => items.push(campo(b, () => items[i + 1]?.querySelector('input'))));
+    return items;
+  };
+
+  let contar = () => {};
+  const elegir = (modo) => {
+    estado.modos[p.id] = modo;
+    set(estado.respuestas[p.id]); // guarda el modo aunque todavía no haya escrito nada
+    pintar();
+  };
+
+  function pintar() {
+    const modo = estado.modos[p.id];
+
+    if (!modo) {
+      contar = () => {};
+      caja.replaceChildren(
+        h('p', { class: 'traducir__pregunta' }, `¿Cuántas ${cosa[1]} querés hacer?`),
+        h(
+          'div',
+          { class: 'traducir__modos' },
+          h(
+            'button',
+            { class: 'modo', type: 'button', onclick: () => elegir('parte') },
+            h('b', {}, 'Una parte'),
+            h('span', {}, `${p.cuantas} ${cosa[1]}${frases ? '' : ' de distintos temas'}`),
+          ),
+          h(
+            'button',
+            { class: 'modo', type: 'button', onclick: () => elegir('todo') },
+            h('b', {}, 'Todas'),
+            h('span', {}, `Las ${total} ${cosa[1]}${p.temas ? ', por tema' : ''}`),
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (modo === 'parte') {
+      const banco = muestra.map((id) => p.banco.find((b) => b.id === id));
+      const cuenta = h('p', { class: 'traducir__cuenta', 'aria-live': 'polite' });
+      contar = () => {
+        const n = escritas(muestra);
+        cuenta.textContent = `${n} de ${muestra.length} escritas`;
+        cuenta.classList.toggle('traducir__cuenta--lista', n === muestra.length);
+      };
+      contar();
+      caja.replaceChildren(
+        h('div', { class: 'traducir__barra' }, cuenta, h('button', { class: 'traducir__cambiar', type: 'button', onclick: () => elegir('todo') }, `Hacer las ${total}`)),
+        h('div', { class: 'traducir' }, lista(banco)),
+      );
+      return;
+    }
+
+    // Todas: primero las de la parte que ya empezó, después el resto por tema.
+    const cuenta = h('p', { class: 'traducir__cuenta', 'aria-live': 'polite' });
+    const grupos = [];
+    if (p.temas) {
+      for (const [tema, titulo] of Object.entries(p.temas)) {
+        const del = p.banco.filter((b) => b.tema === tema);
+        if (del.length) grupos.push({ titulo, banco: del });
+      }
+      const sueltas = p.banco.filter((b) => !b.tema || !(b.tema in p.temas));
+      if (sueltas.length) grupos.push({ titulo: 'Otras', banco: sueltas });
+    } else grupos.push({ titulo: null, banco: p.banco });
+
+    const marcadores = [];
+    const bloques = grupos.map((g, i) => {
+      const marcador = h('span', { class: 'traducir__grupo-cuenta' });
+      marcadores.push([marcador, g.banco.map((b) => b.id)]);
+      const cuerpo = h('div', { class: 'traducir' }, lista(g.banco));
+      if (!g.titulo) return cuerpo;
+      // Los temas se abren y se cierran: 120 campos de una vez abruman.
+      return h(
+        'details',
+        { class: 'traducir__grupo', open: i === 0 || escritas(g.banco.map((b) => b.id)) > 0 },
+        h('summary', {}, h('span', {}, g.titulo), marcador),
+        cuerpo,
+      );
+    });
+    contar = () => {
+      const n = escritas(p.banco.map((b) => b.id));
+      cuenta.textContent = `${n} de ${total} escritas`;
+      cuenta.classList.toggle('traducir__cuenta--lista', n === total);
+      for (const [m, lista] of marcadores) m.textContent = `${escritas(lista)}/${lista.length}`;
+    };
+    contar();
+    caja.replaceChildren(
+      h('div', { class: 'traducir__barra' }, cuenta, h('button', { class: 'traducir__cambiar', type: 'button', onclick: () => elegir('parte') }, `Solo ${p.cuantas}`)),
+      ...bloques,
+    );
+  }
+
+  pintar();
+
+  // Al terminar una parte, se ofrece responder el resto (una sola vez).
+  const antesDeSeguir = () => {
+    if (estado.modos[p.id] !== 'parte' || estado.ofrecidas[p.id]) return true;
+    estado.ofrecidas[p.id] = true;
+    set(estado.respuestas[p.id]);
+    const faltan = total - escritas(muestra);
+    const oferta = h(
+      'div',
+      { class: 'traducir__oferta', role: 'dialog', 'aria-label': `¿Responder las ${cosa[1]} que faltan?` },
+      h('p', { class: 'traducir__oferta-titulo' }, escritas(muestra) ? '¡Gracias por esta parte!' : 'Antes de seguir…'),
+      h('p', {}, `¿Te animás a responder las ${faltan} ${cosa[1]} que faltan? Lo que ya escribiste se queda.`),
+      h(
+        'div',
+        { class: 'traducir__oferta-botones' },
+        h('button', { class: 'btn', type: 'button', onclick: () => elegir('todo') }, 'Sí, quiero hacerlas todas'),
+        h('button', { class: 'btn btn--fantasma', type: 'button', onclick: () => caja.closest('form')?.requestSubmit() }, 'No, seguir'),
+      ),
+    );
+    caja.append(oferta);
+    oferta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    oferta.querySelector('.btn')?.focus({ preventScroll: true });
+    return false;
+  };
+
+  return { cuerpo: caja, antesDeSeguir };
 }
 
 function dibujarConcepto(c) {
@@ -741,6 +870,7 @@ function dibujarPregunta(p, estado, alCambiar, def) {
 
   let cuerpo;
   let marcarFaltantes;
+  let antesDeSeguir;
 
   if (p.tipo === 'unica' || p.tipo === 'multiple') {
     const multiple = p.tipo === 'multiple';
@@ -798,7 +928,7 @@ function dibujarPregunta(p, estado, alCambiar, def) {
     sincronizar();
     cuerpo = [lista, campoOtro];
   } else if (p.tipo === 'traducir') {
-    cuerpo = dibujarTraducir(p, estado, set, nombreLengua(def, p, estado));
+    ({ cuerpo, antesDeSeguir } = dibujarTraducir(p, estado, set, nombreLengua(def, p, estado)));
   } else if (p.tipo === 'escala') {
     cuerpo = dibujarEscala(uid, p.min, p.max, p.etiquetaMin, p.etiquetaMax, estado.respuestas[p.id], set, p.texto);
   } else if (p.tipo === 'matriz') {
@@ -863,7 +993,7 @@ function dibujarPregunta(p, estado, alCambiar, def) {
     error,
   );
   if (p.tipo === 'texto') el.querySelector('.campo').id = `${uid}-campo`;
-  return { el, error, marcarFaltantes };
+  return { el, error, marcarFaltantes, antesDeSeguir };
 }
 
 function dibujarEscala(nombre, min, max, etMin, etMax, valor, alElegir, etiqueta) {

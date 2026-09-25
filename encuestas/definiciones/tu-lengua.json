@@ -9,7 +9,7 @@
   "portada": {
     "saludo": "¡Hola! ¿Me enseñás tu lengua?",
     "resaltar": "Piko",
-    "texto": "Piko es una app para que las niñas y los niños aprendan miskito, mayangna, rama, garífuna y kriol. Para armar las lecciones necesitamos a quienes las hablan: te tocan 10 palabras y 3 frases al azar, y escribís cómo se dicen en tu lengua.",
+    "texto": "Piko es una app para que las niñas y los niños aprendan miskito, mayangna, rama, garífuna y kriol. Para armar las lecciones necesitamos a quienes las hablan: escribís cómo se dicen palabras y frases en tu lengua. Podés hacer una parte o todas.",
     "etiqueta": "Tu lengua vale"
   },
   "permiso": {
@@ -210,7 +210,7 @@
       "titulo": "Palabras",
       "piko": {
         "cara": "feliz",
-        "dice": "Te tocan 10 palabras al azar. Escribilas como las decís vos. Si no sabés una, dejala en blanco: no pasa nada."
+        "dice": "Podés hacer 10 palabras o las 120. Escribilas como las decís vos. Si no sabés una, dejala en blanco: no pasa nada."
       },
       "preguntas": [
         {
@@ -844,7 +844,7 @@
       "titulo": "Frases",
       "piko": {
         "cara": "pensando",
-        "dice": "Ahora 3 frases cortitas, de las que se dicen todos los días. Con ellas armamos los ejercicios de ordenar palabras."
+        "dice": "Ahora frases cortitas, de las que se dicen todos los días: 3 o las 15. Con ellas armamos los ejercicios de ordenar palabras."
       },
       "preguntas": [
         {

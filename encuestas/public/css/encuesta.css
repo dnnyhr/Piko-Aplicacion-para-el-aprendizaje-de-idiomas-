@@ -286,6 +286,53 @@ textarea.campo { min-height: 110px; }
 .traducir__palabra--frase { font-size: 1.12rem; }
 .traducir__campo { margin: 0; background: var(--blanco); }
 
+/* Elegir cuánto hacer */
+.traducir__pregunta { margin: 10px 0 10px; font-weight: 700; color: var(--grafito); }
+.traducir__modos { display: grid; gap: 10px; }
+.modo {
+  appearance: none; cursor: pointer; text-align: left; font: inherit; color: inherit;
+  display: grid; gap: 2px; padding: 14px 16px; border-radius: var(--radio-md);
+  background: var(--blanco); border: 2px solid var(--borde); box-shadow: 0 var(--labio) 0 var(--borde-hondo);
+  transition: transform .06s, box-shadow .06s, border-color .15s;
+}
+.modo b { font-family: Fredoka, sans-serif; font-weight: 600; font-size: 1.15rem; color: var(--verde); }
+.modo span { font-size: .92rem; color: var(--tinta); }
+.modo:active { transform: translateY(var(--labio)); box-shadow: 0 0 0 var(--borde-hondo); }
+.modo:focus-visible { outline: 3px solid var(--cielo); outline-offset: 2px; }
+@media (hover: hover) { .modo:hover { border-color: var(--verde-pasto); } }
+
+.traducir__barra { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 6px 0 10px; }
+.traducir__barra .traducir__cuenta { margin: 0; }
+.traducir__cambiar {
+  appearance: none; border: 0; background: none; cursor: pointer; padding: 6px 0;
+  font: 700 .85rem 'Nunito Sans', sans-serif; color: var(--verde); text-decoration: underline; text-underline-offset: 3px;
+}
+
+/* Todas: un bloque plegable por tema */
+.traducir__grupo { border-radius: var(--radio-md); background: var(--papel); margin-bottom: 10px; }
+.traducir__grupo > summary {
+  list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  padding: 12px 14px; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 1.05rem; color: var(--grafito);
+}
+.traducir__grupo > summary::-webkit-details-marker { display: none; }
+.traducir__grupo > summary::after { content: "▾"; color: var(--tinta-suave); transition: transform .15s; }
+.traducir__grupo[open] > summary::after { transform: rotate(180deg); }
+.traducir__grupo > summary > span:first-child { flex: 1; }
+.traducir__grupo-cuenta { font-family: 'Nunito Sans', sans-serif; font-size: .8rem; font-weight: 700; color: var(--tinta-suave); }
+.traducir__grupo > .traducir { padding: 0 8px 8px; }
+.traducir__grupo .traducir__item { background: var(--blanco); }
+.traducir__grupo .traducir__item--hecho { background: #EEF6E3; }
+
+/* Al terminar una parte: ¿hacer las que faltan? */
+.traducir__oferta {
+  margin-top: 14px; padding: 16px; border-radius: var(--radio-md); text-align: center;
+  background: #EAF6FD; border: 2px solid var(--cielo); animation: aparecer .25s ease-out;
+}
+.traducir__oferta-titulo { margin: 0 0 4px; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 1.2rem; color: var(--grafito); }
+.traducir__oferta p { margin: 0 0 12px; }
+.traducir__oferta-botones { display: grid; gap: 8px; }
+@keyframes aparecer { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
 /* Matriz: en el teléfono, cada fila es su enunciado con su escala debajo. */
 .matriz { margin-top: 8px; display: grid; gap: 8px; }
 .matriz__fila {
@@ -594,6 +641,7 @@ textarea.campo { min-height: 110px; }
 @media (prefers-reduced-motion: reduce) {
   .destello, .pikobot { animation: none !important; }
   .encuesta-card, .encuesta-card__imagen img, .encuesta-card__ir svg { transition: none !important; }
+  .traducir__oferta { animation: none !important; }
 }
 
 /* ================================================== tablet (640px en adelante) */
@@ -608,6 +656,8 @@ textarea.campo { min-height: 110px; }
   /* Tarjetas de ancho parejo, centradas: con una o dos no se estiran de más. */
   .lista__tarjetas { grid-template-columns: repeat(auto-fit, minmax(290px, 400px)); justify-content: center; gap: 22px; }
   .final__mas { width: auto; min-width: 260px; }
+  .traducir__modos { grid-template-columns: 1fr 1fr; }
+  .traducir__oferta-botones { display: flex; justify-content: center; flex-wrap: wrap; }
   :root { --gutter: 24px; }
   body { font-size: 17px; }
 

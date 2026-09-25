@@ -186,7 +186,7 @@ No hace falta tocar código ni el esquema.
 | `escala` | Un número (1–5, 0–10…) | `min`, `max`, `etiquetaMin`, `etiquetaMax` |
 | `matriz` | Una escala por fila | `filas`, `escala: { min, max, etiquetaMin, etiquetaMax }` |
 | `texto` | Texto libre | `multilinea`, `max`, `placeholder` |
-| `traducir` | A cada persona le tocan `cuantas` cosas al azar de un `banco` y escribe cómo se dicen | `banco: [{ id, texto, tema }]`, `cuantas`, `temas`, `max`, `lengua` y `zona` (ids de preguntas de opción única anteriores). En el texto, `{lengua}` se cambia por la lengua elegida |
+| `traducir` | Escribir cómo se dicen las cosas de un `banco`. La persona elige una parte (`cuantas`, distintas para cada quien) o todas; si hace una parte, al terminar se le ofrece hacer el resto | `banco: [{ id, texto, tema }]`, `cuantas`, `temas`, `max`, `lengua` y `zona` (ids de preguntas de opción única anteriores). En el texto, `{lengua}` se cambia por la lengua elegida |
 
 Todas aceptan `requerida`, `ayuda` y `mostrarSi: { "pregunta": "rol", "en": ["docente"] }`
 para mostrarse solo según una respuesta anterior. Una opción con `"otro": true`
@@ -209,9 +209,11 @@ u opción con otro significado**: agregá uno nuevo.
 "Tu lengua en Piko" llena los paquetes de `app/content/packs/`, que hoy están
 vacíos. El recorrido:
 
-1. **Recolectar.** A cada persona le tocan 10 palabras (de un banco de 120, por
-   temas) y 3 frases (de 15), al azar. Así nadie se cansa, entre todos se
-   cubre el banco, y la misma palabra la contestan varias personas.
+1. **Recolectar.** Cada persona elige: una parte (10 palabras de distintos
+   temas y 3 frases) o todo (las 120 palabras por tema y las 15 frases). Si
+   hace una parte, al terminarla se le pregunta si quiere hacer las que
+   faltan. Las 10 de la parte son distintas para cada quien: así entre todos
+   se cubre el banco y la misma palabra la contestan varias personas.
 2. **Revisar.** En `/admin`, la pestaña **Palabras** agrupa lo que escribió la
    gente por palabra y por lengua ("Li" y "li." cuentan como lo mismo) y dice
    cuántas personas y de cuántas zonas coinciden. Es **probable** cuando la

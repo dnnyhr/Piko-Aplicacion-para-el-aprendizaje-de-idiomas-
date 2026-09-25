@@ -14,10 +14,11 @@
  *   escala    un número en un rango   → 4
  *   matriz    una escala por fila     → { fila: 4, ... }
  *   texto     texto libre             → "..."
- *   traducir  a cada persona le tocan   → { item: "cómo se dice", ... }
- *             `cuantas` cosas al azar de un `banco` y escribe cómo se dicen
- *             (en la lengua que eligió en la pregunta `lengua`). Las que no
- *             sabe, las deja en blanco.
+ *   traducir  escribir cómo se dicen    → { item: "cómo se dice", ... }
+ *             las cosas de un `banco` (en la lengua que eligió en la
+ *             pregunta `lengua`). La persona elige hacer una parte
+ *             (`cuantas`, distintas para cada quien) o todo el banco. Las
+ *             que no sabe, las deja en blanco.
  */
 
 export const TIPOS = ['unica', 'multiple', 'escala', 'matriz', 'texto', 'traducir'];
@@ -150,7 +151,6 @@ export function revisarPregunta(p, valor, otro) {
         if (typeof texto !== 'string') return 'Escribí cómo se dice.';
         if (texto.length > max) return `Máximo ${max} caracteres en cada una.`;
       }
-      if (Object.keys(valor).length > p.cuantas) return `Son ${p.cuantas} como máximo.`;
       break;
     }
     case 'texto': {
