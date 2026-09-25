@@ -256,15 +256,13 @@ function graficaPregunta(p) {
     if (p.tipo === 'unica' && p.opciones.length <= CATEGORICOS.length) {
       partes.push(apilada(p.opciones.map((o, i) => ({ ...o, color: color(CATEGORICOS[i]) })), p.respondieron));
     } else {
-      partes.push(barras(p.opciones, p.respondieron, { destacar: p.tipo === 'multiple' ? 3 : 1 }));
-      if (p.tipo === 'multiple') partes.push(h('p', { class: 'meta', style: 'margin-top:10px' }, 'Cada quien podía marcar varias: los % no suman 100.'));
+      partes.push(barras(p.opciones, p.respondieron));
     }
     if (p.otros.length) {
       partes.push(
         h('details', { class: 'datos' }, h('summary', {}, `Lo que escribieron en "otro" (${p.otros.length})`), h('ul', { class: 'lista-textos', style: 'margin-top:8px' }, p.otros.map((t) => h('li', {}, t)))),
       );
     }
-    partes.push(tablaDatos(['Opción', 'Personas', '%'], [...p.opciones].sort((a, b) => b.n - a.n).map((o) => [o.texto, o.n, `${pct(o.n, p.respondieron)}%`])));
     return partes;
   }
 
@@ -275,29 +273,10 @@ function graficaPregunta(p) {
       const n = p.distribucion[v] ?? 0;
       cols.push({ etiqueta: String(v), n, tip: `${v}: ${n} (${pct(n, p.respondieron)}%)`, color: colorEscala(v, p.min, p.max) });
     }
-    return [
-      leyendaEscala(p),
-      columnas(cols),
-      tablaDatos(['Valor', 'Personas', '%'], cols.map((c) => [c.etiqueta, c.n, `${pct(c.n, p.respondieron)}%`])),
-    ];
+    return [leyendaEscala(p), columnas(cols)];
   }
 
-  if (p.tipo === 'matriz') {
-    const cab = ['Fila', 'Promedio'];
-    for (let v = p.min; v <= p.max; v++) cab.push(String(v));
-    return [
-      leyendaEscala(p),
-      likert(p),
-      tablaDatos(
-        cab,
-        p.filas.map((f) => {
-          const fila = [f.texto, dec(f.promedio)];
-          for (let v = p.min; v <= p.max; v++) fila.push(f.distribucion[v] ?? 0);
-          return fila;
-        }),
-      ),
-    ];
-  }
+  if (p.tipo === 'matriz') return [leyendaEscala(p), likert(p)];
 
   return listaTextos(p.textos);
 }
@@ -305,21 +284,17 @@ function graficaPregunta(p) {
 /** Frase corta para la tarjeta cerrada: lo más importante de la pregunta. */
 function frase(p) {
   if (!p.respondieron) return 'Sin respuestas todavía';
-  const quienes = personas(p.respondieron);
   if (p.opciones) {
     const top = [...p.opciones].sort((a, b) => b.n - a.n)[0];
-    return [`${p.tipo === 'multiple' ? 'La más marcada' : 'La más elegida'}: `, h('b', {}, top.texto), ` · ${pct(top.n, p.respondieron)}% · ${quienes}`];
+    return [h('b', {}, top.texto), ` · ${pct(top.n, p.respondieron)}%`];
   }
   if (esNps(p)) {
     const r = nps(p);
-    return ['NPS ', h('b', {}, `${r.puntaje > 0 ? '+' : ''}${r.puntaje}`), ` · ${quienes}`];
+    return ['NPS ', h('b', {}, `${r.puntaje > 0 ? '+' : ''}${r.puntaje}`)];
   }
-  if (p.tipo === 'escala') return ['Promedio ', h('b', {}, dec(p.promedio)), ` de ${p.max} · ${quienes}`];
-  if (p.tipo === 'matriz') {
-    const top = p.filas[0];
-    return ['Lo mejor valorado: ', h('b', {}, top.texto), ` (${dec(top.promedio)}) · ${quienes}`];
-  }
-  return [h('b', {}, p.respondieron), p.respondieron === 1 ? ' respuesta escrita' : ' respuestas escritas'];
+  if (p.tipo === 'escala') return ['Promedio ', h('b', {}, dec(p.promedio)), ` de ${p.max}`];
+  if (p.tipo === 'matriz') return [h('b', {}, p.filas[0].texto), ` · ${dec(p.filas[0].promedio)} de ${p.max}`];
+  return [h('b', {}, p.respondieron), p.respondieron === 1 ? ' respuesta' : ' respuestas'];
 }
 
 /* ------------------------------------------- listas con buscador y páginas */
@@ -628,27 +603,7 @@ function vistaPreguntas() {
     },
   );
   const lista = r.preguntas.filter((p) => estado.seccion === 'todas' || p.seccion === estado.seccion);
-  const todasAbiertas = lista.every((p) => estado.abiertas.has(p.id));
-  const alternar = h(
-    'button',
-    {
-      class: 'btn btn--fantasma btn--chico',
-      type: 'button',
-      onclick: () => {
-        for (const p of lista) todasAbiertas ? estado.abiertas.delete(p.id) : estado.abiertas.add(p.id);
-        pintarContenido();
-      },
-    },
-    todasAbiertas ? 'Cerrar todas' : 'Abrir todas',
-  );
-
-  return h(
-    'div',
-    {},
-    filtro,
-    h('div', { style: 'display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px' }, h('p', { class: 'meta' }, `${lista.length} preguntas`), alternar),
-    h('div', { class: 'cartas' }, lista.map(tarjetaPregunta)),
-  );
+  return h('div', {}, filtro, h('div', { class: 'cartas' }, lista.map(tarjetaPregunta)));
 }
 
 function tarjetaPregunta(p) {
@@ -668,7 +623,7 @@ function tarjetaPregunta(p) {
   const llenar = () => {
     if (cuerpo.childElementCount) return;
     poner(cuerpo, 
-      h('p', { class: 'meta', style: 'margin:0 0 12px' }, [p.id, p.anterior ? `pregunta de la versión ${p.anterior}, ya no está en la encuesta` : null].filter(Boolean).join(' · ')),
+      p.anterior ? h('p', { class: 'meta', style: 'margin:0 0 12px' }, `De la versión ${p.anterior}: ya no está en la encuesta.`) : null,
       graficaPregunta(p),
     );
   };
