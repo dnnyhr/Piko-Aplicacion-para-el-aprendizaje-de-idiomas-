@@ -90,6 +90,7 @@ export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
   @media (max-width: 620px) {
     .contenedor { width:100% !important; }
     .relleno { padding-left:22px !important; padding-right:22px !important; }
+    .boton a { padding:15px 26px !important; }
     .titulo { font-size:28px !important; line-height:34px !important; }
   }
 </style>
@@ -97,36 +98,37 @@ export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
 <body style="margin:0;padding:0;background:#F7F0E4;">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#F7F0E4;">Dale pues: acá está tu enlace para descargar Piko. ¡Gracias por echarnos la mano!&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F7F0E4;">
-<tr><td align="center" style="padding:24px 12px 32px;">
+<tr><td align="center" style="padding:20px 10px 28px;">
 
-  <table role="presentation" class="contenedor" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;background:#FFFFFF;border-radius:24px;overflow:hidden;border:2px solid #E3DACA;">
+  <!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="center"><tr><td><![endif]-->
+  <table role="presentation" class="contenedor" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;margin:0 auto;background:#FFFFFF;border-radius:24px;overflow:hidden;border:2px solid #E3DACA;">
     <tr><td style="background:#60C5FA;line-height:0;">
       <img src="${img('correo-cabecera.jpg')}" width="600" alt="Piko y Pikobot te dan las gracias" style="display:block;width:100%;max-width:600px;height:auto;border:0;">
     </td></tr>
 
-    <tr><td class="relleno" style="padding:34px 44px 8px;font-family:${cuerpo};color:#33453B;">
+    <tr><td class="relleno" style="padding:30px 28px 8px;font-family:${cuerpo};color:#33453B;">
       <p style="margin:0 0 10px;font-family:${cuerpo};font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#197249;">Encuesta · ${e.titulo}</p>
       <h1 class="titulo" style="margin:0 0 16px;font-family:${fuente};font-size:34px;line-height:40px;font-weight:700;color:#16241D;">${e.saludo}</h1>
       <p style="margin:0 0 14px;font-size:17px;line-height:27px;">Ya tenemos tus respuestas y las vamos a leer una por una. Lo que más pidan es lo primero que vamos a construir, así que gracias por echarnos la mano.</p>
       <p style="margin:0 0 24px;font-size:17px;line-height:27px;">Dijiste que querías probar Piko antes que nadie. ¡Dale pues! Acá la tenés:</p>
     </td></tr>
 
-    <tr><td align="center" style="padding:0 44px 10px;">
+    <tr><td align="center" style="padding:0 28px 10px;">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-        <td align="center" bgcolor="#97C137" style="background:#97C137;border-radius:16px;border-bottom:5px solid #7BA22C;">
-          <a href="${e.enlace}" target="_blank" style="display:inline-block;padding:16px 36px;font-family:${fuente};font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#0A4530;text-decoration:none;">Descargar Piko</a>
+        <td class="boton" align="center" bgcolor="#97C137" style="background:#97C137;border-radius:16px;border-bottom:5px solid #7BA22C;">
+          <a href="${e.enlace}" target="_blank" style="display:inline-block;padding:16px 28px;font-family:${fuente};font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#0A4530;text-decoration:none;">Descargar Piko</a>
         </td>
       </tr></table>
       <p style="margin:14px 0 0;font-family:${cuerpo};font-size:14px;line-height:21px;color:#33453B;">Es para Android y pesa bastante: si podés, bajala con WiFi.</p>
       <p style="margin:10px 0 0;font-family:${cuerpo};font-size:13px;line-height:20px;color:#6B7A70;">¿El botón no te abre? Copiá este enlace:<br><a href="${e.enlace}" style="color:#0F5D3D;word-break:break-all;">${e.enlace}</a></p>
     </td></tr>
 
-    <tr><td class="relleno" style="padding:28px 44px 8px;">
+    <tr><td class="relleno" style="padding:26px 28px 8px;">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F7F0E4;border-radius:18px;">
-        <tr><td style="padding:22px 24px 10px;font-family:${fuente};font-size:18px;font-weight:600;color:#0F5D3D;">Lo que te espera adentro</td></tr>
+        <tr><td style="padding:20px 20px 10px;font-family:${fuente};font-size:18px;font-weight:600;color:#0F5D3D;">Lo que te espera adentro</td></tr>
         ${puntos
           .map(
-            ([color, texto]) => `<tr><td style="padding:0 24px 14px;">
+            ([color, texto]) => `<tr><td style="padding:0 20px 14px;">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
             <td valign="top" style="padding:7px 12px 0 0;"><div style="width:10px;height:10px;border-radius:5px;background:${color};line-height:10px;font-size:0;">&nbsp;</div></td>
             <td style="font-family:${cuerpo};font-size:15px;line-height:23px;color:#33453B;">${escapar(texto)}</td>
@@ -138,7 +140,7 @@ export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
       </table>
     </td></tr>
 
-    <tr><td class="relleno" style="padding:26px 44px 34px;font-family:${cuerpo};font-size:16px;line-height:25px;color:#33453B;">
+    <tr><td class="relleno" style="padding:24px 28px 32px;font-family:${cuerpo};font-size:16px;line-height:25px;color:#33453B;">
       <p style="margin:0 0 4px;">Con cariño pinolero,</p>
       <p style="margin:0;font-family:${fuente};font-size:18px;font-weight:600;color:#0F5D3D;">Piko, el chocoyito más hablantín de Nicaragua</p>
       <p style="margin:2px 0 0;">y todo el equipo MugiWare</p>
@@ -146,12 +148,13 @@ export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
     </td></tr>
   </table>
 
-  <table role="presentation" class="contenedor" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;">
-    <tr><td class="relleno" style="padding:20px 44px 0;font-family:${cuerpo};font-size:12px;line-height:19px;color:#6B7A70;text-align:center;">
+  <table role="presentation" class="contenedor" width="100%" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;margin:0 auto;">
+    <tr><td class="relleno" style="padding:20px 28px 0;font-family:${cuerpo};font-size:12px;line-height:19px;color:#6B7A70;text-align:center;">
       Te llegó este correo porque dejaste tu dirección en la encuesta «${e.titulo}» y pediste probar la app. No te vamos a volver a escribir sin tu permiso: palabra de chocoyo.<br><br>
       MugiWare · Jinotega, Nicaragua · <a href="https://piko.mugiware.com" style="color:#6B7A70;">piko.mugiware.com</a>
     </td></tr>
   </table>
+  <!--[if mso]></td></tr></table><![endif]-->
 
 </td></tr>
 </table>
