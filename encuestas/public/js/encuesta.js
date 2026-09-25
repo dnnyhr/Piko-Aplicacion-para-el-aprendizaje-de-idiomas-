@@ -614,6 +614,54 @@ async function abrirEncuesta(slug, siNoExiste = null) {
 
 /* ------------------------------------------------------ piezas de pregunta */
 
+/**
+ * Un aviso grande que tapa la pantalla, para una pregunta que no se puede
+ * pasar por alto. Se cierra con uno de los dos botones; Escape o tocar
+ * afuera lo cierran sin hacer nada.
+ */
+function abrirAviso({ titulo, pastilla, numero, texto, nota, si, no }) {
+  const previo = document.activeElement;
+  const cerrar = () => {
+    fondo.remove();
+    document.body.classList.remove('con-aviso');
+    document.removeEventListener('keydown', teclas);
+    previo?.focus?.({ preventScroll: true });
+  };
+  const teclas = (e) => {
+    if (e.key === 'Escape') cerrar();
+    // El foco no sale del aviso mientras está abierto.
+    if (e.key === 'Tab') {
+      const botones = [...caja.querySelectorAll('button')];
+      const i = botones.indexOf(document.activeElement);
+      e.preventDefault();
+      botones[(i + (e.shiftKey ? -1 : 1) + botones.length) % botones.length].focus();
+    }
+  };
+  const boton = ([texto, accion], clase) =>
+    h('button', { class: `btn ${clase}`, type: 'button', onclick: () => (cerrar(), accion()) }, texto);
+
+  const caja = h(
+    'div',
+    { class: 'aviso-grande', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'aviso-titulo', 'aria-describedby': 'aviso-texto' },
+    h('img', { class: 'aviso-grande__piko', src: '/img/piko.svg', alt: '', width: 178, height: 292 }),
+    pastilla ? h('span', { class: 'pastilla' }, pastilla) : null,
+    h('h2', { id: 'aviso-titulo' }, titulo),
+    h(
+      'p',
+      { id: 'aviso-texto', class: 'aviso-grande__texto' },
+      numero !== undefined ? h('b', { class: 'aviso-grande__numero' }, numero) : null,
+      texto,
+    ),
+    nota ? h('p', { class: 'aviso-grande__nota' }, nota) : null,
+    h('div', { class: 'aviso-grande__botones' }, boton(si, 'btn--siguiente'), boton(no, 'btn--papel')),
+  );
+  const fondo = h('div', { class: 'aviso-fondo', onclick: (e) => e.target === fondo && cerrar() }, caja);
+  document.body.append(fondo);
+  document.body.classList.add('con-aviso');
+  document.addEventListener('keydown', teclas);
+  caja.querySelector('.btn')?.focus({ preventScroll: true });
+}
+
 /** Cómo se llama la lengua que eligió la persona, para decir "¿cómo se dice en miskito?". */
 function nombreLengua(def, p, estado) {
   const origen = preguntasDe(def).find((q) => q.id === p.lengua);
@@ -797,22 +845,24 @@ function dibujarTraducir(p, estado, set, lengua) {
     if (estado.modos[p.id] !== 'parte' || estado.ofrecidas[p.id]) return true;
     estado.ofrecidas[p.id] = true;
     set(estado.respuestas[p.id]);
-    const faltan = total - escritas(muestra);
-    const oferta = h(
-      'div',
-      { class: 'traducir__oferta', role: 'dialog', 'aria-label': `¿Responder las ${cosa[1]} que faltan?` },
-      h('p', { class: 'traducir__oferta-titulo' }, escritas(muestra) ? '¡Gracias por esta parte!' : 'Antes de seguir…'),
-      h('p', {}, `¿Te animás a responder las ${faltan} ${cosa[1]} que faltan? Lo que ya escribiste se queda.`),
-      h(
-        'div',
-        { class: 'traducir__oferta-botones' },
-        h('button', { class: 'btn', type: 'button', onclick: () => elegir('todo') }, 'Sí, quiero hacerlas todas'),
-        h('button', { class: 'btn btn--fantasma', type: 'button', onclick: () => caja.closest('form')?.requestSubmit() }, 'No, seguir'),
-      ),
-    );
-    caja.append(oferta);
-    oferta.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    oferta.querySelector('.btn')?.focus({ preventScroll: true });
+    const hechas = escritas(muestra);
+    const faltan = total - hechas;
+    const seguir = () => caja.closest('form')?.requestSubmit();
+    abrirAviso({
+      titulo: hechas ? '¡Gracias por esta parte!' : 'Antes de seguir…',
+      pastilla: hechas ? `${hechas} de ${muestra.length} escritas` : null,
+      numero: faltan,
+      texto: `${cosa[1]} más te esperan. ¿Te animás a responderlas todas?`,
+      nota: hechas ? 'Lo que ya escribiste se queda.' : 'Las que no sepás, las podés dejar en blanco.',
+      si: [
+        'Sí, quiero hacerlas todas',
+        () => {
+          elegir('todo');
+          caja.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        },
+      ],
+      no: ['No, seguir con la encuesta', seguir],
+    });
     return false;
   };
 
