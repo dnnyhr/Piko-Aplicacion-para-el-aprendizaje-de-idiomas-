@@ -6,8 +6,10 @@
  * definición guardada en `versiones_encuesta`, así una encuesta nueva es un
  * JSON nuevo y no código nuevo.
  *
- *   GET  /  y  /e/:slug                        la página, con la vista previa
- *                                              para compartir ya completa
+ *   GET  /                                     la encuesta principal (ENCUESTA_PRINCIPAL)
+ *   GET  /e/                                   la lista de encuestas abiertas
+ *   GET  /e/:slug                              una encuesta
+ *                                              (las tres con la vista previa para compartir ya completa)
  *   GET  /api/encuestas                        las abiertas
  *   GET  /api/encuestas/:slug                  definición vigente
  *   POST /api/encuestas/:slug/respuestas       guardar una respuesta
@@ -140,30 +142,40 @@ async function enrutar(request, env, ctx) {
 async function servirPagina(request, env, url, partes) {
   if (!env.ASSETS) return new Response('No encontrado', { status: 404 });
 
-  // /e/<slug> no existe como archivo: se sirve index.html. Se pide explícito
-  // porque los robots que arman la vista previa no navegan como un navegador.
+  // /e/ y /e/<slug> no existen como archivo: se sirve index.html. Se pide
+  // explícito porque los robots que arman la vista previa no navegan como un navegador.
   const esEncuesta = partes[0] === 'e' && partes.length === 2;
-  const res = await env.ASSETS.fetch(esEncuesta ? new Request(new URL('/', url), request) : request);
+  const esLista = partes[0] === 'e' && partes.length === 1;
+  const res = await env.ASSETS.fetch(esEncuesta || esLista ? new Request(new URL('/', url), request) : request);
   if (!(res.headers.get('content-type') ?? '').includes('text/html') || typeof HTMLRewriter === 'undefined') return res;
 
-  let titulo = null;
-  let descripcion = null;
-  if (esEncuesta) {
+  // En / se abre la encuesta principal: el enlace corto siempre lleva a la
+  // misma, aunque haya varias abiertas. La lista completa está en /e/.
+  const principal = partes.length === 0 && /^[a-z0-9-]+$/.test(env.ENCUESTA_PRINCIPAL ?? '') ? env.ENCUESTA_PRINCIPAL : null;
+  const slug = esEncuesta ? partes[1] : principal;
+
+  let titulo = esLista ? 'Encuestas de Piko' : null;
+  let descripcion = esLista ? 'Elegí una encuesta y ayudanos a construir Piko, la app para aprender las lenguas de Nicaragua.' : null;
+  let imagen = esLista ? '/img/og-encuestas.jpg' : null;
+  if (slug) {
     try {
-      const e = await cargar(env, partes[1]);
+      const e = await cargar(env, slug);
       if (e && e.estado !== 'borrador') {
         titulo = e.definicion.titulo;
         descripcion = e.definicion.descripcion || null;
+        imagen = e.definicion.imagen ?? null;
       }
     } catch {
       /* sin D1 la página se sirve igual, con los textos genéricos */
     }
   }
 
-  const absoluta = (el) => el.setAttribute('content', new URL(el.getAttribute('content') ?? '/', url.origin).href);
+  // og:image tiene que ser una dirección completa; si la encuesta tiene su propia imagen, va esa.
+  const absoluta = (el) => el.setAttribute('content', new URL(imagen ?? el.getAttribute('content') ?? '/', url.origin).href);
   const poner = (valor) => ({ element: (el) => valor && el.setAttribute('content', valor) });
 
   return new HTMLRewriter()
+    .on('head', { element: (el) => principal && el.append(`<meta name="piko:principal" content="${principal}">`, { html: true }) })
     .on('meta[property="og:image"]', { element: absoluta })
     .on('meta[name="twitter:image"]', { element: absoluta })
     .on('meta[property="og:url"]', { element: (el) => el.setAttribute('content', url.origin + url.pathname) })
@@ -172,13 +184,14 @@ async function servirPagina(request, env, url, partes) {
     .on('meta[property="og:description"]', poner(descripcion))
     .on('meta[name="twitter:description"]', poner(descripcion))
     .on('meta[name="description"]', poner(descripcion))
-    .on('title', { element: (el) => titulo && el.setInnerContent(`${titulo} · Piko`) })
+    .on('title', { element: (el) => titulo && el.setInnerContent(esLista ? titulo : `${titulo} · Piko`) })
     .transform(res);
 }
 
 /* ---------------------------------------------------------------- lectura */
 
 async function listarAbiertas(env) {
+  const principal = env.ENCUESTA_PRINCIPAL ?? null;
   const { results } = await env.DB.prepare(
     `SELECT e.slug, e.titulo, v.definicion
        FROM encuestas e
@@ -188,8 +201,17 @@ async function listarAbiertas(env) {
   ).all();
   const encuestas = results.map((r) => {
     const def = JSON.parse(r.definicion);
-    return { slug: r.slug, titulo: r.titulo, descripcion: def.descripcion ?? '', minutos: def.minutos ?? null };
+    return {
+      slug: r.slug,
+      titulo: r.titulo,
+      descripcion: def.descripcion ?? '',
+      minutos: def.minutos ?? null,
+      imagen: def.imagen ?? '/img/og.jpg',
+      principal: r.slug === principal,
+    };
   });
+  // La principal primero; las demás, de la más nueva a la más vieja.
+  encuestas.sort((a, b) => Number(b.principal) - Number(a.principal));
   return json({ encuestas }, 200, { 'cache-control': 'public, max-age=60' });
 }
 

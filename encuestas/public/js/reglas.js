@@ -205,6 +205,8 @@ export function validarDefinicion(def) {
   if (!def.titulo) e.push('titulo: hace falta.');
   if (def.estado && !['borrador', 'abierta', 'cerrada'].includes(def.estado))
     e.push('estado: borrador, abierta o cerrada.');
+  if (def.imagen !== undefined && !/^\/img\/[a-z0-9-]+\.(jpg|jpeg|png|webp)$/.test(def.imagen))
+    e.push('imagen: una ruta dentro de public/img, como /img/og-mi-encuesta.jpg.');
   if (!Array.isArray(def.secciones) || def.secciones.length === 0) {
     e.push('secciones: hace falta al menos una.');
     return e;

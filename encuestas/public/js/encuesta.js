@@ -19,6 +19,8 @@ const progreso = document.getElementById('progreso');
 const pasoTexto = document.getElementById('paso');
 
 const CLAVE_PENDIENTES = 'piko-encuestas:pendientes';
+// Las que ya se respondieron en este teléfono, para marcarlas en la lista.
+const CLAVE_HECHAS = 'piko-encuestas:hechas';
 
 /* ------------------------------------------------------------ utilidades */
 
@@ -196,40 +198,91 @@ async function iniciar() {
   const ruta = location.pathname.replace(/\/+$/, '');
   const m = ruta.match(/^\/e\/([a-z0-9-]+)$/);
   if (m) return abrirEncuesta(m[1]);
-  return listar();
+  if (ruta === '/e') return listar();
+  // En la raíz, el Worker dice cuál es la encuesta principal. Si no hay (o
+  // ya no existe), la raíz se comporta como siempre: la lista, o directo a
+  // la única abierta.
+  const principal = document.querySelector('meta[name="piko:principal"]')?.content;
+  if (principal) return abrirEncuesta(principal, () => listar({ directo: true }));
+  return listar({ directo: true });
 }
 
-async function listar() {
+async function listar({ directo = false } = {}) {
   mostrarBarra(false);
   let encuestas = [];
   try {
     const res = await fetch('/api/encuestas');
     encuestas = (await res.json()).encuestas ?? [];
   } catch {
-    return sinSenal(listar);
+    return sinSenal(() => listar({ directo }));
   }
-  if (encuestas.length === 1) {
+  if (directo && encuestas.length === 1) {
     history.replaceState(null, '', `/e/${encuestas[0].slug}${location.search}`);
     return abrirEncuesta(encuestas[0].slug);
   }
+  document.title = 'Encuestas de Piko';
+  const hechas = new Set(leer(CLAVE_HECHAS, []));
+
   pantalla(
     h(
       'section',
-      { class: 'contenedor centro' },
-      piko(encuestas.length ? 'saludo' : 'pensando'),
-      h('h1', {}, encuestas.length ? 'Encuestas de Piko' : 'Por ahora no hay encuestas abiertas'),
-      h('p', {}, encuestas.length ? 'Elegí una. Cada respuesta nos ayuda a decidir qué construir.' : 'Volvé pronto: Piko siempre tiene algo que preguntar.'),
+      { class: 'lista' },
       h(
-        'div',
-        { class: 'tarjetas' },
-        encuestas.map((e) =>
+        'header',
+        { class: 'lista__cabeza cielo' },
+        fondo('portada'),
+        h(
+          'div',
+          { class: 'lista__cabeza-grid' },
+          sello(),
           h(
-            'a',
-            { class: 'tarjeta', href: `/e/${e.slug}${location.search}` },
-            h('h2', {}, e.titulo),
-            h('p', {}, e.descripcion, e.minutos ? ` · ${e.minutos} min` : ''),
+            'div',
+            { class: 'lista__saludo' },
+            piko(encuestas.length ? 'saludo' : 'pensando'),
+            h(
+              'div',
+              { class: 'papel lista__papel' },
+              h('span', { class: 'pastilla' }, encuestas.length === 1 ? '1 encuesta abierta' : `${encuestas.length} encuestas abiertas`),
+              h('h1', {}, encuestas.length ? ['Encuestas de ', h('em', {}, 'Piko')] : 'Por ahora no hay encuestas abiertas'),
+              h(
+                'p',
+                {},
+                encuestas.length
+                  ? 'Elegí una. Cada respuesta nos ayuda a construir Piko con la gente que lo va a usar.'
+                  : 'Volvé pronto: Piko siempre tiene algo que preguntar.',
+              ),
+            ),
           ),
         ),
+      ),
+      h('div', { class: 'lista__tarjetas' }, encuestas.map((e) => tarjetaEncuesta(e, hechas.has(e.slug)))),
+    ),
+  );
+}
+
+/** Una encuesta en la lista: su imagen para compartir, título, de qué trata y cuánto tarda. */
+function tarjetaEncuesta(e, hecha) {
+  const enCurso = !hecha && Object.keys(leer(`piko-encuesta:${e.slug}`, {})?.respuestas ?? {}).length > 0;
+  const marca = hecha ? h('span', { class: 'encuesta-card__marca encuesta-card__marca--hecha' }, icono('check'), 'Ya la respondiste') : enCurso ? h('span', { class: 'encuesta-card__marca' }, 'A medias') : null;
+  return h(
+    'a',
+    { class: `encuesta-card${hecha ? ' encuesta-card--hecha' : ''}`, href: `/e/${e.slug}${location.search}` },
+    h(
+      'div',
+      { class: 'encuesta-card__imagen' },
+      h('img', { src: e.imagen, alt: '', width: 1200, height: 630, loading: 'lazy', decoding: 'async' }),
+      marca,
+    ),
+    h(
+      'div',
+      { class: 'encuesta-card__cuerpo' },
+      h('h2', {}, e.titulo),
+      e.descripcion ? h('p', {}, e.descripcion) : null,
+      h(
+        'div',
+        { class: 'encuesta-card__pie' },
+        e.minutos ? h('span', { class: 'encuesta-card__minutos' }, `${e.minutos} min`) : h('span'),
+        h('span', { class: 'encuesta-card__ir' }, hecha ? 'Ver de nuevo' : enCurso ? 'Seguir' : 'Responder', icono('flecha')),
       ),
     ),
   );
@@ -258,18 +311,18 @@ function noExiste(mensaje) {
       piko('pensando'),
       h('h1', {}, mensaje),
       h('p', {}, 'Puede que el enlace esté incompleto o que la encuesta ya haya cerrado.'),
-      h('a', { class: 'btn btn--papel', href: '/' }, 'Ver encuestas abiertas'),
+      h('a', { class: 'btn btn--papel', href: '/e/' }, 'Ver encuestas abiertas'),
     ),
   );
 }
 
 /* --------------------------------------------------------------- encuesta */
 
-async function abrirEncuesta(slug) {
+async function abrirEncuesta(slug, siNoExiste = null) {
   let datos;
   try {
     const res = await fetch(`/api/encuestas/${slug}`);
-    if (res.status === 404) return noExiste('No encontramos esa encuesta');
+    if (res.status === 404) return siNoExiste ? siNoExiste() : noExiste('No encontramos esa encuesta');
     datos = await res.json();
   } catch {
     return sinSenal(() => abrirEncuesta(slug));
@@ -476,6 +529,7 @@ async function abrirEncuesta(slug) {
     }
 
     escribir(clave, undefined);
+    escribir(CLAVE_HECHAS, [...new Set([...leer(CLAVE_HECHAS, []), slug])]);
     final(enCola);
   }
 
@@ -530,6 +584,7 @@ async function abrirEncuesta(slug) {
               botonCompartir,
             ),
           ),
+          h('a', { class: 'btn btn--papel final__mas', href: '/e/' }, 'Ver más encuestas', icono('flecha')),
           h(
             'button',
             {

@@ -21,7 +21,7 @@
     "directory": "./public",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*", "/", "/e/*"]
+    "run_worker_first": ["/api/*", "/", "/e", "/e/*"]
   },
 
   "d1_databases": [
@@ -36,6 +36,9 @@
     }
   ],
 
+  // ENCUESTA_PRINCIPAL  la que se abre en la raíz del dominio (/). La lista
+  //                     de todas las abiertas está en /e/.
+  //
   // Correo automático con el enlace de descarga (ver src/correo.js).
   // Vacío = no se manda y queda anotado como "omitido" en la tabla correos.
   //   CORREO_REMITENTE  una dirección de un dominio verificado en Resend
@@ -45,7 +48,8 @@
   "vars": {
     "CORREO_REMITENTE": "Piko <piko@mugiware.com>",
     "APP_DESCARGA_URL": "https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/releases/latest/download/piko.apk",
-    "CORREO_RESPUESTA": ""
+    "CORREO_RESPUESTA": "",
+    "ENCUESTA_PRINCIPAL": "que-le-falta-a-piko"
   },
 
   // Secretos (no van en este archivo):

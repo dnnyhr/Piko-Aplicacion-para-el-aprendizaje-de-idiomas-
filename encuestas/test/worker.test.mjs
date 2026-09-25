@@ -210,3 +210,18 @@ test('las respuestas a preguntas que se sacaron siguen en el resumen y el CSV', 
   assert.ok(cabecera.split(',').includes('contacto'));
   assert.ok(fila.includes('+505 8888 1234'));
 });
+
+test('la lista pone primero la encuesta principal y trae la imagen de cada una', async () => {
+  env.ENCUESTA_PRINCIPAL = real.slug;
+  await publicar({ ...real, estado: 'abierta' });
+  const otra = { ...real, slug: 'tu-lengua', titulo: 'Tu lengua en Piko', imagen: '/img/og-tu-lengua.jpg', estado: 'abierta' };
+  await publicar(otra);
+  const { encuestas } = await (await llamar('/api/encuestas')).json();
+  assert.deepEqual(
+    encuestas.map((e) => [e.slug, e.principal, e.imagen]),
+    [
+      [real.slug, true, '/img/og.jpg'],
+      ['tu-lengua', false, '/img/og-tu-lengua.jpg'],
+    ],
+  );
+});

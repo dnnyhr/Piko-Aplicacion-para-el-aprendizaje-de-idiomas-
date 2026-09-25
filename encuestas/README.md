@@ -113,10 +113,11 @@ npx wrangler d1 execute piko-encuestas --remote --command "SELECT estado, detall
 
 ## Vista previa al compartir
 
-Al pegar el enlace en WhatsApp, Facebook o X aparece `public/img/og.jpg`
-(1200×630) con el título de la encuesta. Esas apps no ejecutan JavaScript ni
+Al pegar el enlace en WhatsApp, Facebook o X aparece la imagen de la encuesta
+(`imagen` en su definición; si no tiene, `public/img/og.jpg`) con su título.
+La lista `/e/` usa `public/img/og-encuestas.jpg`. Esas apps no ejecutan JavaScript ni
 aceptan direcciones relativas, así que el Worker atiende `/` y `/e/<slug>`
-(ver `run_worker_first` en `wrangler.jsonc`) y completa las etiquetas Open
+y `/e/` (ver `run_worker_first` en `wrangler.jsonc`) y completa las etiquetas Open
 Graph con el dominio desde el que se abrió la página y con el título y la
 descripción de esa encuesta. Funciona igual en `workers.dev` y en un dominio
 propio.
@@ -140,7 +141,8 @@ queda quieto mirando de frente.
 
 | Ruta | Qué es |
 |---|---|
-| `/` | Lista de encuestas abiertas (si hay una sola, entra directo) |
+| `/` | La encuesta principal (`ENCUESTA_PRINCIPAL` en `wrangler.jsonc`). Sin principal: la lista, o directo a la única abierta |
+| `/e/` | Todas las encuestas abiertas, cada una con su imagen; marca las que ya se respondieron en ese teléfono. Al final de cada encuesta, "Ver más encuestas" lleva acá |
 | `/e/<slug>` | La encuesta. `?origen=whatsapp` queda guardado con la respuesta, para saber qué enlace funcionó mejor |
 | `/admin` | Resultados en pestañas (Resumen, Preguntas, Correos, Contactos) con gráficas, filtros, buscador y descarga en CSV (pide el `ADMIN_TOKEN`) |
 | `GET /api/encuestas/<slug>` | Definición vigente |
@@ -154,7 +156,10 @@ queda quieto mirando de frente.
 1. Copiá `definiciones/que-le-falta-a-piko.json` a `definiciones/<slug>.json`
    (el nombre del archivo tiene que ser el slug).
 2. Cambiá el contenido. Empezá con `"estado": "borrador"`: un borrador solo
-   lo ve quien manda el token.
+   lo ve quien manda el token. Para que se reconozca al compartirla y en la
+   lista de `/e/`, dale su propia imagen de 1200×630: guardala en
+   `public/img/` y poné `"imagen": "/img/og-<slug>.jpg"` (sin imagen usa
+   `og.jpg`).
 3. `npm run validar` revisa que esté bien armada (CI lo corre en cada PR).
 4. `npm run publicar <slug>`. Cuando esté lista, pasá a `"abierta"` y publicá
    de nuevo; para cerrarla, `"cerrada"`.

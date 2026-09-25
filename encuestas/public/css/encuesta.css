@@ -493,6 +493,59 @@ textarea.campo { min-height: 110px; }
 .final__acciones .btn { min-width: 0; padding-inline: .5rem; letter-spacing: .03em; }
 .final__otra { white-space: normal; text-align: center; color: var(--grafito) !important; background: rgba(247,240,228,.8) !important; border-radius: 999px; padding-inline: 16px !important; }
 
+.final__mas { width: 100%; gap: 8px; }
+.final__mas svg { width: 18px; height: 18px; }
+
+/* ------------------------------------------------ lista de encuestas (/e/) */
+
+.lista { padding-bottom: max(36px, env(safe-area-inset-bottom)); }
+.lista__cabeza { padding: calc(14px + var(--seguro-arriba)) 0 70px; }
+.lista__cabeza-grid { width: min(1040px, 100% - 2 * var(--gutter)); margin-inline: auto; display: grid; gap: 16px; justify-items: start; }
+.lista__saludo { display: flex; align-items: flex-end; width: 100%; }
+.lista__saludo .piko { width: 74px; flex: none; margin-right: -12px; margin-bottom: -6px; position: relative; z-index: 1; filter: drop-shadow(0 12px 14px rgba(3,26,44,.3)); }
+.lista__papel { flex: 1; min-width: 0; padding-left: 22px; }
+.lista__papel h1 { font-size: clamp(1.7rem, 8vw, 2.9rem); margin: 10px 0 6px; }
+.lista__papel h1 em { font-style: normal; color: var(--verde); }
+.lista__papel p { margin: 0; color: var(--tinta); font-size: .98rem; }
+
+.lista__tarjetas {
+  width: min(1040px, 100% - 2 * var(--gutter)); margin: -44px auto 0; position: relative; z-index: 2;
+  display: grid; gap: 18px; grid-template-columns: 1fr;
+}
+.encuesta-card {
+  display: flex; flex-direction: column; min-width: 0; overflow: hidden;
+  text-decoration: none; color: inherit; background: var(--blanco);
+  border: 2px solid var(--borde); border-radius: var(--radio-lg);
+  box-shadow: 0 var(--labio) 0 var(--borde-hondo), 0 16px 30px rgba(3,26,44,.10);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.encuesta-card:active { transform: translateY(var(--labio)); box-shadow: 0 0 0 var(--borde-hondo), 0 8px 18px rgba(3,26,44,.08); }
+.encuesta-card:focus-visible { outline: 3px solid var(--cielo); outline-offset: 3px; }
+.encuesta-card__imagen { position: relative; aspect-ratio: 1200 / 630; background: var(--cielo-medio); overflow: hidden; border-bottom: 2px solid var(--borde); }
+.encuesta-card__imagen img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+.encuesta-card__marca {
+  position: absolute; top: 10px; left: 10px; display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 999px; background: var(--papel); color: var(--grafito);
+  font-family: Fredoka, sans-serif; font-weight: 600; font-size: .8rem; box-shadow: 0 6px 14px rgba(3,26,44,.22);
+}
+.encuesta-card__marca svg { width: 13px; height: 13px; }
+.encuesta-card__marca--hecha { background: var(--verde); color: #fff; }
+.encuesta-card__cuerpo { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 16px 18px 18px; }
+.encuesta-card__cuerpo h2 { margin: 0; font-size: 1.28rem; line-height: 1.2; color: var(--grafito); }
+.encuesta-card__cuerpo p {
+  margin: 0; color: var(--tinta); font-size: .95rem; line-height: 1.45;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.encuesta-card__pie { margin-top: auto; padding-top: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.encuesta-card__minutos { font-size: .82rem; font-weight: 700; color: var(--verde-hondo); background: #E6F1E9; padding: 4px 11px; border-radius: 999px; }
+.encuesta-card__ir { display: inline-flex; align-items: center; gap: 6px; font-family: Fredoka, sans-serif; font-weight: 600; font-size: 1.02rem; color: var(--verde); }
+.encuesta-card__ir svg { width: 18px; height: 18px; transition: transform .15s ease; }
+@media (hover: hover) {
+  .encuesta-card:hover { transform: translateY(-3px); box-shadow: 0 calc(var(--labio) + 3px) 0 var(--borde-hondo), 0 22px 38px rgba(3,26,44,.16); }
+  .encuesta-card:hover .encuesta-card__imagen img { transform: scale(1.035); }
+  .encuesta-card:hover .encuesta-card__ir svg { transform: translateX(3px); }
+}
+
 /* ------------------------------------------------ lista, avisos y cargando */
 
 .centro { text-align: center; padding: 32px 0 56px; }
@@ -522,11 +575,21 @@ textarea.campo { min-height: 110px; }
 
 @media (prefers-reduced-motion: reduce) {
   .destello, .pikobot { animation: none !important; }
+  .encuesta-card, .encuesta-card__imagen img, .encuesta-card__ir svg { transition: none !important; }
 }
 
 /* ================================================== tablet (640px en adelante) */
 
 @media (min-width: 640px) {
+  .lista__cabeza { padding-bottom: 84px; }
+  /* La cabecera, del mismo ancho que dos tarjetas. */
+  .lista__cabeza-grid, .lista__tarjetas { width: min(846px, 100% - 2 * var(--gutter)); }
+  .lista__saludo .piko { width: 108px; margin-right: -16px; }
+  .lista__papel { padding: 26px 28px 24px 34px; }
+  .lista__papel p { font-size: 1.05rem; max-width: 52ch; }
+  /* Tarjetas de ancho parejo, centradas: con una o dos no se estiran de más. */
+  .lista__tarjetas { grid-template-columns: repeat(auto-fit, minmax(290px, 400px)); justify-content: center; gap: 22px; }
+  .final__mas { width: auto; min-width: 260px; }
   :root { --gutter: 24px; }
   body { font-size: 17px; }
 
