@@ -21,6 +21,7 @@
  *   POST /api/admin/correos/:respuesta/reenviar         reenviar uno (token)
  *   GET  /api/admin/encuestas/:slug/contactos  contactos agregados a mano (token)
  *   POST /api/admin/encuestas/:slug/contactos  agregar contactos, uno por línea (token)
+ *   GET  /api/admin/encuestas/:slug/contactos/viejos  contactos escritos en preguntas que ya no están (token)
  *   POST /api/admin/contactos/:id/enviar       mandar el enlace a uno (token)
  *   DELETE /api/admin/contactos/:id            borrar uno (token)
  */
@@ -81,6 +82,7 @@ async function enrutar(request, env, ctx) {
     if (b === 'correos' && c && d === 'reenviar' && m === 'POST') return reenviarUno(env, c, url);
     if (b === 'encuestas' && c && d === 'contactos' && !e && m === 'GET') return listarContactos(env, c);
     if (b === 'encuestas' && c && d === 'contactos' && !e && m === 'POST') return agregarContactos(request, env, c, url);
+    if (b === 'encuestas' && c && d === 'contactos' && e === 'viejos' && m === 'GET') return contactosViejos(env, c);
     if (b === 'contactos' && c && d === 'enviar' && m === 'POST') return enviarAContacto(env, c, url);
     if (b === 'contactos' && c && !d && m === 'DELETE') return borrarContacto(env, c);
   }
@@ -378,11 +380,15 @@ async function resumen(env, slug) {
     .all();
 
   const { results: textos } = await env.DB.prepare(
-    `SELECT i.pregunta, i.opcion, i.texto, r.creada_en
-       FROM respuestas_items i JOIN respuestas r ON r.id = i.respuesta_id
-      WHERE r.encuesta_id = ? AND i.texto IS NOT NULL
-      ORDER BY r.creada_en DESC
-      LIMIT 500`,
+    // Hasta 200 textos por pregunta (los más nuevos): un límite global dejaba
+    // afuera a las preguntas con respuestas viejas, como el "contacto" de v1.
+    `SELECT pregunta, opcion, texto, creada_en FROM (
+       SELECT i.pregunta, i.opcion, i.texto, r.creada_en,
+              ROW_NUMBER() OVER (PARTITION BY i.pregunta ORDER BY r.creada_en DESC) AS n
+         FROM respuestas_items i JOIN respuestas r ON r.id = i.respuesta_id
+        WHERE r.encuesta_id = ? AND i.texto IS NOT NULL
+     ) WHERE n <= 200
+     ORDER BY creada_en DESC`,
   )
     .bind(e.id)
     .all();
@@ -663,6 +669,53 @@ async function agregarContactos(request, env, slug, url) {
   }
 
   return json({ agregados: nuevos.length, repetidos, invalidas, recortado, maxLineas: MAX_LINEAS, ...cuenta, sinEnviar }, 201);
+}
+
+/**
+ * Los contactos que la gente escribió en preguntas de texto que ya no están
+ * en la encuesta (como "contacto" antes de separarla en correo y teléfono).
+ * Busca en todas las respuestas, sin límite, y devuelve solo las líneas que
+ * tienen un correo o un número válido y que todavía no se agregaron.
+ */
+async function contactosViejos(env, slug) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  const viejas = (await preguntasHistoricas(env, e)).filter((p) => p.anterior && p.tipo === 'texto');
+  if (!viejas.length) return json({ lineas: [], yaAgregados: 0, preguntas: [] });
+
+  const { results } = await env.DB.prepare(
+    `SELECT DISTINCT i.texto
+       FROM respuestas_items i JOIN respuestas r ON r.id = i.respuesta_id
+      WHERE r.encuesta_id = ? AND i.texto IS NOT NULL
+        AND i.pregunta IN (${viejas.map(() => '?').join(', ')})`,
+  )
+    .bind(e.id, ...viejas.map((p) => p.id))
+    .all();
+
+  let existentes = { correos: new Set(), telefonos: new Set() };
+  try {
+    const { results: ya } = await env.DB.prepare('SELECT correo, telefono FROM contactos WHERE encuesta_id = ?').bind(e.id).all();
+    existentes = {
+      correos: new Set(ya.map((x) => x.correo).filter(Boolean)),
+      telefonos: new Set(ya.map((x) => x.telefono).filter(Boolean)),
+    };
+  } catch {
+    /* sin la tabla de contactos todavía: no hay nada agregado */
+  }
+
+  const lineas = [];
+  let yaAgregados = 0;
+  for (const { texto } of results) {
+    const linea = texto.replace(/\s+/g, ' ').trim();
+    const [c] = leerContactos(linea).contactos;
+    if (!c) continue;
+    if ((c.correo && existentes.correos.has(c.correo)) || (c.telefono && existentes.telefonos.has(c.telefono))) {
+      yaAgregados++;
+      continue;
+    }
+    lineas.push(linea);
+  }
+  return json({ lineas, yaAgregados, preguntas: viejas.map((p) => ({ id: p.id, texto: p.texto, version: p.anterior })) });
 }
 
 async function enviarAContacto(env, id, url) {

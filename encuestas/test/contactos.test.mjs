@@ -94,3 +94,37 @@ test('los contactos a mano no cuentan como respuestas', async () => {
   const r = await (await llamar(`/api/admin/encuestas/${real.slug}/resumen`)).json();
   assert.equal(r.respuestas, 0);
 });
+
+test('traer contactos viejos: aunque haya cientos de respuestas nuevas, y sin repetir los ya agregados', async () => {
+  const v1 = structuredClone(real);
+  v1.secciones[4].preguntas = v1.secciones[4].preguntas.filter((p) => !['nombre', 'correo', 'whatsapp'].includes(p.id));
+  v1.secciones[4].preguntas.push({ id: 'contacto', tipo: 'texto', texto: '¿Cómo te avisamos?', max: 120 });
+  delete v1.correo;
+  const base = {
+    rol: 'estudiante', edad: '12_17', lenguas_habla: ['espanol'], lengua_aprender: ['miskito'], telefono: 'propio', internet: 'recargas',
+    app_funciones: Object.fromEntries(real.secciones[2].preguntas[0].filas.map((f) => [f.id, 3])),
+    robot_interes: 4, robot_funciones: Object.fromEntries(real.secciones[3].preguntas[1].filas.map((f) => [f.id, 4])),
+    robot_correccion: 'pistas', robot_confianza: 4,
+  };
+  const responder = (v, extra) =>
+    llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', token: null, body: { id: crypto.randomUUID(), version: v, respuestas: { ...base, ...extra }, otros: {} } });
+
+  await llamar(`/api/admin/encuestas/${real.slug}`, { method: 'PUT', body: v1 });
+  await responder(1, { contacto: 'Profe Lucía  lucia@correo.com' });
+  await responder(1, { contacto: '+505 8777 6655' });
+  await responder(1, { contacto: 'mañana te aviso' });
+  await llamar(`/api/admin/encuestas/${real.slug}`, { method: 'PUT', body: real });
+  // Más de 500 respuestas nuevas con texto: antes empujaban a los contactos viejos fuera del resumen.
+  for (let i = 0; i < 260; i++) await responder(2, { una_cosa: `idea ${i}`, preocupa: `duda ${i}` });
+
+  const r = await (await llamar(`/api/admin/encuestas/${real.slug}/contactos/viejos`)).json();
+  assert.deepEqual(r.lineas.sort(), ['+505 8777 6655', 'Profe Lucía lucia@correo.com']);
+  assert.deepEqual(r.preguntas.map((p) => p.id), ['contacto']);
+
+  const resumen = await (await llamar(`/api/admin/encuestas/${real.slug}/resumen`)).json();
+  assert.equal(resumen.preguntas.find((p) => p.id === 'contacto').textos.length, 3, 'el resumen también los muestra');
+
+  await agregar(r.lineas.join('\n'), false);
+  const otra = await (await llamar(`/api/admin/encuestas/${real.slug}/contactos/viejos`)).json();
+  assert.deepEqual([otra.lineas, otra.yaAgregados], [[], 2]);
+});

@@ -112,21 +112,18 @@ async function mostrarContactos(slug, cont, mensaje = '') {
   const traer = h('button', { class: 'btn btn--papel btn--chico', type: 'button' }, 'Traer los contactos viejos de la encuesta');
   traer.addEventListener('click', async () => {
     traer.disabled = true;
+    traer.textContent = 'Buscando…';
     try {
-      const r = await (await api(`/api/admin/encuestas/${slug}/resumen`)).json();
-      const pareceContacto = (t) => /@/.test(t) || /\d[\d\s().-]{6,}\d/.test(t);
-      const viejos = r.preguntas
-        .filter((p) => p.anterior && p.textos)
-        .flatMap((p) => p.textos.map((t) => t.texto.trim()))
-        .filter(pareceContacto);
-      const unicos = [...new Set(viejos)];
-      texto.value = unicos.join('\n');
-      traer.textContent = unicos.length
-        ? `Se trajeron ${unicos.length}: revisalos y tocá "Agregar contactos"`
-        : 'No hay contactos viejos en la encuesta';
+      const r = await (await api(`/api/admin/encuestas/${slug}/contactos/viejos`)).json();
+      texto.value = r.lineas.join('\n');
+      if (r.lineas.length) traer.textContent = `Se trajeron ${r.lineas.length}: revisalos y tocá "Agregar contactos"`;
+      else if (r.yaAgregados) traer.textContent = `Los ${r.yaAgregados} contactos viejos ya estaban agregados`;
+      else if (!r.preguntas.length) traer.textContent = 'La encuesta no tiene preguntas de versiones anteriores';
+      else traer.textContent = `Nadie dejó un correo o número válido en: ${r.preguntas.map((p) => `"${p.texto}"`).join(', ')}`;
     } catch (err) {
-      traer.textContent = err.message;
+      traer.textContent = `No se pudo: ${err.message}`;
     }
+    traer.disabled = false;
   });
   const boton = h('button', { class: 'btn', type: 'submit' }, 'Agregar contactos');
   const aviso = h('p', { class: 'meta', role: 'status' }, mensaje);
