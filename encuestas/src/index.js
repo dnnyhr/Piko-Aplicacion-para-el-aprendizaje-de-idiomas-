@@ -596,8 +596,11 @@ async function listarContactos(env, slug) {
       .bind(e.id)
       .all();
     return json({ contactos: results });
-  } catch {
-    throw new ErrorHttp(503, SIN_TABLA_CONTACTOS);
+  } catch (err) {
+    // Distinguir "no existe la tabla" de cualquier otro error, y mostrar el real.
+    console.error('listarContactos', err);
+    const msg = String(err?.message ?? err);
+    throw new ErrorHttp(503, /no such table/i.test(msg) ? SIN_TABLA_CONTACTOS : `No se pudo leer la lista de contactos: ${msg}`);
   }
 }
 
@@ -644,8 +647,10 @@ async function agregarContactos(request, env, slug, url) {
       if (r.meta.changes > 0) nuevos.push({ id, ...c, correo_intentos: 0 });
       else repetidos++;
     }
-  } catch {
-    throw new ErrorHttp(503, SIN_TABLA_CONTACTOS);
+  } catch (err) {
+    console.error('agregarContactos', err);
+    const msg = String(err?.message ?? err);
+    throw new ErrorHttp(503, /no such table/i.test(msg) ? SIN_TABLA_CONTACTOS : `No se pudo guardar: ${msg}`);
   }
 
   const cuenta = { enviado: 0, error: 0, omitido: 0 };
