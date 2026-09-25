@@ -323,34 +323,14 @@ textarea.campo { min-height: 110px; }
 .traducir__grupo .traducir__item { background: var(--blanco); }
 .traducir__grupo .traducir__item--hecho { background: #EEF6E3; }
 
-/* Aviso grande (al terminar una parte: ¿hacer las que faltan?) */
-body.con-aviso { overflow: hidden; }
-.aviso-fondo {
-  position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; overflow-y: auto;
-  padding: max(76px, env(safe-area-inset-top)) var(--gutter) max(20px, env(safe-area-inset-bottom));
-  background: rgba(8,48,75,.62); backdrop-filter: blur(4px); animation: aparecer-fondo .2s ease-out;
-}
-.aviso-grande {
-  position: relative; width: min(440px, 100%);
-  padding: 84px 22px 22px; border-radius: 28px; text-align: center;
-  background: var(--papel); box-shadow: 0 30px 60px rgba(3,26,44,.45); animation: aparecer .28s ease-out;
-}
-.aviso-grande__piko {
-  position: absolute; top: -62px; left: 50%; width: 82px; height: auto; margin-left: -41px;
-  filter: drop-shadow(0 12px 14px rgba(3,26,44,.3)); animation: salto 1.8s ease-in-out infinite;
-}
-.aviso-grande .pastilla { margin-bottom: 10px; }
-.aviso-grande h2 { font-size: clamp(1.7rem, 7.5vw, 2.2rem); line-height: 1.1; margin: 0 0 12px; color: var(--grafito); }
-.aviso-grande__texto { font-size: 1.15rem; line-height: 1.45; color: var(--grafito); margin: 0 0 8px; }
-.aviso-grande__numero {
-  display: block; font-family: Fredoka, sans-serif; font-weight: 700; font-size: 3.4rem; line-height: 1;
-  color: var(--verde); margin-bottom: 4px;
-}
-.aviso-grande__nota { font-size: .95rem; color: var(--tinta); margin: 0 0 18px; }
-.aviso-grande__botones { display: grid; gap: 10px; }
-.aviso-grande__botones .btn { width: 100%; min-height: 56px; font-size: 1.02rem; white-space: normal; }
-@keyframes aparecer-fondo { from { opacity: 0; } to { opacity: 1; } }
-@keyframes aparecer { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+/* Al final, si hizo una parte: ¿completar todo o terminar? */
+.completar__papel h1 { font-size: clamp(1.8rem, 8vw, 2.6rem); line-height: 1.1; margin: 10px 0 12px; }
+.completar__papel p { font-size: 1.08rem; color: var(--grafito); }
+.completar__cuenta { list-style: none; padding: 0; margin: 0 0 14px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.completar__cuenta li { padding: 8px 14px; border-radius: 999px; background: #E6F1E9; color: var(--verde-hondo); font-size: 1.02rem; }
+.completar__cuenta b { font-family: Fredoka, sans-serif; font-weight: 700; }
+.completar__botones { display: grid; gap: 12px; margin-top: 18px; }
+.completar__botones .btn { width: 100%; min-height: 60px; font-size: 1.08rem; white-space: normal; }
 
 /* Matriz: en el teléfono, cada fila es su enunciado con su escala debajo. */
 .matriz { margin-top: 8px; display: grid; gap: 8px; }
@@ -660,7 +640,6 @@ body.con-aviso { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .destello, .pikobot { animation: none !important; }
   .encuesta-card, .encuesta-card__imagen img, .encuesta-card__ir svg { transition: none !important; }
-  .aviso-fondo, .aviso-grande, .aviso-grande__piko { animation: none !important; }
 }
 
 /* ================================================== tablet (640px en adelante) */

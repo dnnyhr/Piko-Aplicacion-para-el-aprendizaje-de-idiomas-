@@ -344,8 +344,73 @@ async function abrirEncuesta(slug, siNoExiste = null) {
     estado.paso = paso;
     guardar();
     if (paso < 0) return portada();
-    if (paso >= total) return enviarYTerminar();
+    if (paso >= total) return porCompletar().length && !estado.decidioFinal ? ofrecerCompletar() : enviarYTerminar();
     return seccion(paso);
+  }
+
+  /** Las preguntas traducir en las que la persona hizo solo una parte y quedan cosas sin escribir. */
+  function porCompletar() {
+    return preguntasDe(def).filter((p) => {
+      if (p.tipo !== 'traducir' || estado.modos?.[p.id] !== 'parte' || !esVisible(def, p, estado.respuestas)) return false;
+      const escritas = Object.values(estado.respuestas[p.id] ?? {}).filter((v) => v.trim()).length;
+      return escritas < p.banco.length;
+    });
+  }
+
+  /**
+   * Antes de enviar, si hizo una parte: terminar así, o volver y completar
+   * todo. Sale una sola vez; si elige completar, al volver al final se envía.
+   */
+  function ofrecerCompletar() {
+    mostrarBarra(true, 1, 'Último paso');
+    const pendientes = porCompletar();
+    const resumen = pendientes.map((p) => {
+      const n = Object.values(estado.respuestas[p.id] ?? {}).filter((v) => v.trim()).length;
+      const cosa = (p.max ?? 120) > 100 ? 'frases' : 'palabras';
+      return h('li', {}, h('b', {}, `${n} de ${p.banco.length}`), ` ${cosa}`);
+    });
+    const completar = () => {
+      estado.decidioFinal = true;
+      for (const p of pendientes) estado.modos[p.id] = 'todo';
+      const primera = def.secciones.findIndex((s) => s.preguntas.some((q) => q.id === pendientes[0].id));
+      ir(primera);
+    };
+    const terminar = () => {
+      estado.decidioFinal = true;
+      guardar();
+      enviarYTerminar();
+    };
+    pantalla(
+      h(
+        'section',
+        { class: 'final cielo completar' },
+        fondo('final'),
+        h(
+          'div',
+          { class: 'final__grid' },
+          h('div', { class: 'final__duo' }, piko('feliz')),
+          h(
+            'div',
+            { class: 'papel completar__papel' },
+            h('span', { class: 'pastilla' }, 'Antes de terminar'),
+            h('h1', {}, '¿Te animás a completarla toda?'),
+            h('p', {}, 'Hiciste una parte:'),
+            h('ul', { class: 'completar__cuenta' }, resumen),
+            h(
+              'p',
+              {},
+              'Cada palabra que agregás guarda cómo se habla tu lengua en tu comunidad, con sus variantes, para que no se pierda. Lo que ya escribiste se queda.',
+            ),
+            h(
+              'div',
+              { class: 'completar__botones' },
+              h('button', { class: 'btn btn--siguiente', type: 'button', onclick: completar }, 'Completar todo', icono('flecha')),
+              h('button', { class: 'btn btn--papel', type: 'button', onclick: terminar }, 'Terminar la encuesta'),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   /* ---- portada ---- */
@@ -446,10 +511,6 @@ async function abrirEncuesta(slug, siNoExiste = null) {
         aviso.textContent = n === 1 ? 'Te falta 1 respuesta' : `Te faltan ${n} respuestas`;
         primero?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
-      }
-      // Una pregunta puede querer decir algo antes de pasar (traducir ofrece hacer todas).
-      for (const [id, b] of bloques) {
-        if (b.antesDeSeguir && !b.el.hidden && b.antesDeSeguir() === false) return;
       }
       ir(i + 1);
     };
@@ -635,54 +696,6 @@ async function abrirEncuesta(slug, siNoExiste = null) {
 
 /* ------------------------------------------------------ piezas de pregunta */
 
-/**
- * Un aviso grande que tapa la pantalla, para una pregunta que no se puede
- * pasar por alto. Se cierra con uno de los dos botones; Escape o tocar
- * afuera lo cierran sin hacer nada.
- */
-function abrirAviso({ titulo, pastilla, numero, texto, nota, si, no }) {
-  const previo = document.activeElement;
-  const cerrar = () => {
-    fondo.remove();
-    document.body.classList.remove('con-aviso');
-    document.removeEventListener('keydown', teclas);
-    previo?.focus?.({ preventScroll: true });
-  };
-  const teclas = (e) => {
-    if (e.key === 'Escape') cerrar();
-    // El foco no sale del aviso mientras está abierto.
-    if (e.key === 'Tab') {
-      const botones = [...caja.querySelectorAll('button')];
-      const i = botones.indexOf(document.activeElement);
-      e.preventDefault();
-      botones[(i + (e.shiftKey ? -1 : 1) + botones.length) % botones.length].focus();
-    }
-  };
-  const boton = ([texto, accion], clase) =>
-    h('button', { class: `btn ${clase}`, type: 'button', onclick: () => (cerrar(), accion()) }, texto);
-
-  const caja = h(
-    'div',
-    { class: 'aviso-grande', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'aviso-titulo', 'aria-describedby': 'aviso-texto' },
-    h('img', { class: 'aviso-grande__piko', src: '/img/piko.svg', alt: '', width: 178, height: 292 }),
-    pastilla ? h('span', { class: 'pastilla' }, pastilla) : null,
-    h('h2', { id: 'aviso-titulo' }, titulo),
-    h(
-      'p',
-      { id: 'aviso-texto', class: 'aviso-grande__texto' },
-      numero !== undefined ? h('b', { class: 'aviso-grande__numero' }, numero) : null,
-      texto,
-    ),
-    nota ? h('p', { class: 'aviso-grande__nota' }, nota) : null,
-    h('div', { class: 'aviso-grande__botones' }, boton(si, 'btn--siguiente'), boton(no, 'btn--papel')),
-  );
-  const fondo = h('div', { class: 'aviso-fondo', onclick: (e) => e.target === fondo && cerrar() }, caja);
-  document.body.append(fondo);
-  document.body.classList.add('con-aviso');
-  document.addEventListener('keydown', teclas);
-  caja.querySelector('.btn')?.focus({ preventScroll: true });
-}
-
 /** Cómo se llama la lengua que eligió la persona, para decir "¿cómo se dice en miskito?". */
 function nombreLengua(def, p, estado) {
   const origen = preguntasDe(def).find((q) => q.id === p.lengua);
@@ -696,16 +709,13 @@ function nombreLengua(def, p, estado) {
  * Traducir. La persona elige cuánto hacer:
  *   - "Una parte": `cuantas` del banco. Son distintas para cada persona (así
  *     entre todos se cubre el banco) y se guardan en el teléfono, así al
- *     volver a abrir la encuesta le tocan las mismas. Al tocar "Siguiente" se
- *     le pregunta si quiere responder las que faltan.
+ *     volver a abrir la encuesta le tocan las mismas. Al final de la
+ *     encuesta se le ofrece completar el resto (ver `ofrecerCompletar`).
  *   - "Todas": el banco entero, agrupado por tema.
- * Devuelve el cuerpo y `antesDeSeguir`, que la sección llama antes de pasar
- * a la siguiente: si devuelve false, la sección se queda.
  */
 function dibujarTraducir(p, estado, set, lengua) {
   estado.muestras ??= {};
   estado.modos ??= {};
-  estado.ofrecidas ??= {};
   const ids = new Set(p.banco.map((b) => b.id));
   let muestra = estado.muestras[p.id];
   if (!Array.isArray(muestra) || muestra.length !== p.cuantas || muestra.some((id) => !ids.has(id))) {
@@ -861,33 +871,7 @@ function dibujarTraducir(p, estado, set, lengua) {
 
   pintar();
 
-  // Al terminar una parte, se ofrece responder el resto (una sola vez).
-  const antesDeSeguir = () => {
-    if (estado.modos[p.id] !== 'parte' || estado.ofrecidas[p.id]) return true;
-    estado.ofrecidas[p.id] = true;
-    set(estado.respuestas[p.id]);
-    const hechas = escritas(muestra);
-    const faltan = total - hechas;
-    const seguir = () => caja.closest('form')?.requestSubmit();
-    abrirAviso({
-      titulo: hechas ? '¡Gracias por esta parte!' : 'Antes de seguir…',
-      pastilla: hechas ? `${hechas} de ${muestra.length} escritas` : null,
-      numero: faltan,
-      texto: `${cosa[1]} más te esperan. ¿Te animás a responderlas todas?`,
-      nota: hechas ? 'Lo que ya escribiste se queda.' : 'Las que no sepás, las podés dejar en blanco.',
-      si: [
-        'Sí, quiero hacerlas todas',
-        () => {
-          elegir('todo');
-          caja.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        },
-      ],
-      no: ['No, seguir con la encuesta', seguir],
-    });
-    return false;
-  };
-
-  return { cuerpo: caja, antesDeSeguir };
+  return caja;
 }
 
 function dibujarConcepto(c) {
@@ -941,7 +925,6 @@ function dibujarPregunta(p, estado, alCambiar, def) {
 
   let cuerpo;
   let marcarFaltantes;
-  let antesDeSeguir;
 
   if (p.tipo === 'unica' || p.tipo === 'multiple') {
     const multiple = p.tipo === 'multiple';
@@ -999,7 +982,7 @@ function dibujarPregunta(p, estado, alCambiar, def) {
     sincronizar();
     cuerpo = [lista, campoOtro];
   } else if (p.tipo === 'traducir') {
-    ({ cuerpo, antesDeSeguir } = dibujarTraducir(p, estado, set, nombreLengua(def, p, estado)));
+    cuerpo = dibujarTraducir(p, estado, set, nombreLengua(def, p, estado));
   } else if (p.tipo === 'escala') {
     cuerpo = dibujarEscala(uid, p.min, p.max, p.etiquetaMin, p.etiquetaMax, estado.respuestas[p.id], set, p.texto);
   } else if (p.tipo === 'matriz') {
@@ -1064,7 +1047,7 @@ function dibujarPregunta(p, estado, alCambiar, def) {
     error,
   );
   if (p.tipo === 'texto') el.querySelector('.campo').id = `${uid}-campo`;
-  return { el, error, marcarFaltantes, antesDeSeguir };
+  return { el, error, marcarFaltantes };
 }
 
 function dibujarEscala(nombre, min, max, etMin, etMax, valor, alElegir, etiqueta) {
