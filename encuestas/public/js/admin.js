@@ -378,6 +378,7 @@ function chips(opciones, actual, elegir) {
 
 const estado = {
   slug: null,
+  lista: null, // todas las encuestas, para el selector
   r: null, // resumen
   pestana: 'resumen',
   seccion: 'todas',
@@ -409,23 +410,129 @@ function pestanasDe(r) {
 /** "¿Cómo se dice en {lengua}?" → "¿Cómo se dice en su lengua?" */
 const textoDe = (p) => p.texto.replaceAll('{lengua}', 'su lengua');
 
+const CLAVE_ELEGIDA = 'piko-encuestas:elegida';
+
 async function entrar() {
   try {
     const { encuestas } = await (await api('/api/admin/encuestas')).json();
     sessionStorage.setItem(CLAVE, token);
     $('acceso').hidden = true;
     $('panel').hidden = false;
-    const sel = $('encuesta');
-    sel.replaceChildren(...encuestas.map((e) => h('option', { value: e.slug }, `${e.titulo} · ${e.estado} · ${e.respuestas} resp.`)));
-    if (encuestas.length) cargarEncuesta(encuestas[0].slug);
-    else poner($('contenido'), h('p', { class: 'vacio' }, 'Todavía no hay encuestas publicadas.'));
+    estado.lista = encuestas;
+    // Se vuelve a la que estaba mirando, si todavía existe.
+    const antes = sessionStorage.getItem(CLAVE_ELEGIDA);
+    const elegida = encuestas.find((e) => e.slug === antes) ?? encuestas[0];
+    if (elegida) {
+      estado.slug = elegida.slug;
+      pintarSelector();
+      cargarEncuesta(elegida.slug);
+    } else {
+      pintarSelector();
+      poner($('contenido'), h('p', { class: 'vacio' }, 'Todavía no hay encuestas publicadas.'));
+    }
   } catch (err) {
     $('acceso-error').textContent = err.message;
     sessionStorage.removeItem(CLAVE);
   }
 }
 
+/* ------------------------------------------------ selector de encuestas */
+
+const ESTADOS = {
+  abierta: { texto: 'Abierta', accion: 'Cerrar', nuevo: 'cerrada' },
+  cerrada: { texto: 'Cerrada', accion: 'Abrir', nuevo: 'abierta' },
+  borrador: { texto: 'Borrador', accion: 'Publicar', nuevo: 'abierta' },
+};
+
+/**
+ * Las encuestas como tarjetas: tocar una la abre en el panel, y cada una
+ * tiene su botón para abrirla o cerrarla. En el teléfono se deslizan de lado.
+ */
+function pintarSelector() {
+  const lista = estado.lista ?? [];
+  const abiertas = lista.filter((e) => e.estado === 'abierta').length;
+  poner(
+    $('selector'),
+    h(
+      'div',
+      { class: 'selector__cabeza' },
+      h('h2', {}, 'Encuestas'),
+      h('span', { class: 'meta' }, `${lista.length} en total · ${abiertas} ${abiertas === 1 ? 'abierta' : 'abiertas'}`),
+    ),
+    h('ul', { class: 'selector__lista' }, lista.map(tarjetaSelector)),
+  );
+  $('selector').querySelector('.enc--elegida')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
+function tarjetaSelector(e) {
+  const est = ESTADOS[e.estado] ?? ESTADOS.borrador;
+  const elegida = e.slug === estado.slug;
+  const cambiar = h(
+    'button',
+    {
+      class: `btn btn--chico ${e.estado === 'abierta' ? 'btn--papel' : ''}`,
+      type: 'button',
+      onclick: async () => {
+        const aviso =
+          est.nuevo === 'cerrada'
+            ? `¿Cerrar «${e.titulo}»?\n\nDeja de aparecer en la lista y ya no recibe respuestas. Las que ya llegaron se quedan. La podés volver a abrir cuando quieras.` +
+              (e.principal ? '\n\nEs la principal: quien entre a la página va a ver que está cerrada.' : '')
+            : `¿Abrir «${e.titulo}»?\n\nVa a aparecer en la lista de encuestas y cualquiera con el enlace la puede responder.`;
+        if (!confirm(aviso)) return;
+        cambiar.disabled = true;
+        try {
+          await api(`/api/admin/encuestas/${e.slug}/estado`, { method: 'POST', body: JSON.stringify({ estado: est.nuevo }) });
+          e.estado = est.nuevo;
+          if (estado.r && e.slug === estado.slug) estado.r.estado = est.nuevo;
+        } catch (err) {
+          alert(err.message);
+        }
+        pintarSelector();
+      },
+    },
+    est.accion,
+  );
+  return h(
+    'li',
+    { class: `enc enc--${e.estado}${elegida ? ' enc--elegida' : ''}` },
+    h(
+      'button',
+      {
+        class: 'enc__elegir',
+        type: 'button',
+        'aria-pressed': String(elegida),
+        onclick: () => {
+          if (elegida) return;
+          estado.slug = e.slug;
+          pintarSelector();
+          cargarEncuesta(e.slug);
+        },
+      },
+      h(
+        'span',
+        { class: 'enc__imagen' },
+        h('img', { src: e.imagen, alt: '', width: 1200, height: 630, loading: 'lazy' }),
+        e.principal ? h('span', { class: 'enc__principal', 'data-tip': 'Es la que se abre en la página principal' }, 'Principal') : null,
+      ),
+      h('span', { class: 'enc__titulo' }, e.titulo),
+      h(
+        'span',
+        { class: 'enc__meta' },
+        h('span', { class: `enc__estado enc__estado--${e.estado}` }, est.texto),
+        `${e.respuestas} ${e.respuestas === 1 ? 'respuesta' : 'respuestas'}`,
+      ),
+    ),
+    h(
+      'div',
+      { class: 'enc__acciones' },
+      cambiar,
+      e.estado === 'borrador' ? null : h('a', { class: 'enc__ver', href: `/e/${e.slug}`, target: '_blank', rel: 'noopener' }, 'Ver página ↗'),
+    ),
+  );
+}
+
 async function cargarEncuesta(slug) {
+  sessionStorage.setItem(CLAVE_ELEGIDA, slug);
   Object.assign(estado, { slug, r: null, correos: null, contactos: null, contactosError: '', seccion: 'todas', abiertas: new Set(), palabras: null });
   estado.palabrasFiltro = { pregunta: null, grupo: null, ver: 'con', tema: 'todos', q: '', pagina: 0 };
   poner($('kpis'), );
@@ -1257,13 +1364,12 @@ $('acceso').addEventListener('submit', (e) => {
   token = $('token').value.trim();
   entrar();
 });
-$('encuesta').addEventListener('change', (e) => cargarEncuesta(e.target.value));
 $('salir').addEventListener('click', () => {
   sessionStorage.removeItem(CLAVE);
   location.reload();
 });
 $('csv').addEventListener('click', async () => {
-  const slug = $('encuesta').value;
+  const slug = estado.slug;
   const blob = await (await api(`/api/admin/encuestas/${slug}/csv`)).blob();
   const a = h('a', { href: URL.createObjectURL(blob), download: `${slug}.csv` });
   a.click();

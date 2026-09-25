@@ -225,3 +225,26 @@ test('la lista pone primero la encuesta principal y trae la imagen de cada una',
     ],
   );
 });
+
+test('el panel abre, cierra y pasa a borrador una encuesta sin tocar sus respuestas', async () => {
+  env.ENCUESTA_PRINCIPAL = real.slug;
+  await publicar({ ...real, estado: 'abierta' });
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: respuestaValida() });
+  const cambiar = (estado, token = TOKEN) => llamar(`/api/admin/encuestas/${real.slug}/estado`, { method: 'POST', body: { estado }, token });
+
+  assert.equal((await cambiar('cerrada', 'malo')).status, 401);
+  assert.equal((await cambiar('rara')).status, 400);
+  assert.equal((await llamar('/api/admin/encuestas/no-existe/estado', { method: 'POST', body: { estado: 'cerrada' }, token: TOKEN })).status, 404);
+
+  assert.equal((await cambiar('cerrada')).status, 200);
+  assert.deepEqual((await (await llamar('/api/encuestas')).json()).encuestas, []);
+  assert.equal((await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: respuestaValida() })).status, 410);
+
+  const [e] = (await (await llamar('/api/admin/encuestas', { token: TOKEN })).json()).encuestas;
+  assert.deepEqual([e.estado, e.respuestas, e.principal, e.imagen], ['cerrada', 1, true, '/img/og.jpg']);
+
+  assert.equal((await cambiar('borrador')).status, 200);
+  assert.equal((await llamar(`/api/encuestas/${real.slug}`)).status, 404);
+  assert.equal((await cambiar('abierta')).status, 200);
+  assert.equal((await (await llamar('/api/encuestas')).json()).encuestas.length, 1);
+});

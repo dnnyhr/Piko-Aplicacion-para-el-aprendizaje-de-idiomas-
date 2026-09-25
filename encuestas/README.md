@@ -153,6 +153,7 @@ queda quieto mirando de frente.
 | `GET /api/encuestas/<slug>` | Definición vigente |
 | `POST /api/encuestas/<slug>/respuestas` | Guardar una respuesta |
 | `PUT /api/admin/encuestas/<slug>` | Publicar o actualizar una definición |
+| `POST /api/admin/encuestas/<slug>/estado` | Abrirla, cerrarla o pasarla a borrador (el panel lo usa) |
 | `GET /api/admin/encuestas/<slug>/resumen` | Agregados por pregunta |
 | `GET /api/admin/encuestas/<slug>/csv` | Todas las respuestas, una fila por persona |
 
@@ -168,6 +169,11 @@ queda quieto mirando de frente.
 3. `npm run validar` revisa que esté bien armada (CI lo corre en cada PR).
 4. `npm run publicar <slug>`. Cuando esté lista, pasá a `"abierta"` y publicá
    de nuevo; para cerrarla, `"cerrada"`.
+
+También se puede abrir, cerrar o publicar un borrador desde `/admin`, con el
+botón de la tarjeta de cada encuesta, sin tocar el JSON. Ojo: `npm run
+publicar` vuelve a poner el estado que diga el archivo, así que si cerraste
+una desde el panel, cambiá también su `"estado"` antes de publicarla otra vez.
 
 No hace falta tocar código ni el esquema.
 

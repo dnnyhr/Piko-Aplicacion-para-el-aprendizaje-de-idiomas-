@@ -16,6 +16,7 @@
  *
  *   PUT  /api/admin/encuestas/:slug            publicar / actualizar (token)
  *   GET  /api/admin/encuestas                  todas, con conteo (token)
+ *   POST /api/admin/encuestas/:slug/estado     abrirla, cerrarla o pasarla a borrador (token)
  *   GET  /api/admin/encuestas/:slug/resumen    agregados por pregunta (token)
  *   GET  /api/admin/encuestas/:slug/csv        exportar (token)
  *   GET  /api/admin/encuestas/:slug/correos    correos enviados y su estado (token)
@@ -119,6 +120,7 @@ async function enrutar(request, env, ctx) {
   if (a === 'admin') {
     await exigirAdmin(request, env);
     if (b === 'encuestas' && !c && m === 'GET') return listarTodas(env);
+    if (b === 'encuestas' && c && d === 'estado' && !e && m === 'POST') return cambiarEstado(request, env, c);
     if (b === 'encuestas' && c && !d && m === 'PUT') return publicar(request, env, c);
     if (b === 'encuestas' && c && d === 'resumen' && m === 'GET') return resumen(env, c);
     if (b === 'encuestas' && c && d === 'csv' && m === 'GET') return exportarCsv(env, c);
@@ -412,12 +414,34 @@ function igualSeguro(a, b) {
 
 async function listarTodas(env) {
   const { results } = await env.DB.prepare(
-    `SELECT e.slug, e.titulo, e.estado, e.version_actual AS version, e.actualizada_en,
-            (SELECT COUNT(*) FROM respuestas r WHERE r.encuesta_id = e.id) AS respuestas
+    `SELECT e.slug, e.titulo, e.estado, e.version_actual AS version, e.actualizada_en, v.definicion,
+            (SELECT COUNT(*) FROM respuestas r WHERE r.encuesta_id = e.id) AS respuestas,
+            (SELECT MAX(r.creada_en) FROM respuestas r WHERE r.encuesta_id = e.id) AS ultima
        FROM encuestas e
+       LEFT JOIN versiones_encuesta v ON v.encuesta_id = e.id AND v.version = e.version_actual
       ORDER BY e.actualizada_en DESC`,
   ).all();
-  return json({ encuestas: results });
+  const orden = { abierta: 0, borrador: 1, cerrada: 2 };
+  const encuestas = results
+    .map(({ definicion, ...e }) => {
+      const def = definicion ? JSON.parse(definicion) : {};
+      return { ...e, descripcion: def.descripcion ?? '', imagen: def.imagen ?? '/img/og.jpg', principal: e.slug === env.ENCUESTA_PRINCIPAL };
+    })
+    // La principal primero, después las abiertas, los borradores y las cerradas.
+    .sort((a, b) => Number(b.principal) - Number(a.principal) || orden[a.estado] - orden[b.estado]);
+  return json({ encuestas });
+}
+
+/**
+ * Abrir, cerrar o pasar a borrador desde el panel. Solo cambia el estado: las
+ * preguntas, las versiones y las respuestas quedan como están.
+ */
+async function cambiarEstado(request, env, slug) {
+  const { estado } = await leerJson(request);
+  if (!['abierta', 'cerrada', 'borrador'].includes(estado)) throw new ErrorHttp(400, 'El estado tiene que ser abierta, cerrada o borrador.');
+  const r = await env.DB.prepare('UPDATE encuestas SET estado = ? WHERE slug = ?').bind(estado, slug).run();
+  if (!r.meta.changes) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  return json({ ok: true, slug, estado });
 }
 
 async function publicar(request, env, slug) {
