@@ -11,7 +11,7 @@
  *   - al terminar, "otra persona va a responder" deja el teléfono listo para la siguiente.
  */
 
-import { esVisible, revisar } from './reglas.js';
+import { esVisible, muestraDelBanco, preguntasDe, revisar } from './reglas.js';
 
 const app = document.getElementById('app');
 const barra = document.getElementById('barra');
@@ -425,7 +425,7 @@ async function abrirEncuesta(slug, siNoExiste = null) {
     };
 
     const preguntas = s.preguntas.map((p) => {
-      const b = dibujarPregunta(p, estado, () => cambio(p));
+      const b = dibujarPregunta(p, estado, () => cambio(p), def);
       bloques.set(p.id, b);
       return b.el;
     });
@@ -536,7 +536,7 @@ async function abrirEncuesta(slug, siNoExiste = null) {
   function final(enCola) {
     mostrarBarra(true, 1, '¡Listo!');
     const enlace = `${location.origin}/e/${slug}`;
-    const textoCompartir = `${def.titulo} Ayudá a Piko a decidir qué construir: ${enlace}`;
+    const textoCompartir = `${def.final?.textoCompartir ?? `${def.titulo} Ayudá a Piko a decidir qué construir:`} ${enlace}`;
 
     const compartir = async () => {
       if (navigator.share) {
@@ -610,6 +610,86 @@ async function abrirEncuesta(slug, siNoExiste = null) {
 
 /* ------------------------------------------------------ piezas de pregunta */
 
+/** Cómo se llama la lengua que eligió la persona, para decir "¿cómo se dice en miskito?". */
+function nombreLengua(def, p, estado) {
+  const origen = preguntasDe(def).find((q) => q.id === p.lengua);
+  const elegida = origen?.opciones.find((o) => o.id === estado.respuestas[p.lengua]);
+  if (!elegida) return 'tu lengua';
+  if (elegida.otro) return estado.otros[p.lengua]?.trim() || 'tu lengua';
+  return elegida.texto.replace(/\s*\(.*\)$/, '').toLocaleLowerCase('es');
+}
+
+/**
+ * Traducir: a cada persona le tocan `cuantas` cosas del banco, al azar. La
+ * muestra se guarda con la respuesta en el teléfono, así al volver a abrir
+ * la encuesta le siguen tocando las mismas.
+ */
+function dibujarTraducir(p, estado, set, lengua) {
+  estado.muestras ??= {};
+  const ids = new Set(p.banco.map((b) => b.id));
+  let muestra = estado.muestras[p.id];
+  if (!Array.isArray(muestra) || muestra.length !== p.cuantas || muestra.some((id) => !ids.has(id))) {
+    muestra = estado.muestras[p.id] = muestraDelBanco(p);
+  }
+  const valor = () => estado.respuestas[p.id] ?? {};
+  const frases = (p.max ?? 120) > 100;
+  const cuenta = h('p', { class: 'traducir__cuenta', 'aria-live': 'polite' });
+  const contar = () => {
+    const n = Object.values(valor()).filter((v) => v.trim()).length;
+    cuenta.textContent = `${n} de ${muestra.length} escritas`;
+    cuenta.classList.toggle('traducir__cuenta--lista', n === muestra.length);
+  };
+
+  const items = muestra.map((id, i) => {
+    const b = p.banco.find((x) => x.id === id);
+    const campoId = `t-${p.id}-${id}`;
+    const campo = h('input', {
+      class: 'campo traducir__campo',
+      id: campoId,
+      type: 'text',
+      maxlength: p.max ?? 120,
+      placeholder: `En ${lengua}…`,
+      // Sin autocorrector ni corrector: "arreglarían" la palabra al español.
+      autocomplete: 'off',
+      autocorrect: 'off',
+      autocapitalize: frases ? 'sentences' : 'none',
+      spellcheck: 'false',
+      enterkeyhint: i === muestra.length - 1 ? 'done' : 'next',
+      value: valor()[id] ?? '',
+      oninput: (e) => {
+        const nuevo = { ...valor() };
+        if (e.target.value.trim()) nuevo[id] = e.target.value;
+        else delete nuevo[id];
+        set(Object.keys(nuevo).length ? nuevo : undefined);
+        item.classList.toggle('traducir__item--hecho', Boolean(e.target.value.trim()));
+        contar();
+      },
+      onkeydown: (e) => {
+        // Enter pasa a la siguiente palabra en vez de mandar el formulario.
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        const siguiente = items[i + 1]?.querySelector('input');
+        if (siguiente) siguiente.focus();
+        else e.target.blur();
+      },
+    });
+    const item = h(
+      'div',
+      { class: `traducir__item${(valor()[id] ?? '').trim() ? ' traducir__item--hecho' : ''}` },
+      h(
+        'label',
+        { class: 'traducir__es', for: campoId },
+        p.temas && b.tema ? h('span', { class: 'traducir__tema' }, p.temas[b.tema]) : null,
+        h('span', { class: `traducir__palabra${frases ? ' traducir__palabra--frase' : ''}` }, frases ? b.texto : `“${b.texto}”`),
+      ),
+      campo,
+    );
+    return item;
+  });
+  contar();
+  return [cuenta, h('div', { class: 'traducir' }, items)];
+}
+
 function dibujarConcepto(c) {
   const pilares = c.pilares ?? [];
   return h(
@@ -647,10 +727,10 @@ let contadorIds = 0;
  * Dibuja una pregunta y la conecta al estado. Devuelve el bloque, el lugar
  * donde va el mensaje de error y, para la matriz, cómo marcar filas vacías.
  */
-function dibujarPregunta(p, estado, alCambiar) {
+function dibujarPregunta(p, estado, alCambiar, def) {
   const uid = `p${++contadorIds}`;
   const error = h('p', { class: 'pregunta__error', id: `${uid}-error`, role: 'alert' });
-  const titulo = [p.texto, p.requerida ? h('span', { class: 'pregunta__requerida', 'aria-hidden': 'true' }, ' *') : null];
+  const titulo = [p.lengua ? p.texto.replaceAll('{lengua}', nombreLengua(def, p, estado)) : p.texto, p.requerida ? h('span', { class: 'pregunta__requerida', 'aria-hidden': 'true' }, ' *') : null];
   const ayuda = p.ayuda ? h('span', { class: 'pregunta__ayuda' }, p.ayuda) : null;
 
   const set = (valor) => {
@@ -717,6 +797,8 @@ function dibujarPregunta(p, estado, alCambiar) {
     );
     sincronizar();
     cuerpo = [lista, campoOtro];
+  } else if (p.tipo === 'traducir') {
+    cuerpo = dibujarTraducir(p, estado, set, nombreLengua(def, p, estado));
   } else if (p.tipo === 'escala') {
     cuerpo = dibujarEscala(uid, p.min, p.max, p.etiquetaMin, p.etiquetaMax, estado.respuestas[p.id], set, p.texto);
   } else if (p.tipo === 'matriz') {

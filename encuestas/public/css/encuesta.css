@@ -268,6 +268,24 @@ textarea.campo { min-height: 110px; }
 .escala--larga .escala__botones { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px 6px; }
 .escala--larga .escala__botones .opcion__cuerpo { border-radius: var(--radio-sm); min-height: 46px; }
 
+/* Traducir: cada palabra en su tarjetita, con el campo debajo. */
+.traducir__cuenta { margin: 6px 0 10px; font-size: .85rem; font-weight: 700; color: var(--tinta-suave); }
+.traducir__cuenta--lista { color: var(--verde); }
+.traducir { display: grid; gap: 10px; }
+.traducir__item {
+  display: grid; gap: 8px; padding: 12px; border-radius: var(--radio-md);
+  background: var(--papel); border: 2px solid transparent; transition: border-color .15s, background .15s;
+}
+.traducir__item--hecho { background: #EEF6E3; border-color: #CFE5BF; }
+.traducir__es { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; cursor: text; }
+.traducir__tema {
+  order: 2; margin-left: auto; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--verde-hondo); background: rgba(15,93,61,.1); padding: 3px 9px; border-radius: 999px;
+}
+.traducir__palabra { font-family: Fredoka, sans-serif; font-weight: 600; font-size: 1.35rem; line-height: 1.2; color: var(--grafito); }
+.traducir__palabra--frase { font-size: 1.12rem; }
+.traducir__campo { margin: 0; background: var(--blanco); }
+
 /* Matriz: en el teléfono, cada fila es su enunciado con su escala debajo. */
 .matriz { margin-top: 8px; display: grid; gap: 8px; }
 .matriz__fila {

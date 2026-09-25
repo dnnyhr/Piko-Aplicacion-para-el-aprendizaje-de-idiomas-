@@ -278,6 +278,15 @@ function graficaPregunta(p) {
 
   if (p.tipo === 'matriz') return [leyendaEscala(p), likert(p)];
 
+  if (p.tipo === 'traducir') {
+    const conRespuesta = p.items.filter((i) => i.n > 0);
+    return [
+      h('p', { class: 'meta', style: 'margin:0 0 10px' }, `Las ${Math.min(10, conRespuesta.length)} con más respuestas, de ${p.items.length}. A cada persona le tocan ${p.cuantas} al azar.`),
+      barras(conRespuesta.slice().sort((a, b) => b.n - a.n).slice(0, 10), p.respondieron),
+      h('p', { style: 'margin:12px 0 0' }, h('a', { href: '#palabras', onclick: (e) => { e.preventDefault(); estado.palabrasFiltro.pregunta = p.id; irA('palabras'); } }, 'Ver y confirmar en Palabras →')),
+    ];
+  }
+
   return listaTextos(p.textos);
 }
 
@@ -293,6 +302,7 @@ function frase(p) {
     return ['NPS ', h('b', {}, `${r.puntaje > 0 ? '+' : ''}${r.puntaje}`)];
   }
   if (p.tipo === 'escala') return ['Promedio ', h('b', {}, dec(p.promedio)), ` de ${p.max}`];
+  if (p.tipo === 'traducir') return [h('b', {}, p.items.filter((i) => i.n > 0).length), ` de ${p.items.length} con al menos una respuesta`];
   if (p.tipo === 'matriz') return [h('b', {}, p.filas[0].texto), ` · ${dec(p.filas[0].promedio)} de ${p.max}`];
   return [h('b', {}, p.respondieron), p.respondieron === 1 ? ' respuesta' : ' respuestas'];
 }
@@ -377,14 +387,27 @@ const estado = {
   contactos: null,
   contactosError: '',
   contactosFiltro: { tipo: 'todos', q: '', pagina: 0, aviso: '' },
+  palabras: null,
+  palabrasFiltro: { pregunta: null, grupo: null, ver: 'con', tema: 'todos', q: '', pagina: 0 },
 };
 
 const PESTANAS = [
   ['resumen', 'Resumen'],
   ['preguntas', 'Preguntas'],
+  ['palabras', 'Palabras'],
   ['correos', 'Correos'],
   ['contactos', 'Contactos'],
 ];
+
+/** Las pestañas que tienen sentido para esta encuesta. */
+function pestanasDe(r) {
+  const conPalabras = r?.preguntas.some((p) => p.tipo === 'traducir');
+  const conCorreo = !r || r.usaCorreo || Object.keys(r.correos ?? {}).length > 0 || estado.contactos?.length > 0;
+  return PESTANAS.filter(([id]) => (id === 'palabras' ? conPalabras : id === 'correos' || id === 'contactos' ? conCorreo : true));
+}
+
+/** "¿Cómo se dice en {lengua}?" → "¿Cómo se dice en su lengua?" */
+const textoDe = (p) => p.texto.replaceAll('{lengua}', 'su lengua');
 
 async function entrar() {
   try {
@@ -403,7 +426,8 @@ async function entrar() {
 }
 
 async function cargarEncuesta(slug) {
-  Object.assign(estado, { slug, r: null, correos: null, contactos: null, contactosError: '', seccion: 'todas', abiertas: new Set() });
+  Object.assign(estado, { slug, r: null, correos: null, contactos: null, contactosError: '', seccion: 'todas', abiertas: new Set(), palabras: null });
+  estado.palabrasFiltro = { pregunta: null, grupo: null, ver: 'con', tema: 'todos', q: '', pagina: 0 };
   poner($('kpis'), );
   poner($('contenido'), h('p', { class: 'meta' }, 'Cargando…'));
   try {
@@ -413,6 +437,8 @@ async function cargarEncuesta(slug) {
     return;
   }
   pintarKpis();
+  // Si la pestaña que estaba abierta no existe en esta encuesta, se vuelve al resumen.
+  if (!pestanasDe(estado.r).some(([id]) => id === estado.pestana)) estado.pestana = 'resumen';
   pintarPestanas();
   pintarContenido();
   // Los contactos se piden ya, para que el número de la pestaña esté.
@@ -428,7 +454,14 @@ function pintarKpis() {
   poner($('kpis'), 
     h('div', { class: 'kpi' }, h('b', {}, r.respuestas), h('span', {}, 'respuestas')),
     h('div', { class: 'kpi' }, h('b', {}, min === null ? '—' : `${Math.max(1, min)} min`), h('span', {}, 'en contestar, en promedio')),
-    h('div', { class: 'kpi' }, h('b', {}, conCorreo ? `${enviados}/${conCorreo}` : '—'), h('span', {}, 'correos que llegaron')),
+    r.usaCorreo || conCorreo
+      ? h('div', { class: 'kpi' }, h('b', {}, conCorreo ? `${enviados}/${conCorreo}` : '—'), h('span', {}, 'correos que llegaron'))
+      : h(
+          'div',
+          { class: 'kpi' },
+          h('b', {}, r.preguntas.filter((p) => p.tipo === 'traducir').reduce((a, p) => a + p.items.reduce((x, i) => x + i.n, 0), 0)),
+          h('span', {}, 'traducciones escritas'),
+        ),
     h('div', { class: 'kpi' }, h('b', {}, ultimo ? ultimo.n : 0), h('span', {}, ultimo ? `el último día (${diaCorto(ultimo.dia)})` : 'respuestas hoy')),
   );
 }
@@ -441,7 +474,7 @@ function pintarPestanas() {
     contactos: estado.contactos?.length ?? null,
   };
   poner($('pestanas'), 
-    ...PESTANAS.map(([id, texto]) =>
+    ...pestanasDe(r).map(([id, texto]) =>
       h(
         'button',
         {
@@ -474,6 +507,7 @@ function pintarContenido() {
   if (estado.pestana === 'preguntas') poner(cont, vistaPreguntas());
   else if (estado.pestana === 'correos') vistaCorreos(cont);
   else if (estado.pestana === 'contactos') vistaContactos(cont);
+  else if (estado.pestana === 'palabras') vistaPalabras(cont);
   else poner(cont, vistaResumen());
 }
 
@@ -614,7 +648,7 @@ function tarjetaPregunta(p) {
     h(
       'summary',
       {},
-      h('span', { class: 'plegable__titulo' }, p.texto),
+      h('span', { class: 'plegable__titulo' }, textoDe(p)),
       h('span', { class: 'plegable__resumen' }, frase(p)),
     ),
     cuerpo,
@@ -635,6 +669,235 @@ function tarjetaPregunta(p) {
     } else estado.abiertas.delete(p.id);
   });
   return det;
+}
+
+/* ----------------------------------------------------- pestaña Palabras */
+
+/**
+ * Lo que la gente escribió en las preguntas traducir, agrupado: para cada
+ * palabra y cada lengua, las formas que escribieron y cuántas personas (y de
+ * cuántas zonas) coinciden. Quien sabe la lengua confirma las buenas, y lo
+ * confirmado se descarga en el formato de los paquetes de la app.
+ */
+async function vistaPalabras(cont) {
+  if (!estado.palabras) {
+    poner(cont, h('p', { class: 'meta' }, 'Cargando palabras…'));
+    try {
+      estado.palabras = await (await api(`/api/admin/encuestas/${estado.slug}/palabras`)).json();
+    } catch (err) {
+      poner(cont, h('p', { class: 'vacio' }, `No se pudieron cargar las palabras: ${err.message}`));
+      return;
+    }
+    if (estado.pestana !== 'palabras') return;
+  }
+  const datos = estado.palabras;
+  const f = estado.palabrasFiltro;
+  const repintar = () => vistaPalabras(cont);
+  if (!datos.preguntas.length) return poner(cont, h('p', { class: 'vacio' }, 'Esta encuesta no tiene preguntas de palabras.'));
+
+  const P = datos.preguntas.find((q) => q.id === f.pregunta) ?? datos.preguntas[0];
+  f.pregunta = P.id;
+  const nombreDe = (q) => (q.temas ? 'Palabras' : 'Frases');
+  const selectorPregunta =
+    datos.preguntas.length > 1
+      ? chips(
+          datos.preguntas.map((q) => [q.id, nombreDe(q)]),
+          P.id,
+          (v) => {
+            Object.assign(f, { pregunta: v, pagina: 0, tema: 'todos' });
+            repintar();
+          },
+        )
+      : null;
+
+  if (!P.grupos.length) {
+    return poner(cont, selectorPregunta, h('p', { class: 'vacio' }, 'Todavía nadie escribió nada acá. Cuando lleguen respuestas, aparecen agrupadas por lengua.'));
+  }
+  const G = P.grupos.find((g) => g.id === f.grupo) ?? P.grupos[0];
+  f.grupo = G.id;
+  // En una oración, el nombre de la lengua va en minúscula: "en miskito".
+  const lengua = G.texto.replace(/\s*\(.*\)$/, '').toLocaleLowerCase('es');
+
+  const variantesDe = (item) => item.porGrupo[G.id] ?? [];
+  const cuenta = { con: 0, confirmadas: 0, probables: 0, sin: 0 };
+  for (const it of P.items) {
+    const v = variantesDe(it);
+    if (!v.length) cuenta.sin++;
+    else cuenta.con++;
+    if (v.some((x) => x.confirmada)) cuenta.confirmadas++;
+    else if (v.some((x) => x.probable)) cuenta.probables++;
+  }
+
+  const pasa = (it) => {
+    const v = variantesDe(it);
+    if (f.tema !== 'todos' && it.tema !== f.tema) return false;
+    if (f.ver === 'con' && !v.length) return false;
+    if (f.ver === 'sin' && v.length) return false;
+    if (f.ver === 'confirmadas' && !v.some((x) => x.confirmada)) return false;
+    if (f.ver === 'probables' && !(v.some((x) => x.probable) && !v.some((x) => x.confirmada))) return false;
+    if (!f.q) return true;
+    const q = sinTildes(f.q);
+    return sinTildes(it.texto).includes(q) || v.some((x) => sinTildes(x.texto).includes(q));
+  };
+  // Primero las que tienen más respuestas: son las que conviene revisar antes.
+  const lista = P.items.filter(pasa).sort((a, b) => (variantesDe(b)[0]?.n ?? 0) - (variantesDe(a)[0]?.n ?? 0));
+  const TAM = 20;
+  f.pagina = Math.min(f.pagina, Math.max(0, Math.ceil(lista.length / TAM) - 1));
+
+  const descargar = h(
+    'button',
+    {
+      class: 'btn btn--chico',
+      type: 'button',
+      disabled: cuenta.confirmadas === 0,
+      onclick: async (e) => {
+        const boton = e.currentTarget;
+        boton.disabled = true;
+        try {
+          const res = await api(`/api/admin/encuestas/${estado.slug}/palabras/exportar?grupo=${encodeURIComponent(G.id)}`);
+          const nombre = /filename="([^"]+)"/.exec(res.headers.get('content-disposition') ?? '')?.[1] ?? 'palabras.json';
+          const a = h('a', { href: URL.createObjectURL(await res.blob()), download: nombre });
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        } catch (err) {
+          alert(err.message);
+        }
+        boton.disabled = false;
+      },
+    },
+    G.codigo ? `Descargar para la app (${lengua})` : `Descargar lo confirmado (${lengua})`,
+  );
+
+  poner(
+    cont,
+    selectorPregunta,
+    chips(
+      P.grupos.map((g) => [g.id, `${g.texto.replace(/\s*\(.*\)$/, '')} · ${personas(g.personas)}`]),
+      G.id,
+      (v) => {
+        Object.assign(f, { grupo: v, pagina: 0 });
+        repintar();
+      },
+    ),
+    h(
+      'article',
+      { class: 'carta', style: 'margin-bottom:14px' },
+      h('h3', {}, `${nombreDe(P)} en ${lengua}`),
+      h('p', { class: 'meta' }, `${cuenta.confirmadas} confirmadas · ${cuenta.con} con respuestas · ${P.items.length} en total`),
+      apilada(
+        [
+          { texto: 'Confirmadas', n: cuenta.confirmadas, color: color('div-5') },
+          { texto: 'Con respuestas, sin confirmar', n: cuenta.con - cuenta.confirmadas, color: color('c2') },
+          { texto: 'Sin respuestas todavía', n: cuenta.sin, color: color('div-3') },
+        ],
+        P.items.length,
+      ),
+      h(
+        'p',
+        { class: 'meta', style: 'margin:12px 0' },
+        `"Probable" = la escribieron igual ${datos.regla.personas} personas o más, de ${datos.regla.zonas} zonas o más. La última palabra la tiene alguien que hable ${lengua}.`,
+        datos.sinPermiso ? ` No se muestran ${datos.sinPermiso} respuestas de quienes no dieron permiso.` : '',
+      ),
+      descargar,
+      G.codigo ? null : h('p', { class: 'meta', style: 'margin:8px 0 0' }, `El ${lengua} todavía no está en la app: se descarga la lista, sin paquetes.`),
+    ),
+    chips(
+      [
+        ['con', `Con respuestas · ${cuenta.con}`],
+        ['probables', `Probables · ${cuenta.probables}`],
+        ['confirmadas', `Confirmadas · ${cuenta.confirmadas}`],
+        ['sin', `Sin respuestas · ${cuenta.sin}`],
+        ['todas', `Todas · ${P.items.length}`],
+      ],
+      f.ver,
+      (v) => {
+        Object.assign(f, { ver: v, pagina: 0 });
+        repintar();
+      },
+    ),
+    P.temas
+      ? h(
+          'select',
+          {
+            class: 'campo buscador',
+            'aria-label': 'Tema',
+            onchange: (e) => {
+              Object.assign(f, { tema: e.target.value, pagina: 0 });
+              repintar();
+            },
+          },
+          [['todos', 'Todos los temas'], ...Object.entries(P.temas)].map(([id, t]) => h('option', { value: id, selected: f.tema === id }, t)),
+        )
+      : null,
+    buscadorVivo(`Buscar en español o en ${lengua}…`, f, repintar),
+    lista.length
+      ? h('ul', { class: 'palabras' }, lista.slice(f.pagina * TAM, (f.pagina + 1) * TAM).map((it) => tarjetaPalabra(P, G, it, repintar)))
+      : h('p', { class: 'vacio' }, 'Ninguna coincide.'),
+    paginas(lista.length, f.pagina, TAM, (n) => {
+      f.pagina = n;
+      repintar();
+    }),
+  );
+}
+
+function tarjetaPalabra(P, G, it, repintar) {
+  const variantes = it.porGrupo[G.id] ?? [];
+  return h(
+    'li',
+    { class: `palabra${variantes.some((v) => v.confirmada) ? ' palabra--confirmada' : ''}` },
+    h(
+      'div',
+      { class: 'palabra__cabeza' },
+      h('b', { class: 'palabra__es' }, it.texto),
+      it.tema && P.temas ? h('span', { class: 'palabra__tema' }, P.temas[it.tema]) : null,
+    ),
+    variantes.length
+      ? h(
+          'ul',
+          { class: 'variantes' },
+          variantes.map((v) => {
+            const boton = h(
+              'button',
+              {
+                class: `btn btn--chico ${v.confirmada ? 'btn--papel' : ''}`,
+                type: 'button',
+                'aria-pressed': String(v.confirmada),
+                onclick: async () => {
+                  boton.disabled = true;
+                  try {
+                    await api(`/api/admin/encuestas/${estado.slug}/palabras/confirmar`, {
+                      method: 'POST',
+                      body: JSON.stringify({ pregunta: P.id, item: it.id, grupo: G.id, texto: v.texto, confirmada: !v.confirmada }),
+                    });
+                    v.confirmada = !v.confirmada;
+                  } catch (err) {
+                    alert(err.message);
+                  }
+                  repintar();
+                },
+              },
+              v.confirmada ? 'Quitar' : 'Confirmar',
+            );
+            return h(
+              'li',
+              { class: `variante${v.confirmada ? ' variante--confirmada' : ''}` },
+              h(
+                'div',
+                { class: 'variante__texto' },
+                h('span', { class: 'variante__forma' }, v.texto),
+                h(
+                  'span',
+                  { class: 'variante__meta' },
+                  `${personas(v.n)} · ${v.zonas} ${v.zonas === 1 ? 'zona' : 'zonas'}`,
+                  v.confirmada ? h('span', { class: 'etiqueta etiqueta--ok' }, 'Confirmada') : v.probable ? h('span', { class: 'etiqueta' }, 'Probable') : null,
+                ),
+              ),
+              boton,
+            );
+          }),
+        )
+      : h('p', { class: 'meta', style: 'margin:6px 0 0' }, `Nadie la escribió en ${G.texto.replace(/\s*\(.*\)$/, '')} todavía.`),
+  );
 }
 
 /* ------------------------------------------------------ pestaña Correos */

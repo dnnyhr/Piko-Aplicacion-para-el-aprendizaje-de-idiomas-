@@ -163,6 +163,23 @@
   .contactos__check input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--verde); flex: none; }
   .nota { font-size: .88rem; color: var(--tinta); margin: 8px 0; }
 
+  /* Palabras: una tarjeta por palabra, con las formas que escribió la gente */
+  .palabras { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; }
+  .palabra { background: var(--blanco); border: 2px solid var(--borde); border-radius: var(--radio-md); padding: 12px 14px; }
+  .palabra--confirmada { border-color: #B9D9A8; }
+  .palabra__cabeza { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .palabra__es { font-family: Fredoka, sans-serif; font-size: 1.15rem; color: var(--grafito); }
+  .palabra__tema { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--verde-hondo); background: #E6F1E9; padding: 2px 9px; border-radius: 999px; white-space: nowrap; }
+  .variantes { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 6px; }
+  .variante { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radio-sm); background: var(--papel); }
+  .variante--confirmada { background: #EEF6E3; }
+  .variante__texto { display: grid; gap: 2px; min-width: 0; }
+  .variante__forma { font-weight: 700; font-size: 1.02rem; overflow-wrap: anywhere; }
+  .variante__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: .8rem; color: var(--tinta-suave); }
+  .etiqueta { font-family: Fredoka, sans-serif; font-weight: 600; font-size: .72rem; padding: 1px 8px; border-radius: 999px; background: #FDF0CF; color: #7A5410; }
+  .etiqueta--ok { background: var(--verde); color: #fff; }
+  .variante .btn { flex: none; }
+
   /* Tooltip de las gráficas */
   .tip { position: fixed; z-index: 50; pointer-events: none; background: var(--grafito); color: #fff; font-size: .82rem; line-height: 1.35;
     padding: 6px 10px; border-radius: 8px; max-width: 240px; box-shadow: 0 6px 18px rgba(0,0,0,.2); }

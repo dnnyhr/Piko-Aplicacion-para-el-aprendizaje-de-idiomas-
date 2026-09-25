@@ -14,13 +14,43 @@
  *   escala    un número en un rango   → 4
  *   matriz    una escala por fila     → { fila: 4, ... }
  *   texto     texto libre             → "..."
+ *   traducir  a cada persona le tocan   → { item: "cómo se dice", ... }
+ *             `cuantas` cosas al azar de un `banco` y escribe cómo se dicen
+ *             (en la lengua que eligió en la pregunta `lengua`). Las que no
+ *             sabe, las deja en blanco.
  */
 
-export const TIPOS = ['unica', 'multiple', 'escala', 'matriz', 'texto'];
+export const TIPOS = ['unica', 'multiple', 'escala', 'matriz', 'texto', 'traducir'];
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ID = /^[a-z0-9_]+$/;
 const TEXTO_MAX = 2000;
+/** Largo máximo de una traducción si la pregunta no dice otro. */
+const TRADUCCION_MAX = 120;
+
+/** Quita las traducciones en blanco y los espacios de más: dejar una en blanco es "no sé esta". */
+export function limpiarTraducciones(valor) {
+  if (!valor || typeof valor !== 'object' || Array.isArray(valor)) return valor;
+  const limpio = {};
+  for (const [k, v] of Object.entries(valor)) {
+    if (typeof v !== 'string') limpio[k] = v;
+    else if (v.trim()) limpio[k] = v.trim().replace(/\s+/g, ' ');
+  }
+  return limpio;
+}
+
+/**
+ * Elige `cuantas` cosas del banco al azar (Fisher–Yates). `azar` se puede
+ * pasar para las pruebas; en el navegador es Math.random.
+ */
+export function muestraDelBanco(p, azar = Math.random) {
+  const ids = p.banco.map((b) => b.id);
+  for (let i = ids.length - 1; i > 0; i--) {
+    const j = Math.floor(azar() * (i + 1));
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+  }
+  return ids.slice(0, p.cuantas);
+}
 
 /** Formatos que puede pedir una pregunta de texto. */
 export const FORMATOS = ['correo', 'telefono'];
@@ -111,6 +141,18 @@ export function revisarPregunta(p, valor, otro) {
       if (p.requerida && Object.keys(valor).length < filas.size) return 'Te faltan algunas filas.';
       break;
     }
+    case 'traducir': {
+      if (typeof valor !== 'object' || Array.isArray(valor)) return 'Escribí cómo se dice.';
+      const banco = new Set(p.banco.map((b) => b.id));
+      const max = p.max ?? TRADUCCION_MAX;
+      for (const [item, texto] of Object.entries(valor)) {
+        if (!banco.has(item)) return 'Hay una palabra que no está en la lista.';
+        if (typeof texto !== 'string') return 'Escribí cómo se dice.';
+        if (texto.length > max) return `Máximo ${max} caracteres en cada una.`;
+      }
+      if (Object.keys(valor).length > p.cuantas) return `Son ${p.cuantas} como máximo.`;
+      break;
+    }
     case 'texto': {
       if (typeof valor !== 'string') return 'Escribí tu respuesta.';
       const max = p.max ?? TEXTO_MAX;
@@ -146,7 +188,7 @@ export function revisar(def, respuestas = {}, otros = {}, seccion) {
   for (const s of secciones) {
     for (const p of s.preguntas) {
       if (!esVisible(def, p, respuestas)) continue;
-      const valor = respuestas[p.id];
+      const valor = p.tipo === 'traducir' ? limpiarTraducciones(respuestas[p.id]) : respuestas[p.id];
       const otro = otros[p.id];
       const error = revisarPregunta(p, valor, otro);
       if (error) {
@@ -188,6 +230,9 @@ export function aFilas(def, limpias, otros = {}) {
         break;
       case 'texto':
         filas.push({ ...base, texto: v });
+        break;
+      case 'traducir':
+        for (const [item, texto] of Object.entries(v)) filas.push({ ...base, fila: item, texto });
         break;
     }
   }
@@ -255,6 +300,22 @@ export function validarDefinicion(def) {
         if (!(Number.isInteger(esc.min) && Number.isInteger(esc.max) && esc.min < esc.max))
           e.push(`${q}: la escala de la matriz necesita min < max enteros.`);
       }
+      if (p.tipo === 'traducir') {
+        if (!Array.isArray(p.banco) || p.banco.length === 0) e.push(`${q}: necesita un banco.`);
+        const ids = new Set();
+        for (const b of p.banco ?? []) {
+          if (!ID.test(b.id ?? '') || !b.texto) e.push(`${q}: elemento del banco mal formado "${b.id}".`);
+          if (ids.has(b.id)) e.push(`${q}: elemento repetido en el banco "${b.id}".`);
+          ids.add(b.id);
+          if (p.temas && b.tema && !(b.tema in p.temas)) e.push(`${q}: el tema "${b.tema}" de "${b.id}" no está en temas.`);
+        }
+        if (!Number.isInteger(p.cuantas) || p.cuantas < 1 || p.cuantas > ids.size)
+          e.push(`${q}: cuantas tiene que ser un entero entre 1 y el tamaño del banco.`);
+        for (const campo of ['lengua', 'zona']) {
+          if (p[campo] && anteriores.get(p[campo])?.tipo !== 'unica')
+            e.push(`${q}: ${campo} tiene que apuntar a una pregunta anterior de opción única.`);
+        }
+      }
       if (p.mostrarSi) {
         const origen = anteriores.get(p.mostrarSi.pregunta);
         if (!origen) e.push(`${q}: mostrarSi apunta a "${p.mostrarSi.pregunta}", que no es una pregunta anterior.`);
@@ -267,6 +328,11 @@ export function validarDefinicion(def) {
       }
       anteriores.set(p.id, p);
     }
+  }
+  if (def.permiso) {
+    const p = anteriores.get(def.permiso.pregunta);
+    if (p?.tipo !== 'unica' || !p.opciones.some((o) => o.id === def.permiso.valor))
+      e.push(`permiso: "${def.permiso.pregunta}" tiene que ser una pregunta de opción única con la opción "${def.permiso.valor}".`);
   }
   if (def.correo) {
     const p = anteriores.get(def.correo.pregunta);

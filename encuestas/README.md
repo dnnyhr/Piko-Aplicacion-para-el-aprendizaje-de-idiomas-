@@ -1,10 +1,15 @@
 # Encuestas de Piko
 
 Una página, muchas encuestas. Corre en **Cloudflare Workers** y guarda las
-respuestas en **D1**. La primera encuesta es
-[`¿Qué le falta a Piko?`](definiciones/que-le-falta-a-piko.json): qué quiere la
-gente en la app y en el robot, el acompañante de aula que **guía, escucha y
-corrige con IA**.
+respuestas en **D1**. Hay dos:
+
+- [`¿Qué le falta a Piko?`](definiciones/que-le-falta-a-piko.json): qué quiere
+  la gente en la app y en el robot, el acompañante de aula que **guía, escucha
+  y corrige con IA**. Es la principal: se abre en la raíz del dominio.
+- [`Tu lengua en Piko`](definiciones/tu-lengua.json) (`/e/tu-lengua`): los
+  hablantes escriben cómo se dicen palabras y frases en miskito, mayangna,
+  rama, garífuna o kriol. Con eso se arman los paquetes de lecciones de la app
+  (ver [Palabras para la app](#palabras-para-la-app)).
 
 La página es **mobile first**: casi todas las personas la van a contestar con
 el pulgar, en un teléfono de gama baja y con poca señal. Los estilos base son
@@ -96,7 +101,7 @@ respuesta: si Resend falla, la respuesta queda guardada igual.
 Para activarlo:
 
 ```bash
-npm run db:remoto                          # tablas correos, contactos e intentos_admin (migraciones 0002 a 0005)
+npm run db:remoto                          # tablas correos, contactos, intentos_admin y confirmaciones (migraciones 0002 a 0006)
 npx wrangler secret put RESEND_API_KEY     # la API key de Resend
 ```
 
@@ -175,6 +180,7 @@ No hace falta tocar código ni el esquema.
 | `escala` | Un número (1–5, 0–10…) | `min`, `max`, `etiquetaMin`, `etiquetaMax` |
 | `matriz` | Una escala por fila | `filas`, `escala: { min, max, etiquetaMin, etiquetaMax }` |
 | `texto` | Texto libre | `multilinea`, `max`, `placeholder` |
+| `traducir` | A cada persona le tocan `cuantas` cosas al azar de un `banco` y escribe cómo se dicen | `banco: [{ id, texto, tema }]`, `cuantas`, `temas`, `max`, `lengua` y `zona` (ids de preguntas de opción única anteriores). En el texto, `{lengua}` se cambia por la lengua elegida |
 
 Todas aceptan `requerida`, `ayuda` y `mostrarSi: { "pregunta": "rol", "en": ["docente"] }`
 para mostrarse solo según una respuesta anterior. Una opción con `"otro": true`
@@ -191,6 +197,33 @@ solo cambia el estado, no. Cada respuesta guarda con qué versión se contestó 
 se valida contra esa, así que quien empezó antes del cambio puede terminar sin
 problemas. Para no romper los agregados, **no reutilices el id de una pregunta
 u opción con otro significado**: agregá uno nuevo.
+
+## Palabras para la app
+
+"Tu lengua en Piko" llena los paquetes de `app/content/packs/`, que hoy están
+vacíos. El recorrido:
+
+1. **Recolectar.** A cada persona le tocan 10 palabras (de un banco de 120, por
+   temas) y 3 frases (de 15), al azar. Así nadie se cansa, entre todos se
+   cubre el banco, y la misma palabra la contestan varias personas.
+2. **Revisar.** En `/admin`, la pestaña **Palabras** agrupa lo que escribió la
+   gente por palabra y por lengua ("Li" y "li." cuentan como lo mismo) y dice
+   cuántas personas y de cuántas zonas coinciden. Es **probable** cuando la
+   escribieron igual 3 personas o más, de 2 zonas o más. Quien habla la lengua
+   la **confirma**; se pueden confirmar varias formas si cambian según la zona.
+3. **Exportar.** "Descargar para la app" baja un JSON con lo confirmado de esa
+   lengua y, si la lengua está en la app (miskito `miq`, mayangna `sum`, rama
+   `rma`, garífuna `cab`), los **paquetes** ya en el formato de
+   `app/src/core/content/schema.ts`: uno de opción múltiple por tema (hacen
+   falta 2 palabras confirmadas en el tema) y uno de ordenar frases. El kriol
+   todavía no está en la app: se descarga la lista, sin paquetes.
+
+Solo se usa lo de quien respondió "Sí" en el permiso (`"permiso"` en la
+definición); lo demás no aparece en Palabras ni se exporta. Las confirmaciones
+van en la tabla `confirmaciones` (migración 0006).
+
+Los ejercicios de escuchar necesitan grabaciones de hablantes: la encuesta
+pregunta quién se anima a grabar y deja su WhatsApp para una segunda ronda.
 
 ## Cómo se guarda
 

@@ -26,11 +26,15 @@
  *   GET  /api/admin/encuestas/:slug/contactos/viejos  contactos escritos en preguntas que ya no están (token)
  *   POST /api/admin/contactos/:id/enviar       mandar el enlace a uno (token)
  *   DELETE /api/admin/contactos/:id            borrar uno (token)
+ *   GET  /api/admin/encuestas/:slug/palabras   traducciones agrupadas por palabra, lengua y zona (token)
+ *   POST /api/admin/encuestas/:slug/palabras/confirmar  confirmar o quitar una traducción (token)
+ *   GET  /api/admin/encuestas/:slug/palabras/exportar?grupo=  lo confirmado, y los paquetes de la app (token)
  */
 
 import { aFilas, preguntasDe, revisar, validarDefinicion } from '../public/js/reglas.js';
 import { detalleAmigable, enviarBienvenida, limpiarNombre, mandarDescarga, nombreDesdeCorreo } from './correo.js';
 import { leerContactos, MAX_LINEAS } from './contactos.js';
+import { agrupar, armarPaquetes, clavePalabra, REGLA } from './palabras.js';
 
 /** Intentos fallidos de token por IP antes de bloquearla, y por cuánto tiempo. */
 const INTENTOS_ADMIN = 10;
@@ -126,6 +130,9 @@ async function enrutar(request, env, ctx) {
     if (b === 'encuestas' && c && d === 'contactos' && e === 'viejos' && m === 'GET') return contactosViejos(env, c);
     if (b === 'contactos' && c && d === 'enviar' && m === 'POST') return enviarAContacto(env, c, url);
     if (b === 'contactos' && c && !d && m === 'DELETE') return borrarContacto(env, c);
+    if (b === 'encuestas' && c && d === 'palabras' && !e && m === 'GET') return verPalabras(env, c);
+    if (b === 'encuestas' && c && d === 'palabras' && e === 'confirmar' && m === 'POST') return confirmarPalabra(request, env, c);
+    if (b === 'encuestas' && c && d === 'palabras' && e === 'exportar' && m === 'GET') return exportarPalabras(env, c, url);
   }
 
   throw new ErrorHttp(404, 'Ruta no encontrada.');
@@ -537,6 +544,16 @@ async function resumen(env, slug) {
       filas.sort((x, y) => (y.promedio ?? -1) - (x.promedio ?? -1));
       return { ...base, min: p.escala.min, max: p.escala.max, etiquetaMin: p.escala.etiquetaMin ?? null, etiquetaMax: p.escala.etiquetaMax ?? null, filas };
     }
+    if (p.tipo === 'traducir') {
+      // Cuántas personas escribieron cada cosa del banco (el detalle, en la pestaña Palabras).
+      const items = p.banco.map((b) => ({
+        id: b.id,
+        texto: b.texto,
+        tema: p.temas?.[b.tema] ?? null,
+        n: mias.filter((c) => c.fila === b.id).reduce((a, c) => a + c.n, 0),
+      }));
+      return { ...base, cuantas: p.cuantas, items };
+    }
     const lista = textos.filter((t) => t.pregunta === p.id && !t.opcion).map((t) => ({ texto: t.texto, en: t.creada_en }));
     return { ...base, respondieron: lista.length, textos: lista };
   });
@@ -572,6 +589,7 @@ async function resumen(env, slug) {
     slug: e.slug,
     titulo: e.definicion.titulo,
     correos,
+    usaCorreo: Boolean(e.definicion.correo),
     estado: e.estado,
     version: e.version,
     respuestas: total.n,
@@ -594,6 +612,13 @@ async function exportarCsv(env, slug) {
   const columnas = [];
   for (const p of await preguntasHistoricas(env, e)) {
     if (p.tipo === 'matriz') for (const f of p.filas) columnas.push({ titulo: `${p.id}.${f.id}`, leer: (d) => d.respuestas[p.id]?.[f.id] });
+    else if (p.tipo === 'traducir') {
+      const es = new Map(p.banco.map((b) => [b.id, b.texto]));
+      columnas.push({
+        titulo: p.id,
+        leer: (d) => Object.entries(d.respuestas[p.id] ?? {}).map(([item, t]) => `${es.get(item) ?? item}: ${t}`).join(' | '),
+      });
+    }
     else columnas.push({ titulo: p.id, leer: (d) => d.respuestas[p.id] });
     if ((p.opciones ?? []).some((o) => o.otro)) columnas.push({ titulo: `${p.id}.otro`, leer: (d) => d.otros?.[p.id] });
   }
@@ -608,6 +633,148 @@ async function exportarCsv(env, slug) {
     headers: {
       'content-type': 'text/csv; charset=utf-8',
       'content-disposition': `attachment; filename="${slug}.csv"`,
+      'cache-control': 'no-store',
+    },
+  });
+}
+
+/* --------------------------------------------------------------- palabras */
+
+/**
+ * Las filas de una pregunta traducir, con la lengua y la zona que eligió cada
+ * persona. Solo las de quien dio permiso, si la encuesta lo pide.
+ */
+async function filasTraducir(env, e, p) {
+  const permiso = e.definicion.permiso;
+  const { results } = await env.DB.prepare(
+    `SELECT i.fila AS item, i.texto, i.respuesta_id AS respuesta,
+            (SELECT g.opcion FROM respuestas_items g WHERE g.respuesta_id = i.respuesta_id AND g.pregunta = ?) AS grupo,
+            (SELECT g.texto  FROM respuestas_items g WHERE g.respuesta_id = i.respuesta_id AND g.pregunta = ?) AS grupoTexto,
+            (SELECT z.opcion FROM respuestas_items z WHERE z.respuesta_id = i.respuesta_id AND z.pregunta = ?) AS zona
+       FROM respuestas_items i JOIN respuestas r ON r.id = i.respuesta_id
+      WHERE r.encuesta_id = ? AND i.pregunta = ? AND i.texto IS NOT NULL
+        ${permiso ? 'AND EXISTS (SELECT 1 FROM respuestas_items pm WHERE pm.respuesta_id = i.respuesta_id AND pm.pregunta = ? AND pm.opcion = ?)' : ''}`,
+  )
+    .bind(p.lengua ?? '', p.lengua ?? '', p.zona ?? '', e.id, p.id, ...(permiso ? [permiso.pregunta, permiso.valor] : []))
+    .all();
+  return results;
+}
+
+async function leerConfirmadas(env, e) {
+  try {
+    const { results } = await env.DB.prepare('SELECT pregunta, item, grupo, clave, texto FROM confirmaciones WHERE encuesta_id = ? ORDER BY creada_en')
+      .bind(e.id)
+      .all();
+    return results;
+  } catch (err) {
+    console.error('confirmaciones (¿falta npm run db:remoto?)', err);
+    return [];
+  }
+}
+
+/** Las lenguas de la pregunta a la que apunta `lengua`, con su código de la app (si lo tiene). */
+function lenguasDe(e, p) {
+  const origen = preguntasDe(e.definicion).find((q) => q.id === p.lengua);
+  return new Map((origen?.opciones ?? []).map((o) => [o.id, { texto: o.texto, codigo: o.codigo ?? null }]));
+}
+
+async function verPalabras(env, slug) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  const traducir = (await preguntasHistoricas(env, e)).filter((p) => p.tipo === 'traducir');
+  const confirmadas = await leerConfirmadas(env, e);
+
+  let sinPermiso = 0;
+  if (e.definicion.permiso) {
+    ({ n: sinPermiso } = await env.DB.prepare(
+      `SELECT COUNT(DISTINCT i.respuesta_id) AS n FROM respuestas_items i JOIN respuestas r ON r.id = i.respuesta_id
+        WHERE r.encuesta_id = ? AND i.pregunta = ? AND i.opcion != ?`,
+    )
+      .bind(e.id, e.definicion.permiso.pregunta, e.definicion.permiso.valor)
+      .first());
+  }
+
+  const preguntas = [];
+  for (const p of traducir) {
+    const marcadas = new Set(confirmadas.filter((c) => c.pregunta === p.id).map((c) => `${c.item}|${c.grupo}|${c.clave}`));
+    const { grupos, items } = agrupar(await filasTraducir(env, e, p), marcadas);
+    const lenguas = lenguasDe(e, p);
+    preguntas.push({
+      id: p.id,
+      texto: p.texto,
+      anterior: p.anterior ?? null,
+      temas: p.temas ?? null,
+      grupos: [...grupos].map(([id, g]) => ({
+        id,
+        texto: lenguas.get(id)?.texto ?? g.texto ?? id,
+        codigo: lenguas.get(id)?.codigo ?? null,
+        personas: g.personas,
+      })).sort((a, b) => b.personas - a.personas),
+      items: p.banco.map((b) => ({
+        id: b.id,
+        texto: b.texto,
+        tema: b.tema ?? null,
+        porGrupo: Object.fromEntries(items.get(b.id) ?? []),
+      })),
+    });
+  }
+  return json({ preguntas, regla: REGLA, sinPermiso });
+}
+
+async function confirmarPalabra(request, env, slug) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  const b = await leerJson(request);
+  const p = (await preguntasHistoricas(env, e)).find((q) => q.id === b.pregunta && q.tipo === 'traducir');
+  if (!p || !p.banco.some((x) => x.id === b.item)) throw new ErrorHttp(400, 'Esa palabra no existe en la encuesta.');
+  const texto = String(b.texto ?? '').trim().slice(0, 300);
+  const clave = clavePalabra(texto);
+  const grupo = String(b.grupo ?? '').slice(0, 100);
+  if (!clave || !grupo) throw new ErrorHttp(400, 'Falta la traducción o la lengua.');
+  try {
+    if (b.confirmada === false) {
+      await env.DB.prepare('DELETE FROM confirmaciones WHERE encuesta_id = ? AND pregunta = ? AND item = ? AND grupo = ? AND clave = ?')
+        .bind(e.id, p.id, b.item, grupo, clave)
+        .run();
+    } else {
+      await env.DB.prepare(
+        `INSERT INTO confirmaciones (encuesta_id, pregunta, item, grupo, clave, texto) VALUES (?, ?, ?, ?, ?, ?)
+         ON CONFLICT (encuesta_id, pregunta, item, grupo, clave) DO UPDATE SET texto = excluded.texto`,
+      )
+        .bind(e.id, p.id, b.item, grupo, clave, texto)
+        .run();
+    }
+  } catch (err) {
+    console.error('confirmarPalabra (¿falta npm run db:remoto?)', err);
+    throw new ErrorHttp(503, 'No se pudo guardar. Probá de nuevo en un rato.');
+  }
+  return json({ ok: true, confirmada: b.confirmada !== false });
+}
+
+async function exportarPalabras(env, slug, url) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  const grupo = url.searchParams.get('grupo') ?? '';
+  const traducir = (await preguntasHistoricas(env, e)).filter((p) => p.tipo === 'traducir');
+  const lengua = traducir.map((p) => lenguasDe(e, p).get(grupo)).find(Boolean) ?? { texto: grupo.replace(/^otra:/, ''), codigo: null };
+
+  const confirmadas = (await leerConfirmadas(env, e)).filter((c) => c.grupo === grupo);
+  const es = new Map(traducir.flatMap((p) => p.banco.map((b) => [`${p.id}|${b.id}`, b])));
+  const palabras = confirmadas.map((c) => ({
+    pregunta: c.pregunta,
+    item: c.item,
+    es: es.get(`${c.pregunta}|${c.item}`)?.texto ?? c.item,
+    tema: es.get(`${c.pregunta}|${c.item}`)?.tema ?? null,
+    texto: c.texto,
+  }));
+  const nombre = lengua.texto.replace(/\s*\(.*\)$/, '').toLocaleLowerCase('es');
+  const paquetes = lengua.codigo ? armarPaquetes({ codigo: lengua.codigo, lengua: nombre, preguntas: traducir, confirmadas }) : [];
+
+  const archivo = `${slug}-${(lengua.codigo ?? grupo).replace(/[^a-z0-9-]+/gi, '-')}.json`;
+  return new Response(JSON.stringify({ encuesta: slug, lengua: { id: grupo, ...lengua }, generado: new Date().toISOString(), palabras, paquetes }, null, 2), {
+    headers: {
+      'content-type': 'application/json; charset=utf-8',
+      'content-disposition': `attachment; filename="${archivo}"`,
       'cache-control': 'no-store',
     },
   });

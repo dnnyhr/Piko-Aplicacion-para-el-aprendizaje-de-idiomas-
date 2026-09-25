@@ -1,0 +1,1052 @@
+{
+  "slug": "tu-lengua",
+  "titulo": "Tu lengua en Piko",
+  "descripcion": "Enseñale a Piko palabras de tu lengua para que las niñas y los niños de la Costa Caribe aprendan con ellas.",
+  "imagen": "/img/og-tu-lengua.jpg",
+  "estado": "abierta",
+  "minutos": 6,
+  "creditos": "kronox",
+  "portada": {
+    "saludo": "¡Hola! ¿Me enseñás tu lengua?",
+    "resaltar": "Piko",
+    "texto": "Piko es una app para que las niñas y los niños aprendan miskito, mayangna, rama, garífuna y kriol. Para armar las lecciones necesitamos a quienes las hablan: te tocan 10 palabras y 3 frases al azar, y escribís cómo se dicen en tu lengua.",
+    "etiqueta": "Tu lengua vale"
+  },
+  "permiso": {
+    "pregunta": "permiso",
+    "valor": "si"
+  },
+  "secciones": [
+    {
+      "titulo": "Tu lengua",
+      "piko": {
+        "cara": "saludo",
+        "dice": "Primero contame qué lengua hablás y de dónde sos. Una misma palabra puede cambiar de un lugar a otro, y todas valen."
+      },
+      "preguntas": [
+        {
+          "id": "lengua",
+          "tipo": "unica",
+          "requerida": true,
+          "texto": "¿En qué lengua nos vas a enseñar?",
+          "ayuda": "Si hablás más de una, elegí una ahora. Al final podés volver a empezar con otra.",
+          "opciones": [
+            {
+              "id": "miskito",
+              "texto": "Miskito",
+              "codigo": "miq"
+            },
+            {
+              "id": "mayangna",
+              "texto": "Mayangna",
+              "codigo": "sum"
+            },
+            {
+              "id": "rama",
+              "texto": "Rama",
+              "codigo": "rma"
+            },
+            {
+              "id": "garifuna",
+              "texto": "Garífuna",
+              "codigo": "cab"
+            },
+            {
+              "id": "kriol",
+              "texto": "Kriol (inglés criollo)"
+            },
+            {
+              "id": "otra",
+              "texto": "Otra lengua",
+              "otro": true
+            }
+          ]
+        },
+        {
+          "id": "variante_mayangna",
+          "tipo": "unica",
+          "texto": "¿Qué variante del mayangna hablás?",
+          "mostrarSi": {
+            "pregunta": "lengua",
+            "en": [
+              "mayangna"
+            ]
+          },
+          "opciones": [
+            {
+              "id": "panamahka",
+              "texto": "Panamahka"
+            },
+            {
+              "id": "tuahka",
+              "texto": "Tuahka"
+            },
+            {
+              "id": "no_se",
+              "texto": "No estoy seguro/a"
+            }
+          ]
+        },
+        {
+          "id": "region",
+          "tipo": "unica",
+          "requerida": true,
+          "texto": "¿De qué zona sos?",
+          "opciones": [
+            {
+              "id": "rio_coco",
+              "texto": "Waspam y el Río Coco"
+            },
+            {
+              "id": "bilwi",
+              "texto": "Bilwi (Puerto Cabezas) y alrededores"
+            },
+            {
+              "id": "tasba_pri",
+              "texto": "Tasba Pri y Prinzapolka"
+            },
+            {
+              "id": "minas",
+              "texto": "Las Minas: Siuna, Rosita o Bonanza"
+            },
+            {
+              "id": "bosawas",
+              "texto": "Bosawás"
+            },
+            {
+              "id": "bluefields",
+              "texto": "Bluefields"
+            },
+            {
+              "id": "laguna_perlas",
+              "texto": "Laguna de Perlas y sus comunidades"
+            },
+            {
+              "id": "rama_cay",
+              "texto": "Rama Cay y el territorio rama"
+            },
+            {
+              "id": "corn_island",
+              "texto": "Corn Island"
+            },
+            {
+              "id": "pacifico",
+              "texto": "Managua u otra ciudad del Pacífico"
+            },
+            {
+              "id": "honduras",
+              "texto": "Honduras (La Mosquitia)"
+            },
+            {
+              "id": "otra_zona",
+              "texto": "Otro lugar",
+              "otro": true
+            }
+          ]
+        },
+        {
+          "id": "comunidad",
+          "tipo": "texto",
+          "max": 80,
+          "texto": "¿De qué comunidad o barrio sos?",
+          "ayuda": "Opcional.",
+          "placeholder": "Tu comunidad o barrio"
+        },
+        {
+          "id": "nivel",
+          "tipo": "unica",
+          "requerida": true,
+          "texto": "¿Cómo es tu relación con la lengua?",
+          "opciones": [
+            {
+              "id": "materna",
+              "texto": "Es mi lengua materna"
+            },
+            {
+              "id": "bien",
+              "texto": "La hablo bien"
+            },
+            {
+              "id": "entiendo",
+              "texto": "La entiendo, pero hablo poco"
+            },
+            {
+              "id": "aprendiendo",
+              "texto": "La estoy aprendiendo"
+            }
+          ]
+        },
+        {
+          "id": "rol",
+          "tipo": "unica",
+          "texto": "¿Y vos quién sos?",
+          "opciones": [
+            {
+              "id": "docente",
+              "texto": "Docente de educación bilingüe"
+            },
+            {
+              "id": "estudiante",
+              "texto": "Estudiante"
+            },
+            {
+              "id": "familia",
+              "texto": "Mamá, papá o familiar de un estudiante"
+            },
+            {
+              "id": "sabio",
+              "texto": "Anciano, anciana o sabio de la comunidad"
+            },
+            {
+              "id": "otro",
+              "texto": "Otro",
+              "otro": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "titulo": "Palabras",
+      "piko": {
+        "cara": "feliz",
+        "dice": "Te tocan 10 palabras al azar. Escribilas como las decís vos. Si no sabés una, dejala en blanco: no pasa nada."
+      },
+      "preguntas": [
+        {
+          "id": "palabras",
+          "tipo": "traducir",
+          "texto": "¿Cómo se dice en {lengua}?",
+          "ayuda": "Escribila como la decís vos. Las que no sepás, dejalas en blanco.",
+          "lengua": "lengua",
+          "zona": "region",
+          "cuantas": 10,
+          "max": 80,
+          "temas": {
+            "saludos": "Saludos",
+            "familia": "Familia",
+            "numeros": "Números",
+            "cuerpo": "El cuerpo",
+            "animales": "Animales",
+            "comida": "Comida",
+            "naturaleza": "Naturaleza",
+            "casa": "La casa",
+            "escuela": "La escuela",
+            "colores": "Colores",
+            "acciones": "Acciones"
+          },
+          "banco": [
+            {
+              "id": "hola",
+              "texto": "hola",
+              "tema": "saludos"
+            },
+            {
+              "id": "buenos_dias",
+              "texto": "buenos días",
+              "tema": "saludos"
+            },
+            {
+              "id": "buenas_tardes",
+              "texto": "buenas tardes",
+              "tema": "saludos"
+            },
+            {
+              "id": "buenas_noches",
+              "texto": "buenas noches",
+              "tema": "saludos"
+            },
+            {
+              "id": "adios",
+              "texto": "adiós",
+              "tema": "saludos"
+            },
+            {
+              "id": "gracias",
+              "texto": "gracias",
+              "tema": "saludos"
+            },
+            {
+              "id": "por_favor",
+              "texto": "por favor",
+              "tema": "saludos"
+            },
+            {
+              "id": "si",
+              "texto": "sí",
+              "tema": "saludos"
+            },
+            {
+              "id": "no",
+              "texto": "no",
+              "tema": "saludos"
+            },
+            {
+              "id": "como_estas",
+              "texto": "¿cómo estás?",
+              "tema": "saludos"
+            },
+            {
+              "id": "mama",
+              "texto": "mamá",
+              "tema": "familia"
+            },
+            {
+              "id": "papa",
+              "texto": "papá",
+              "tema": "familia"
+            },
+            {
+              "id": "hermano",
+              "texto": "hermano",
+              "tema": "familia"
+            },
+            {
+              "id": "hermana",
+              "texto": "hermana",
+              "tema": "familia"
+            },
+            {
+              "id": "abuela",
+              "texto": "abuela",
+              "tema": "familia"
+            },
+            {
+              "id": "abuelo",
+              "texto": "abuelo",
+              "tema": "familia"
+            },
+            {
+              "id": "hijo",
+              "texto": "hijo",
+              "tema": "familia"
+            },
+            {
+              "id": "hija",
+              "texto": "hija",
+              "tema": "familia"
+            },
+            {
+              "id": "tio",
+              "texto": "tío",
+              "tema": "familia"
+            },
+            {
+              "id": "tia",
+              "texto": "tía",
+              "tema": "familia"
+            },
+            {
+              "id": "nino_o_nina",
+              "texto": "niño o niña",
+              "tema": "familia"
+            },
+            {
+              "id": "bebe",
+              "texto": "bebé",
+              "tema": "familia"
+            },
+            {
+              "id": "uno",
+              "texto": "uno",
+              "tema": "numeros"
+            },
+            {
+              "id": "dos",
+              "texto": "dos",
+              "tema": "numeros"
+            },
+            {
+              "id": "tres",
+              "texto": "tres",
+              "tema": "numeros"
+            },
+            {
+              "id": "cuatro",
+              "texto": "cuatro",
+              "tema": "numeros"
+            },
+            {
+              "id": "cinco",
+              "texto": "cinco",
+              "tema": "numeros"
+            },
+            {
+              "id": "seis",
+              "texto": "seis",
+              "tema": "numeros"
+            },
+            {
+              "id": "siete",
+              "texto": "siete",
+              "tema": "numeros"
+            },
+            {
+              "id": "ocho",
+              "texto": "ocho",
+              "tema": "numeros"
+            },
+            {
+              "id": "nueve",
+              "texto": "nueve",
+              "tema": "numeros"
+            },
+            {
+              "id": "diez",
+              "texto": "diez",
+              "tema": "numeros"
+            },
+            {
+              "id": "cabeza",
+              "texto": "cabeza",
+              "tema": "cuerpo"
+            },
+            {
+              "id": "ojo",
+              "texto": "ojo",
+              "tema": "cuerpo"
+            },
+            {
+              "id": "boca",
+              "texto": "boca",
+              "tema": "cuerpo"
+            },
+            {
+              "id": "nariz",
+              "texto": "nariz",
+              "tema": "cuerpo"
+            },
+            {
+              "id": "oreja",
+              "texto": "oreja",
+              "tema": "cuerpo"
+            },
+            {
+              "id": "mano",
+              "texto": "mano",
+              "tema": "cuerpo"
+            },
+            {
+              "id": "pie",
+              "texto": "pie",
+              "tema": "cuerpo"
+            },
+            {
+              "id": "diente",
+              "texto": "diente",
+              "tema": "cuerpo"
+            },
+            {
+              "id": "pelo",
+              "texto": "pelo",
+              "tema": "cuerpo"
+            },
+            {
+              "id": "corazon",
+              "texto": "corazón",
+              "tema": "cuerpo"
+            },
+            {
+              "id": "perro",
+              "texto": "perro",
+              "tema": "animales"
+            },
+            {
+              "id": "gato",
+              "texto": "gato",
+              "tema": "animales"
+            },
+            {
+              "id": "gallina",
+              "texto": "gallina",
+              "tema": "animales"
+            },
+            {
+              "id": "cerdo",
+              "texto": "cerdo",
+              "tema": "animales"
+            },
+            {
+              "id": "vaca",
+              "texto": "vaca",
+              "tema": "animales"
+            },
+            {
+              "id": "caballo",
+              "texto": "caballo",
+              "tema": "animales"
+            },
+            {
+              "id": "pez",
+              "texto": "pez",
+              "tema": "animales"
+            },
+            {
+              "id": "tortuga",
+              "texto": "tortuga",
+              "tema": "animales"
+            },
+            {
+              "id": "iguana",
+              "texto": "iguana",
+              "tema": "animales"
+            },
+            {
+              "id": "pajaro",
+              "texto": "pájaro",
+              "tema": "animales"
+            },
+            {
+              "id": "loro",
+              "texto": "loro",
+              "tema": "animales"
+            },
+            {
+              "id": "mono",
+              "texto": "mono",
+              "tema": "animales"
+            },
+            {
+              "id": "culebra",
+              "texto": "culebra",
+              "tema": "animales"
+            },
+            {
+              "id": "tigre",
+              "texto": "tigre (jaguar)",
+              "tema": "animales"
+            },
+            {
+              "id": "agua",
+              "texto": "agua",
+              "tema": "comida"
+            },
+            {
+              "id": "arroz",
+              "texto": "arroz",
+              "tema": "comida"
+            },
+            {
+              "id": "frijoles",
+              "texto": "frijoles",
+              "tema": "comida"
+            },
+            {
+              "id": "yuca",
+              "texto": "yuca",
+              "tema": "comida"
+            },
+            {
+              "id": "platano",
+              "texto": "plátano",
+              "tema": "comida"
+            },
+            {
+              "id": "banano",
+              "texto": "banano",
+              "tema": "comida"
+            },
+            {
+              "id": "coco",
+              "texto": "coco",
+              "tema": "comida"
+            },
+            {
+              "id": "pescado",
+              "texto": "pescado",
+              "tema": "comida"
+            },
+            {
+              "id": "carne",
+              "texto": "carne",
+              "tema": "comida"
+            },
+            {
+              "id": "huevo",
+              "texto": "huevo",
+              "tema": "comida"
+            },
+            {
+              "id": "pan",
+              "texto": "pan",
+              "tema": "comida"
+            },
+            {
+              "id": "sal",
+              "texto": "sal",
+              "tema": "comida"
+            },
+            {
+              "id": "cafe",
+              "texto": "café",
+              "tema": "comida"
+            },
+            {
+              "id": "maiz",
+              "texto": "maíz",
+              "tema": "comida"
+            },
+            {
+              "id": "rio",
+              "texto": "río",
+              "tema": "naturaleza"
+            },
+            {
+              "id": "mar",
+              "texto": "mar",
+              "tema": "naturaleza"
+            },
+            {
+              "id": "lluvia",
+              "texto": "lluvia",
+              "tema": "naturaleza"
+            },
+            {
+              "id": "sol",
+              "texto": "sol",
+              "tema": "naturaleza"
+            },
+            {
+              "id": "luna",
+              "texto": "luna",
+              "tema": "naturaleza"
+            },
+            {
+              "id": "estrella",
+              "texto": "estrella",
+              "tema": "naturaleza"
+            },
+            {
+              "id": "arbol",
+              "texto": "árbol",
+              "tema": "naturaleza"
+            },
+            {
+              "id": "monte",
+              "texto": "monte",
+              "tema": "naturaleza"
+            },
+            {
+              "id": "tierra",
+              "texto": "tierra",
+              "tema": "naturaleza"
+            },
+            {
+              "id": "piedra",
+              "texto": "piedra",
+              "tema": "naturaleza"
+            },
+            {
+              "id": "fuego",
+              "texto": "fuego",
+              "tema": "naturaleza"
+            },
+            {
+              "id": "viento",
+              "texto": "viento",
+              "tema": "naturaleza"
+            },
+            {
+              "id": "casa",
+              "texto": "casa",
+              "tema": "casa"
+            },
+            {
+              "id": "puerta",
+              "texto": "puerta",
+              "tema": "casa"
+            },
+            {
+              "id": "cama",
+              "texto": "cama",
+              "tema": "casa"
+            },
+            {
+              "id": "hamaca",
+              "texto": "hamaca",
+              "tema": "casa"
+            },
+            {
+              "id": "olla",
+              "texto": "olla",
+              "tema": "casa"
+            },
+            {
+              "id": "cuchillo",
+              "texto": "cuchillo",
+              "tema": "casa"
+            },
+            {
+              "id": "machete",
+              "texto": "machete",
+              "tema": "casa"
+            },
+            {
+              "id": "canoa",
+              "texto": "canoa (cayuco)",
+              "tema": "casa"
+            },
+            {
+              "id": "ropa",
+              "texto": "ropa",
+              "tema": "casa"
+            },
+            {
+              "id": "zapato",
+              "texto": "zapato",
+              "tema": "casa"
+            },
+            {
+              "id": "maestro_o_maestra",
+              "texto": "maestro o maestra",
+              "tema": "escuela"
+            },
+            {
+              "id": "escuela",
+              "texto": "escuela",
+              "tema": "escuela"
+            },
+            {
+              "id": "estudiante",
+              "texto": "estudiante",
+              "tema": "escuela"
+            },
+            {
+              "id": "libro",
+              "texto": "libro",
+              "tema": "escuela"
+            },
+            {
+              "id": "cuaderno",
+              "texto": "cuaderno",
+              "tema": "escuela"
+            },
+            {
+              "id": "lapiz",
+              "texto": "lápiz",
+              "tema": "escuela"
+            },
+            {
+              "id": "palabra",
+              "texto": "palabra",
+              "tema": "escuela"
+            },
+            {
+              "id": "leer",
+              "texto": "leer",
+              "tema": "escuela"
+            },
+            {
+              "id": "escribir",
+              "texto": "escribir",
+              "tema": "escuela"
+            },
+            {
+              "id": "aprender",
+              "texto": "aprender",
+              "tema": "escuela"
+            },
+            {
+              "id": "rojo",
+              "texto": "rojo",
+              "tema": "colores"
+            },
+            {
+              "id": "blanco",
+              "texto": "blanco",
+              "tema": "colores"
+            },
+            {
+              "id": "negro",
+              "texto": "negro",
+              "tema": "colores"
+            },
+            {
+              "id": "verde",
+              "texto": "verde",
+              "tema": "colores"
+            },
+            {
+              "id": "amarillo",
+              "texto": "amarillo",
+              "tema": "colores"
+            },
+            {
+              "id": "azul",
+              "texto": "azul",
+              "tema": "colores"
+            },
+            {
+              "id": "comer",
+              "texto": "comer",
+              "tema": "acciones"
+            },
+            {
+              "id": "beber",
+              "texto": "beber",
+              "tema": "acciones"
+            },
+            {
+              "id": "dormir",
+              "texto": "dormir",
+              "tema": "acciones"
+            },
+            {
+              "id": "caminar",
+              "texto": "caminar",
+              "tema": "acciones"
+            },
+            {
+              "id": "hablar",
+              "texto": "hablar",
+              "tema": "acciones"
+            },
+            {
+              "id": "escuchar",
+              "texto": "escuchar",
+              "tema": "acciones"
+            },
+            {
+              "id": "ver",
+              "texto": "ver",
+              "tema": "acciones"
+            },
+            {
+              "id": "jugar",
+              "texto": "jugar",
+              "tema": "acciones"
+            },
+            {
+              "id": "trabajar",
+              "texto": "trabajar",
+              "tema": "acciones"
+            },
+            {
+              "id": "cantar",
+              "texto": "cantar",
+              "tema": "acciones"
+            },
+            {
+              "id": "ir",
+              "texto": "ir",
+              "tema": "acciones"
+            },
+            {
+              "id": "venir",
+              "texto": "venir",
+              "tema": "acciones"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "titulo": "Frases",
+      "piko": {
+        "cara": "pensando",
+        "dice": "Ahora 3 frases cortitas, de las que se dicen todos los días. Con ellas armamos los ejercicios de ordenar palabras."
+      },
+      "preguntas": [
+        {
+          "id": "frases",
+          "tipo": "traducir",
+          "texto": "¿Cómo se dice esta frase en {lengua}?",
+          "ayuda": "Si no sabés una, dejala en blanco.",
+          "lengua": "lengua",
+          "zona": "region",
+          "cuantas": 3,
+          "max": 200,
+          "banco": [
+            {
+              "id": "buenos_dias_maestra",
+              "texto": "Buenos días, maestra."
+            },
+            {
+              "id": "como_te_llamas",
+              "texto": "¿Cómo te llamás?"
+            },
+            {
+              "id": "me_llamo_ana",
+              "texto": "Me llamo Ana."
+            },
+            {
+              "id": "como_estas",
+              "texto": "¿Cómo estás?"
+            },
+            {
+              "id": "estoy_bien",
+              "texto": "Estoy bien."
+            },
+            {
+              "id": "tengo_hambre",
+              "texto": "Tengo hambre."
+            },
+            {
+              "id": "quiero_agua",
+              "texto": "Quiero agua."
+            },
+            {
+              "id": "vamos_a_la_escuela",
+              "texto": "Vamos a la escuela."
+            },
+            {
+              "id": "mi_mama_esta_en_la_casa",
+              "texto": "Mi mamá está en la casa."
+            },
+            {
+              "id": "el_perro_come",
+              "texto": "El perro come."
+            },
+            {
+              "id": "hasta_manana",
+              "texto": "Hasta mañana."
+            },
+            {
+              "id": "gracias_amigo",
+              "texto": "Gracias, amigo."
+            },
+            {
+              "id": "donde_vivis",
+              "texto": "¿Dónde vivís?"
+            },
+            {
+              "id": "me_gusta_el_pescado",
+              "texto": "Me gusta el pescado."
+            },
+            {
+              "id": "esta_lloviendo",
+              "texto": "Está lloviendo."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "titulo": "Tu aporte",
+      "piko": {
+        "cara": "guino",
+        "dice": "¿Hay algo de tu lengua que te gustaría que las niñas y los niños aprendan sí o sí?"
+      },
+      "preguntas": [
+        {
+          "id": "aporte",
+          "tipo": "texto",
+          "multilinea": true,
+          "max": 600,
+          "texto": "Una palabra, un dicho, un cuento corto o una canción",
+          "ayuda": "Opcional. Escribilo en tu lengua y, si podés, contanos qué significa.",
+          "placeholder": "Escribilo acá"
+        }
+      ]
+    },
+    {
+      "titulo": "Permiso y crédito",
+      "piko": {
+        "cara": "feliz",
+        "dice": "Lo que escribiste es de tu comunidad. Nosotros lo cuidamos y lo usamos solo para enseñar la lengua."
+      },
+      "preguntas": [
+        {
+          "id": "permiso",
+          "tipo": "unica",
+          "requerida": true,
+          "texto": "¿Nos das permiso para usar lo que escribiste en las lecciones de Piko?",
+          "opciones": [
+            {
+              "id": "si",
+              "texto": "Sí, doy permiso para que Piko lo use para enseñar la lengua"
+            },
+            {
+              "id": "no",
+              "texto": "No, prefiero que no se use"
+            }
+          ]
+        },
+        {
+          "id": "credito",
+          "tipo": "unica",
+          "requerida": true,
+          "texto": "¿Cómo querés aparecer en los créditos de Piko?",
+          "mostrarSi": {
+            "pregunta": "permiso",
+            "en": [
+              "si"
+            ]
+          },
+          "opciones": [
+            {
+              "id": "nombre",
+              "texto": "Con mi nombre"
+            },
+            {
+              "id": "comunidad",
+              "texto": "Solo con el nombre de mi comunidad"
+            },
+            {
+              "id": "anonimo",
+              "texto": "Prefiero no aparecer"
+            }
+          ]
+        },
+        {
+          "id": "nombre",
+          "tipo": "texto",
+          "requerida": true,
+          "max": 80,
+          "texto": "¿Qué nombre ponemos?",
+          "mostrarSi": {
+            "pregunta": "credito",
+            "en": [
+              "nombre"
+            ]
+          },
+          "placeholder": "Tu nombre"
+        },
+        {
+          "id": "ayudar",
+          "tipo": "unica",
+          "texto": "¿Te animás a ayudarnos más adelante a revisar palabras o a grabar tu voz?",
+          "ayuda": "Las lecciones de escuchar necesitan voces de hablantes de verdad.",
+          "mostrarSi": {
+            "pregunta": "permiso",
+            "en": [
+              "si"
+            ]
+          },
+          "opciones": [
+            {
+              "id": "si",
+              "texto": "Sí, me apunto"
+            },
+            {
+              "id": "no",
+              "texto": "Por ahora no"
+            }
+          ]
+        },
+        {
+          "id": "whatsapp",
+          "tipo": "texto",
+          "formato": "telefono",
+          "requerida": true,
+          "max": 30,
+          "texto": "¿A qué WhatsApp te escribimos?",
+          "ayuda": "Solo para esto. No lo compartimos con nadie.",
+          "mostrarSi": {
+            "pregunta": "ayudar",
+            "en": [
+              "si"
+            ]
+          },
+          "placeholder": "+505 8888 8888"
+        }
+      ]
+    }
+  ],
+  "final": {
+    "titulo": "¡Gracias por enseñarle a Piko!",
+    "texto": "Cada palabra que escribiste ayuda a que una niña o un niño aprenda su lengua. Si hablás otra lengua, podés volver a empezar y enseñarnos esa también.",
+    "compartir": "¿Conocés a alguien que hable su lengua? Pasale la encuesta.",
+    "textoCompartir": "Tu lengua en Piko: enseñale palabras de tu lengua a Piko, la app para que las niñas y los niños de la Costa Caribe aprendan."
+  }
+}
