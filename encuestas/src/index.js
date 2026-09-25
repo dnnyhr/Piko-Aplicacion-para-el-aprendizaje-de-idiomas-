@@ -393,9 +393,20 @@ async function resumen(env, slug) {
     .bind(e.id)
     .all();
 
+  // A qué parte de la encuesta pertenece cada pregunta (las viejas van aparte).
+  const seccionDe = new Map();
+  for (const sec of e.definicion.secciones) for (const p of sec.preguntas) seccionDe.set(p.id, sec.titulo);
+
+  const { results: porDia } = await env.DB.prepare(
+    `SELECT substr(creada_en, 1, 10) AS dia, COUNT(*) AS n FROM respuestas
+      WHERE encuesta_id = ? GROUP BY dia ORDER BY dia`,
+  )
+    .bind(e.id)
+    .all();
+
   const preguntas = (await preguntasHistoricas(env, e)).map((p) => {
     const mias = conteos.filter((c) => c.pregunta === p.id);
-    const base = { id: p.id, tipo: p.tipo, texto: p.texto, respondieron: 0, anterior: p.anterior ?? null };
+    const base = { id: p.id, tipo: p.tipo, texto: p.texto, respondieron: 0, anterior: p.anterior ?? null, seccion: seccionDe.get(p.id) ?? 'Versiones anteriores' };
     if (p.tipo === 'unica' || p.tipo === 'multiple') {
       const opciones = p.opciones.map((o) => ({ id: o.id, texto: o.texto, n: mias.find((c) => c.opcion === o.id)?.n ?? 0 }));
       const otros = textos.filter((t) => t.pregunta === p.id && t.opcion).map((t) => t.texto);
@@ -410,7 +421,7 @@ async function resumen(env, slug) {
         suma += c.numero * c.n;
         n += c.n;
       }
-      return { ...base, respondieron: n, min: p.min, max: p.max, promedio: n ? suma / n : null, distribucion: dist };
+      return { ...base, respondieron: n, min: p.min, max: p.max, etiquetaMin: p.etiquetaMin ?? null, etiquetaMax: p.etiquetaMax ?? null, promedio: n ? suma / n : null, distribucion: dist };
     }
     if (p.tipo === 'matriz') {
       const filas = p.filas.map((f) => {
@@ -425,7 +436,7 @@ async function resumen(env, slug) {
         return { id: f.id, texto: f.texto, n, promedio: n ? suma / n : null, distribucion: dist };
       });
       filas.sort((x, y) => (y.promedio ?? -1) - (x.promedio ?? -1));
-      return { ...base, min: p.escala.min, max: p.escala.max, filas };
+      return { ...base, min: p.escala.min, max: p.escala.max, etiquetaMin: p.escala.etiquetaMin ?? null, etiquetaMax: p.escala.etiquetaMax ?? null, filas };
     }
     const lista = textos.filter((t) => t.pregunta === p.id && !t.opcion).map((t) => ({ texto: t.texto, en: t.creada_en }));
     return { ...base, respondieron: lista.length, textos: lista };
@@ -466,6 +477,8 @@ async function resumen(env, slug) {
     version: e.version,
     respuestas: total.n,
     duracionPromedioSeg: total.duracion,
+    porDia,
+    secciones: e.definicion.secciones.map((sec) => sec.titulo),
     preguntas,
   });
 }

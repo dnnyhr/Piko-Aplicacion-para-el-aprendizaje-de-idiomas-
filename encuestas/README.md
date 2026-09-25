@@ -142,7 +142,7 @@ queda quieto mirando de frente.
 |---|---|
 | `/` | Lista de encuestas abiertas (si hay una sola, entra directo) |
 | `/e/<slug>` | La encuesta. `?origen=whatsapp` queda guardado con la respuesta, para saber qué enlace funcionó mejor |
-| `/admin` | Resultados con barras y descarga en CSV (pide el `ADMIN_TOKEN`) |
+| `/admin` | Resultados en pestañas (Resumen, Preguntas, Correos, Contactos) con gráficas, filtros, buscador y descarga en CSV (pide el `ADMIN_TOKEN`) |
 | `GET /api/encuestas/<slug>` | Definición vigente |
 | `POST /api/encuestas/<slug>/respuestas` | Guardar una respuesta |
 | `PUT /api/admin/encuestas/<slug>` | Publicar o actualizar una definición |

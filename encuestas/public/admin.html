@@ -12,52 +12,175 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/encuesta.css">
 <style>
-  .admin { padding: 28px 0 80px; }
-  .admin__cabeza { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
-  .admin__cabeza img { width: 72px; }
-  .admin__cabeza h1 { font-size: 1.6rem; }
-  .fila-acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0 22px; }
-  .cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 22px; }
-  .cifra { background: var(--verde-hondo); color: #EAF3EE; border-radius: var(--radio-lg); padding: 16px; }
-  .cifra b { display: block; font-family: Fredoka, sans-serif; font-size: 2rem; color: #fff; line-height: 1.1; }
-  .cifra span { font-size: .85rem; color: #A9BFB2; }
-  .barras { display: grid; gap: 8px; margin-top: 12px; }
-  /* Mobile first: en el teléfono la barra va debajo de su etiqueta. */
-  .barra-dato { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; font-size: .92rem; }
-  .barra-dato__pista { grid-column: 1 / -1; grid-row: 2; }
-  .barra-dato__pista { height: 14px; border-radius: 999px; background: var(--papel-hondo); overflow: hidden; }
-  .barra-dato__relleno { height: 100%; border-radius: 999px; background: var(--verde-pasto); }
-  .barra-dato__n { font-family: Fredoka, sans-serif; font-weight: 600; color: var(--verde); min-width: 5.5em; text-align: right; }
-  .textos { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; max-height: 420px; overflow: auto; }
-  .textos li { background: var(--papel); border-radius: var(--radio-sm); padding: 10px 12px; font-size: .95rem; }
-  .pregunta h3 { font-size: 1.1rem; margin-bottom: 2px; }
-  .meta { font-size: .85rem; color: var(--tinta-suave); margin: 0; }
+  /*
+   * Panel de resultados. Mobile first, como la encuesta.
+   *
+   * Colores de las gráficas (validados con el script de la guía de datos:
+   * luminosidad, croma, separación para daltonismo y visión normal):
+   *   categóricos, en este orden fijo: verde, celeste, naranja, morado, amarillo, magenta
+   *   escalas 1–5: naranja → gris → verde (nada ↔ mucho)
+   * Celeste y amarillo tienen poco contraste sobre blanco: por eso cada gráfica
+   * lleva el número escrito y una tabla.
+   */
+  :root {
+    --c1: #197249; --c2: #3AA8E0; --c3: #D9531C; --c4: #7B5CB8; --c5: #E8A429; --c6: #C2457E;
+    --div-1: #D9531C; --div-2: #EE9B73; --div-3: #CFC3AD; --div-4: #6FAE76; --div-5: #197249;
+    --barra: #197249; --barra-suave: #A7CBB0; --pista: #EFE8DA; --regla: #E3DACA;
+  }
+  body { background: var(--papel); }
+  .admin { padding: 20px 0 80px; }
+  .admin__cabeza { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .admin__cabeza img { width: 56px; }
+  .admin__cabeza h1 { font-size: 1.45rem; }
+  .fila-acciones { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; margin: 0 0 16px; }
+  .fila-acciones select { grid-column: 1 / -1; }
   select.campo { margin: 0; width: 100%; }
-  .correos { margin: 0 0 24px; }
-  .correos h2 { font-size: 1.3rem; margin-bottom: 10px; }
-  .correos__cuenta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
-  .correos .btn { margin-bottom: 8px; }
+  .meta { font-size: .85rem; color: var(--tinta-suave); margin: 0; }
+  .vacio { padding: 18px; text-align: center; color: var(--tinta-suave); background: var(--blanco); border-radius: var(--radio-md); border: 2px dashed var(--borde); }
+
+  /* KPIs */
+  .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+  .kpi { background: var(--verde-hondo); color: #EAF3EE; border-radius: var(--radio-lg); padding: 14px; }
+  .kpi b { display: block; font-family: Fredoka, sans-serif; font-size: 1.9rem; line-height: 1.05; color: #fff; font-variant-numeric: tabular-nums; }
+  .kpi span { font-size: .8rem; color: #A9BFB2; }
+
+  /* Pestañas */
+  .pestanas { position: sticky; top: 0; z-index: 5; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+    margin: 0 calc(-1 * var(--gutter)) 16px; padding: 8px var(--gutter); background: rgba(247,240,228,.96); backdrop-filter: blur(6px); border-bottom: 2px solid var(--borde); }
+  .pestanas::-webkit-scrollbar { display: none; }
+  .pestana { flex: none; appearance: none; border: 0; cursor: pointer; font-family: Fredoka, sans-serif; font-weight: 600; font-size: .95rem;
+    padding: 8px 11px; border-radius: 999px; background: transparent; color: var(--tinta); display: inline-flex; gap: 6px; align-items: center; }
+  .pestana[aria-selected="true"] { background: var(--verde); color: #fff; }
+  .pestana:focus-visible { outline: 3px solid var(--cielo); outline-offset: 2px; }
+  .admin a { color: var(--verde); font-weight: 700; text-underline-offset: 3px; }
+  .pestana .num { font-size: .75rem; background: rgba(0,0,0,.08); padding: 1px 7px; border-radius: 999px; }
+  .pestana[aria-selected="true"] .num { background: rgba(255,255,255,.2); }
+
+  /* Tarjetas de gráfica */
+  .cartas { display: grid; gap: 14px; }
+  .carta { background: var(--blanco); border: 2px solid var(--borde); border-radius: var(--radio-lg); padding: 16px; min-width: 0; }
+  .carta h3 { font-size: 1.08rem; line-height: 1.25; margin: 0 0 2px; }
+  .carta > .meta { margin-bottom: 12px; }
+  .destacado { font-family: Fredoka, sans-serif; font-size: 1rem; color: var(--grafito); margin: 0 0 12px; }
+  .destacado b { color: var(--verde); }
+
+  /* Barras horizontales */
+  .hbarras { display: grid; gap: 10px; }
+  .hbarra { display: grid; grid-template-columns: 1fr auto; gap: 3px 10px; align-items: baseline; }
+  .hbarra__nombre { font-size: .92rem; line-height: 1.3; color: var(--grafito); }
+  .hbarra__valor { font-family: Fredoka, sans-serif; font-weight: 600; font-size: .9rem; color: var(--grafito); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .hbarra__valor small { font-family: "Nunito Sans", sans-serif; font-weight: 400; color: var(--tinta-suave); }
+  .hbarra__pista { grid-column: 1 / -1; height: 12px; border-radius: 4px; background: var(--pista); overflow: hidden; }
+  .hbarra__relleno { height: 100%; border-radius: 0 4px 4px 0; background: var(--barra-suave); }
+  .hbarra--top .hbarra__relleno { background: var(--barra); }
+  .vistazo { gap: 14px; }
+  .vistazo .hbarra { color: inherit; font-weight: inherit; text-decoration: none; border-radius: var(--radio-sm); }
+  .vistazo .hbarra:hover .hbarra__nombre { text-decoration: underline; }
+  .vistazo__pregunta { grid-column: 1 / -1; font-size: .78rem; color: var(--tinta-suave); line-height: 1.3; }
+  .vistazo .hbarra__nombre { font-weight: 700; }
+
+  /* Barra 100% apilada (partes de un todo) */
+  .apilada { display: flex; height: 22px; gap: 2px; border-radius: 4px; overflow: hidden; margin-bottom: 12px; }
+  .apilada span { display: block; height: 100%; min-width: 3px; }
+  .leyenda { display: grid; grid-template-columns: 1fr; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .leyenda li { display: grid; grid-template-columns: 12px 1fr auto; gap: 8px; align-items: center; font-size: .9rem; }
+  .leyenda i { width: 12px; height: 12px; border-radius: 3px; }
+  .leyenda b { font-family: Fredoka, sans-serif; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* Likert: barras divergentes por fila */
+  .likert { display: grid; gap: 12px; }
+  .likert__fila { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: baseline; }
+  .likert__nombre { font-size: .9rem; line-height: 1.3; }
+  .likert__prom { font-family: Fredoka, sans-serif; font-weight: 600; font-size: .9rem; font-variant-numeric: tabular-nums; }
+  .likert__barra { grid-column: 1 / -1; display: flex; height: 14px; gap: 2px; border-radius: 4px; overflow: hidden; background: var(--pista); }
+  .likert__barra span { height: 100%; }
+  .escala-leyenda { display: flex; flex-wrap: wrap; gap: 6px 12px; margin: 0 0 12px; padding: 0; list-style: none; font-size: .8rem; color: var(--tinta); }
+  .escala-leyenda li { display: flex; gap: 5px; align-items: center; }
+  .escala-leyenda i { width: 10px; height: 10px; border-radius: 2px; }
+
+  /* Columnas (distribución de una escala, respuestas por día) */
+  .columnas { display: flex; align-items: flex-end; gap: 4px; height: 140px; padding-top: 18px; border-bottom: 1px solid var(--regla); }
+  .columna { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; min-width: 0; position: relative; }
+  .columna__valor { font-family: Fredoka, sans-serif; font-weight: 600; font-size: .75rem; color: var(--grafito); margin-bottom: 3px; font-variant-numeric: tabular-nums; }
+  .columna__barra { width: min(100%, 36px); border-radius: 4px 4px 0 0; background: var(--barra); min-height: 2px; }
+  .columnas__ejes { display: flex; gap: 4px; margin-top: 4px; }
+  .columnas__ejes span { flex: 1; text-align: center; font-size: .72rem; color: var(--tinta-suave); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* NPS */
+  .nps { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; margin-bottom: 12px; }
+  .nps__numero { font-family: Fredoka, sans-serif; font-weight: 700; font-size: 2.6rem; line-height: 1; color: var(--verde); font-variant-numeric: tabular-nums; }
+  .nps__numero small { display: block; font-size: .72rem; font-weight: 600; color: var(--tinta-suave); letter-spacing: .08em; text-transform: uppercase; margin-top: 4px; }
+
+  /* Tabla de datos (accesible) */
+  details.datos { margin-top: 12px; }
+  details.datos summary { cursor: pointer; font-size: .85rem; color: var(--verde); font-weight: 700; }
+  .tabla { overflow-x: auto; margin-top: 8px; }
+  .tabla table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+  .tabla th, .tabla td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--regla); }
+  .tabla td.n { text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* Preguntas plegables */
+  .filtros { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 0 12px; padding-bottom: 2px; }
+  .filtros::-webkit-scrollbar { display: none; }
+  .chip { flex: none; appearance: none; cursor: pointer; border: 2px solid var(--borde); background: var(--blanco); color: var(--tinta);
+    font-family: Fredoka, sans-serif; font-weight: 500; font-size: .85rem; padding: 6px 12px; border-radius: 999px; }
+  .chip[aria-pressed="true"] { border-color: var(--verde); background: #E6F1E9; color: var(--verde-hondo); }
+  details.pregunta-plegable { background: var(--blanco); border: 2px solid var(--borde); border-radius: var(--radio-lg); }
+  details.pregunta-plegable > summary { list-style: none; cursor: pointer; padding: 14px 16px; display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: start; }
+  details.pregunta-plegable > summary::-webkit-details-marker { display: none; }
+  details.pregunta-plegable > summary::after { content: "▾"; grid-column: 2; grid-row: 1; color: var(--tinta-suave); transition: transform .15s; }
+  details.pregunta-plegable[open] > summary::after { transform: rotate(180deg); }
+  .plegable__titulo { font-family: Fredoka, sans-serif; font-weight: 600; font-size: 1rem; line-height: 1.25; }
+  .plegable__resumen { grid-column: 1 / -1; font-size: .85rem; color: var(--tinta-suave); }
+  .plegable__resumen b { color: var(--verde); font-weight: 700; }
+  .plegable__cuerpo { padding: 0 16px 16px; }
+
+  /* Listas con buscador y páginas */
+  .buscador { width: 100%; margin: 0 0 10px; }
+  .lista-textos { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .lista-textos li { background: var(--papel); border-radius: var(--radio-sm); padding: 10px 12px; font-size: .95rem; overflow-wrap: anywhere; }
+  .lista-textos time { display: block; font-size: .75rem; color: var(--tinta-suave); margin-top: 2px; }
+  .paginas { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 10px; font-size: .85rem; color: var(--tinta-suave); }
+  .btn--chico { min-height: 40px; padding: .45rem .9rem; font-size: .85rem; }
+
+  /* Correos y contactos */
   .correos__lista { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; }
   .correo { background: var(--blanco); border: 2px solid var(--borde); border-radius: var(--radio-md); padding: 12px 14px; display: grid; gap: 6px; }
   .correo__fila { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
   .correo__para { overflow-wrap: anywhere; }
   .correo__detalle { color: var(--intento-tinta); }
+  .correo__acciones { display: flex; gap: 6px; align-items: center; }
   .estado { font-family: Fredoka, sans-serif; font-weight: 600; font-size: .8rem; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
   .estado--enviado { background: #EDF8D9; color: #3F6B0E; }
   .estado--error { background: var(--intento-fondo); color: var(--intento-tinta); }
-  .estado--omitido { background: var(--papel-hondo); color: var(--tinta); }
-  .btn--chico { min-height: 40px; padding: .45rem .9rem; font-size: .85rem; }
-  .correo__acciones { display: flex; gap: 6px; align-items: center; }
-  .contactos__form { margin-bottom: 8px; }
-  .contactos__form .campo { font-family: inherit; }
-  .contactos__form > .btn--chico { margin-top: 4px; white-space: normal; text-align: left; }
+  .estado--omitido, .estado--numero { background: var(--papel-hondo); color: var(--tinta); }
+  .agregar { background: var(--blanco); border: 2px solid var(--borde); border-radius: var(--radio-lg); margin-bottom: 12px; }
+  .agregar > summary { cursor: pointer; list-style: none; padding: 14px 16px; font-family: Fredoka, sans-serif; font-weight: 600; color: var(--verde); }
+  .agregar > summary::-webkit-details-marker { display: none; }
+  .agregar > div { padding: 0 16px 16px; }
+  .agregar .campo { font-family: inherit; }
   .contactos__check { display: flex; gap: 8px; align-items: flex-start; margin: 12px 0; font-size: .95rem; cursor: pointer; }
   .contactos__check input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--verde); flex: none; }
+  .nota { font-size: .88rem; color: var(--tinta); margin: 8px 0; }
+
+  /* Tooltip de las gráficas */
+  .tip { position: fixed; z-index: 50; pointer-events: none; background: var(--grafito); color: #fff; font-size: .82rem; line-height: 1.35;
+    padding: 6px 10px; border-radius: 8px; max-width: 240px; box-shadow: 0 6px 18px rgba(0,0,0,.2); }
+  [data-tip] { cursor: default; }
+
+  /* En teléfonos angostos, sin los números, para que entren las cuatro pestañas. */
+  @media (max-width: 440px) { .pestana .num { display: none; } .pestana { font-size: .9rem; } }
   @media (min-width: 640px) {
-    .barra-dato { grid-template-columns: minmax(120px, 1fr) 2fr auto; gap: 10px; }
-    .barra-dato__pista { grid-column: auto; grid-row: auto; }
-    select.campo { width: auto; min-width: 240px; }
+    .admin { padding-top: 28px; }
+    .pestana { padding: 9px 14px; }
+    .fila-acciones { grid-template-columns: 1fr auto auto; }
+    .fila-acciones select { grid-column: auto; }
+    .kpis { grid-template-columns: repeat(4, 1fr); }
+    .leyenda { grid-template-columns: 1fr 1fr; column-gap: 20px; }
+    .cartas--dos { grid-template-columns: 1fr 1fr; }
+    .carta--ancha { grid-column: 1 / -1; }
   }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 <script type="module" src="/js/admin.js"></script>
 </head>
@@ -82,11 +205,14 @@
   <section id="panel" hidden>
     <div class="fila-acciones">
       <select id="encuesta" class="campo" aria-label="Encuesta"></select>
-      <button id="csv" class="btn btn--papel" type="button">Descargar CSV</button>
-      <button id="salir" class="btn btn--fantasma" type="button">Salir</button>
+      <button id="csv" class="btn btn--papel btn--chico" type="button">Descargar CSV</button>
+      <button id="salir" class="btn btn--fantasma btn--chico" type="button">Salir</button>
     </div>
-    <div id="resumen"></div>
+    <div id="kpis" class="kpis"></div>
+    <nav id="pestanas" class="pestanas" role="tablist" aria-label="Secciones del panel"></nav>
+    <div id="contenido" role="tabpanel"></div>
   </section>
 </main>
+<div id="tip" class="tip" role="tooltip" hidden></div>
 </body>
 </html>
