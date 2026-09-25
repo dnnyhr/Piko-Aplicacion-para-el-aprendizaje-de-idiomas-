@@ -189,6 +189,34 @@ test('si Resend falla, la respuesta se guarda igual y queda el error anotado', a
   assert.deepEqual(r.correos, { error: 1 });
 });
 
+test('a una misma dirección, el envío automático sale una vez por día', async () => {
+  await llamar(`/api/admin/encuestas/${real.slug}`, { method: 'PUT', body: real, token: TOKEN });
+  const primera = respuesta({ correo: 'ana@correo.com' });
+  const segunda = respuesta({ correo: 'ANA@correo.com' });
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: primera });
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: segunda });
+  assert.equal(llamadas.length, 1);
+  const otra = (await correos()).find((c) => c.respuesta_id === segunda.id);
+  assert.deepEqual([otra.estado, otra.detalle], ['omitido', 'A esta dirección ya se le mandó el enlace hoy.']);
+
+  // Desde el panel sí sale: lo pidió alguien del equipo.
+  const r = await (await llamar(`/api/admin/correos/${segunda.id}/reenviar`, { method: 'POST', token: TOKEN })).json();
+  assert.equal(r.estado, 'enviado');
+  assert.equal(llamadas.length, 2);
+});
+
+test('los correos automáticos tienen un tope por día', async () => {
+  env.CORREOS_POR_DIA = '1';
+  await llamar(`/api/admin/encuestas/${real.slug}`, { method: 'PUT', body: real, token: TOKEN });
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: respuesta({ correo: 'a@correo.com' }) });
+  const b = respuesta({ correo: 'b@correo.com' });
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: b });
+  assert.equal(llamadas.length, 1);
+  const c = (await correos()).find((x) => x.respuesta_id === b.id);
+  assert.equal(c.estado, 'omitido');
+  assert.match(c.detalle, /tope de 1 correos automáticos/);
+});
+
 /* ------------------------------------------------- reenvíos desde el panel */
 
 test('el panel lista los correos y reenvía uno como un intento nuevo', async () => {

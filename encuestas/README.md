@@ -96,7 +96,7 @@ respuesta: si Resend falla, la respuesta queda guardada igual.
 Para activarlo:
 
 ```bash
-npm run db:remoto                          # tablas correos y contactos (migraciones 0002 a 0004)
+npm run db:remoto                          # tablas correos, contactos e intentos_admin (migraciones 0002 a 0005)
 npx wrangler secret put RESEND_API_KEY     # la API key de Resend
 ```
 
@@ -211,6 +211,25 @@ SELECT i.fila, ROUND(AVG(i.numero), 2) AS promedio, COUNT(*) AS n
 - Cada respuesta lleva un id generado en el teléfono: reenviarla no la duplica.
 - Al terminar, **"Otra persona va a responder en este teléfono"** deja el
   teléfono listo para la siguiente, para aulas con un solo teléfono.
+
+## Seguridad
+
+- **Panel:** `ADMIN_TOKEN` tiene que tener al menos 16 caracteres; con uno más
+  corto el panel no abre y dice cómo cambiarlo. Una IP que prueba 10 tokens
+  equivocados en 15 minutos queda bloqueada esos 15 minutos, aunque después
+  acierte (tabla `intentos_admin`, migración 0005). El token vive solo en la
+  pestaña del navegador y se borra al cerrarla.
+- **Correo:** nadie puede usar la encuesta para mandar correos a direcciones
+  ajenas: el envío automático sale una sola vez por día a cada dirección, y
+  hay un tope diario (`CORREOS_POR_DIA`, 100 si no se pone). Lo que se frena
+  queda como "Sin enviar" y se puede mandar desde el panel.
+- **Respuestas:** hasta 60 por día desde un mismo lugar, 64 KB como máximo por
+  envío, un campo trampa para bots, y el CSV protegido contra fórmulas.
+- **Navegador:** todas las páginas y la API salen con Content-Security-Policy
+  (solo scripts propios, nadie puede meter la página en un iframe), HSTS,
+  `nosniff` y demás cabeceras. Las de los archivos estáticos están en
+  `public/_headers`; las del Worker, en `src/index.js`. Si se agrega un
+  script, una fuente o una imagen de otro dominio, hay que sumarlo a las dos.
 
 ## Privacidad
 

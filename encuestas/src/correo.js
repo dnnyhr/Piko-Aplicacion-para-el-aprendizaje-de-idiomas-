@@ -7,6 +7,7 @@
  *   CORREO_REMITENTE    var      "Piko <hola@tu-dominio-verificado>"
  *   APP_DESCARGA_URL    var      enlace de descarga de la app
  *   CORREO_RESPUESTA    var      opcional: a dónde van las respuestas al correo
+ *   CORREOS_POR_DIA     var      opcional: tope de correos automáticos por día (100)
  *
  * Si falta cualquiera de las tres primeras, no se manda nada y queda anotado
  * en la tabla `correos` como "omitido", con el motivo.
@@ -14,6 +15,8 @@
 
 const RESEND = 'https://api.resend.com/emails';
 const ESPERA_MS = 10_000;
+/** Tope de correos automáticos por día si no se configura CORREOS_POR_DIA (el plan gratis de Resend manda 100). */
+const TOPE_DIARIO = 100;
 
 // Qué suele significar cada error de Resend, para que el panel lo diga claro.
 const PISTAS = {
@@ -229,6 +232,13 @@ export async function enviarBienvenida(env, { respuestaId, def, respuestas, base
     return { estado, detalle: d, intentos: intento };
   };
 
+  // Frenos para que nadie use la encuesta para mandar correos a direcciones
+  // ajenas. Solo para el envío automático: un reenvío desde el panel sale siempre.
+  if (intento === 1) {
+    const freno = await frenoAutomatico(env, para);
+    if (freno) return anotar('omitido', freno);
+  }
+
   const nombre = limpiarNombre(respuestas[conf.nombre]) ?? nombreDesdeCorreo(para);
   const r = await mandarDescarga(env, {
     para,
@@ -240,6 +250,30 @@ export async function enviarBienvenida(env, { respuestaId, def, respuestas, base
     tipo: intento > 1 ? 'reenvio' : 'bienvenida',
   });
   return anotar(r.estado, r.detalle, r.resendId);
+}
+
+/**
+ * ¿Hay que frenar este envío automático? Devuelve el motivo, o null.
+ * - A una misma dirección, una vez por día.
+ * - Como mucho CORREOS_POR_DIA automáticos por día en total.
+ * Los frenados quedan como "omitido" y se pueden reenviar desde el panel.
+ */
+async function frenoAutomatico(env, para) {
+  const hace1dia = `strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-1 day')`;
+  try {
+    const misma = await env.DB.prepare(
+      `SELECT COUNT(*) AS n FROM correos WHERE lower(para) = lower(?) AND estado = 'enviado' AND actualizado_en > ${hace1dia}`,
+    )
+      .bind(para)
+      .first();
+    if (misma.n > 0) return 'A esta dirección ya se le mandó el enlace hoy.';
+    const tope = Number(env.CORREOS_POR_DIA) || TOPE_DIARIO;
+    const hoy = await env.DB.prepare(`SELECT COUNT(*) AS n FROM correos WHERE estado = 'enviado' AND actualizado_en > ${hace1dia}`).first();
+    if (hoy.n >= tope) return `Se llegó al tope de ${tope} correos automáticos del día: reenvialo desde el panel más tarde.`;
+  } catch (err) {
+    console.error('No se pudo revisar el tope de correos', err);
+  }
+  return null;
 }
 
 /**

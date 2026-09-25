@@ -30,6 +30,44 @@ import { aFilas, preguntasDe, revisar, validarDefinicion } from '../public/js/re
 import { enviarBienvenida, limpiarNombre, mandarDescarga, nombreDesdeCorreo } from './correo.js';
 import { leerContactos, MAX_LINEAS } from './contactos.js';
 
+/** Intentos fallidos de token por IP antes de bloquearla, y por cuánto tiempo. */
+const INTENTOS_ADMIN = 10;
+const BLOQUEO_MIN = 15;
+/** Largo mínimo de ADMIN_TOKEN: uno corto se adivina probando. */
+const TOKEN_MIN = 16;
+
+/**
+ * Cabeceras de seguridad para todo lo que sale del Worker (las páginas que
+ * pasan por acá y la API). Los archivos estáticos llevan las mismas desde
+ * public/_headers.
+ */
+const SEGURIDAD = {
+  'content-security-policy': [
+    "default-src 'self'",
+    "script-src 'self'",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    'font-src https://fonts.gstatic.com',
+    "img-src 'self' data:",
+    "connect-src 'self'",
+    "object-src 'none'",
+    "base-uri 'none'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+  ].join('; '),
+  'strict-transport-security': 'max-age=31536000; includeSubDomains',
+  'x-content-type-options': 'nosniff',
+  'x-frame-options': 'DENY',
+  'referrer-policy': 'strict-origin-when-cross-origin',
+  'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+  'cross-origin-opener-policy': 'same-origin',
+};
+
+function conSeguridad(res) {
+  const r = new Response(res.body, res);
+  for (const [k, v] of Object.entries(SEGURIDAD)) r.headers.set(k, v);
+  return r;
+}
+
 /** Respuestas por huella y por día antes de responder 429. Un aula comparte IP. */
 const LIMITE_DIARIO = 60;
 const CUERPO_MAX = 64 * 1024;
@@ -37,20 +75,21 @@ const CUERPO_MAX = 64 * 1024;
 export default {
   async fetch(request, env, ctx) {
     try {
-      return await enrutar(request, env, ctx);
+      return conSeguridad(await enrutar(request, env, ctx));
     } catch (err) {
-      if (err instanceof ErrorHttp) return json({ error: err.message, ...err.extra }, err.status);
+      if (err instanceof ErrorHttp) return conSeguridad(json({ error: err.message, ...err.extra }, err.status, err.cabeceras));
       console.error(err);
-      return json({ error: 'Algo se rompió de nuestro lado.' }, 500);
+      return conSeguridad(json({ error: 'Algo se rompió de nuestro lado.' }, 500));
     }
   },
 };
 
 class ErrorHttp extends Error {
-  constructor(status, message, extra = {}) {
+  constructor(status, message, extra = {}, cabeceras = {}) {
     super(message);
     this.status = status;
     this.extra = extra;
+    this.cabeceras = cabeceras;
   }
 }
 
@@ -67,7 +106,7 @@ async function enrutar(request, env, ctx) {
 
   if (a === 'encuestas') {
     if (!b && m === 'GET') return listarAbiertas(env);
-    if (b && !c && m === 'GET') return obtenerEncuesta(env, b, esAdmin(request, env));
+    if (b && !c && m === 'GET') return obtenerEncuesta(env, b, await tokenValido(request, env));
     if (b && c === 'respuestas' && !d && m === 'POST') return guardarRespuesta(request, env, b, url, ctx);
   }
 
@@ -285,15 +324,52 @@ async function huellaDe(request, slug) {
 
 /* ------------------------------------------------------------------ admin */
 
-function esAdmin(request, env) {
-  const token = env.ADMIN_TOKEN;
+/**
+ * ¿Trae el token correcto? Si trae uno equivocado, cuenta como intento
+ * fallido de esa IP; con INTENTOS_ADMIN fallidos en BLOQUEO_MIN minutos, la
+ * IP queda bloqueada (429) aunque después acierte, así probar tokens al azar
+ * no sirve. Sin token no cuenta: es una persona contestando la encuesta.
+ */
+async function tokenValido(request, env) {
   const dado = (request.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
-  return Boolean(token) && dado.length > 0 && igualSeguro(dado, token);
+  if (!dado) return false;
+  const token = env.ADMIN_TOKEN;
+  if (!token || token.length < TOKEN_MIN) return false;
+
+  const huella = await sha256(`admin|${request.headers.get('cf-connecting-ip') ?? ''}`);
+  const desde = `strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-${BLOQUEO_MIN} minutes')`;
+  let fallidos = 0;
+  try {
+    ({ n: fallidos } = await env.DB.prepare(`SELECT COUNT(*) AS n FROM intentos_admin WHERE huella = ? AND creado_en > ${desde}`)
+      .bind(huella)
+      .first());
+  } catch (err) {
+    // Sin la migración 0005 el panel sigue andando, pero sin este freno.
+    console.error('Falta la tabla intentos_admin: corré npm run db:remoto', err);
+  }
+  if (fallidos >= INTENTOS_ADMIN) {
+    throw new ErrorHttp(429, `Demasiados intentos con un token equivocado. Esperá ${BLOQUEO_MIN} minutos.`, {}, { 'retry-after': String(BLOQUEO_MIN * 60) });
+  }
+
+  if (igualSeguro(dado, token)) return true;
+  try {
+    await env.DB.batch([
+      env.DB.prepare('INSERT INTO intentos_admin (huella) VALUES (?)').bind(huella),
+      // Limpieza de paso: lo viejo ya no sirve para nada.
+      env.DB.prepare(`DELETE FROM intentos_admin WHERE creado_en < strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-1 day')`),
+    ]);
+  } catch {
+    /* sin la migración 0005: ya quedó avisado arriba */
+  }
+  return false;
 }
 
 async function exigirAdmin(request, env) {
   if (!env.ADMIN_TOKEN) throw new ErrorHttp(503, 'Falta configurar ADMIN_TOKEN en el Worker.');
-  if (!esAdmin(request, env)) throw new ErrorHttp(401, 'Token inválido.');
+  if (env.ADMIN_TOKEN.length < TOKEN_MIN) {
+    throw new ErrorHttp(503, `ADMIN_TOKEN es muy corto: tiene que tener al menos ${TOKEN_MIN} caracteres. Cambialo con: npx wrangler secret put ADMIN_TOKEN`);
+  }
+  if (!(await tokenValido(request, env))) throw new ErrorHttp(401, 'Token inválido.');
 }
 
 function igualSeguro(a, b) {

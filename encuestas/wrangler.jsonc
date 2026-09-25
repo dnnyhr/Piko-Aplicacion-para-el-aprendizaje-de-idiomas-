@@ -41,6 +41,7 @@
   //   CORREO_REMITENTE  una dirección de un dominio verificado en Resend
   //   APP_DESCARGA_URL  el enlace para descargar la app
   //   CORREO_RESPUESTA  opcional: a dónde llegan las respuestas al correo
+  //   CORREOS_POR_DIA   opcional: tope de correos automáticos por día (sin ponerlo, 100)
   "vars": {
     "CORREO_REMITENTE": "Piko <piko@mugiware.com>",
     "APP_DESCARGA_URL": "https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/releases/latest/download/piko.apk",
@@ -48,7 +49,7 @@
   },
 
   // Secretos (no van en este archivo):
-  //   ADMIN_TOKEN     `npx wrangler secret put ADMIN_TOKEN`
+  //   ADMIN_TOKEN     `npx wrangler secret put ADMIN_TOKEN` (mínimo 16 caracteres)
   //   RESEND_API_KEY  `npx wrangler secret put RESEND_API_KEY`
   // En local van en .dev.vars (ver .dev.vars.example).
 
