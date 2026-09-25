@@ -136,6 +136,9 @@ test('si deja su correo, se manda el enlace por Resend, con su nombre', async ()
   assert.ok(l.cuerpo.html.includes(CONFIG.APP_DESCARGA_URL));
   assert.ok(l.cuerpo.html.includes('https://encuestas.test/img/correo-cabecera.jpg'));
   assert.match(l.cuerpo.text, /Descargar Piko: https:\/\/piko\.test\/descargar/);
+  // Cada envío es único: Gmail no lo junta con otro ni recorta lo repetido.
+  assert.equal(l.cuerpo.headers['X-Entity-Ref-ID'], `bienvenida-${cuerpo.id}-1`);
+  assert.ok(l.cuerpo.html.includes(`bienvenida-${cuerpo.id}-1`));
 
   const [c] = await correos();
   assert.deepEqual([c.estado, c.resend_id, c.para], ['enviado', 'resend-123', 'vale@correo.com']);

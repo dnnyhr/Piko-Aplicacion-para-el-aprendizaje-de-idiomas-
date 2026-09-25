@@ -60,7 +60,7 @@ const escapar = (s) =>
  * Arma el correo de bienvenida. `base` es el dominio de la encuesta: de ahí
  * salen las imágenes (en PNG: Gmail y Outlook no muestran SVG).
  */
-export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
+export function armarCorreo({ nombre, enlace, base, encuesta, asunto, marca = null }) {
   const saludo = nombre ? `¡Tuani, ${nombre}!` : '¡Tuani, gracias por responder!';
   const titulo = encuesta ?? 'nuestra encuesta';
   const img = (archivo) => `${base}/img/${archivo}`;
@@ -155,6 +155,11 @@ export function armarCorreo({ nombre, enlace, base, encuesta, asunto }) {
     </td></tr>
   </table>
   <!--[if mso]></td></tr></table><![endif]-->
+  ${
+    // Una marca invisible distinta en cada envío: si no, Gmail ve el mismo
+    // contenido que en un correo anterior y lo esconde detrás de "•••".
+    marca ? `<div style="display:none;max-height:0;overflow:hidden;font-size:1px;line-height:1px;color:#F7F0E4;">${escapar(marca)}</div>` : ''
+  }
 
 </td></tr>
 </table>
@@ -254,6 +259,7 @@ export async function mandarDescarga(env, { para, nombre, base, encuesta, asunto
     base,
     encuesta,
     asunto: asunto ?? 'Tu enlace para descargar Piko',
+    marca: clave,
   });
 
   try {
@@ -276,6 +282,9 @@ export async function mandarDescarga(env, { para, nombre, base, encuesta, asunto
         text: correo.texto,
         ...(env.CORREO_RESPUESTA ? { reply_to: env.CORREO_RESPUESTA } : {}),
         tags: [{ name: 'tipo', value: tipo }],
+        // Un id distinto por envío: Gmail no junta los reenvíos en una misma
+        // conversación (ahí es donde recorta lo repetido).
+        headers: { 'X-Entity-Ref-ID': clave },
       }),
     });
     const r = await res.json().catch(() => ({}));
