@@ -525,6 +525,11 @@ async function abrirEncuesta(slug, siNoExiste = null) {
       }
       if (status === 410) return noExiste('Esta encuesta ya cerró');
       if (status >= 500 || status === 429) throw new Error(String(status));
+      // Cualquier otro rechazo: no se guardó. Se dice, y lo contestado sigue en el teléfono.
+      if (status >= 400) {
+        console.error('La respuesta no se guardó', status, r);
+        return noSeGuardo(r.error ?? `Error ${status}`);
+      }
     } catch {
       const cola = leer(CLAVE_PENDIENTES, []);
       if (!cola.some((c) => c.cuerpo.id === pendiente.cuerpo.id)) cola.push(pendiente);
@@ -535,6 +540,22 @@ async function abrirEncuesta(slug, siNoExiste = null) {
     escribir(clave, undefined);
     escribir(CLAVE_HECHAS, [...new Set([...leer(CLAVE_HECHAS, []), slug])]);
     final(enCola);
+  }
+
+  function noSeGuardo(motivo) {
+    mostrarBarra(true, 1, '');
+    pantalla(
+      h(
+        'section',
+        { class: 'contenedor centro' },
+        piko('pensando'),
+        h('h1', {}, 'No pudimos guardar tus respuestas'),
+        h('p', {}, 'Lo que contestaste sigue guardado en este teléfono: no se perdió nada.'),
+        h('p', { class: 'pendiente', style: 'margin:12px auto' }, motivo),
+        h('button', { class: 'btn', type: 'button', onclick: enviarYTerminar }, 'Probar de nuevo'),
+        h('p', { style: 'margin-top:14px' }, h('button', { class: 'btn btn--fantasma', type: 'button', onclick: () => ir(total - 1) }, 'Volver a mis respuestas')),
+      ),
+    );
   }
 
   function final(enCola) {
