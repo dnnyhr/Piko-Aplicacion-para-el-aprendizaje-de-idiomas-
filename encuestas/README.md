@@ -18,13 +18,20 @@ para 360px, y las pantallas más grandes se agregan con `min-width` (640px y
 
 ```
 encuestas/
-├── definiciones/        una encuesta = un JSON (esto es lo que se edita)
-├── migrations/          el esquema de D1
-├── public/              la página: HTML, CSS, JS y los dibujos de Piko
-│   └── js/reglas.js     validación compartida por el navegador y el Worker
-├── src/index.js         el Worker: API sobre D1 + sirve public/
-├── herramientas/        publicar.mjs: sube las definiciones al Worker
-└── test/                pruebas en Node con un D1 falso sobre node:sqlite
+├── definiciones/          una encuesta = un JSON (esto es lo que se edita)
+├── migrations/            el esquema de D1 (0001 a 0006)
+├── public/                la página: HTML, CSS, JS y los dibujos de Piko
+│   ├── index.html         la encuesta y la lista de encuestas
+│   ├── admin.html         el panel de resultados
+│   ├── js/reglas.js       validación compartida por el navegador y el Worker
+│   └── _headers           cabeceras de seguridad de los archivos estáticos
+├── src/
+│   ├── index.js           el Worker: API sobre D1 + sirve public/
+│   ├── correo.js          el correo con el enlace de descarga (Resend)
+│   ├── contactos.js       leer contactos pegados a mano en el panel
+│   └── palabras.js        agrupar traducciones y armar los paquetes de la app
+├── herramientas/          publicar.mjs (sube las definiciones) y animar-pikobot.mjs
+└── test/                  pruebas en Node con un D1 falso sobre node:sqlite
 ```
 
 ## Poner en marcha
@@ -45,10 +52,25 @@ npx wrangler secret put ADMIN_TOKEN
 npm run deploy
 
 # 4. Publicar las encuestas de definiciones/
-PIKO_ENCUESTAS_URL=https://piko-encuestas.<tu-cuenta>.workers.dev \
+PIKO_ENCUESTAS_URL=https://encuestas.piko.mugiware.com \
 PIKO_ENCUESTAS_TOKEN=<el ADMIN_TOKEN> \
 npm run publicar
 ```
+
+En Windows (PowerShell) las variables van en líneas aparte:
+
+```powershell
+$env:PIKO_ENCUESTAS_URL = "https://encuestas.piko.mugiware.com"
+$env:PIKO_ENCUESTAS_TOKEN = "<el ADMIN_TOKEN>"
+npm run publicar tu-lengua        # o sin nombre, para publicar todas
+```
+
+Cada vez que baja código nuevo: `git pull`, `npm run db:remoto` (si hay
+migraciones nuevas; no toca los datos) y `npm run deploy`. Publicar hace falta
+solo cuando cambia algo en `definiciones/`.
+
+La encuesta que se abre en la raíz del dominio es `ENCUESTA_PRINCIPAL`, en
+`vars` de `wrangler.jsonc`.
 
 Para un dominio propio (por ejemplo `encuestas.piko.mugiware.com`), agregá
 una *Custom Domain* al Worker desde el panel de Cloudflare.
@@ -149,13 +171,36 @@ queda quieto mirando de frente.
 | `/` | La encuesta principal (`ENCUESTA_PRINCIPAL` en `wrangler.jsonc`). Sin principal: la lista, o directo a la única abierta |
 | `/e/` | Todas las encuestas abiertas, cada una con su imagen; marca las que ya se respondieron en ese teléfono. Al final de cada encuesta, "Ver más encuestas" lleva acá |
 | `/e/<slug>` | La encuesta. `?origen=whatsapp` queda guardado con la respuesta, para saber qué enlace funcionó mejor |
-| `/admin` | Resultados en pestañas (Resumen, Preguntas, Correos, Contactos) con gráficas, filtros, buscador y descarga en CSV (pide el `ADMIN_TOKEN`) |
+| `/admin` | El panel (ver [El panel](#el-panel)). Pide el `ADMIN_TOKEN` |
 | `GET /api/encuestas/<slug>` | Definición vigente |
 | `POST /api/encuestas/<slug>/respuestas` | Guardar una respuesta |
 | `PUT /api/admin/encuestas/<slug>` | Publicar o actualizar una definición |
 | `POST /api/admin/encuestas/<slug>/estado` | Abrirla, cerrarla o pasarla a borrador (el panel lo usa) |
 | `GET /api/admin/encuestas/<slug>/resumen` | Agregados por pregunta |
 | `GET /api/admin/encuestas/<slug>/csv` | Todas las respuestas, una fila por persona |
+| `GET /api/admin/encuestas/<slug>/correos` · `POST …/correos/reenviar` | Los correos enviados y reenviar los que fallaron |
+| `GET` · `POST /api/admin/encuestas/<slug>/contactos` | Contactos agregados a mano |
+| `GET /api/admin/encuestas/<slug>/palabras` | Traducciones agrupadas por palabra, lengua y zona |
+| `POST …/palabras/confirmar` · `GET …/palabras/exportar?grupo=` | Confirmar una traducción; descargar lo confirmado y los paquetes |
+
+Todas las de `/api/admin/` piden `Authorization: Bearer <ADMIN_TOKEN>`.
+
+## El panel
+
+`/admin`, con la contraseña del panel (`ADMIN_TOKEN`):
+
+- **Encuestas:** una tarjeta por encuesta con su imagen, estado y respuestas.
+  Tocar una la abre; su botón la **cierra**, la **abre** o **publica** un
+  borrador (con aviso antes). La principal lleva la etiqueta "Principal".
+- **Resumen:** respuestas por día, quién respondió, NPS, lo mejor valorado y lo
+  más elegido en cada pregunta.
+- **Preguntas:** cada pregunta en una tarjeta plegable con su gráfica, filtradas
+  por sección.
+- **Palabras** (solo en encuestas con preguntas `traducir`): ver
+  [Palabras para la app](#palabras-para-la-app).
+- **Correos** y **Contactos** (solo en encuestas que mandan correo): estado de
+  cada envío, reenvíos y contactos agregados a mano.
+- **Descargar respuestas:** el CSV de la encuesta elegida.
 
 ## Hacer una encuesta nueva
 
@@ -213,8 +258,9 @@ vacíos. El recorrido:
    temas y 3 frases) o todo (las 120 palabras por tema y las 15 frases). Si
    hizo una parte, al final, antes de enviar, una pantalla le ofrece dos
    botones: "Completar todo" (vuelve con todas, sin perder lo escrito) o
-   "Terminar la encuesta". Las 10 de la parte son distintas para cada quien: así entre todos
-   se cubre el banco y la misma palabra la contestan varias personas.
+   "Terminar la encuesta". Las 10 de la parte son distintas para cada
+   quien: así entre todos se cubre el banco y la misma palabra la contestan
+   varias personas.
 2. **Revisar.** En `/admin`, la pestaña **Palabras** agrupa lo que escribió la
    gente por palabra y por lengua ("Li" y "li." cuentan como lo mismo) y dice
    cuántas personas y de cuántas zonas coinciden. Es **probable** cuando la
@@ -256,6 +302,9 @@ SELECT i.fila, ROUND(AVG(i.numero), 2) AS promedio, COUNT(*) AS n
 - Lo contestado se guarda en el teléfono a cada toque: se puede cerrar y seguir.
 - Si al enviar no hay señal, la respuesta queda en cola y sale sola al volver.
 - Cada respuesta lleva un id generado en el teléfono: reenviarla no la duplica.
+- Si el servidor la rechaza por otro motivo, la pantalla lo dice ("No pudimos
+  guardar tus respuestas"), con el motivo y un botón para probar de nuevo; lo
+  contestado sigue en el teléfono.
 - Al terminar, **"Otra persona va a responder en este teléfono"** deja el
   teléfono listo para la siguiente, para aulas con un solo teléfono.
 
@@ -281,13 +330,44 @@ SELECT i.fila, ROUND(AVG(i.numero), 2) AS promedio, COUNT(*) AS n
 ## Privacidad
 
 No se guarda la IP. Para frenar abusos se guarda un hash de IP + navegador que
-cambia cada día y por encuesta (no sirve para seguir a nadie). La única
-pregunta con datos personales es el contacto opcional para probar Piko: sale
-en el CSV, así que tratá ese archivo con cuidado.
+cambia cada día y por encuesta (no sirve para seguir a nadie). Los datos
+personales son todos opcionales: en "¿Qué le falta a Piko?", el correo y el
+WhatsApp para probar la app; en "Tu lengua en Piko", el nombre para los
+créditos y el WhatsApp de quien se anima a revisar o grabar. Salen en el CSV,
+así que tratá ese archivo con cuidado.
+
+## Consultas útiles
+
+Desde la carpeta `encuestas`, con `npx wrangler d1 execute piko-encuestas
+--remote --command "…"` (agregá `--json` para ver el resultado aunque esté
+vacío):
+
+```sql
+-- Cuántas respuestas tiene cada encuesta
+SELECT e.slug, COUNT(r.id) AS respuestas
+  FROM encuestas e LEFT JOIN respuestas r ON r.encuesta_id = e.id GROUP BY e.slug;
+
+-- De dónde son los que no recomiendan Piko (0 a 6, como el NPS del panel)
+SELECT z.opcion AS lugar, COUNT(*) AS personas
+  FROM respuestas_items n
+  LEFT JOIN respuestas_items z ON z.respuesta_id = n.respuesta_id AND z.pregunta = 'region'
+ WHERE n.pregunta = 'recomendar' AND n.numero BETWEEN 0 AND 6
+ GROUP BY lugar ORDER BY personas DESC;
+
+-- Las últimas respuestas de "Tu lengua en Piko" y cuántas palabras trajo cada una
+SELECT r.creada_en,
+       (SELECT COUNT(*) FROM respuestas_items i WHERE i.respuesta_id = r.id AND i.pregunta = 'palabras') AS palabras,
+       (SELECT COUNT(*) FROM respuestas_items i WHERE i.respuesta_id = r.id AND i.pregunta = 'frases') AS frases
+  FROM respuestas r JOIN encuestas e ON e.id = r.encuesta_id
+ WHERE e.slug = 'tu-lengua' ORDER BY r.creada_en DESC LIMIT 10;
+```
+
+Si algo no se guarda, `npx wrangler tail` muestra en vivo cada pedido que
+llega al Worker y sus errores.
 
 ## Pruebas
 
 ```bash
-npm run prueba      # reglas + Worker completo contra un D1 en memoria
+npm run prueba      # reglas, Worker, correo, contactos, palabras y seguridad contra un D1 en memoria
 npm run validar     # las definiciones de definiciones/
 ```

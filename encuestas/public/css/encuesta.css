@@ -610,24 +610,13 @@ textarea.campo { min-height: 110px; }
   .encuesta-card:hover .encuesta-card__ir svg { transform: translateX(3px); }
 }
 
-/* ------------------------------------------------ lista, avisos y cargando */
+/* ------------------------------------------------ avisos y cargando */
 
 .centro { text-align: center; padding: 32px 0 56px; }
 .centro .piko { width: 120px; margin: 0 auto 14px; }
 .centro h1 { font-size: clamp(1.6rem, 7vw, 2.6rem); margin-bottom: 10px; }
 .centro p { color: var(--tinta); max-width: 52ch; margin-inline: auto; }
 .centro > .btn { margin-top: 8px; }
-.tarjetas { display: grid; gap: 12px; margin-top: 22px; text-align: left; }
-.tarjeta {
-  display: block; text-decoration: none; color: inherit;
-  padding: 16px; background: var(--blanco);
-  border: 2px solid var(--borde); border-radius: var(--radio-lg);
-  box-shadow: 0 var(--labio) 0 var(--borde-hondo);
-  transition: transform .06s, box-shadow .06s;
-}
-.tarjeta:active { transform: translateY(var(--labio)); box-shadow: 0 0 0 var(--borde-hondo); }
-.tarjeta h2 { font-size: 1.2rem; color: var(--verde); margin-bottom: 4px; }
-.tarjeta p { margin: 0; color: var(--tinta); font-size: .95rem; }
 .pendiente {
   display: inline-flex; gap: 8px; align-items: center;
   margin: 0; padding: 8px 14px; border-radius: var(--radio-md);
@@ -635,7 +624,6 @@ textarea.campo { min-height: 110px; }
 }
 .cargando { min-height: 80svh; display: grid; place-content: center; justify-items: center; gap: 12px; color: var(--tinta-suave); font-family: Fredoka, sans-serif; text-align: center; padding: 16px; }
 .cargando__piko { width: 80px; animation: salto 1.2s ease-in-out infinite; }
-.aviso { padding: 16px; text-align: center; }
 
 @media (prefers-reduced-motion: reduce) {
   .destello, .pikobot { animation: none !important; }
