@@ -80,8 +80,11 @@ Garífuna, the build fails. We would rather ship no audio than a pronunciation
 invented by a machine.
 
 **This is the project's real risk, and the contribution we most need.** If you
-speak one of these languages, or work with people who do, see
-[CONTRIBUTING.md](CONTRIBUTING.md) — no coding required.
+speak one of these languages, answer
+[Tu lengua en Piko](https://encuestas.piko.mugiware.com/e/tu-lengua) from your
+phone, or see [CONTRIBUTING.md](CONTRIBUTING.md) — no coding required. Words
+that several speakers agree on are confirmed by the team and exported straight
+into the pack format (see [encuestas/README.md](encuestas/README.md)).
 
 ---
 
@@ -93,6 +96,8 @@ app/        The mobile app (Expo / React Native + TypeScript)
   content/    Language packs as JSON data, not code
 robot/      Classroom companion: Arduino firmware + Node control bridge
 web/        Landing page
+encuestas/  Surveys on Cloudflare Workers + D1, including the word collection
+            that feeds the language packs
 docs/       Architecture, technology choices, decision log
 ```
 

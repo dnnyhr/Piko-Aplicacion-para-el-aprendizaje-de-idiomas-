@@ -213,6 +213,7 @@ simulador juega una clase entera sin un solo teléfono.</sub></p>
 | Quiero… | Voy a… |
 |---|---|
 | 🗣️ Corregir o agregar una palabra de una lengua | `app/content/packs/<idioma>/` — o, sin tocar código, el [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml) |
+| ✅ Revisar las palabras que manda la gente y pasarlas a la app | Pestaña **Palabras** de `/admin` en las encuestas — ver [encuestas/README.md](encuestas/README.md#palabras-para-la-app) |
 | 🔌 Tocar el protocolo del aula o la sincronización | `app/src/core/` — recordá: nada de React Native ahí adentro |
 | 🎨 Cambiar una pantalla, un ejercicio o el diseño | `app/src/ui/` · `app/src/features/` |
 | 🤖 Arreglar algo del robot físico | `robot/firmware/` (Arduino) · `robot/panel/` (el puente) |
@@ -295,7 +296,7 @@ audio a tener una pronunciación inventada por una máquina.
 
 | | |
 |---|---|
-| <img src="https://api.iconify.design/mdi/translate.svg?color=%232F6B4F" width="18"/> **¿Hablás una de estas lenguas?** | Abrí un [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml). No hace falta saber programar ni usar Git — escribí las palabras en texto plano y nosotros las convertimos. |
+| <img src="https://api.iconify.design/mdi/translate.svg?color=%232F6B4F" width="18"/> **¿Hablás una de estas lenguas?** | Contestá [**Tu lengua en Piko**](https://encuestas.piko.mugiware.com/e/tu-lengua): escribís cómo se dicen palabras y frases en tu lengua, desde el teléfono. O abrí un [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml). No hace falta saber programar ni usar Git. |
 | <img src="https://api.iconify.design/mdi/code-braces.svg?color=%231F4E5F" width="18"/> **¿Querés aportar código?** | Todo está en [CONTRIBUTING.md](CONTRIBUTING.md): cómo correr el proyecto, las 121 pruebas, el simulador de aula y las restricciones que no son negociables. |
 
 </div>
