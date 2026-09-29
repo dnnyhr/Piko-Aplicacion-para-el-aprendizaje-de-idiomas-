@@ -1,0 +1,69 @@
+{
+  "id": "miq.colores.1",
+  "lang": "miq",
+  "theme": "colores",
+  "difficulty": 1,
+  "title": "Colores",
+  "items": [
+    {
+      "id": "miq.colores.1.a",
+      "type": "choice",
+      "skill": "miq.colores",
+      "prompt": "rojo",
+      "answer": "pauni",
+      "options": [
+        "pauni",
+        "pihni",
+        "siksa"
+      ]
+    },
+    {
+      "id": "miq.colores.1.b",
+      "type": "choice",
+      "skill": "miq.colores",
+      "prompt": "blanco",
+      "answer": "pihni",
+      "options": [
+        "pihni",
+        "pauni",
+        "lalahni"
+      ]
+    },
+    {
+      "id": "miq.colores.1.c",
+      "type": "choice",
+      "skill": "miq.colores",
+      "prompt": "negro",
+      "answer": "siksa",
+      "options": [
+        "siksa",
+        "sangni",
+        "pihni"
+      ]
+    },
+    {
+      "id": "miq.colores.1.d",
+      "type": "choice",
+      "skill": "miq.colores",
+      "prompt": "amarillo",
+      "answer": "lalahni",
+      "options": [
+        "lalahni",
+        "pauni",
+        "sangni"
+      ]
+    },
+    {
+      "id": "miq.colores.1.e",
+      "type": "choice",
+      "skill": "miq.colores",
+      "prompt": "azul",
+      "answer": "sangni",
+      "options": [
+        "sangni",
+        "siksa",
+        "lalahni"
+      ]
+    }
+  ]
+}

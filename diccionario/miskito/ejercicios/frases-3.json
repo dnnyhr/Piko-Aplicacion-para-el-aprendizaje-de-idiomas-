@@ -1,0 +1,42 @@
+{
+  "id": "miq.frases.3",
+  "lang": "miq",
+  "theme": "frases",
+  "difficulty": 3,
+  "title": "Frases largas",
+  "items": [
+    {
+      "id": "miq.frases.3.a",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Titan yamni smasmalkra mairin",
+      "blocks": [
+        "Titan",
+        "yamni",
+        "smasmalkra",
+        "mairin",
+        "waitna",
+        "tutni"
+      ],
+      "gloss": "Buenos días, maestra"
+    },
+    {
+      "id": "miq.frases.3.b",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Kuki ki ai kuku ka kaiki kikisa",
+      "blocks": [
+        "Kuki",
+        "ki",
+        "ai",
+        "kuku",
+        "ka",
+        "kaiki",
+        "kikisa",
+        "kuka",
+        "pisa"
+      ],
+      "gloss": "Mi abuela sonríe al ver su coco"
+    }
+  ]
+}

@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json",
     "sim": "tsx tools/sim.ts",
     "validate:packs": "tsx tools/validate-packs.ts",
+    "validate:diccionario": "tsx ../diccionario/herramientas/verificar.ts",
     "gen:svg": "tsx tools/gen-svg.ts"
   },
   "dependencies": {

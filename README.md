@@ -181,6 +181,7 @@ flowchart TD
     RAIZ --> ROBOT["🤖 robot/<br/><sub>el acompañante de aula</sub>"]
     RAIZ --> WEB["🌐 web/<br/><sub>piko.mugiware.com</sub>"]
     RAIZ --> DOCS["📖 docs/<br/><sub>por qué se construyó así</sub>"]
+    RAIZ --> DICC["📚 diccionario/<br/><sub>léxico y gramática de cada lengua</sub>"]
 
     APP --> CORE["🧠 src/core/<br/><sub>protocolo · sync · progreso</sub>"]
     APP --> RESTO["src/net · src/db · src/ui<br/><sub>red, datos e interfaz</sub>"]
@@ -196,7 +197,7 @@ flowchart TD
     classDef hoja fill:#F7F0E4,stroke:#97C137,color:#16241D
 
     class RAIZ raiz
-    class APP,ROBOT,WEB,DOCS puerta
+    class APP,ROBOT,WEB,DOCS,DICC puerta
     class CORE nucleo
     class RESTO,CONTENT,TESTS,FIRM,PANEL hoja
 ```
@@ -213,6 +214,7 @@ simulador juega una clase entera sin un solo teléfono.</sub></p>
 | Quiero… | Voy a… |
 |---|---|
 | 🗣️ Corregir o agregar una palabra de una lengua | `app/content/packs/<idioma>/` — o, sin tocar código, el [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml) |
+| 📚 Ver el diccionario y las reglas que se van encontrando de una lengua | `diccionario/` — ver [diccionario/README.md](diccionario/README.md) |
 | ✅ Revisar las palabras que manda la gente y pasarlas a la app | Pestaña **Palabras** de `/admin` en las encuestas — ver [encuestas/README.md](encuestas/README.md#palabras-para-la-app) |
 | 🔌 Tocar el protocolo del aula o la sincronización | `app/src/core/` — recordá: nada de React Native ahí adentro |
 | 🎨 Cambiar una pantalla, un ejercicio o el diseño | `app/src/ui/` · `app/src/features/` |
@@ -230,6 +232,7 @@ simulador juega una clase entera sin un solo teléfono.</sub></p>
 | [docs/decisiones.md](docs/decisiones.md) | Registro de decisiones, con su contexto y sus consecuencias |
 | [docs/desarrollo.md](docs/desarrollo.md) | Correr, probar y compilar el APK |
 | [app/content/README.md](app/content/README.md) | Formato de los paquetes de contenido |
+| [diccionario/metodologia.md](diccionario/metodologia.md) | Cómo se descubren las reglas de cada lengua con modelos de razonamiento y hablantes nativos |
 
 </div>
 
