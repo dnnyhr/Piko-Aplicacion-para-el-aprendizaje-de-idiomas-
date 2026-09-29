@@ -1,0 +1,87 @@
+{
+  "id": "miq.numeros.2",
+  "lang": "miq",
+  "theme": "numeros",
+  "difficulty": 2,
+  "title": "Números: del 7 al 9 (seis más…)",
+  "items": [
+    {
+      "id": "miq.numeros.2.a",
+      "type": "choice",
+      "skill": "miq.numeros",
+      "prompt": "siete",
+      "answer": "matlalkahbi pura kum",
+      "options": [
+        "matlalkahbi pura kum",
+        "matlalkahbi pura wal",
+        "matlalkahbi pura yumhpa"
+      ]
+    },
+    {
+      "id": "miq.numeros.2.b",
+      "type": "choice",
+      "skill": "miq.numeros",
+      "prompt": "ocho",
+      "answer": "matlalkahbi pura wal",
+      "options": [
+        "matlalkahbi pura wal",
+        "matlalkahbi pura yumhpa",
+        "matlalkahbi pura kum"
+      ]
+    },
+    {
+      "id": "miq.numeros.2.c",
+      "type": "choice",
+      "skill": "miq.numeros",
+      "prompt": "nueve",
+      "answer": "matlalkahbi pura yumhpa",
+      "options": [
+        "matlalkahbi pura yumhpa",
+        "matlalkahbi pura kum",
+        "matlalkahbi pura wal"
+      ]
+    },
+    {
+      "id": "miq.numeros.2.d",
+      "type": "build",
+      "skill": "miq.numeros",
+      "target": "matlalkahbi pura kum",
+      "blocks": [
+        "matlalkahbi",
+        "pura",
+        "kum",
+        "wal",
+        "yumhpa"
+      ],
+      "gloss": "siete"
+    },
+    {
+      "id": "miq.numeros.2.e",
+      "type": "build",
+      "skill": "miq.numeros",
+      "target": "matlalkahbi pura wal",
+      "blocks": [
+        "matlalkahbi",
+        "pura",
+        "wal",
+        "kum",
+        "yumhpa"
+      ],
+      "gloss": "ocho"
+    },
+    {
+      "id": "miq.numeros.2.f",
+      "type": "build",
+      "skill": "miq.numeros",
+      "target": "matlalkahbi pura yumhpa",
+      "blocks": [
+        "matlalkahbi",
+        "pura",
+        "yumhpa",
+        "kum",
+        "wal"
+      ],
+      "gloss": "nueve"
+    }
+  ]
+}

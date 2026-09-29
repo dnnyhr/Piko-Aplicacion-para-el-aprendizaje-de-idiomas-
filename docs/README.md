@@ -13,6 +13,7 @@ Esta carpeta explica cómo está construido y por qué se tomó cada decisión.
 | [decisiones.md](decisiones.md) | Registro de decisiones con su contexto y sus consecuencias |
 | [desarrollo.md](desarrollo.md) | Correr, probar y compilar el APK |
 | [../app/content/README.md](../app/content/README.md) | Formato de los paquetes de contenido |
+| [../diccionario/metodologia.md](../diccionario/metodologia.md) | Cómo se descubren las reglas de cada lengua con modelos de razonamiento y hablantes nativos |
 
 ---
 

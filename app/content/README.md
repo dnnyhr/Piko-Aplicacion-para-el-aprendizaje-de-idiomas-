@@ -15,7 +15,7 @@ npm run validate:packs
 | Código | Lengua | Estado |
 |---|---|---|
 | `eng` | Inglés | ✅ Con contenido |
-| `miq` | Miskito | ⬜ Vacío — necesita hablantes |
+| `miq` | Miskito | 🟨 Borradores en [`diccionario/miskito/ejercicios/`](../../diccionario/miskito/ejercicios/) — falta validarlos con hablantes |
 | `sum` | Mayangna | ⬜ Vacío — necesita hablantes |
 | `rma` | Rama | ⬜ Vacío — necesita hablantes |
 | `cab` | Garífuna | ⬜ Vacío — necesita hablantes |

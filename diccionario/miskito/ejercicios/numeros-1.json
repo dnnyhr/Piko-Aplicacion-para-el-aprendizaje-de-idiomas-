@@ -1,0 +1,93 @@
+{
+  "id": "miq.numeros.1",
+  "lang": "miq",
+  "theme": "numeros",
+  "difficulty": 1,
+  "title": "Números: del 1 al 6, y el 10",
+  "items": [
+    {
+      "id": "miq.numeros.1.a",
+      "type": "choice",
+      "skill": "miq.numeros",
+      "prompt": "uno",
+      "answer": "kumi",
+      "options": [
+        "kumi",
+        "wal",
+        "yumhpa"
+      ]
+    },
+    {
+      "id": "miq.numeros.1.b",
+      "type": "choice",
+      "skill": "miq.numeros",
+      "prompt": "dos",
+      "answer": "wal",
+      "options": [
+        "wal",
+        "kumi",
+        "walhwal"
+      ]
+    },
+    {
+      "id": "miq.numeros.1.c",
+      "type": "choice",
+      "skill": "miq.numeros",
+      "prompt": "tres",
+      "answer": "yumhpa",
+      "options": [
+        "yumhpa",
+        "wal",
+        "matsip"
+      ]
+    },
+    {
+      "id": "miq.numeros.1.d",
+      "type": "choice",
+      "skill": "miq.numeros",
+      "prompt": "cuatro",
+      "answer": "walhwal",
+      "options": [
+        "walhwal",
+        "wal",
+        "yumhpa"
+      ]
+    },
+    {
+      "id": "miq.numeros.1.e",
+      "type": "choice",
+      "skill": "miq.numeros",
+      "prompt": "cinco",
+      "answer": "matsip",
+      "options": [
+        "matsip",
+        "mata walsip",
+        "walhwal"
+      ]
+    },
+    {
+      "id": "miq.numeros.1.f",
+      "type": "choice",
+      "skill": "miq.numeros",
+      "prompt": "seis",
+      "answer": "matlalkahbi",
+      "options": [
+        "matlalkahbi",
+        "matsip",
+        "walhwal"
+      ]
+    },
+    {
+      "id": "miq.numeros.1.g",
+      "type": "choice",
+      "skill": "miq.numeros",
+      "prompt": "diez",
+      "answer": "mata walsip",
+      "options": [
+        "mata walsip",
+        "matsip",
+        "matlalkahbi"
+      ]
+    }
+  ]
+}

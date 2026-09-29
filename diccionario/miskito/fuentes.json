@@ -1,0 +1,26 @@
+{
+  "lengua": {
+    "nombre": "Miskito",
+    "autonimo": "Miskitu",
+    "iso639_3": "miq",
+    "familia": "Misumalpa"
+  },
+  "fuentes": [
+    {
+      "id": "raiti-2026-09-28",
+      "tipo": "encuesta",
+      "encuesta": "tu-lengua",
+      "respuesta": "1d3807ef-44c3-4039-806e-9c1691848e47",
+      "fecha": "2026-09-28",
+      "zona": "rio_coco",
+      "comunidad": "Raiti, Río Coco",
+      "relacion": "lengua materna",
+      "rol": "docente",
+      "permiso": true,
+      "credito": "Teacher Smith",
+      "puede_revisar_y_grabar": true,
+      "contenido": "80 palabras, 15 frases y una oración libre",
+      "notas": "Primera tanda real. La respuesta anterior de la misma encuesta (2026-09-25) fue de prueba y no se usa."
+    }
+  ]
+}
