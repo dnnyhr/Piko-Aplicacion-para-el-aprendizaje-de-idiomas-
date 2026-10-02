@@ -1,0 +1,10 @@
+{
+  "$comentario": "La lista única de lenguas de Piko. `carpeta` es donde vive su diccionario; `voz`, la voz sintética con que puede sonar (null: sólo grabaciones). Tiene que coincidir con LANGS, LANG_NOMBRE y VOZ_SINTETICA de app/src/core/content/schema.ts: `npm run validate:diccionario` lo comprueba.",
+  "lenguas": [
+    { "codigo": "eng", "nombre": "Inglés", "carpeta": "ingles", "voz": "en-US" },
+    { "codigo": "miq", "nombre": "Miskito", "autonimo": "Miskitu", "carpeta": "miskito", "voz": "es-US", "voz_provisional": "Voz en español para mientras se consiguen grabaciones de hablantes (decisión 16)." },
+    { "codigo": "sum", "nombre": "Mayangna", "carpeta": null, "voz": null },
+    { "codigo": "rma", "nombre": "Rama", "carpeta": null, "voz": null },
+    { "codigo": "cab", "nombre": "Garífuna", "carpeta": null, "voz": null }
+  ]
+}

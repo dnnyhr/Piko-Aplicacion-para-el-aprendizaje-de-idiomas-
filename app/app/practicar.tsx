@@ -19,9 +19,12 @@ import { useProgreso } from '../src/features/progreso/store';
 import { color, espacio, radio, texto } from '../src/ui/tokens';
 import { PACKS } from '../content';
 import { pickAdaptive, temasDe } from '../src/core/content/selector';
-import { LANG_NOMBRE, type LangCode } from '../src/core/content/schema';
+import { LANGS, LANG_NOMBRE, type LangCode } from '../src/core/content/schema';
 
 const ITEMS_POR_RONDA = 8;
+
+/** Sólo se ofrecen las lenguas que ya tienen ejercicios. */
+const CON_CONTENIDO = LANGS.filter((l) => temasDe(PACKS, l).length > 0);
 
 type Fase = 'elegir' | 'jugando' | 'resultado';
 
@@ -34,8 +37,7 @@ export default function Practicar() {
   const [tema, setTema] = useState<string | null>(null);
   const [resultado, setResultado] = useState<ResultadoRonda | null>(null);
 
-  // Hoy sólo inglés tiene contenido; las demás lenguas esperan a sus hablantes.
-  const lang: LangCode = 'eng';
+  const [lang, setLang] = useState<LangCode>('eng');
   const temas = useMemo(() => temasDe(PACKS, lang), [lang]);
 
   const [items, setItems] = useState<ReturnType<typeof pickAdaptive>>([]);
@@ -113,6 +115,21 @@ export default function Practicar() {
           </View>
         </View>
 
+        {CON_CONTENIDO.length > 1 && (
+          <>
+            <Text style={styles.instruccion}>Elegí la lengua</Text>
+            <View style={styles.lenguas}>
+              {CON_CONTENIDO.map((l) => (
+                <View key={l} style={styles.lengua}>
+                  <Opcion estado={l === lang ? 'elegida' : 'normal'} onPress={() => setLang(l)}>
+                    {LANG_NOMBRE[l]}
+                  </Opcion>
+                </View>
+              ))}
+            </View>
+          </>
+        )}
+
         <Text style={styles.instruccion}>Elegí un tema</Text>
 
         <View style={styles.temas}>
@@ -156,6 +173,8 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   temas: { gap: espacio.md },
+  lenguas: { flexDirection: 'row', gap: espacio.md },
+  lengua: { flex: 1 },
 
   fin: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: espacio.lg },
   marcador: { flexDirection: 'row', gap: espacio.md, marginTop: espacio.sm },

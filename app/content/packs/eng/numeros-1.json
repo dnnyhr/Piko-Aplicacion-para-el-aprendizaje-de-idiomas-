@@ -11,7 +11,11 @@
       "skill": "eng.numeros",
       "prompt": "uno",
       "answer": "one",
-      "options": ["one", "two", "ten"]
+      "options": [
+        "one",
+        "two",
+        "ten"
+      ]
     },
     {
       "id": "eng.numeros.1.b",
@@ -19,7 +23,11 @@
       "skill": "eng.numeros",
       "prompt": "tres",
       "answer": "three",
-      "options": ["three", "two", "eight"]
+      "options": [
+        "three",
+        "two",
+        "eight"
+      ]
     },
     {
       "id": "eng.numeros.1.c",
@@ -27,7 +35,11 @@
       "skill": "eng.numeros",
       "prompt": "cinco",
       "answer": "five",
-      "options": ["five", "four", "nine"]
+      "options": [
+        "five",
+        "four",
+        "nine"
+      ]
     },
     {
       "id": "eng.numeros.1.d",
@@ -35,7 +47,11 @@
       "skill": "eng.numeros",
       "prompt": "siete",
       "answer": "seven",
-      "options": ["seven", "six", "ten"]
+      "options": [
+        "seven",
+        "six",
+        "ten"
+      ]
     },
     {
       "id": "eng.numeros.1.e",
@@ -43,7 +59,11 @@
       "skill": "eng.numeros",
       "prompt": "diez",
       "answer": "ten",
-      "options": ["ten", "nine", "three"]
+      "options": [
+        "ten",
+        "nine",
+        "three"
+      ]
     },
     {
       "id": "eng.numeros.1.f",
@@ -52,7 +72,11 @@
       "tts": "three",
       "ttsLang": "en-US",
       "answer": "three",
-      "options": ["three", "tree", "free"],
+      "options": [
+        "three",
+        "tree",
+        "free"
+      ],
       "gloss": "tres"
     },
     {
@@ -62,7 +86,11 @@
       "tts": "eight",
       "ttsLang": "en-US",
       "answer": "eight",
-      "options": ["eight", "eighty", "ate"],
+      "options": [
+        "eight",
+        "eighty",
+        "ate"
+      ],
       "gloss": "ocho"
     },
     {
@@ -70,7 +98,14 @@
       "type": "build",
       "skill": "eng.numeros",
       "target": "I have two brothers",
-      "blocks": ["I", "have", "two", "brothers", "sisters", "am"],
+      "blocks": [
+        "I",
+        "have",
+        "two",
+        "brothers",
+        "sisters",
+        "am"
+      ],
       "gloss": "Tengo dos hermanos"
     }
   ]

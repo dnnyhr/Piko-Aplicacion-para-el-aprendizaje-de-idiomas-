@@ -4,56 +4,30 @@
  *   cd app && npm run validate:diccionario
  *
  * La regla que cuida es una sola: todo lo que un estudiante ve en un
- * ejercicio se puede seguir hasta lo que escribió una persona.
+ * ejercicio se puede seguir hasta su fuente.
  *
- *   corpus.csv        lo que escribió la gente, tal cual
- *     → lexico.json   cada entrada dice de qué fuente sale y cómo se escribió
- *       → ejercicios/ sólo formas del léxico que no están por revisar
+ *   corpus.csv          lo que escribió la gente o la obra publicada, tal cual
+ *     → lexico.json     cada entrada dice de qué fuente sale y cómo se escribió
+ *       → ejercicios.json  recetas que apuntan a entradas del léxico por su id
+ *         → app/content/packs/   los genera `npm run contenido`
  *
- * Y en los ejercicios de escucha del miskito, que la voz reciba la palabra
- * preparada por `voz.ts` (voz en español para mientras, decisión 16).
- *
- * Además valida los ejercicios con el mismo contrato que la app
- * (`validatePack`), así pasarlos a `app/content/packs/` es copiarlos.
+ * Además comprueba que `lenguas.json` diga lo mismo que la app (códigos,
+ * nombres y voz) y valida los paquetes con el mismo contrato que la app.
  */
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { leerPacks } from '../../app/tools/packs';
-import { paraVozEspanola } from './voz';
+import { LANGS, LANG_NOMBRE, validatePack } from '../../app/src/core/content/schema';
+import { armar, leerDiccionario, leerLenguas, palabras, paraLaApp, RAIZ_DICCIONARIO, type Entrada, type Lengua } from './recetas';
 
-const AQUI = path.dirname(fileURLToPath(import.meta.url));
-const RAIZ = path.resolve(AQUI, '..');
+const RAIZ = RAIZ_DICCIONARIO;
 
 const CATEGORIAS = new Set([
   'sustantivo', 'verbo', 'adjetivo', 'adverbio', 'numeral', 'pronombre', 'interrogativo',
   'posposicion', 'interjeccion', 'particula', 'expresion', 'frase', 'forma_flexionada',
 ]);
 const ESTADOS = new Set(['publicada', 'un_hablante', 'varios_hablantes', 'probable', 'confirmada']);
-const TIPOS_CORPUS = new Set(['palabra', 'frase', 'aporte', 'publicacion']);
-
-interface Entrada {
-  id: string;
-  forma: string;
-  registrado: string[];
-  es: string;
-  categoria: string;
-  tema: string;
-  de?: string;
-  revisar?: string;
-  reglas?: string[];
-  fuentes: string[];
-  estado: string;
-}
-
-/** Palabras de un texto, sin los signos pegados al principio o al final. */
-function palabras(texto: string): string[] {
-  return texto
-    .split(/\s+/)
-    .map((p) => p.replace(/^[¿¡"«(]+|[.,;:!?"»)]+$/g, ''))
-    .filter(Boolean);
-}
+const TIPOS_CORPUS = new Set(['palabra', 'frase', 'aporte', 'publicacion', 'equipo']);
 
 /** Clave para comparar: mismas palabras, sin mayúsculas ni signos. */
 const clave = (texto: string) => palabras(texto).join(' ').toLocaleLowerCase('es');
@@ -97,8 +71,9 @@ async function existe(archivo: string): Promise<boolean> {
   return fs.access(archivo).then(() => true, () => false);
 }
 
-async function verificarLengua(dir: string, nombre: string): Promise<string[]> {
+async function verificarLengua(lengua: Lengua): Promise<string[]> {
   const errores: string[] = [];
+  const dir = path.join(RAIZ, lengua.carpeta as string);
 
   // ── Fuentes ───────────────────────────────────────────────────────────
   const { fuentes } = await leerJson<{ fuentes: { id: string }[] }>(path.join(dir, 'fuentes.json'));
@@ -163,77 +138,78 @@ async function verificarLengua(dir: string, nombre: string): Promise<string[]> {
   }
 
   // ── Ejercicios ────────────────────────────────────────────────────────
-  const usables = lexico.entradas.filter((e) => !e.revisar);
-  const formas = new Set(usables.map((e) => clave(e.forma)));
-  const fichas = new Set(usables.flatMap((e) => palabras(e.forma).map((p) => p.toLocaleLowerCase('es'))));
-  const porRevisar = new Map(
-    lexico.entradas.filter((e) => e.revisar).map((e) => [clave(e.forma), e.id] as const),
-  );
-  const noAtestiguada = (texto: string) => {
-    const r = porRevisar.get(clave(texto));
-    return r ? `«${texto}» está por revisar en el léxico (${r})` : `«${texto}» no es una forma del léxico`;
-  };
-
-  const leidos = await leerPacks(path.join(dir, 'ejercicios'));
+  if (lexico.lengua !== lengua.codigo) errores.push(`lexico.json: \`lengua\` es ${lexico.lengua}, lenguas.json dice ${lengua.codigo}`);
+  const d = leerDiccionario(lengua);
+  const armados = d ? armar(d) : [];
+  const fichas = new Set(lexico.entradas.flatMap((e) => palabras(e.forma).map((p) => p.toLocaleLowerCase('es'))));
   const idsEjercicios = new Set<string>();
   let items = 0;
-  for (const l of leidos) {
-    const en = `ejercicios/${l.relativa}`;
-    if (!l.pack) {
-      for (const e of l.errores) errores.push(`${en}: ${e}`);
-      continue;
-    }
-    if (l.pack.lang !== lexico.lengua) errores.push(`${en}: \`lang\` es ${l.pack.lang}, el léxico es ${lexico.lengua}`);
-    for (const id of [l.pack.id, ...l.pack.items.map((it) => it.id)]) {
-      if (idsEjercicios.has(id)) errores.push(`${en}: id repetido entre paquetes (${id})`);
-      idsEjercicios.add(id);
-    }
-    for (const it of l.pack.items) {
+  for (const a of armados) {
+    const en = `ejercicios.json ${a.pack.id}`;
+    errores.push(...a.errores.map((e) => `ejercicios.json ${e}`));
+    const r = validatePack(a.pack);
+    if (!r.ok) errores.push(...r.errors.map((e) => `${en}: ${e}`));
+    if (idsEjercicios.has(a.pack.id)) errores.push(`${en}: hay dos paquetes con el mismo tema y nivel`);
+    idsEjercicios.add(a.pack.id);
+    for (const [k, u] of a.usa.entries()) {
       items++;
-      if (it.type === 'build') {
-        if (!formas.has(clave(it.target))) errores.push(`${en} ${it.id}: ${noAtestiguada(it.target)}`);
-        for (const b of it.blocks) {
-          if (!fichas.has(clave(b))) errores.push(`${en} ${it.id}: el bloque «${b}» no sale de ninguna forma usable del léxico`);
-        }
-      } else {
-        if (it.type === 'listen' && it.tts && lexico.lengua === 'miq') {
-          const esperado = paraVozEspanola(it.answer);
-          if (!it.ttsLang?.startsWith('es')) errores.push(`${en} ${it.id}: el miskito suena con la voz en español (\`ttsLang\` es-…)`);
-          if (it.tts !== esperado) errores.push(`${en} ${it.id}: \`tts\` tiene que ser «${esperado}» (voz.ts), no «${it.tts}»`);
-        }
-        for (const o of new Set([it.answer, ...it.options])) {
-          if (!formas.has(clave(o))) errores.push(`${en} ${it.id}: ${noAtestiguada(o)}`);
-        }
+      for (const x of u.extra) {
+        if (!fichas.has(x.toLocaleLowerCase('es'))) errores.push(`${en} ítem ${k + 1}: el bloque «${x}» no es palabra de ninguna entrada`);
       }
     }
   }
+  const enApp = d ? paraLaApp(d, armados).reduce((n, a) => n + a.pack.items.length, 0) : 0;
 
-  const revisar = lexico.entradas.length - usables.length;
-  console.log(`  ${nombre} (${lexico.lengua})`);
+  const revisar = lexico.entradas.filter((e: Entrada) => e.revisar).length;
+  console.log(`  ${lengua.nombre} (${lengua.codigo})`);
   console.log(`    fuentes     ${String(fuentes.length).padStart(4)}`);
   console.log(`    corpus      ${String(corpus.length).padStart(4)} registros`);
   console.log(`    léxico      ${String(lexico.entradas.length).padStart(4)} entradas (${revisar} por revisar)`);
-  console.log(`    ejercicios  ${String(leidos.length).padStart(4)} paquetes, ${items} ítems`);
+  console.log(`    ejercicios  ${String(armados.length).padStart(4)} paquetes, ${items} ítems (${items - enApp} esperan revisión)`);
+  return errores;
+}
+
+/** `lenguas.json` y la app tienen que decir lo mismo. */
+async function verificarLenguas(lenguas: Lengua[]): Promise<string[]> {
+  const errores: string[] = [];
+  const codigos = lenguas.map((l) => l.codigo);
+  if (codigos.join() !== [...LANGS].join()) {
+    errores.push(`lenguas.json: los códigos (${codigos.join(', ')}) no son los de la app (${LANGS.join(', ')})`);
+  }
+  for (const l of lenguas) {
+    if (LANG_NOMBRE[l.codigo] !== l.nombre) errores.push(`lenguas.json ${l.codigo}: la app la llama «${LANG_NOMBRE[l.codigo]}», no «${l.nombre}»`);
+    // La voz: se prueba con un ejercicio de escucha contra el validador de la app.
+    const prueba = (ttsLang: string) =>
+      validatePack({
+        id: 'p', lang: l.codigo, theme: 't', difficulty: 1, title: 't',
+        items: [{ id: 'i', type: 'listen', skill: 's', tts: 'a', ttsLang, answer: 'a', options: ['a', 'b'], gloss: 'g' }],
+      }).ok;
+    if (l.voz && !prueba(l.voz)) errores.push(`lenguas.json ${l.codigo}: la app no deja sonar con la voz ${l.voz}`);
+    if (!l.voz && (prueba('es-US') || prueba('en-US'))) errores.push(`lenguas.json ${l.codigo}: dice que no tiene voz, pero la app la deja sonar`);
+  }
+  const carpetas = new Set(lenguas.map((l) => l.carpeta).filter(Boolean));
+  for (const d of await fs.readdir(RAIZ, { withFileTypes: true })) {
+    if (d.isDirectory() && d.name !== 'herramientas' && !carpetas.has(d.name)) {
+      errores.push(`la carpeta diccionario/${d.name} no figura en lenguas.json`);
+    }
+  }
   return errores;
 }
 
 async function main(): Promise<void> {
   console.log(`\n  Diccionario\n  ${'─'.repeat(56)}`);
-  const lenguas = (await fs.readdir(RAIZ, { withFileTypes: true }))
-    .filter((d) => d.isDirectory() && d.name !== 'herramientas')
-    .map((d) => d.name)
-    .sort();
-
+  const lenguas = leerLenguas();
   let problemas = 0;
-  for (const nombre of lenguas) {
-    const errores = await verificarLengua(path.join(RAIZ, nombre), nombre);
+  const avisar = (errores: string[]) => {
     for (const e of errores) console.log(`    ✗ ${e}`);
     problemas += errores.length;
-  }
+  };
+  avisar(await verificarLenguas(lenguas));
+  for (const l of lenguas) if (l.carpeta) avisar(await verificarLengua(l));
 
   console.log(`  ${'─'.repeat(56)}`);
   if (problemas === 0) {
-    console.log('  Todo en orden: cada ejercicio sale de lo que escribió una persona.\n');
+    console.log('  Todo en orden: cada ejercicio sale de una fuente.\n');
   } else {
     console.log(`  ${problemas} problema(s).\n`);
     process.exit(1);

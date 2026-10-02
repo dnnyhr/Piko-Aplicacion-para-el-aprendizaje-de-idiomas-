@@ -11,7 +11,11 @@
       "skill": "eng.escuela",
       "prompt": "maestro",
       "answer": "teacher",
-      "options": ["teacher", "student", "school"]
+      "options": [
+        "teacher",
+        "student",
+        "school"
+      ]
     },
     {
       "id": "eng.escuela.2.b",
@@ -19,7 +23,11 @@
       "skill": "eng.escuela",
       "prompt": "libro",
       "answer": "book",
-      "options": ["book", "pencil", "paper"]
+      "options": [
+        "book",
+        "pencil",
+        "paper"
+      ]
     },
     {
       "id": "eng.escuela.2.c",
@@ -27,7 +35,11 @@
       "skill": "eng.escuela",
       "prompt": "¿Puedo pasar?",
       "answer": "May I come in?",
-      "options": ["May I come in?", "Can I go out?", "Where is the door?"]
+      "options": [
+        "May I come in?",
+        "Can I go out?",
+        "Where is the door?"
+      ]
     },
     {
       "id": "eng.escuela.2.d",
@@ -36,7 +48,11 @@
       "tts": "open your book",
       "ttsLang": "en-US",
       "answer": "open your book",
-      "options": ["open your book", "close your book", "open your bag"],
+      "options": [
+        "open your book",
+        "close your book",
+        "open your bag"
+      ],
       "gloss": "abre tu libro"
     },
     {
@@ -44,7 +60,16 @@
       "type": "build",
       "skill": "eng.escuela",
       "target": "I go to school every day",
-      "blocks": ["I", "go", "to", "school", "every", "day", "week", "the"],
+      "blocks": [
+        "I",
+        "go",
+        "to",
+        "school",
+        "every",
+        "day",
+        "week",
+        "the"
+      ],
       "gloss": "Voy a la escuela todos los días"
     },
     {
@@ -52,7 +77,16 @@
       "type": "build",
       "skill": "eng.escuela",
       "target": "The teacher is reading a book",
-      "blocks": ["The", "teacher", "is", "reading", "a", "book", "writing", "student"],
+      "blocks": [
+        "The",
+        "teacher",
+        "is",
+        "reading",
+        "a",
+        "book",
+        "writing",
+        "student"
+      ],
       "gloss": "El maestro está leyendo un libro"
     },
     {
@@ -60,7 +94,14 @@
       "type": "build",
       "skill": "eng.escuela",
       "target": "I do not understand",
-      "blocks": ["I", "do", "not", "understand", "know", "you"],
+      "blocks": [
+        "I",
+        "do",
+        "not",
+        "understand",
+        "know",
+        "you"
+      ],
       "gloss": "No entiendo"
     }
   ]

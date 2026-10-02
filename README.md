@@ -213,7 +213,7 @@ simulador juega una clase entera sin un solo teléfono.</sub></p>
 
 | Quiero… | Voy a… |
 |---|---|
-| 🗣️ Corregir o agregar una palabra de una lengua | `app/content/packs/<idioma>/` — o, sin tocar código, el [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml) |
+| 🗣️ Corregir o agregar una palabra o un ejercicio | `diccionario/<lengua>/` y `npm run contenido` — o, sin tocar código, el [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml) |
 | 📚 Ver el diccionario y las reglas que se van encontrando de una lengua | `diccionario/` — ver [diccionario/README.md](diccionario/README.md) |
 | ✅ Revisar las palabras que manda la gente y pasarlas a la app | Pestaña **Palabras** de `/admin` en las encuestas — ver [encuestas/README.md](encuestas/README.md#palabras-para-la-app) |
 | 🔌 Tocar el protocolo del aula o la sincronización | `app/src/core/` — recordá: nada de React Native ahí adentro |
@@ -287,8 +287,10 @@ La mascota se llama **Piko**, y también le da nombre a la app. Piko es un choco
 
 Piko es software libre, y la contribución que más falta le hace **no es código.**
 
-Hoy la aplicación sólo tiene contenido en inglés. Las cuatro lenguas indígenas
-tienen el formato listo y están vacías **a propósito**: el vocabulario y la
+Hoy la aplicación tiene contenido en inglés y en miskito. El miskito sale de
+hablantes de Raiti y de diccionarios publicados, y cada palabra se puede
+rastrear hasta su fuente ([diccionario/](diccionario/README.md)). Mayangna,
+rama y garífuna esperan sus fuentes **a propósito**: el vocabulario y la
 pronunciación tienen que venir de hablantes nativos o de material lingüístico
 publicado. Inventarlos sería enseñarle una lengua falsa justo a los niños que
 están tratando de conservarla. Por eso el validador de contenido **rechaza la

@@ -35,8 +35,11 @@ jobs:
       - name: Formato de los paquetes de contenido
         run: npm run validate:packs
 
-      - name: Diccionario — de la encuesta al ejercicio
+      - name: Diccionario — de la fuente al ejercicio
         run: npm run validate:diccionario
+
+      - name: Contenido de la app al día con el diccionario
+        run: npm run contenido:comprobar
 
   panel:
     name: Robot — panel y puente

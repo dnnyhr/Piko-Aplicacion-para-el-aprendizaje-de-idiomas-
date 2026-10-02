@@ -286,9 +286,36 @@ falta para dejar la voz sintética.
 
 ---
 
+## 17. El diccionario es la única fuente del contenido
+
+**Contexto.** Había tres maneras de producir un paquete: a mano (inglés), con un
+script que no estaba en el repositorio (miskito) y desde el panel de
+encuestas. Cada una con su convención de nombres. Los ejercicios copiaban las
+palabras como texto, así que corregir una palabra era editar cada archivo
+donde aparecía. La lista de lenguas estaba repetida en cuatro lugares.
+
+**Decisión.** Cada lengua tiene una carpeta en `diccionario/` con su léxico y
+sus recetas de ejercicios, y las recetas apuntan a las palabras por id. `npm
+run contenido` genera `app/content/packs/` y `index.ts`, sólo con los
+ejercicios cuyas palabras no están marcadas para revisar.
+`diccionario/lenguas.json` es la lista de lenguas, y el verificador comprueba
+que coincida con `schema.ts`. El panel de encuestas queda como herramienta
+interna del equipo y no produce paquetes para la app.
+
+**Por qué.** Una palabra se corrige en un solo lugar. Lo que ve un estudiante
+se puede rastrear hasta su fuente, y CI rechaza un paquete editado a mano.
+
+**Costo.** El formato de la app (`schema.ts`) no cambió, pero los archivos de
+inglés pasaron de `saludos.json` a `saludos-1.json`, el mismo nombre que usa
+cualquier lengua. El id de un ejercicio sale de su posición en la receta: los
+nuevos se agregan al final para no mezclar el progreso de los estudiantes.
+
+---
+
 ## Pendientes conocidos
 
-- **El contenido de las cuatro lenguas indígenas.** El riesgo principal.
+- **El contenido de mayangna, rama y garífuna, y grabaciones de hablantes de
+  miskito.** El riesgo principal.
 - **Presets de aula guardados** e importación de listas por archivo.
 - **Compartir el APK por Bluetooth** desde la propia aplicación: requiere un
   módulo nativo pequeño que lea la ruta del paquete instalado y lance el

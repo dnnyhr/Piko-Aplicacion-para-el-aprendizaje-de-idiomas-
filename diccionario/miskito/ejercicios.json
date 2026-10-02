@@ -1,0 +1,309 @@
+{
+  "$comentario": "Recetas de ejercicios: cada una apunta a entradas de lexico.json por su id. `npm run contenido` las convierte en los paquetes de la app, sólo con lo confirmado. Ver diccionario/README.md.",
+  "paquetes": [
+    {
+      "tema": "acciones",
+      "nivel": 1,
+      "titulo": "Acciones",
+      "items": [
+        { "elegir": "piyaya", "opciones": ["piyaya", "diyaya", "yapaya"] },
+        { "elegir": "diyaya", "opciones": ["diyaya", "piyaya", "walaya"] },
+        { "elegir": "yapaya", "opciones": ["yapaya", "wapaya", "piyaya"] },
+        { "elegir": "wapaya", "opciones": ["wapaya", "yapaya", "walaya"] },
+        { "elegir": "aisaya", "opciones": ["aisaya", "aiwanaya", "kaikaya"] },
+        { "elegir": "walaya", "opciones": ["walaya", "wapaya", "aisaya"] },
+        { "elegir": "kaikaya", "opciones": ["kaikaya", "walaya", "pulaya"] },
+        { "elegir": "aiwanaya", "opciones": ["aiwanaya", "aisaya", "pulaya"] },
+        { "elegir": "pulaya", "opciones": ["pulaya", "ulbaya", "diyaya"] },
+        { "armar": "wark_takaya", "extra": ["lan", "kaikaya"] }
+      ]
+    },
+    {
+      "tema": "animales",
+      "nivel": 1,
+      "titulo": "Animales",
+      "items": [
+        { "elegir": "yul", "opciones": ["yul", "urus", "aras"] },
+        { "elegir": "urus", "opciones": ["urus", "yul", "limi"] },
+        { "elegir": "limi", "opciones": ["limi", "micki", "urus"] },
+        { "elegir": "micki", "opciones": ["micki", "limi", "yul"] },
+        { "elegir": "galila", "opciones": ["galila", "urus", "bip"] },
+        { "elegir": "bip", "opciones": ["bip", "aras", "galila"] },
+        { "elegir": "aras", "opciones": ["aras", "bip", "kuswa"] },
+        { "elegir": "kuswa", "opciones": ["kuswa", "kakamuk", "piuta"] },
+        { "elegir": "kakamuk", "opciones": ["kakamuk", "kuswa", "piuta"] },
+        { "elegir": "piuta", "opciones": ["piuta", "kuswa", "urus"] }
+      ]
+    },
+    {
+      "tema": "casa",
+      "nivel": 1,
+      "titulo": "La casa",
+      "items": [
+        { "elegir": "utla", "opciones": ["utla", "dur", "krikri"] },
+        { "elegir": "dur", "opciones": ["dur", "utla", "sus"] },
+        { "elegir": "krikri", "opciones": ["krikri", "slilmika", "kwala"] },
+        { "elegir": "slilmika", "opciones": ["slilmika", "krikri", "dikua"] },
+        { "elegir": "dikua", "opciones": ["dikua", "kisura", "duary"] },
+        { "elegir": "kisura", "opciones": ["kisura", "ispara", "dikua"] },
+        { "elegir": "ispara", "opciones": ["ispara", "kisura", "sus"] },
+        { "elegir": "duary", "opciones": ["duary", "dur", "dikua"] },
+        { "elegir": "kwala", "opciones": ["kwala", "sus", "krikri"] },
+        { "elegir": "sus", "opciones": ["sus", "kwala", "dur"] }
+      ]
+    },
+    {
+      "tema": "colores",
+      "nivel": 1,
+      "titulo": "Colores",
+      "items": [
+        { "elegir": "pauni", "opciones": ["pauni", "pihni", "siksa"] },
+        { "elegir": "pihni", "opciones": ["pihni", "pauni", "lalahni"] },
+        { "elegir": "siksa", "opciones": ["siksa", "sangni", "pihni"] },
+        { "elegir": "lalahni", "opciones": ["lalahni", "pauni", "sangni"] },
+        { "elegir": "sangni", "opciones": ["sangni", "siksa", "lalahni"] }
+      ]
+    },
+    {
+      "tema": "comida",
+      "nivel": 1,
+      "titulo": "La comida",
+      "items": [
+        { "elegir": "li", "opciones": ["li", "wina", "haya"], "pregunta": "agua" },
+        { "elegir": "plun", "opciones": ["plun", "li", "rais"] },
+        { "elegir": "rais", "opciones": ["rais", "bins", "haya"] },
+        { "elegir": "bins", "opciones": ["bins", "rais", "bret"] },
+        { "elegir": "yaura", "opciones": ["yaura", "tama", "platu"] },
+        { "elegir": "platu", "opciones": ["platu", "tama", "yaura"] },
+        { "elegir": "tama", "opciones": ["tama", "platu", "kuku"] },
+        { "elegir": "kuku", "opciones": ["kuku", "tama", "cafi"] },
+        { "elegir": "inska", "opciones": ["inska", "wina", "bins"], "pregunta": "pescado" },
+        { "elegir": "wina", "opciones": ["wina", "inska", "bret"] },
+        { "elegir": "bret", "opciones": ["bret", "bins", "cafi"] },
+        { "elegir": "cafi", "opciones": ["cafi", "bret", "li"] },
+        { "elegir": "haya", "opciones": ["haya", "rais", "yaura"] },
+        { "armar": "galila_mabra", "extra": ["wina", "inska"], "glosa": "huevo (de gallina)" }
+      ]
+    },
+    {
+      "tema": "cuerpo",
+      "nivel": 1,
+      "titulo": "El cuerpo",
+      "items": [
+        { "elegir": "lal", "opciones": ["lal", "nakra", "mina"] },
+        { "elegir": "nakra", "opciones": ["nakra", "kakma", "kiama"] },
+        { "elegir": "kakma", "opciones": ["kakma", "kiama", "napa"] },
+        { "elegir": "kiama", "opciones": ["kiama", "kakma", "tawa"] },
+        { "elegir": "bila", "opciones": ["bila", "napa", "mina"] },
+        { "elegir": "mihta", "opciones": ["mihta", "mina", "lal"] },
+        { "elegir": "mina", "opciones": ["mina", "mihta", "napa"] },
+        { "elegir": "napa", "opciones": ["napa", "bila", "tawa"] },
+        { "elegir": "tawa", "opciones": ["tawa", "lal", "kupia"] },
+        { "elegir": "kupia", "opciones": ["kupia", "kiama", "nakra"] }
+      ]
+    },
+    {
+      "tema": "escucha",
+      "nivel": 1,
+      "titulo": "Escuchá: palabras de todos los días",
+      "items": [
+        { "escuchar": "kumi", "opciones": ["kumi", "wal", "lal"] },
+        { "escuchar": "wal", "opciones": ["wal", "lal", "mina"] },
+        { "escuchar": "matsip", "opciones": ["matsip", "mihta", "kakma"] },
+        { "escuchar": "lal", "opciones": ["lal", "wal", "li"] },
+        { "escuchar": "nakra", "opciones": ["nakra", "napa", "kakma"] },
+        { "escuchar": "kiama", "opciones": ["kiama", "kakma", "kupia"] },
+        { "escuchar": "mihta", "opciones": ["mihta", "mina", "matsip"] },
+        { "escuchar": "kupia", "opciones": ["kupia", "kiama", "tuktan"] },
+        { "escuchar": "yul", "opciones": ["yul", "li", "lal"] },
+        { "escuchar": "inska", "opciones": ["inska", "anti", "mina"], "glosa": "pescado" },
+        { "escuchar": "tahti", "opciones": ["tahti", "anti", "mama"] },
+        { "escuchar": "tingki", "opciones": ["tingki", "tuktan", "pain"], "mayuscula": true }
+      ]
+    },
+    {
+      "tema": "escucha",
+      "nivel": 2,
+      "titulo": "Escuchá: palabras que se parecen",
+      "items": [
+        { "escuchar": "yapaya", "opciones": ["yapaya", "wapaya", "diyaya"] },
+        { "escuchar": "wapaya", "opciones": ["wapaya", "yapaya", "walaya"] },
+        { "escuchar": "diyaya", "opciones": ["diyaya", "piyaya", "yapaya"] },
+        { "escuchar": "kakma", "opciones": ["kakma", "kiama", "kaikaya"] },
+        { "escuchar": "napa", "opciones": ["napa", "nakra", "mina"] },
+        { "escuchar": "aisaya", "opciones": ["aisaya", "aiwanaya", "walaya"] },
+        { "escuchar": "walaya", "opciones": ["walaya", "wal", "wapaya"] },
+        { "escuchar": "kaikaya", "opciones": ["kaikaya", "kakma", "pulaya"] },
+        { "escuchar": "walhwal", "opciones": ["walhwal", "wal", "matsip"] },
+        { "escuchar": "yumpha", "opciones": ["yumpha", "yul", "kumi"] }
+      ]
+    },
+    {
+      "tema": "escucha",
+      "nivel": 3,
+      "titulo": "Escuchá: frases",
+      "mayuscula": true,
+      "items": [
+        { "escuchar": "frase.estoy_bien", "opciones": ["frase.estoy_bien", "nahkisma", "frase.quiero_agua"], "glosa": "Estoy bien" },
+        { "escuchar": "frase.quiero_agua", "opciones": ["frase.quiero_agua", "frase.esta_lloviendo", "frase.estoy_bien"], "glosa": "Quiero agua" },
+        { "escuchar": "frase.esta_lloviendo", "opciones": ["frase.esta_lloviendo", "frase.quiero_agua", "frase.donde_vivis"], "glosa": "Está lloviendo" },
+        { "escuchar": "frase.donde_vivis", "opciones": ["frase.donde_vivis", "nahkisma", "frase.estoy_bien"] },
+        { "escuchar": "frase.gracias_amigo", "opciones": ["frase.gracias_amigo", "frase.estoy_bien", "frase.quiero_agua"], "glosa": "Gracias, amigo" },
+        { "escuchar": "frase.me_llamo_ana", "opciones": ["frase.me_llamo_ana", "frase.donde_vivis", "frase.gracias_amigo"], "glosa": "Me llamo Ana" }
+      ]
+    },
+    {
+      "tema": "escuela",
+      "nivel": 1,
+      "titulo": "La escuela",
+      "items": [
+        { "elegir": "smasmalkra", "opciones": ["smasmalkra", "skul_tuktan", "buk"] },
+        { "elegir": "buk", "opciones": ["buk", "ingk", "wauhtaya"] },
+        { "elegir": "wauhtaya", "opciones": ["wauhtaya", "buk", "ingk"] },
+        { "elegir": "ingk", "opciones": ["ingk", "buk", "wauhtaya"] },
+        { "elegir": "ulbaya", "opciones": ["ulbaya", "aisi_kaikaya", "lan_takaya"] },
+        { "armar": "skul_watla", "extra": ["utla", "tuktan"] },
+        { "armar": "skul_tuktan", "extra": ["watla", "luhpi"] },
+        { "armar": "aisi_kaikaya", "extra": ["takaya", "ulbaya"] },
+        { "armar": "lan_takaya", "extra": ["wark", "kaikaya"] }
+      ]
+    },
+    {
+      "tema": "familia",
+      "nivel": 1,
+      "titulo": "La familia",
+      "items": [
+        { "elegir": "yapti", "opciones": ["yapti", "aisa", "kuka"] },
+        { "elegir": "aisa", "opciones": ["aisa", "yapti", "dama"] },
+        { "elegir": "kuka", "opciones": ["kuka", "dama", "yapti"] },
+        { "elegir": "dama", "opciones": ["dama", "kuka", "aisa"] },
+        { "elegir": "tahti", "opciones": ["tahti", "anti", "dama"] },
+        { "elegir": "anti", "opciones": ["anti", "tahti", "kuka"] },
+        { "elegir": "tuktan", "opciones": ["tuktan", "bibi", "dama"] },
+        { "elegir": "bibi", "opciones": ["bibi", "tuktan", "anti"] }
+      ]
+    },
+    {
+      "tema": "familia",
+      "nivel": 2,
+      "titulo": "La familia: palabras que se arman",
+      "items": [
+        { "armar": "luhpi_waitna", "extra": ["mairin", "almuk"] },
+        { "armar": "luhpi_mairin", "extra": ["waitna", "almuk"] },
+        { "armar": "aisa_almuk", "extra": ["luhpi", "waitna"] },
+        { "armar": "mama_almuk", "extra": ["aisa", "mairin"] },
+        { "armar": "smasmalkra_mairin", "extra": ["waitna", "almuk"] },
+        { "armar": "tuktan_mairin", "extra": ["waitna", "luhpi"] },
+        { "armar": "tuktan_waitna", "extra": ["mairin", "almuk"] }
+      ]
+    },
+    {
+      "tema": "frases",
+      "nivel": 2,
+      "titulo": "Frases de todos los días",
+      "mayuscula": true,
+      "items": [
+        { "armar": "frase.me_llamo_ana", "extra": ["ninam", "dia"], "glosa": "Me llamo Ana" },
+        { "armar": "frase.como_te_llamas", "extra": ["nini", "anira"] },
+        { "armar": "frase.estoy_bien", "extra": ["sa", "yamni"], "glosa": "Estoy bien" },
+        { "armar": "frase.mi_mama_esta_en_la_casa", "extra": ["yapti", "sna"], "glosa": "Mi mamá está en la casa" },
+        { "armar": "frase.el_perro_come", "extra": ["piyaya", "li"], "glosa": "El perro come" },
+        { "armar": "frase.donde_vivis", "extra": ["nahkisma", "ra"] },
+        { "armar": "frase.me_gusta_el_pescado", "extra": ["want", "li"], "glosa": "Me gusta el pescado" },
+        { "armar": "frase.quiero_agua", "extra": ["laiksna", "inska"], "glosa": "Quiero agua" },
+        { "armar": "frase.esta_lloviendo", "extra": ["pisa", "want"], "glosa": "Está lloviendo" },
+        { "armar": "frase.tengo_hambre", "extra": ["want", "li"], "glosa": "Tengo hambre" },
+        { "armar": "frase.gracias_amigo", "extra": ["pain", "au"], "glosa": "Gracias, amigo" }
+      ]
+    },
+    {
+      "tema": "frases",
+      "nivel": 3,
+      "titulo": "Frases largas",
+      "mayuscula": true,
+      "items": [
+        { "armar": "frase.buenos_dias_maestra", "extra": ["waitna", "tutni"], "glosa": "Buenos días, maestra" },
+        { "armar": "frase.aporte_abuela_coco", "extra": ["kuka", "pisa"], "glosa": "Mi abuela sonríe al ver su coco" },
+        { "armar": "frase.el_perro_come.2", "extra": ["piyaya", "li"], "glosa": "El perro come (comida)" },
+        { "armar": "frase.aporte_tangni", "extra": ["sna", "utla"], "glosa": "Mi nombre es Tangni, tengo 18 años y estudio en Jinotega" }
+      ]
+    },
+    {
+      "tema": "naturaleza",
+      "nivel": 1,
+      "titulo": "La naturaleza",
+      "items": [
+        { "elegir": "tasba", "opciones": ["tasba", "walpa", "unta"] },
+        { "elegir": "tikni", "opciones": ["tikni", "kabu", "li"] },
+        { "elegir": "kabu", "opciones": ["kabu", "tikni", "tasba"] },
+        { "elegir": "kati", "opciones": ["kati", "slisma", "kabu"] },
+        { "elegir": "slisma", "opciones": ["slisma", "kati", "dus"] },
+        { "elegir": "dus", "opciones": ["dus", "unta", "pasa"] },
+        { "elegir": "unta", "opciones": ["unta", "dus", "tasba"] },
+        { "elegir": "walpa", "opciones": ["walpa", "tasba", "dus"] },
+        { "elegir": "pasa", "opciones": ["pasa", "tasba", "walpa"] }
+      ]
+    },
+    {
+      "tema": "numeros",
+      "nivel": 1,
+      "titulo": "Números: del 1 al 6, y el 10",
+      "items": [
+        { "elegir": "kumi", "opciones": ["kumi", "wal", "yumpha"] },
+        { "elegir": "wal", "opciones": ["wal", "kumi", "walhwal"] },
+        { "elegir": "yumpha", "opciones": ["yumpha", "wal", "matsip"] },
+        { "elegir": "walhwal", "opciones": ["walhwal", "wal", "yumpha"] },
+        { "elegir": "matsip", "opciones": ["matsip", "mata_walsip", "walhwal"] },
+        { "elegir": "matlalkahbi", "opciones": ["matlalkahbi", "matsip", "walhwal"] },
+        { "elegir": "mata_walsip", "opciones": ["mata_walsip", "matsip", "matlalkahbi"] }
+      ]
+    },
+    {
+      "tema": "numeros",
+      "nivel": 2,
+      "titulo": "Números: del 7 al 9 (seis más…)",
+      "items": [
+        { "elegir": "matlalkahbi_pura_kum", "opciones": ["matlalkahbi_pura_kum", "matlalkahbi_pura_wal", "matlalkahbi_pura_yumpha"] },
+        { "elegir": "matlalkahbi_pura_wal", "opciones": ["matlalkahbi_pura_wal", "matlalkahbi_pura_yumpha", "matlalkahbi_pura_kum"] },
+        { "elegir": "matlalkahbi_pura_yumpha", "opciones": ["matlalkahbi_pura_yumpha", "matlalkahbi_pura_kum", "matlalkahbi_pura_wal"] },
+        { "armar": "matlalkahbi_pura_kum", "extra": ["wal", "yumpha"] },
+        { "armar": "matlalkahbi_pura_wal", "extra": ["kum", "yumpha"] },
+        { "armar": "matlalkahbi_pura_yumpha", "extra": ["kum", "wal"] }
+      ]
+    },
+    {
+      "tema": "posesion",
+      "nivel": 2,
+      "titulo": "Mío y tuyo",
+      "items": [
+        { "elegir": "yaptiki", "opciones": ["yaptiki", "yapti", "kuka"] },
+        { "elegir": "yapti", "opciones": ["yapti", "yaptiki", "aisa"] },
+        { "elegir": "kuki_ki", "opciones": ["kuki_ki", "kuka", "yaptiki"] },
+        { "elegir": "nini", "opciones": ["nini", "ninam", "yaptiki"] },
+        { "elegir": "ninam", "opciones": ["ninam", "nini", "nahkisma"] },
+        { "elegir": "frase.como_te_llamas", "opciones": ["frase.como_te_llamas", "frase.me_llamo_ana", "nahkisma"], "mayuscula": true },
+        { "elegir": "frase.me_llamo_ana", "opciones": ["frase.me_llamo_ana", "frase.como_te_llamas", "frase.estoy_bien"], "pregunta": "Me llamo Ana", "mayuscula": true },
+        { "elegir": "mamiki", "opciones": ["mamiki", "mama", "papiki"], "pregunta": "mi mamá (como lo dice Tangni)" },
+        { "elegir": "papiki", "opciones": ["papiki", "mamiki", "aisa"], "pregunta": "mi papá (como lo dice Tangni)" }
+      ]
+    },
+    {
+      "tema": "saludos",
+      "nivel": 1,
+      "titulo": "Saludos",
+      "mayuscula": true,
+      "items": [
+        { "elegir": "titan_yamni", "opciones": ["titan_yamni", "tutni_yamni", "yamni_yaps"], "pregunta": "Buenos días" },
+        { "elegir": "tutni_yamni", "opciones": ["tutni_yamni", "titan_yamni", "yamni_yaps"], "pregunta": "Buenas tardes" },
+        { "elegir": "yamni_yaps", "opciones": ["yamni_yaps", "titan_yamni", "tutni_yamni"], "pregunta": "Buenas noches" },
+        { "elegir": "tingki", "opciones": ["tingki", "du_plis", "aisaby"], "pregunta": "Gracias" },
+        { "elegir": "du_plis", "opciones": ["du_plis", "tingki", "apia"], "pregunta": "Por favor" },
+        { "elegir": "au", "opciones": ["au", "apia", "tingki"], "pregunta": "Sí" },
+        { "elegir": "apia", "opciones": ["apia", "au", "aisaby"], "pregunta": "No" },
+        { "elegir": "aisaby", "opciones": ["aisaby", "tingki", "au"], "pregunta": "Adiós" },
+        { "elegir": "nahkisma", "opciones": ["nahkisma", "tingki", "aisaby"], "pregunta": "¿Cómo estás?" },
+        { "armar": "frase.hasta_manana", "extra": ["titan", "ra"], "glosa": "Hasta mañana" }
+      ]
+    }
+  ]
+}

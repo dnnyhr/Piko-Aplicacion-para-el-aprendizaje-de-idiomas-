@@ -1,0 +1,1282 @@
+{
+  "$comentario": "Léxico de inglés de Piko: lo que usan sus ejercicios, escrito y revisado por el equipo.",
+  "lengua": "eng",
+  "version": "1.0.0",
+  "actualizado": "2026-10-02",
+  "entradas": [
+    {
+      "id": "bird",
+      "forma": "bird",
+      "registrado": [
+        "bird"
+      ],
+      "es": "pájaro",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "fish",
+      "forma": "fish",
+      "registrado": [
+        "fish"
+      ],
+      "es": "pez",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "dog",
+      "forma": "dog",
+      "registrado": [
+        "dog"
+      ],
+      "es": "perro",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "cat",
+      "forma": "cat",
+      "registrado": [
+        "cat"
+      ],
+      "es": "gato",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "cow",
+      "forma": "cow",
+      "registrado": [
+        "cow"
+      ],
+      "es": "vaca",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "horse",
+      "forma": "horse",
+      "registrado": [
+        "horse"
+      ],
+      "es": "caballo",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "pig",
+      "forma": "pig",
+      "registrado": [
+        "pig"
+      ],
+      "es": "cerdo",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "a_small_bird",
+      "forma": "a small bird",
+      "registrado": [
+        "a small bird"
+      ],
+      "es": "un pájaro pequeño",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "a_small_fish",
+      "forma": "a small fish",
+      "registrado": [
+        "a small fish"
+      ],
+      "es": "un pez pequeño",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "a_tall_bird",
+      "forma": "a tall bird",
+      "registrado": [
+        "a tall bird"
+      ],
+      "es": "un pájaro alto",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "the_bird_can_fly",
+      "forma": "The bird can fly",
+      "registrado": [
+        "The bird can fly"
+      ],
+      "es": "El pájaro puede volar",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "swim",
+      "forma": "swim",
+      "registrado": [
+        "swim"
+      ],
+      "es": "nadar",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "green",
+      "forma": "green",
+      "registrado": [
+        "green"
+      ],
+      "es": "verde",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "blue",
+      "forma": "blue",
+      "registrado": [
+        "blue"
+      ],
+      "es": "azul",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "grey",
+      "forma": "grey",
+      "registrado": [
+        "grey"
+      ],
+      "es": "gris",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "black",
+      "forma": "black",
+      "registrado": [
+        "black"
+      ],
+      "es": "negro",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "brown",
+      "forma": "brown",
+      "registrado": [
+        "brown"
+      ],
+      "es": "café (color)",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "red",
+      "forma": "red",
+      "registrado": [
+        "red"
+      ],
+      "es": "rojo",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "pink",
+      "forma": "pink",
+      "registrado": [
+        "pink"
+      ],
+      "es": "rosado",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "orange",
+      "forma": "orange",
+      "registrado": [
+        "orange"
+      ],
+      "es": "anaranjado; naranja",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "yellow",
+      "forma": "yellow",
+      "registrado": [
+        "yellow"
+      ],
+      "es": "amarillo",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "white",
+      "forma": "white",
+      "registrado": [
+        "white"
+      ],
+      "es": "blanco",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "the_green_tree",
+      "forma": "the green tree",
+      "registrado": [
+        "the green tree"
+      ],
+      "es": "el árbol verde",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "the_grey_tree",
+      "forma": "the grey tree",
+      "registrado": [
+        "the grey tree"
+      ],
+      "es": "el árbol gris",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "the_green_three",
+      "forma": "the green three",
+      "registrado": [
+        "the green three"
+      ],
+      "es": "el tres verde",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "the_bird_is_green",
+      "forma": "The bird is green",
+      "registrado": [
+        "The bird is green"
+      ],
+      "es": "El pájaro es verde",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "teacher",
+      "forma": "teacher",
+      "registrado": [
+        "teacher"
+      ],
+      "es": "maestro",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "student",
+      "forma": "student",
+      "registrado": [
+        "student"
+      ],
+      "es": "estudiante",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "school",
+      "forma": "school",
+      "registrado": [
+        "school"
+      ],
+      "es": "escuela",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "book",
+      "forma": "book",
+      "registrado": [
+        "book"
+      ],
+      "es": "libro",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "pencil",
+      "forma": "pencil",
+      "registrado": [
+        "pencil"
+      ],
+      "es": "lápiz",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "paper",
+      "forma": "paper",
+      "registrado": [
+        "paper"
+      ],
+      "es": "papel",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "may_i_come_in",
+      "forma": "May I come in?",
+      "registrado": [
+        "May I come in?"
+      ],
+      "es": "¿Puedo pasar?",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "can_i_go_out",
+      "forma": "Can I go out?",
+      "registrado": [
+        "Can I go out?"
+      ],
+      "es": "¿Puedo salir?",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "where_is_the_door",
+      "forma": "Where is the door?",
+      "registrado": [
+        "Where is the door?"
+      ],
+      "es": "¿Dónde está la puerta?",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "open_your_book",
+      "forma": "open your book",
+      "registrado": [
+        "open your book"
+      ],
+      "es": "abre tu libro",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "close_your_book",
+      "forma": "close your book",
+      "registrado": [
+        "close your book"
+      ],
+      "es": "cierra tu libro",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "open_your_bag",
+      "forma": "open your bag",
+      "registrado": [
+        "open your bag"
+      ],
+      "es": "abre tu bolso",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "i_go_to_school_every_day",
+      "forma": "I go to school every day",
+      "registrado": [
+        "I go to school every day"
+      ],
+      "es": "Voy a la escuela todos los días",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "week",
+      "forma": "week",
+      "registrado": [
+        "week"
+      ],
+      "es": "semana",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "the_teacher_is_reading_a_book",
+      "forma": "The teacher is reading a book",
+      "registrado": [
+        "The teacher is reading a book"
+      ],
+      "es": "El maestro está leyendo un libro",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "writing",
+      "forma": "writing",
+      "registrado": [
+        "writing"
+      ],
+      "es": "escribiendo",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "i_do_not_understand",
+      "forma": "I do not understand",
+      "registrado": [
+        "I do not understand"
+      ],
+      "es": "No entiendo",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "know",
+      "forma": "know",
+      "registrado": [
+        "know"
+      ],
+      "es": "saber",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "mother",
+      "forma": "mother",
+      "registrado": [
+        "mother"
+      ],
+      "es": "madre",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "father",
+      "forma": "father",
+      "registrado": [
+        "father"
+      ],
+      "es": "padre",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "sister",
+      "forma": "sister",
+      "registrado": [
+        "sister"
+      ],
+      "es": "hermana",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "brother",
+      "forma": "brother",
+      "registrado": [
+        "brother"
+      ],
+      "es": "hermano",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "daughter",
+      "forma": "daughter",
+      "registrado": [
+        "daughter"
+      ],
+      "es": "hija",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "grandmother",
+      "forma": "grandmother",
+      "registrado": [
+        "grandmother"
+      ],
+      "es": "abuela",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "grandfather",
+      "forma": "grandfather",
+      "registrado": [
+        "grandfather"
+      ],
+      "es": "abuelo",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "aunt",
+      "forma": "aunt",
+      "registrado": [
+        "aunt"
+      ],
+      "es": "tía",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "my_brother",
+      "forma": "my brother",
+      "registrado": [
+        "my brother"
+      ],
+      "es": "mi hermano",
+      "categoria": "expresion",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "my_mother",
+      "forma": "my mother",
+      "registrado": [
+        "my mother"
+      ],
+      "es": "mi madre",
+      "categoria": "expresion",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "my_father",
+      "forma": "my father",
+      "registrado": [
+        "my father"
+      ],
+      "es": "mi padre",
+      "categoria": "expresion",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "this_is_my_mother",
+      "forma": "This is my mother",
+      "registrado": [
+        "This is my mother"
+      ],
+      "es": "Esta es mi madre",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "my_family_is_big",
+      "forma": "My family is big",
+      "registrado": [
+        "My family is big"
+      ],
+      "es": "Mi familia es grande",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "one",
+      "forma": "one",
+      "registrado": [
+        "one"
+      ],
+      "es": "uno",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "two",
+      "forma": "two",
+      "registrado": [
+        "two"
+      ],
+      "es": "dos",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "ten",
+      "forma": "ten",
+      "registrado": [
+        "ten"
+      ],
+      "es": "diez",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "three",
+      "forma": "three",
+      "registrado": [
+        "three"
+      ],
+      "es": "tres",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "eight",
+      "forma": "eight",
+      "registrado": [
+        "eight"
+      ],
+      "es": "ocho",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "five",
+      "forma": "five",
+      "registrado": [
+        "five"
+      ],
+      "es": "cinco",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "four",
+      "forma": "four",
+      "registrado": [
+        "four"
+      ],
+      "es": "cuatro",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "nine",
+      "forma": "nine",
+      "registrado": [
+        "nine"
+      ],
+      "es": "nueve",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "seven",
+      "forma": "seven",
+      "registrado": [
+        "seven"
+      ],
+      "es": "siete",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "six",
+      "forma": "six",
+      "registrado": [
+        "six"
+      ],
+      "es": "seis",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "tree",
+      "forma": "tree",
+      "registrado": [
+        "tree"
+      ],
+      "es": "árbol",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "free",
+      "forma": "free",
+      "registrado": [
+        "free"
+      ],
+      "es": "libre",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "eighty",
+      "forma": "eighty",
+      "registrado": [
+        "eighty"
+      ],
+      "es": "ochenta",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "ate",
+      "forma": "ate",
+      "registrado": [
+        "ate"
+      ],
+      "es": "comió",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "i_have_two_brothers",
+      "forma": "I have two brothers",
+      "registrado": [
+        "I have two brothers"
+      ],
+      "es": "Tengo dos hermanos",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "sisters",
+      "forma": "sisters",
+      "registrado": [
+        "sisters"
+      ],
+      "es": "hermanas",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "am",
+      "forma": "am",
+      "registrado": [
+        "am"
+      ],
+      "es": "soy, estoy",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "good_morning",
+      "forma": "Good morning",
+      "registrado": [
+        "Good morning"
+      ],
+      "es": "Buenos días",
+      "categoria": "expresion",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "good_night",
+      "forma": "Good night",
+      "registrado": [
+        "Good night"
+      ],
+      "es": "Buenas noches",
+      "categoria": "expresion",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "good_afternoon",
+      "forma": "Good afternoon",
+      "registrado": [
+        "Good afternoon"
+      ],
+      "es": "Buenas tardes",
+      "categoria": "expresion",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "good_evening",
+      "forma": "Good evening",
+      "registrado": [
+        "Good evening"
+      ],
+      "es": "Buenas noches (al llegar)",
+      "categoria": "expresion",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "thank_you",
+      "forma": "Thank you",
+      "registrado": [
+        "Thank you"
+      ],
+      "es": "Gracias",
+      "categoria": "expresion",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "please",
+      "forma": "Please",
+      "registrado": [
+        "Please"
+      ],
+      "es": "Por favor",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "sorry",
+      "forma": "Sorry",
+      "registrado": [
+        "Sorry"
+      ],
+      "es": "Perdón",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "welcome",
+      "forma": "Welcome",
+      "registrado": [
+        "Welcome"
+      ],
+      "es": "Bienvenido",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "goodbye",
+      "forma": "Goodbye",
+      "registrado": [
+        "Goodbye"
+      ],
+      "es": "Adiós",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "hello",
+      "forma": "Hello",
+      "registrado": [
+        "Hello"
+      ],
+      "es": "Hola",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "see_you",
+      "forma": "See you",
+      "registrado": [
+        "See you"
+      ],
+      "es": "Nos vemos",
+      "categoria": "expresion",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "thank_you_very_much",
+      "forma": "Thank you very much",
+      "registrado": [
+        "Thank you very much"
+      ],
+      "es": "Muchas gracias",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "see_you_later",
+      "forma": "See you later",
+      "registrado": [
+        "See you later"
+      ],
+      "es": "Hasta luego",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "how_are_you",
+      "forma": "How are you",
+      "registrado": [
+        "How are you"
+      ],
+      "es": "¿Cómo estás?",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "see_you_tomorrow",
+      "forma": "See you tomorrow",
+      "registrado": [
+        "See you tomorrow"
+      ],
+      "es": "Nos vemos mañana",
+      "categoria": "frase",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "today",
+      "forma": "today",
+      "registrado": [
+        "today"
+      ],
+      "es": "hoy",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    },
+    {
+      "id": "me",
+      "forma": "me",
+      "registrado": [
+        "me"
+      ],
+      "es": "me, a mí",
+      "categoria": "sustantivo",
+      "tema": "ingles",
+      "fuentes": [
+        "equipo-piko"
+      ],
+      "estado": "confirmada"
+    }
+  ]
+}

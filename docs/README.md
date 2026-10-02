@@ -52,8 +52,9 @@ diga que la habla mal.
 - El aula en red: sala, descubrimiento del anfitrión, rondas sincronizadas,
   reconexión y semáforo de rezago para el maestro.
 - Identidad y progreso que siguen al estudiante entre dispositivos.
-- Contenido en inglés (6 paquetes, 43 ítems). Las cuatro lenguas indígenas
-  tienen el formato listo y esperan material de hablantes nativos.
+- Contenido en inglés (6 paquetes, 43 ítems) y en miskito (19 paquetes, 167
+  ítems), generado desde `diccionario/`. Mayangna, rama y garífuna esperan
+  material de hablantes nativos.
 - 124 pruebas automatizadas y un simulador que levanta un aula entera sin
   necesidad de teléfonos.
 
@@ -61,4 +62,5 @@ diga que la habla mal.
 
 - Presets de aula guardados e importación de listas de estudiantes por archivo.
 - Compartir el APK por Bluetooth desde la propia app.
-- El contenido de las cuatro lenguas indígenas — el riesgo real del proyecto.
+- El contenido de mayangna, rama y garífuna, y grabaciones de hablantes de
+  miskito — el riesgo real del proyecto.

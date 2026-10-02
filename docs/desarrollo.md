@@ -194,12 +194,14 @@ Con dos teléfonos y el *development build* instalado:
 Ver [../app/content/README.md](../app/content/README.md) para el formato
 completo.
 
-1. Crear `app/content/packs/<lengua>/<tema>.json`.
-2. Importarlo en `app/content/index.ts` y agregarlo al arreglo `PACKS`.
-3. `npm run validate:packs`.
+1. Agregar las palabras a `diccionario/<lengua>/lexico.json` y las recetas a
+   `diccionario/<lengua>/ejercicios.json`.
+2. `npm run contenido`: genera `app/content/packs/` y `app/content/index.ts`.
+3. `npm run validate:diccionario` y `npm run validate:packs`.
 
 Metro no puede recorrer directorios en tiempo de ejecución, de ahí el índice
-estático. El validador avisa si quedó un archivo sin registrar.
+estático; ahora lo escribe el generador. CI corre `npm run
+contenido:comprobar` para que nadie edite los paquetes a mano.
 
 ---
 

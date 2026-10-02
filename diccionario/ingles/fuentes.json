@@ -1,0 +1,13 @@
+{
+  "lengua": {
+    "nombre": "Inglés",
+    "iso639_3": "eng"
+  },
+  "fuentes": [
+    {
+      "id": "equipo-piko",
+      "tipo": "equipo",
+      "notas": "Contenido de inglés escrito y revisado por el equipo de Piko (MugiWare). Es una lengua con norma escrita y voz sintética propia; no hace falta encuesta."
+    }
+  ]
+}

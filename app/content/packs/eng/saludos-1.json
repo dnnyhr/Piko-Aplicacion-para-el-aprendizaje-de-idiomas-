@@ -11,7 +11,11 @@
       "skill": "eng.saludos",
       "prompt": "Buenos días",
       "answer": "Good morning",
-      "options": ["Good morning", "Good night", "Good afternoon"]
+      "options": [
+        "Good morning",
+        "Good night",
+        "Good afternoon"
+      ]
     },
     {
       "id": "eng.saludos.1.b",
@@ -19,7 +23,11 @@
       "skill": "eng.saludos",
       "prompt": "Buenas noches",
       "answer": "Good night",
-      "options": ["Good night", "Good morning", "Good evening"]
+      "options": [
+        "Good night",
+        "Good morning",
+        "Good evening"
+      ]
     },
     {
       "id": "eng.saludos.1.c",
@@ -27,7 +35,11 @@
       "skill": "eng.saludos",
       "prompt": "Gracias",
       "answer": "Thank you",
-      "options": ["Thank you", "Please", "Sorry"]
+      "options": [
+        "Thank you",
+        "Please",
+        "Sorry"
+      ]
     },
     {
       "id": "eng.saludos.1.d",
@@ -35,7 +47,11 @@
       "skill": "eng.saludos",
       "prompt": "Por favor",
       "answer": "Please",
-      "options": ["Please", "Thank you", "Welcome"]
+      "options": [
+        "Please",
+        "Thank you",
+        "Welcome"
+      ]
     },
     {
       "id": "eng.saludos.1.e",
@@ -43,7 +59,11 @@
       "skill": "eng.saludos",
       "prompt": "Adiós",
       "answer": "Goodbye",
-      "options": ["Goodbye", "Hello", "See you"]
+      "options": [
+        "Goodbye",
+        "Hello",
+        "See you"
+      ]
     },
     {
       "id": "eng.saludos.1.f",
@@ -52,7 +72,11 @@
       "tts": "Good morning",
       "ttsLang": "en-US",
       "answer": "Good morning",
-      "options": ["Good morning", "Good night", "Good afternoon"],
+      "options": [
+        "Good morning",
+        "Good night",
+        "Good afternoon"
+      ],
       "gloss": "Buenos días"
     },
     {
@@ -62,7 +86,11 @@
       "tts": "Thank you very much",
       "ttsLang": "en-US",
       "answer": "Thank you very much",
-      "options": ["Thank you very much", "Thank you", "See you later"],
+      "options": [
+        "Thank you very much",
+        "Thank you",
+        "See you later"
+      ],
       "gloss": "Muchas gracias"
     },
     {
@@ -70,7 +98,13 @@
       "type": "build",
       "skill": "eng.saludos",
       "target": "How are you",
-      "blocks": ["How", "are", "you", "is", "the"],
+      "blocks": [
+        "How",
+        "are",
+        "you",
+        "is",
+        "the"
+      ],
       "gloss": "¿Cómo estás?"
     },
     {
@@ -78,7 +112,13 @@
       "type": "build",
       "skill": "eng.saludos",
       "target": "See you tomorrow",
-      "blocks": ["See", "you", "tomorrow", "today", "me"],
+      "blocks": [
+        "See",
+        "you",
+        "tomorrow",
+        "today",
+        "me"
+      ],
       "gloss": "Nos vemos mañana"
     }
   ]

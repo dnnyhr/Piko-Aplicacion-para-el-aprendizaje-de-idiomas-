@@ -9,23 +9,35 @@ El método está en [**metodologia.md**](metodologia.md). En corto: un modelo de
 lenguaje de razonamiento busca patrones en los datos y los propone como
 hipótesis, cada una con su evidencia. Los hablantes deciden qué es correcto.
 
+**Es la única fuente del contenido de la app.** Los paquetes de
+`app/content/packs/` y su `index.ts` los genera `npm run contenido` a partir de
+acá; no se editan a mano.
+
 ```
 diccionario/
+├── lenguas.json              la lista única de lenguas: código, nombre, carpeta y voz
 ├── metodologia.md            el método, y por qué se puede confiar en él
 ├── herramientas/
-│   └── verificar.ts          comprueba que cada ejercicio salga de lo que escribió una persona
+│   ├── recetas.ts            convierte recetas + léxico en paquetes de la app
+│   ├── contenido.ts          npm run contenido: escribe app/content/packs/ e index.ts
+│   ├── voz.ts                prepara cada palabra para la voz sintética
+│   └── verificar.ts          npm run validate:diccionario: de la fuente al ejercicio
+├── ingles/
+│   ├── fuentes.json · corpus.csv · lexico.json    escrito y revisado por el equipo
+│   └── ejercicios.json
 └── miskito/
     ├── fuentes.json          quién aportó y de dónde (sin datos de contacto)
-    ├── corpus.csv            lo que escribió cada persona, tal cual
+    ├── corpus.csv            lo que escribió cada persona o la obra publicada, tal cual
     ├── lexico.json           el diccionario: cada entrada con su análisis
     ├── gramatica.md          los patrones y reglas encontrados, con evidencia y confianza
-    └── ejercicios/           paquetes en el formato de la app (borradores)
+    └── ejercicios.json       recetas de ejercicios: apuntan al léxico por id
 ```
 
 ## Estado
 
 | Lengua | Versión | Fuentes | Léxico | Reglas | Ejercicios |
 |---|---|---|---|---|---|
+| Inglés (`eng`) | 1.0 | El equipo | 91 entradas | — | 6 paquetes, 43 ítems |
 | Miskito (`miq`) | 0.4 | 2 hablantes (Raiti, Río Coco) y dos diccionarios publicados (Bilwi) | 269 entradas, 18 por revisar, 60 dichas por las dos personas | 48 (24 A · 17 B · 6 C · 1 mixta) | 19 paquetes, 167 ítems (28 de escucha) |
 | Mayangna (`sum`) | — | — | — | — | — |
 | Rama (`rma`) | — | — | — | — | — |
@@ -33,28 +45,33 @@ diccionario/
 
 Lo principal del miskito, en [`miskito/gramatica.md`](miskito/gramatica.md#lo-principal-en-diez-líneas).
 
-## Tres capas, y por qué no se mezclan
+## Cuatro capas, y por qué no se mezclan
 
 1. **`corpus.csv`: lo que escribió la gente.** Queda tal cual, con sus
    mayúsculas y sus variantes. No se corrige nunca.
 2. **`lexico.json`: el análisis.** Cada entrada guarda en `registrado` cómo se
    escribió y en `forma` la forma de trabajo. Si las dos difieren,
    `normalizacion` explica por qué.
-3. **`ejercicios/`: lo que ve un estudiante.** Sólo usa formas del léxico que
-   no estén marcadas para revisar. Eso incluye las opciones incorrectas.
+3. **`ejercicios.json`: las recetas.** Cada ejercicio apunta a entradas del
+   léxico por su id; no copia palabras.
+4. **`app/content/packs/`: lo que ve un estudiante.** Lo genera `npm run
+   contenido`. Llega a la app todo ejercicio cuyas palabras **no** estén
+   marcadas para revisar, incluidas las opciones incorrectas. Los que usan
+   una palabra en revisión esperan, y aparecen solos cuando se resuelve.
 
-`verificar.ts` comprueba la cadena completa en cada cambio, también en CI:
+Dos comprobaciones cuidan la cadena en cada cambio, también en CI:
 
 ```bash
-cd app && npm run validate:diccionario
+cd app && npm run validate:diccionario   # de la fuente a la receta
+cd app && npm run contenido:comprobar    # la app está al día con el diccionario
 ```
 
 ## Una entrada del léxico
 
 ```json
 {
-  "id": "yumhpa",
-  "forma": "yumhpa",
+  "id": "yumpha",
+  "forma": "yumpha",
   "registrado": ["yumgpa", "yumpha"],
   "es": "tres",
   "categoria": "numeral",
@@ -77,23 +94,39 @@ cd app && npm run validate:diccionario
 | `revisar` | Qué hay que preguntarle a un hablante. **Si existe, la entrada no se usa en ejercicios** |
 | `estado` | `publicada` (sólo en una obra publicada) · `un_hablante` → `varios_hablantes` (la dieron 2 personas o más) → `probable` (3 personas, 2 zonas) → `confirmada` (la validó un hablante) |
 
-## Los ejercicios todavía no están en la app
+## Las recetas de ejercicios
 
-Salen de dos personas de una sola comunidad y ninguna regla está validada. Por eso viven acá y
-no en `app/content/packs/`. Ya tienen el formato exacto de la app y pasan su
-mismo validador. Cuando un hablante los revise (Teacher Smith y Tangni se ofrecieron),
-pasarlos es copiarlos:
+Una línea por ejercicio, en `<lengua>/ejercicios.json`:
 
-1. Copiar `miskito/ejercicios/*.json` a `app/content/packs/miq/`.
-2. Importarlos en `app/content/index.ts` y agregarlos a `PACKS`.
-3. `cd app && npm run validate:packs`.
-4. Actualizar la tabla de estado de [`app/content/README.md`](../app/content/README.md).
+```json
+{ "elegir": "yapti", "opciones": ["yapti", "aisa", "kuka"] }
+{ "escuchar": "kumi", "opciones": ["kumi", "wal", "lal"] }
+{ "armar": "frase.hasta_manana", "extra": ["titan", "ra"] }
+```
 
-Los ejercicios de escuchar (`escucha-1` a `escucha-3`) suenan con la voz en
-español **para mientras** se consiguen grabaciones de hablantes. La palabra se
+| Receta | Ejercicio en la app | De dónde sale cada cosa |
+|---|---|---|
+| `elegir` | Elegir la traducción | La pregunta es el `es` de la entrada (o `pregunta`); las opciones, sus `forma` |
+| `escuchar` | Escuchar y elegir | La voz dice la `forma`, preparada por `voz.ts`; la traducción es el `es` (o `glosa`) |
+| `armar` | Ordenar bloques | La frase es la `forma`; `extra` son bloques para despistar |
+
+Las recetas se agrupan en paquetes con `tema`, `nivel` (1 a 3) y `titulo`, y
+`"mayuscula": true` escribe la primera letra en mayúscula. El id de cada
+ejercicio sale de su posición en el paquete (`miq.saludos.1.a`): para no
+mezclar el progreso de los estudiantes, **los ejercicios nuevos se agregan al
+final** del paquete.
+
+**Para cambiar algo:** si es una palabra, se cambia en `lexico.json`; si es un
+ejercicio, en `ejercicios.json`. Después:
+
+```bash
+cd app && npm run contenido && npm run validate:diccionario
+```
+
+Los ejercicios de escuchar del miskito suenan con la voz en español **para
+mientras** se consiguen grabaciones de hablantes (decisión 16). La palabra se
 le pasa a la voz preparada por [`herramientas/voz.ts`](herramientas/voz.ts), y
-el verificador exige que cada ejercicio use esa preparación. Sólo usan
-palabras que dieron igual las dos personas.
+sólo usan palabras que dieron igual las dos personas.
 
 ## Cómo se suma una tanda nueva
 
@@ -104,8 +137,8 @@ palabras que dieron igual las dos personas.
 4. Antes de tocar las reglas, contar cuántas predicciones de
    [`gramatica.md`](miskito/gramatica.md#qué-preguntar-en-la-próxima-tanda)
    acertó la tanda nueva: es la tasa de acierto de la versión anterior.
-5. Actualizar léxico, reglas y ejercicios. Subir la versión y anotarla abajo.
-6. `npm run validate:diccionario`.
+5. Actualizar léxico, reglas y recetas. Subir la versión y anotarla abajo.
+6. `npm run contenido` y `npm run validate:diccionario`.
 
 ## Uso de estos datos
 

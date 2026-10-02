@@ -109,9 +109,9 @@ celebración y el ánimo.
 
 ## El contenido
 
-Ver [content/README.md](content/README.md). Hoy sólo hay inglés. Las cuatro
-lenguas indígenas tienen el formato listo y esperan material de hablantes
-nativos — el validador rechaza a propósito la síntesis de voz en esas lenguas,
+Ver [content/README.md](content/README.md). Hay inglés y miskito, y se generan
+con `npm run contenido` desde `diccionario/`. Mayangna, rama y garífuna esperan
+material de hablantes nativos — el validador rechaza a propósito la síntesis de voz en esas lenguas,
 para que nadie termine enseñando una pronunciación inventada. La excepción es
 el miskito: puede sonar con la voz en español para mientras se consiguen
 grabaciones (decisión 16 de `docs/decisiones.md`).
