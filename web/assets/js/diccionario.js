@@ -35,11 +35,14 @@
   };
 
   var datos = null;
+  var PASO = 48;      // tarjetas que se dibujan de una vez; el resto, con «Ver más»
+  var limite = PASO;
+  var actual = [];    // la lista filtrada, en orden
   var tema = "";
   var variante = "";
   var animadas = [];
   var $ = function (id) { return document.getElementById(id); };
-  var anim = function () { return window.PikoAnim || { animar: false, aparecer: function () {}, contar: function () {} }; };
+  var anim = function () { return window.PikoAnim || { animar: false, aparecer: function () { return []; }, contar: function () {} }; };
 
   /** Para buscar: sin mayúsculas, sin tildes ni circunflejos, y la h no cuenta. */
   function llano(t) {
@@ -122,7 +125,8 @@
       }).join("") + "</dd>");
     }
     if (e.viene_de) det.push("<dt>De dónde viene</dt><dd>Del " + esc(e.viene_de.lengua) + ": <i>" + esc(e.viene_de.palabra) + "</i></dd>");
-    return '<details><summary>Más sobre esta palabra</summary><dl class="detalle">' + det.join("") + "</dl></details>";
+    return '<details><summary>Más sobre esta palabra</summary><dl class="detalle">' + det.join("") + "</dl>" +
+      '<button class="compartir" type="button" data-compartir="' + esc(e.id) + '" data-forma="' + esc(e.forma) + '">' + icono("enlace") + "<span>Compartir esta palabra</span></button></details>";
   }
 
   function tarjeta(e) {
@@ -134,7 +138,6 @@
       '<p class="palabra__es">' + esc(e.es) + "</p>" +
       insignias(e, false) +
       detalle(e) +
-      '<a class="copiar-enlace" href="#' + esc(e.id) + '">Enlace a esta palabra</a>' +
       "</article>"
     );
   }
@@ -189,8 +192,10 @@
     lista.sort(function (a, b) { return (q ? b.p - a.p : 0) || a.e.forma.localeCompare(b.e.forma, "es"); });
 
     $("destacada").hidden = !!(q || tema || variante) || !$("destacada").innerHTML;
+    actual = lista.map(function (x) { return x.e; });
+    limite = PASO;
     $("palabras").innerHTML = lista.length
-      ? lista.map(function (x) { return tarjeta(x.e); }).join("")
+      ? actual.slice(0, limite).map(tarjeta).join("") + botonMas()
       : '<div class="vacio"><img src="../assets/img/piko.svg" alt="" width="110" height="180">No encontramos «' + esc($("q").value) + '». Probá en español o en miskito, o con otra forma de escribirla.<br>¿La conocés? <a href="../aporta/">Aportala</a>.</div>';
     var total = datos.entradas.length;
     $("cuenta").innerHTML = lista.length === total ? "<b>" + total + "</b> palabras y frases" : "<b>" + lista.length + "</b> de " + total + " palabras y frases";
@@ -200,6 +205,42 @@
     info.textContent = lista.length === 1 ? "1 palabra" : lista.length + " palabras";
     animadas.forEach(function (t) { t.kill(); });
     animadas = anim().aparecer($("palabras").children, { stagger: .04, duracion: .5, y: 24 });
+  }
+
+  /** «Ver más»: cuántas quedan sin dibujar. */
+  function botonMas() {
+    var quedan = actual.length - limite;
+    return quedan > 0
+      ? '<button class="ver-mas" type="button" id="ver-mas">Ver ' + Math.min(PASO, quedan) + " más <small>(quedan " + quedan + ")</small></button>"
+      : "";
+  }
+
+  /** Dibuja más tarjetas, hasta `hasta` (o una tanda más). */
+  function dibujarMas(hasta) {
+    var desde = limite;
+    limite = Math.max(hasta || 0, limite + PASO);
+    var boton = $("ver-mas");
+    if (boton) boton.remove();
+    $("palabras").insertAdjacentHTML("beforeend", actual.slice(desde, limite).map(tarjeta).join("") + botonMas());
+    var nuevas = Array.prototype.slice.call($("palabras").children, desde, limite);
+    animadas = animadas.concat(anim().aparecer(nuevas, { stagger: .03, duracion: .45, y: 18 }) || []);
+  }
+
+  /** Compartir el enlace de una palabra: el menú del teléfono, o copiarlo. */
+  function compartir(boton) {
+    var url = location.origin + location.pathname + "#" + boton.getAttribute("data-compartir");
+    var texto = boton.querySelector("span");
+    var aviso = function (m) {
+      texto.textContent = m;
+      setTimeout(function () { texto.textContent = "Compartir esta palabra"; }, 2200);
+    };
+    if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+      navigator.share({ title: boton.getAttribute("data-forma") + " · Diccionario miskito de Piko", url: url }).catch(function () {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(function () { aviso("Enlace copiado"); }, function () { aviso(url); });
+    } else {
+      aviso(url);
+    }
   }
 
   function chip(atributos, texto, activo, icon) {
@@ -262,15 +303,26 @@
 
   function ir(id) {
     var el = document.getElementById(id);
-    if (!el) {
+    var donde = function () { return actual.findIndex(function (e) { return e.id === id; }); };
+    if (!el && donde() < 0) {
       // Puede estar oculta por un filtro: se limpian y se vuelve a dibujar.
       $("q").value = ""; tema = ""; variante = ""; filtros(); mostrar();
-      el = document.getElementById(id);
     }
+    if (!document.getElementById(id) && donde() >= 0) dibujarMas(donde() + 1); // todavía sin dibujar
+    el = document.getElementById(id);
     if (!el) return;
     history.replaceState(null, "", "#" + id);
     var d = el.querySelector("details"); if (d) d.open = true;
-    el.scrollIntoView({ behavior: anim().animar ? "smooth" : "auto", block: "start" });
+    // Las tarjetas lejanas no se dibujan hasta acercarse (content-visibility) y
+    // cambian de alto al hacerlo: se salta sin animación y se corrige al llegar.
+    el.scrollIntoView({ block: "start" });
+    [80, 250, 600].forEach(function (ms) {
+      setTimeout(function () {
+        var arriba = el.getBoundingClientRect().top;
+        var margen = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+        if (Math.abs(arriba - margen) > 4) el.scrollIntoView({ block: "start" });
+      }, ms);
+    });
     el.classList.add("palabra--brilla");
     setTimeout(function () { el.classList.remove("palabra--brilla"); }, 1800);
   }
@@ -362,6 +414,9 @@
       }
       return mostrar();
     }
+    if (ev.target.closest("#ver-mas")) return dibujarMas();
+    var c = ev.target.closest("[data-compartir]");
+    if (c) return compartir(c);
     var v = ev.target.closest(".escuchar");
     if (v) return decir(v.getAttribute("data-voz"), v);
     var a = ev.target.closest("[data-ir]");
