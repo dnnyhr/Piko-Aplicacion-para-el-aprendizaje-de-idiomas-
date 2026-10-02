@@ -23,7 +23,7 @@ diccionario/
 │   ├── voz.ts                prepara cada palabra para la voz sintética
 │   ├── interfaz.ts           la planilla de traducción de la interfaz
 │   ├── web.ts                los datos del sitio: web/datos/ (con las variantes), la lista del diccionario y el sitemap
-│   ├── reglas.ts             la página de reglas del sitio: las reglas sólidas de gramatica.md, en HTML
+│   ├── reglas.ts             la página de reglas del sitio: las sólidas de gramatica.md, con el texto de reglas-sitio.md
 │   └── verificar.ts          npm run validate:diccionario: de la fuente al ejercicio
 ├── ingles/
 │   ├── fuentes.json · corpus.csv · lexico.json    escrito y revisado por el equipo
@@ -33,6 +33,7 @@ diccionario/
     ├── corpus.csv            lo que escribió cada persona o la obra publicada, tal cual
     ├── lexico.json           el diccionario: cada entrada con su análisis
     ├── gramatica.md          los patrones y reglas encontrados, con evidencia y confianza
+    ├── reglas-sitio.md       el texto formal de las reglas sólidas, para piko.mugiware.com/reglas
     ├── ejercicios.json       recetas de ejercicios: apuntan al léxico por id
     └── interfaz.csv          la interfaz de la app en miskito: la llenan hablantes
 ```

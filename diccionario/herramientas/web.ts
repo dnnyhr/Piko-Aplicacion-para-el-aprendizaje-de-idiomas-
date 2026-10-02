@@ -7,7 +7,7 @@
  *                                         <!-- palabras:fin -->, para que los buscadores
  *                                         vean las palabras sin correr JavaScript
  *   web/reglas/index.html                 sólo lo que está entre sus marcas: las reglas
- *                                         sólidas de gramatica.md (ver reglas.ts)
+ *                                         sólidas, con el texto de reglas-sitio.md (ver reglas.ts)
  *   web/sitemap.xml                       las páginas del sitio
  *
  * Los escribe `npm run contenido`, igual que los paquetes de la app, así el
@@ -260,11 +260,12 @@ export function archivosDeLaWeb(generados: ReadonlyMap<string, string> = new Map
       salida.set(pagina, conPalabras(fs.readFileSync(pagina, 'utf8'), entradas));
 
       const gramatica = path.join(d.dir, 'gramatica.md');
+      const textoSitio = path.join(d.dir, 'reglas-sitio.md');
       const paginaReglas = path.join(WEB, 'reglas', 'index.html');
-      if (fs.existsSync(gramatica) && fs.existsSync(paginaReglas)) {
-        const reglas = reglasSolidas(fs.readFileSync(gramatica, 'utf8'));
+      if (fs.existsSync(gramatica) && fs.existsSync(textoSitio) && fs.existsSync(paginaReglas)) {
+        const reglas = reglasSolidas(fs.readFileSync(gramatica, 'utf8'), fs.readFileSync(textoSitio, 'utf8'));
         const { lista, filtros } = reglasHtml(reglas);
-        const nota = 'lo escribe npm run contenido desde diccionario/miskito/gramatica.md';
+        const nota = 'lo escribe npm run contenido desde diccionario/miskito/reglas-sitio.md';
         let r = fs.readFileSync(paginaReglas, 'utf8');
         r = entreMarcas(r, 'web/reglas/index.html', 'cifras', [
           `<div class="cifra-chica" data-entra><b data-contar="${reglas.length}">${reglas.length}</b><span>reglas sólidas</span></div>`,
