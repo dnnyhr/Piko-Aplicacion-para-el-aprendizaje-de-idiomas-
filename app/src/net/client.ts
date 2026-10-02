@@ -19,7 +19,7 @@ import {
   type RosterEntry,
 } from '../core/protocol/messages';
 import type { Item } from '../core/content/schema';
-import { answerEvent } from '../core/progress/events';
+import { answerEvent, lessonDoneEvent } from '../core/progress/events';
 import { emptyState, project, type StudentState } from '../core/progress/projection';
 import { aplicarAck, aplicarDelta, porEnviar } from '../core/sync/delta';
 import type { EventLog } from '../core/sync/log';
@@ -228,6 +228,25 @@ export class EstudianteCliente {
       skill: args.item.skill,
       correct: args.correct,
       ms: args.ms,
+    });
+    this.opts.log.appendLocal(ev);
+    this.recomputar();
+    this.programarPush();
+  }
+
+  /**
+   * Registra una ronda terminada: es la que da las sacuanjoches. Igual que las
+   * respuestas, se escribe primero en local y viaja después.
+   */
+  terminarLeccion(args: { packId: string; correct: number; total: number }): void {
+    if (!this.studentId) return;
+
+    const ev = lessonDoneEvent({
+      id: uuidv4(this.rng),
+      studentId: this.studentId,
+      originDevice: this.opts.deviceId,
+      createdAt: this.ahora(),
+      ...args,
     });
     this.opts.log.appendLocal(ev);
     this.recomputar();

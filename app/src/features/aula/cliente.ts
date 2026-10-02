@@ -18,7 +18,7 @@ import {
   type RosterEntry,
 } from '../../core/protocol/messages';
 import type { Item } from '../../core/content/schema';
-import { useProgreso } from '../progreso/store';
+import { packPrincipal, useProgreso } from '../progreso/store';
 
 export type EstadoConexion = 'suelto' | 'conectando' | 'conectado' | 'caido';
 
@@ -41,6 +41,8 @@ interface AulaCliente {
   conectar: (ip: string, puerto?: number) => Promise<void>;
   reclamar: (studentId: string) => void;
   responder: (item: Item, packId: string, acerto: boolean, ms: number) => void;
+  /** Cierra la lección: suma sacuanjoches. */
+  terminarLeccion: (items: readonly Item[], correctas: number) => void;
   limpiarRonda: () => void;
   salir: () => void;
 }
@@ -148,6 +150,16 @@ export const useAulaCliente = create<AulaCliente>((set, get) => ({
       useProgreso.getState().recomputar();
     } else {
       useProgreso.getState().registrar(item, packId, acerto, ms);
+    }
+  },
+
+  terminarLeccion(items, correctas) {
+    const cliente = get().cliente;
+    if (cliente) {
+      cliente.terminarLeccion({ packId: packPrincipal(items), correct: correctas, total: items.length });
+      useProgreso.getState().recomputar();
+    } else {
+      useProgreso.getState().terminarLeccion(items, correctas);
     }
   },
 
