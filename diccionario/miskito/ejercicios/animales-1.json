@@ -1,0 +1,129 @@
+{
+  "id": "miq.animales.1",
+  "lang": "miq",
+  "theme": "animales",
+  "difficulty": 1,
+  "title": "Animales",
+  "items": [
+    {
+      "id": "miq.animales.1.a",
+      "type": "choice",
+      "skill": "miq.animales",
+      "prompt": "perro",
+      "answer": "yul",
+      "options": [
+        "yul",
+        "urus",
+        "aras"
+      ]
+    },
+    {
+      "id": "miq.animales.1.b",
+      "type": "choice",
+      "skill": "miq.animales",
+      "prompt": "mono",
+      "answer": "urus",
+      "options": [
+        "urus",
+        "yul",
+        "limi"
+      ]
+    },
+    {
+      "id": "miq.animales.1.c",
+      "type": "choice",
+      "skill": "miq.animales",
+      "prompt": "tigre (jaguar)",
+      "answer": "limi",
+      "options": [
+        "limi",
+        "micki",
+        "urus"
+      ]
+    },
+    {
+      "id": "miq.animales.1.d",
+      "type": "choice",
+      "skill": "miq.animales",
+      "prompt": "gato",
+      "answer": "micki",
+      "options": [
+        "micki",
+        "limi",
+        "yul"
+      ]
+    },
+    {
+      "id": "miq.animales.1.e",
+      "type": "choice",
+      "skill": "miq.animales",
+      "prompt": "gallina",
+      "answer": "galila",
+      "options": [
+        "galila",
+        "urus",
+        "bip"
+      ]
+    },
+    {
+      "id": "miq.animales.1.f",
+      "type": "choice",
+      "skill": "miq.animales",
+      "prompt": "vaca",
+      "answer": "bip",
+      "options": [
+        "bip",
+        "aras",
+        "galila"
+      ]
+    },
+    {
+      "id": "miq.animales.1.g",
+      "type": "choice",
+      "skill": "miq.animales",
+      "prompt": "caballo",
+      "answer": "aras",
+      "options": [
+        "aras",
+        "bip",
+        "kuswa"
+      ]
+    },
+    {
+      "id": "miq.animales.1.h",
+      "type": "choice",
+      "skill": "miq.animales",
+      "prompt": "tortuga",
+      "answer": "kuswa",
+      "options": [
+        "kuswa",
+        "kakamuk",
+        "piuta"
+      ]
+    },
+    {
+      "id": "miq.animales.1.i",
+      "type": "choice",
+      "skill": "miq.animales",
+      "prompt": "iguana",
+      "answer": "kakamuk",
+      "options": [
+        "kakamuk",
+        "kuswa",
+        "piuta"
+      ]
+    },
+    {
+      "id": "miq.animales.1.j",
+      "type": "choice",
+      "skill": "miq.animales",
+      "prompt": "culebra",
+      "answer": "piuta",
+      "options": [
+        "piuta",
+        "kuswa",
+        "urus"
+      ]
+    }
+  ]
+}

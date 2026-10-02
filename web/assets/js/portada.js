@@ -141,6 +141,14 @@
     gsap.from(".repo__relleno", {scaleX:0, duration:1.2, ease:"power2.out",
       scrollTrigger:{trigger:".repo__avance", start:"top 92%", once:true}});
 
+    /* ---- Descarga ---- */
+    gsap.from(".descarga", {y:55, opacity:0, scale:.98, duration:1,
+      scrollTrigger:{trigger:".descarga", start:"top 86%", once:true}});
+    gsap.from(".descarga__datos li", {y:18, opacity:0, duration:.6, stagger:.11,
+      scrollTrigger:{trigger:".descarga__datos", start:"top 92%", once:true}});
+    gsap.from(".descarga__accion > *", {y:20, opacity:0, duration:.7, stagger:.12,
+      scrollTrigger:{trigger:".descarga__accion", start:"top 92%", once:true}});
+
     /* ---- Pie ---- */
     gsap.from(".marca-neg", {y:30, opacity:0, duration:.9,
       scrollTrigger:{trigger:".pie__grid", start:"top 88%", once:true}});
@@ -283,5 +291,95 @@
       .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
       .then(pintarLenguajes)
       .catch(function(){ /* se queda la barra de respaldo */ });
+  }
+
+  /* ============================================================
+     4. Descarga del APK: apuntar al archivo de la última release
+     ============================================================ */
+
+  /* Si siempre subís el APK con el mismo nombre de archivo, poné ese nombre acá
+     (por ejemplo "piko.apk") y el botón usará el enlace permanente de GitHub
+     .../releases/latest/download/piko.apk, que funciona sin consultar la API.
+     Vacío = se resuelve por API, que sirve aunque el nombre cambie en cada versión. */
+  var APK_NOMBRE_FIJO = "";
+
+  /* Hay dos botones: el del hero y el de la tarjeta de descarga */
+  var enlacesApk = [].slice.call(document.querySelectorAll("[data-apk-enlace]"));
+
+  function ponerApk(nombre, valor){
+    if (!valor) return;
+    document.querySelectorAll('[data-apk="' + nombre + '"]').forEach(function(el){
+      el.textContent = valor;
+    });
+  }
+
+  function pesoLegible(bytes){
+    if (!bytes) return null;
+    var mb = bytes / 1048576;
+    return (mb >= 10 ? Math.round(mb) : mb.toFixed(1)).toString().replace(".", ",") + " MB";
+  }
+
+  function fechaLegible(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return null;
+    return d.toLocaleDateString("es-NI", {day:"numeric", month:"short", year:"numeric"});
+  }
+
+  if (enlacesApk.length) {
+    if (APK_NOMBRE_FIJO) {
+      enlacesApk.forEach(function(a){
+        a.href = "https://github.com/" + REPO + "/releases/latest/download/" + APK_NOMBRE_FIJO;
+      });
+    }
+
+    if (window.fetch) {
+      fetch("https://api.github.com/repos/" + REPO + "/releases?per_page=10")
+        .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+        .then(function(lista){
+          if (!Array.isArray(lista)) return;
+          var publicadas = lista.filter(function(rel){ return !rel.draft; });
+
+          /* La primera release (las más nuevas van primero) que traiga un .apk.
+             Se recorren todas porque puede haber versiones sin binario. */
+          var release = null, apk = null;
+          publicadas.some(function(rel){
+            var encontrado = (rel.assets || []).filter(function(a){
+              return /\.apk$/i.test(a.name);
+            })[0];
+            if (encontrado) { release = rel; apk = encontrado; return true; }
+            return false;
+          });
+
+          if (apk) {
+            enlacesApk.forEach(function(a){
+              a.href = apk.browser_download_url;         /* directo al archivo */
+              a.removeAttribute("data-estado");
+            });
+            ponerApk("etiqueta", "Descargar APK");
+            ponerApk("etiqueta-hero", "Descargar APK");
+            ponerApk("version", release.tag_name);
+            ponerApk("fecha", fechaLegible(release.published_at));
+            ponerApk("tamano", pesoLegible(apk.size));
+            return;
+          }
+
+          /* Hay releases pero ninguna trae APK todavía: mejor decirlo que
+             dejar un botón que descarga un 404. */
+          if (publicadas.length) {
+            var ultima = publicadas[0];
+            enlacesApk.forEach(function(a){
+              a.href = ultima.html_url;
+              a.setAttribute("data-estado", "sin-apk");
+            });
+            ponerApk("etiqueta", "Ver la release " + ultima.tag_name);
+            ponerApk("etiqueta-hero", "Todavía sin APK");
+            ponerApk("version", ultima.tag_name);
+            ponerApk("fecha", fechaLegible(ultima.published_at));
+            ponerApk("tamano", "sin APK");
+            ponerApk("nota", "Todavía no hay un APK publicado. Cuando se suba uno a una release, este botón lo va a bajar directo.");
+          }
+        })
+        .catch(function(){ /* sin conexión: el botón queda apuntando a releases/latest */ });
+    }
   }
 })();

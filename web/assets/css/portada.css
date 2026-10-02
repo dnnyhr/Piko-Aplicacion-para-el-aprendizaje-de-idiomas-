@@ -231,6 +231,43 @@ img{max-width:100%; display:block}
 .repo__copiar:hover{background:#A9D341; transform:translateY(-1px)}
 .repo__copiar[data-listo="si"]{background:var(--pico)}
 
+/* Descarga del APK */
+.descarga{
+  background:#fff; border-radius:calc(var(--radio) + 8px); box-shadow:var(--sombra);
+  border-top:8px solid var(--verde-pasto); padding:clamp(1.8rem,3.5vw,2.8rem);
+  display:grid; grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);
+  gap:clamp(1.8rem,3.5vw,3rem); align-items:center;
+}
+.descarga h2{font-size:clamp(1.5rem,2.8vw,2.15rem); margin-bottom:.8rem}
+.descarga__texto > p{color:#3B4C42; margin-bottom:1.6rem}
+.descarga__datos{list-style:none; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:1rem 2.2rem}
+.descarga__datos li{display:flex; flex-direction:column; gap:.15rem}
+.descarga__datos span{
+  font-family:Fredoka,sans-serif; font-size:.7rem; letter-spacing:.11em;
+  text-transform:uppercase; color:#6B7A70;
+}
+.descarga__datos b{font-family:Fredoka,sans-serif; font-weight:600; font-size:1.05rem; color:var(--verde-piko)}
+.descarga__accion{display:flex; flex-direction:column; gap:.9rem; text-align:center}
+/* Naranja del copete: el lima se confundía con el pasto del paisaje del hero */
+.btn--apk{background:var(--copete); color:var(--grafito); box-shadow:0 10px 24px rgba(233,121,39,.35)}
+.btn--apk:hover{background:#F2892F; transform:translateY(-2px); box-shadow:0 14px 30px rgba(233,121,39,.42)}
+.btn--apk svg{width:20px; height:20px}
+.btn--apk:hover svg{animation:apk-baja .6s ease}
+@keyframes apk-baja{0%,100%{transform:translateY(0)} 50%{transform:translateY(3px)}}
+/* Mientras no haya un APK publicado el botón sigue siendo un enlace real, pero apagado */
+.btn--apk[data-estado="sin-apk"]{background:var(--papel-hondo); color:#4E5F55; box-shadow:none}
+.btn--apk[data-estado="sin-apk"]:hover{background:#E3D6BE; transform:none; box-shadow:none}
+.btn--apk[data-estado="sin-apk"]:hover svg{animation:none}
+/* En la tarjeta de descarga el botón es el protagonista; en el hero va a la par de los otros */
+.descarga__accion .btn--apk{width:100%; justify-content:center; font-size:1.05rem; padding:1.05rem 1.4rem}
+.descarga__accion .btn--apk svg{width:22px; height:22px}
+.descarga__nota{font-size:.82rem; line-height:1.5; color:#6B7A70; margin:0}
+.descarga__todas{
+  font-size:.86rem; color:var(--verde-bosque); text-decoration:none;
+  border-bottom:1px solid rgba(25,114,73,.3); align-self:center;
+}
+.descarga__todas:hover{color:var(--verde-piko); border-bottom-color:var(--verde-piko)}
+
 /* Footer */
 .pie{background:var(--verde-piko); color:#CFE2D6; padding:clamp(3.5rem,6vw,5rem) 0 2.5rem}
 .pie__grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:2.5rem; align-items:center}
@@ -253,7 +290,7 @@ img{max-width:100%; display:block}
   .hero__texto{padding-bottom:2rem}
   .marca{width:min(280px,70%)}
   .piko-fig{width:min(250px,60%)}
-  .problema__grid,.mascota__grid,.proceso__grid,.codigo__grid,.pie__grid{grid-template-columns:1fr}
+  .problema__grid,.mascota__grid,.proceso__grid,.codigo__grid,.descarga,.pie__grid{grid-template-columns:1fr}
   .rutas,.principios{grid-template-columns:1fr}
   .bifurcacion{display:none}
   .pregunta{margin-bottom:1.6rem}
@@ -311,6 +348,10 @@ img{max-width:100%; display:block}
   .repo__stats li{padding:.7rem .3rem}
   .repo__stats b{font-size:1.4rem}
   .repo__stats span{font-size:.66rem; letter-spacing:.04em}
+
+  /* Descarga */
+  .descarga{padding:1.6rem 1.35rem; gap:1.6rem}
+  .descarga__datos{gap:.9rem 1.6rem}
 
   .pie__meta{flex-direction:column; align-items:flex-start; gap:.9rem}
 }
