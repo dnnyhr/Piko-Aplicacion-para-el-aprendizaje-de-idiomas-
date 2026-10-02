@@ -47,10 +47,12 @@ verifica con:
 cd app && npm run validate:packs
 ```
 
-El validador **rechaza a propósito** la síntesis de voz en las cuatro lenguas
-indígenas. Si un paquete pide TTS en miskito, mayangna, rama o garífuna, falla.
-Eso es intencional: preferimos no tener audio a tener una pronunciación
-inventada por una máquina.
+El validador **rechaza a propósito** la síntesis de voz en mayangna, rama y
+garífuna. Si un paquete pide TTS en esas lenguas, falla. Eso es intencional:
+preferimos no tener audio a tener una pronunciación inventada por una máquina.
+El miskito puede usar la voz en español **para mientras** se consiguen
+grabaciones, con la palabra preparada por `diccionario/herramientas/voz.ts`
+(decisión 16 de `docs/decisiones.md`).
 
 ---
 
@@ -66,7 +68,7 @@ npm install
 ### Antes de mandar cualquier cambio
 
 ```bash
-npm test              # 121 pruebas sobre el núcleo puro y la persistencia
+npm test              # 124 pruebas sobre el núcleo puro y la persistencia
 npm run typecheck     # app + herramientas de Node
 npm run validate:packs
 ```

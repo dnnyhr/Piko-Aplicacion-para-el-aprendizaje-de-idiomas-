@@ -329,9 +329,12 @@ clave. El diccionario le da tres cosas:
   distinguen palabras (tres vocales), o que *yumgpa* y *yumhpa* son la misma.
 - La lista de **grabaciones** que hay que pedir a hablantes.
 
-La única referencia acústica válida es la voz de un hablante. La voz sintética
-que usa hoy el robot sirve para el español. En las lenguas indígenas no se
-usa síntesis de voz, y el validador de contenido de la app ya lo impide.
+La referencia acústica que vale es la voz de un hablante. **Para mientras**
+se consiguen grabaciones, el miskito suena con la voz en español: se escribe
+casi como se lee en español, y `herramientas/voz.ts` prepara cada palabra con
+reglas que salen de este análisis (la h aspirada, la w, el acento en la
+primera sílaba). Esas reglas también le sirven al reconocedor del robot: dicen
+qué esperar al oír a un niño. Mayangna, rama y garífuna no usan síntesis.
 
 ### 6.3 La conversación y las explicaciones del robot
 

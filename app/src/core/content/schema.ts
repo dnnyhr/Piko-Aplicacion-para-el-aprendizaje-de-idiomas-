@@ -43,9 +43,10 @@ export interface ChoiceItem extends ItemBase {
  * Comprensión auditiva: se escucha y se elige.
  *
  * La fuente del sonido puede ser una grabación (`audio`) o la síntesis de voz
- * del sistema (`tts`). Para inglés alcanza el TTS que ya trae Android; para
- * miskito, mayangna, rama y garífuna **no existe síntesis**, así que esos
- * paquetes obligatoriamente necesitan grabaciones de hablantes.
+ * del sistema (`tts`). Para inglés alcanza el TTS que ya trae Android. Para
+ * miskito se admite la voz en español **para mientras**, mientras se consiguen
+ * grabaciones de hablantes (decisión 16); mayangna, rama y garífuna no tienen
+ * síntesis y necesitan grabaciones.
  */
 export interface ListenItem extends ItemBase {
   type: 'listen';
@@ -96,11 +97,19 @@ export function words(sentence: string): string[] {
 }
 
 /**
- * Idiomas con síntesis de voz disponible en Android. Las lenguas indígenas no
- * la tienen, y dejar que un paquete las "hable" con una voz en español sería
- * enseñar una pronunciación falsa.
+ * Con qué voz sintética se puede hacer sonar cada lengua.
+ *
+ * Inglés, con la suya. Miskito, con la voz en español **para mientras**, hasta
+ * tener grabaciones de hablantes: su escritura se lee casi como el español,
+ * pero no del todo (la h aspirada, las vocales largas). Por eso la palabra se
+ * le pasa a la voz ya preparada; ver `diccionario/herramientas/voz.ts` y la
+ * decisión 16. Mayangna, rama y garífuna no tienen ninguna: hacerlas hablar
+ * con otra voz sería enseñar una pronunciación falsa.
  */
-const CON_SINTESIS: ReadonlySet<string> = new Set<string>(['eng']);
+const VOZ_SINTETICA: Readonly<Record<string, (ttsLang: string) => boolean>> = {
+  eng: (l) => l.startsWith('en'),
+  miq: (l) => l.startsWith('es'),
+};
 
 function validateItem(raw: unknown, at: string, errors: string[], lang: unknown): Item | null {
   if (typeof raw !== 'object' || raw === null) {
@@ -138,10 +147,15 @@ function validateItem(raw: unknown, at: string, errors: string[], lang: unknown)
       if (isStr(o.tts) && !isStr(o.ttsLang)) {
         errors.push(`${at}: con \`tts\` hace falta \`ttsLang\` (p. ej. "en-US")`);
       }
-      if (isStr(o.tts) && isStr(lang) && !CON_SINTESIS.has(lang)) {
-        errors.push(
-          `${at}: ${lang} no tiene síntesis de voz; este ítem necesita una grabación de hablante en \`audio\``,
-        );
+      if (isStr(o.tts) && isStr(o.ttsLang) && isStr(lang)) {
+        const permitida = VOZ_SINTETICA[lang];
+        if (!permitida) {
+          errors.push(
+            `${at}: ${lang} no tiene síntesis de voz; este ítem necesita una grabación de hablante en \`audio\``,
+          );
+        } else if (!permitida(o.ttsLang)) {
+          errors.push(`${at}: ${lang} no se puede hacer sonar con la voz ${o.ttsLang}`);
+        }
       }
       if (!isStr(o.answer)) errors.push(`${at}: falta \`answer\``);
       if (!isStr(o.gloss)) errors.push(`${at}: falta \`gloss\``);

@@ -55,7 +55,7 @@ sin un aula llena de equipos:
 ```bash
 npm test
 ```
-121 pruebas sobre el núcleo puro y la persistencia: el framer de líneas partido
+124 pruebas sobre el núcleo puro y la persistencia: el framer de líneas partido
 a mitad de paquete, la convergencia de la sincronización diferencial, el
 determinismo de la proyección, los umbrales del semáforo y el esquema SQLite
 real (contra `node:sqlite`).
@@ -112,7 +112,9 @@ celebración y el ánimo.
 Ver [content/README.md](content/README.md). Hoy sólo hay inglés. Las cuatro
 lenguas indígenas tienen el formato listo y esperan material de hablantes
 nativos — el validador rechaza a propósito la síntesis de voz en esas lenguas,
-para que nadie termine enseñando una pronunciación inventada.
+para que nadie termine enseñando una pronunciación inventada. La excepción es
+el miskito: puede sonar con la voz en español para mientras se consiguen
+grabaciones (decisión 16 de `docs/decisiones.md`).
 
 ## Detalles que no son obvios
 

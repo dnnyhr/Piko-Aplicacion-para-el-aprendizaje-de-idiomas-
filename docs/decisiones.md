@@ -16,7 +16,7 @@ probar.
 **Decisión.** Todo eso vive en `src/core/` como TypeScript puro, sin una sola
 importación de React Native.
 
-**Por qué.** Porque así corre en Node. Las 121 pruebas se ejecutan en cuatro
+**Por qué.** Porque así corre en Node. Las 124 pruebas se ejecutan en cuatro
 segundos sin emulador, y `tools/sim.ts` puede levantar un aula entera —
 anfitrión y ocho estudiantes reales sobre TCP — en la computadora.
 
@@ -167,6 +167,9 @@ costo de rendimiento.
 
 ## 10. Contenido sólo en inglés, y síntesis de voz prohibida en las demás
 
+> Modificada por la decisión 16: el miskito puede sonar con la voz en
+> español, para mientras se consiguen grabaciones.
+
 **Contexto.** Piko enseña cinco lenguas, pero conseguir vocabulario y
 pronunciación correctos en cuatro lenguas indígenas es un trabajo de campo.
 
@@ -250,6 +253,36 @@ físico que evalúa pronunciación.
 
 **Por qué.** La ruta con teléfonos ya es un proyecto completo, y la fecha es la
 que es.
+
+---
+
+## 16. El miskito suena con la voz en español, para mientras
+
+**Contexto.** Los ejercicios de escucha necesitan sonido, y todavía no hay
+grabaciones de hablantes. Sin sonido, el miskito se queda sin uno de los tres
+ejercicios, el que más ayuda con la pronunciación.
+
+**Decisión.** **Mientras se consiguen voces reales**, el miskito puede usar la
+voz en español del teléfono (`ttsLang` es-…). Mayangna, rama y garífuna
+siguen sin síntesis. La palabra no se le da a la voz tal como se escribe: la
+prepara `diccionario/herramientas/voz.ts` con reglas que salen del análisis de
+la lengua (la h aspirada se lee como j, la w como u, el acento en la primera
+sílaba). Y `npm run validate:diccionario` exige que cada ejercicio de escucha
+use exactamente esa preparación.
+
+**Por qué.** El miskito se escribe casi como se lee en español: tres vocales,
+consonantes con el mismo valor. Una voz española se acerca bastante, y un
+ejercicio de escucha con una voz aproximada enseña más que ninguno.
+
+**Costo.** No es la voz de un hablante. No distingue las vocales largas (*kati*,
+luna / *kâti*, mes) y el acento en la primera sílaba es una hipótesis. Por eso
+los ejercicios de escucha usan palabras que dieron igual dos personas y no
+usan pares que sólo se distinguen por la duración de la vocal.
+
+**Cuándo se deshace.** Cuando haya una grabación, el ítem pasa a `audio` y deja
+`tts`. Teacher Smith y Tangni se ofrecieron a grabar. La reproducción de
+`audio` todavía no está hecha en `EjercicioOpciones`: es lo primero que hace
+falta para dejar la voz sintética.
 
 ---
 

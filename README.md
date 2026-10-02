@@ -186,7 +186,7 @@ flowchart TD
     APP --> CORE["🧠 src/core/<br/><sub>protocolo · sync · progreso</sub>"]
     APP --> RESTO["src/net · src/db · src/ui<br/><sub>red, datos e interfaz</sub>"]
     APP --> CONTENT["🗣️ content/<br/><sub>las lenguas, en JSON</sub>"]
-    APP --> TESTS["✅ tests/ · tools/<br/><sub>121 pruebas · simulador de aula</sub>"]
+    APP --> TESTS["✅ tests/ · tools/<br/><sub>124 pruebas · simulador de aula</sub>"]
 
     ROBOT --> FIRM["⚙️ firmware/<br/><sub>Arduino: motores y luces</sub>"]
     ROBOT --> PANEL["🌉 panel/<br/><sub>puente Node ↔ navegador</sub>"]
@@ -292,15 +292,17 @@ tienen el formato listo y están vacías **a propósito**: el vocabulario y la
 pronunciación tienen que venir de hablantes nativos o de material lingüístico
 publicado. Inventarlos sería enseñarle una lengua falsa justo a los niños que
 están tratando de conservarla. Por eso el validador de contenido **rechaza la
-síntesis de voz** en miskito, mayangna, rama y garífuna: preferimos no tener
-audio a tener una pronunciación inventada por una máquina.
+síntesis de voz** en mayangna, rama y garífuna: preferimos no tener audio a
+tener una pronunciación inventada por una máquina. El miskito, que se escribe
+casi como se lee en español, puede sonar con la voz en español **para
+mientras** se consiguen grabaciones de hablantes ([decisión 16](docs/decisiones.md)).
 
 <div align="center">
 
 | | |
 |---|---|
 | <img src="https://api.iconify.design/mdi/translate.svg?color=%232F6B4F" width="18"/> **¿Hablás una de estas lenguas?** | Contestá [**Tu lengua en Piko**](https://encuestas.piko.mugiware.com/e/tu-lengua): escribís cómo se dicen palabras y frases en tu lengua, desde el teléfono. O abrí un [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml). No hace falta saber programar ni usar Git. |
-| <img src="https://api.iconify.design/mdi/code-braces.svg?color=%231F4E5F" width="18"/> **¿Querés aportar código?** | Todo está en [CONTRIBUTING.md](CONTRIBUTING.md): cómo correr el proyecto, las 121 pruebas, el simulador de aula y las restricciones que no son negociables. |
+| <img src="https://api.iconify.design/mdi/code-braces.svg?color=%231F4E5F" width="18"/> **¿Querés aportar código?** | Todo está en [CONTRIBUTING.md](CONTRIBUTING.md): cómo correr el proyecto, las 124 pruebas, el simulador de aula y las restricciones que no son negociables. |
 
 </div>
 
