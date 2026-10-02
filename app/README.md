@@ -55,7 +55,7 @@ sin un aula llena de equipos:
 ```bash
 npm test
 ```
-140 pruebas sobre el núcleo puro y la persistencia: el framer de líneas partido
+148 pruebas sobre el núcleo puro y la persistencia: el framer de líneas partido
 a mitad de paquete, la convergencia de la sincronización diferencial, el
 determinismo de la proyección, los umbrales del semáforo y el esquema SQLite
 real (contra `node:sqlite`).

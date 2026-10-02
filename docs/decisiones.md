@@ -16,7 +16,7 @@ probar.
 **Decisión.** Todo eso vive en `src/core/` como TypeScript puro, sin una sola
 importación de React Native.
 
-**Por qué.** Porque así corre en Node. Las 140 pruebas se ejecutan en cuatro
+**Por qué.** Porque así corre en Node. Las 148 pruebas se ejecutan en cuatro
 segundos sin emulador, y `tools/sim.ts` puede levantar un aula entera —
 anfitrión y ocho estudiantes reales sobre TCP — en la computadora.
 
@@ -286,53 +286,59 @@ falta para dejar la voz sintética.
 
 ---
 
-## 17. El progreso se ve como un madroño que crece
+## 17. El progreso se ve en un madroño: un camino de niveles y un árbol que crece
 
 **Contexto.** El XP es un número que a un niño de primaria le dice poco, y la
 app no tenía niveles ni perfil. Hacía falta que avanzar se *viera*, y que se
 sintiera propio.
 
-**Decisión.** Cada lección terminada da **sacuanjoches**: 3 por terminarla,
-una más si acertó el 70 % o más, y otra si fue perfecta. Se acumulan y hacen
-crecer un **madroño** en seis etapas (semilla, brote, arbolito, árbol con
-hojas, primeras flores, árbol florecido), y Piko sube una rama por **nivel**
-(diez en total). Los umbrales están en `src/core/progress/arbol.ts`:
+**Decisión.** Dos caras del progreso, conectadas pero separadas:
 
-| Nivel | Sacuanjoches | Etapa del árbol |
-|---|---|---|
-| 1 | 0 | Semilla |
-| 2 | 4 | Brote |
-| 3 | 12 | Arbolito |
-| 4 | 22 | |
-| 5 | 35 | Árbol con hojas |
-| 6 | 50 | |
-| 7 | 68 | Primeras flores |
-| 8 | 88 | |
-| 9 | 110 | Árbol florecido |
-| 10 | 135 | (Piko en la cima) |
+1. **El camino de niveles** (`src/core/progress/niveles.ts`). Cada paquete de
+   contenido es un nivel, en orden de dificultad, dibujado como un tronquito en
+   la punta de una rama de un madroño: el 1 abajo, el último en la copa. Se
+   supera terminando una lección de ese paquete, eso abre el siguiente, y Piko
+   salta a esa rama. Cada nivel guarda sus mejores estrellas: 1 por terminar,
+   2 con el 70 % o más, 3 si fue perfecta. Se puede repetir para mejorarlas.
+2. **El árbol que crece** (`src/core/progress/arbol.ts`). Cada lección
+   terminada da **sacuanjoches**: 3, una más con el 70 %, otra si fue perfecta.
+   Se acumulan y hacen crecer *tu* madroño en seis etapas:
 
-La lección terminada es un evento `lessonDone` más del log, con sus aciertos
-y su total; las sacuanjoches las calcula la proyección, como el XP.
+| Etapa | Sacuanjoches |
+|---|---|
+| Semilla | 0 |
+| Brote | 3 |
+| Arbolito | 12 |
+| Árbol con hojas | 30 |
+| Primeras flores | 60 |
+| Árbol florecido | 100 |
+
+El ciclo: superar un nivel → ganar sacuanjoches → el madroño crece → Piko
+sube a la rama siguiente → seguir aprendiendo.
+
+La lección terminada es un evento `lessonDone` del log, con su `packId`, sus
+aciertos y su total; la proyección calcula las sacuanjoches y las estrellas,
+como el XP. Una ronda que mezcla paquetes se anota como `mezcla`: da
+sacuanjoches pero no supera ningún nivel.
 
 **Por qué.**
 
 - *No se gastan.* El árbol no consume flores: su etapa sale del total, que
-  nunca baja. Así el total es historial y motor a la vez, y nadie pierde lo
-  que ganó.
+  nunca baja. El total es historial y motor a la vez.
 - *Terminar siempre rinde.* Igual que con el XP: equivocarse rinde menos,
   nunca deja sin nada.
 - *Crece de a poco.* Con 5 como máximo por lección, el árbol avanza a lo sumo
-  una etapa por vez; las pruebas lo verifican. Cada cambio de etapa coincide
-  con una subida de nivel, así el árbol y Piko se mueven juntos.
-- *Viaja con el estudiante.* Al ser eventos del log, las sacuanjoches ganadas
-  en la clase se sincronizan con el maestro y sobreviven a cerrar la app,
-  sin una tabla nueva ni una migración. Un snapshot de una versión anterior
-  arranca el árbol en cero y los eventos siguientes lo hacen crecer.
-- *Gama baja.* El árbol es un SVG plano por etapa y lo único que se anima es
+  una etapa por vez; las pruebas lo verifican.
+- *Los niveles van en orden.* Un nivel cuenta como superado sólo si el
+  anterior también: si alguien practicó un tema más adelante por su cuenta,
+  sus estrellas quedan guardadas y el nivel se abre solo al llegar.
+- *Viaja con el estudiante.* Al ser eventos del log, se sincroniza con el
+  maestro y sobrevive a cerrar la app, sin tabla nueva ni migración.
+- *Gama baja.* El camino y el árbol son SVG planos; lo único que se anima es
   `transform` y `opacity`, por el hilo nativo.
 
 **Costo.** Las lecciones terminadas antes de esta versión no tienen evento
-`lessonDone` y no dan sacuanjoches: el árbol de todos empieza como semilla.
+`lessonDone`: todos empiezan en el nivel 1 y con una semilla.
 
 ---
 
