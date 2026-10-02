@@ -194,6 +194,10 @@
       : '<div class="vacio"><img src="../assets/img/piko.svg" alt="" width="110" height="180">No encontramos «' + esc($("q").value) + '». Probá en español o en miskito, o con otra forma de escribirla.<br>¿La conocés? <a href="../aporta/">Aportala</a>.</div>';
     var total = datos.entradas.length;
     $("cuenta").innerHTML = lista.length === total ? "<b>" + total + "</b> palabras y frases" : "<b>" + lista.length + "</b> de " + total + " palabras y frases";
+    var info = $("info");
+    var filtrado = !!(q || tema || variante);
+    info.hidden = !filtrado;
+    info.textContent = lista.length === 1 ? "1 palabra" : lista.length + " palabras";
     animadas.forEach(function (t) { t.kill(); });
     animadas = anim().aparecer($("palabras").children, { stagger: .04, duracion: .5, y: 24 });
   }
@@ -271,6 +275,38 @@
     setTimeout(function () { el.classList.remove("palabra--brilla"); }, 1800);
   }
 
+  // ---------- El buscador: chico, y se abre al tocarlo ----------
+  var panel = $("panel");
+  function abrir() {
+    if (panel.classList.contains("panel--abierto")) return;
+    panel.classList.add("panel--abierto");
+    ultimoY = window.scrollY;
+    $("panel-mas").removeAttribute("inert");
+    $("q").setAttribute("aria-expanded", "true");
+  }
+  function cerrar() {
+    if (!panel.classList.contains("panel--abierto")) return;
+    panel.classList.remove("panel--abierto");
+    $("panel-mas").setAttribute("inert", "");
+    $("q").setAttribute("aria-expanded", "false");
+  }
+  panel.addEventListener("focusin", abrir);
+  panel.addEventListener("click", abrir);
+  document.addEventListener("click", function (ev) {
+    if (!panel.contains(ev.target) && !ev.target.closest("[data-ver-variante]")) cerrar();
+  });
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape" && panel.classList.contains("panel--abierto")) { cerrar(); $("q").blur(); }
+  });
+  // Al bajar por los resultados, el buscador vuelve a ser chico.
+  var ultimoY = window.scrollY;
+  var sinCerrarHasta = 0; // mientras la página baja sola hasta el buscador
+  window.addEventListener("scroll", function () {
+    if (Date.now() < sinCerrarHasta) { ultimoY = window.scrollY; return; }
+    if (Math.abs(window.scrollY - ultimoY) > 160 && document.activeElement !== $("q")) cerrar();
+    if (!panel.classList.contains("panel--abierto")) ultimoY = window.scrollY;
+  }, { passive: true });
+
   // ---------- Eventos ----------
   document.addEventListener("click", function (ev) {
     var b = ev.target.closest(".filtro");
@@ -293,6 +329,8 @@
       variante = l.getAttribute("data-ver-variante");
       document.querySelectorAll(".filtro[data-variante]").forEach(function (x) { x.setAttribute("aria-pressed", String(x.getAttribute("data-variante") === variante)); });
       mostrar();
+      abrir();
+      sinCerrarHasta = Date.now() + 1500;
       $("panel").scrollIntoView({ behavior: anim().animar ? "smooth" : "auto", block: "start" });
     }
   });
