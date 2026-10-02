@@ -1,7 +1,7 @@
 /**
  * Los datos que muestra el sitio (piko.mugiware.com), sacados del diccionario.
  *
- *   web/datos/diccionario-<código>.json   las palabras, con su fuente y su análisis
+ *   web/datos/diccionario-<código>.json   las palabras confirmadas, con su fuente y sus variantes
  *   web/datos/estado.json                 cuánto hay de cada lengua y quiénes enseñaron
  *   web/diccionario/index.html            sólo la lista entre <!-- palabras:inicio --> y
  *                                         <!-- palabras:fin -->, para que los buscadores
@@ -17,11 +17,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { avanceDeInterfaz } from './interfaz';
-import { armar, armarAlEspanol, leerDiccionario, leerLenguas, paraLaApp, RAIZ_DICCIONARIO, usable, type Entrada } from './recetas';
+import { armar, armarAlEspanol, leerCsv, leerDiccionario, leerLenguas, paraLaApp, RAIZ_DICCIONARIO, usable, type Entrada } from './recetas';
 import { paraVozEspanola } from './voz';
 
 const WEB = path.resolve(RAIZ_DICCIONARIO, '..', 'web');
-const REPO = 'https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/blob/main';
 
 interface Fuente {
   id: string;
@@ -48,20 +47,113 @@ function fuentePublica(f: Fuente) {
   return { id: f.id, tipo: f.tipo, nombre: 'El equipo de Piko', detalle: '', fecha: f.fecha };
 }
 
-/** El ancla con que GitHub enlaza un título de Markdown. */
-const ancla = (titulo: string) =>
-  titulo.toLocaleLowerCase('es').replace(/[^\p{L}\p{N}\s-]/gu, '').trim().replace(/\s/g, '-');
+// ---------- Variantes ----------
 
-/** Las reglas de `gramatica.md`: id → título, confianza y enlace. */
-function reglasDe(dir: string, carpeta: string) {
-  const archivo = path.join(dir, 'gramatica.md');
-  if (!fs.existsSync(archivo)) return {};
-  const reglas: Record<string, { titulo: string; confianza: string; enlace: string }> = {};
-  for (const m of fs.readFileSync(archivo, 'utf8').matchAll(/^### (([A-Z]\d+) · (.+?) — Confianza (.+))$/gm)) {
-    const [, completo = '', id = '', titulo = '', confianza = ''] = m;
-    reglas[id] = { titulo, confianza, enlace: `${REPO}/diccionario/${carpeta}/gramatica.md#${ancla(completo)}` };
+/** Cómo se nombra una fuente en una etiqueta corta: «Tangni», «Matamoros (1996)». */
+function nombreCorto(f: Fuente) {
+  if (f.tipo === 'encuesta') return f.credito ?? 'Anónimo';
+  const partes = (f.autor ?? '').split(/\s+/).filter((p) => p && !p.endsWith('.'));
+  return `${partes.length > 1 ? partes.slice(1).join(' ') : partes.join(' ')} (${f.fecha?.slice(0, 4) ?? ''})`;
+}
+
+/** Dónde se habla la forma que dio una fuente: la comunidad de quien contestó, o la zona de la obra. */
+function lugar(f: Fuente) {
+  if (f.tipo === 'encuesta') return (f.comunidad ?? '').split(',')[0]!.trim();
+  return f.zona ? f.zona.charAt(0).toUpperCase() + f.zona.slice(1).replace(/_/g, ' ') : '';
+}
+
+/** Para comparar formas: sin mayúsculas, signos ni tilde aguda (la circunfleja sí cuenta: marca la vocal larga). */
+const llano = (t: string) =>
+  t.normalize('NFD').replace(/[\u0300\u0301]/g, '').normalize('NFC')
+    .toLocaleLowerCase('es').replace(/[¿?¡!.,;:«»"]/g, '').replace(/\s+/g, ' ').trim();
+const escapar = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+type Etiqueta = 'escrituras' | 'region' | 'hablantes' | 'sistemas' | 'sinonimo';
+interface Variantes {
+  etiquetas: Etiqueta[];
+  escrituras?: { forma: string; quien: string[] }[];
+  otras?: { id: string; forma: string; quien: string[]; tipo: Etiqueta }[];
+}
+
+/**
+ * Las variantes de cada entrada, sacadas de los datos y no escritas a mano:
+ * - las distintas maneras en que la escribieron (`registrado`), con quién
+ *   escribió cada una según el corpus;
+ * - las otras palabras del léxico con la misma traducción, y por qué difieren:
+ *   dos maneras de contar (regla N3), la región (Raiti o Bilwi), la persona,
+ *   o simplemente otra palabra.
+ */
+function variantesDe(entradas: Entrada[], fuentes: Fuente[], corpus: string[][]) {
+  const porId = new Map(fuentes.map((f) => [f.id, f]));
+  const filas = corpus.slice(1).map(([fuente = '', , , , miq = '']) => ({ fuente, miq }));
+  /** Qué fuentes escribieron exactamente esta forma (o, si ninguna, sin mirar mayúsculas). */
+  const quienEscribio = (forma: string, candidatas: string[]) => {
+    for (const banderas of ['u', 'iu']) {
+      const re = new RegExp(`(^|[^\\p{L}])${escapar(forma)}($|[^\\p{L}])`, banderas);
+      const ids = candidatas.filter((id) => filas.some((r) => r.fuente === id && re.test(r.miq)));
+      if (ids.length) return ids;
+    }
+    return [];
+  };
+  const personas = (ids: string[]) => new Set(ids.filter((id) => porId.get(id)?.tipo === 'encuesta'));
+  const lugares = (ids: string[]) => new Set(ids.map((id) => porId.get(id)).filter(Boolean).map((f) => lugar(f!)).filter(Boolean));
+  const nombres = (ids: string[]) => ids.map((id) => porId.get(id)).filter(Boolean).map((f) => nombreCorto(f!));
+  const disjuntos = (a: Set<string>, b: Set<string>) => a.size > 0 && b.size > 0 && [...a].every((x) => !b.has(x));
+
+  const porTraduccion = new Map<string, Entrada[]>();
+  for (const e of entradas) porTraduccion.set(llano(e.es), [...(porTraduccion.get(llano(e.es)) ?? []), e]);
+
+  const resultado = new Map<string, Variantes>();
+  for (const e of entradas) {
+    const etiquetas = new Set<Etiqueta>();
+    const v: Variantes = { etiquetas: [] };
+
+    // Las maneras de escribirla: se agrupan las que sólo cambian en mayúsculas o signos.
+    const grupos = new Map<string, { forma: string; ids: Set<string> }>();
+    for (const forma of e.registrado) {
+      const clave = llano(forma);
+      const g = grupos.get(clave) ?? { forma: forma.replace(/[¿?¡!]/g, '').trim(), ids: new Set<string>() };
+      for (const id of quienEscribio(forma, e.fuentes)) g.ids.add(id);
+      grupos.set(clave, g);
+    }
+    if (grupos.size > 1) {
+      etiquetas.add('escrituras');
+      const lista = [...grupos.values()];
+      v.escrituras = lista.map((g) => ({ forma: g.forma, quien: nombres([...g.ids]) }));
+      for (const a of lista) for (const b of lista) {
+        // Una forma más larga que empieza igual (muih → muihnika) es la palabra con algo
+        // agregado, no otra manera de decirla: no dice nada de la región ni de la persona.
+        const [x, y] = [llano(a.forma), llano(b.forma)];
+        if (a === b || (x.length >= y.length + 3 && x.startsWith(y)) || (y.length >= x.length + 3 && y.startsWith(x))) continue;
+        if (disjuntos(lugares([...a.ids]), lugares([...b.ids]))) etiquetas.add('region');
+        if (disjuntos(personas([...a.ids]), personas([...b.ids]))) etiquetas.add('hablantes');
+      }
+    }
+
+    // Otras palabras con la misma traducción.
+    const otras = (porTraduccion.get(llano(e.es)) ?? []).filter((o) => o.id !== e.id && llano(o.forma) !== llano(e.forma));
+    if (otras.length) {
+      v.otras = otras.map((o) => {
+        const tipo: Etiqueta =
+          e.tema === 'numeros' && o.tema === 'numeros' && [...(e.reglas ?? []), ...(o.reglas ?? [])].includes('N3')
+            ? 'sistemas'
+            : disjuntos(lugares(e.fuentes), lugares(o.fuentes))
+              ? 'region'
+              : disjuntos(personas(e.fuentes), personas(o.fuentes))
+                ? 'hablantes'
+                : 'sinonimo';
+        etiquetas.add(tipo);
+        return { id: o.id, forma: o.forma, quien: nombres(o.fuentes), tipo };
+      });
+    }
+
+    if (etiquetas.size) {
+      const orden: Etiqueta[] = ['sistemas', 'region', 'hablantes', 'escrituras', 'sinonimo'];
+      v.etiquetas = orden.filter((x) => etiquetas.has(x));
+      resultado.set(e.id, v);
+    }
   }
-  return reglas;
+  return resultado;
 }
 
 const json = (v: unknown) => JSON.stringify(v, null, 1) + '\n';
@@ -127,22 +219,20 @@ export function archivosDeLaWeb(generados: ReadonlyMap<string, string> = new Map
     });
 
     if (lengua.codigo === 'eng') continue; // el inglés no necesita un diccionario en el sitio
-    const reglas = reglasDe(d.dir, lengua.carpeta);
-    const entradas = d.entradas.map((e) => ({
+    // En el sitio sólo va lo confirmado: lo que está en revisión espera, como en
+    // los ejercicios de la app. Y sin lo técnico (glosas, reglas, categorías):
+    // eso vive en gramatica.md y en lexico.json para quien estudia la lengua.
+    const publicables = d.entradas.filter(usable);
+    const corpus = leerCsv(fs.readFileSync(path.join(d.dir, 'corpus.csv'), 'utf8'));
+    const variantes = variantesDe(publicables, fuentes, corpus);
+    const entradas = publicables.map((e) => ({
       id: e.id,
       forma: e.forma,
       es: e.es,
-      categoria: e.categoria,
       tema: e.tema,
-      ...(e.analisis ? { analisis: e.analisis } : {}),
-      ...(e.glosa ? { glosa: e.glosa } : {}),
-      ...(e.prestamo ? { prestamo: e.prestamo } : {}),
-      ...(e.notas ? { notas: e.notas } : {}),
-      ...(e.revisar ? { revisar: e.revisar } : {}),
-      escrito: e.registrado,
-      reglas: (e.reglas ?? []).filter((r) => r in reglas),
+      ...(e.prestamo ? { viene_de: { lengua: e.prestamo.de, palabra: e.prestamo.origen } } : {}),
+      ...(variantes.has(e.id) ? { variantes: variantes.get(e.id) } : {}),
       fuentes: e.fuentes,
-      estado: e.estado,
       voz: lengua.codigo === 'miq' ? paraVozEspanola(e.forma) : e.forma,
     }));
     salida.set(
@@ -150,7 +240,6 @@ export function archivosDeLaWeb(generados: ReadonlyMap<string, string> = new Map
       json({
         lengua: { codigo: lengua.codigo, nombre: lengua.nombre, autonimo: lengua.autonimo ?? null, voz: lengua.voz },
         fuentes: fuentes.filter((f) => f.tipo !== 'equipo').map(fuentePublica),
-        reglas,
         entradas,
       }),
     );

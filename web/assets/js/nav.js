@@ -52,15 +52,37 @@
 
     // En el teléfono la fila se desliza: que se vea la sección en la que estás.
     var activo = document.querySelector('.nav__enlace[aria-current="page"]');
-    if (activo && activo.scrollIntoView) activo.scrollIntoView({ block: "nearest", inline: "center" });
+    if (activo && activo.parentNode && activo.parentNode.parentNode) {
+      var lista = activo.parentNode.parentNode;
+      lista.scrollLeft = activo.offsetLeft - (lista.clientWidth - activo.offsetWidth) / 2;
+    }
+
+    // Al bajar, la barra toma sombra para separarse del contenido.
+    var barra = document.querySelector(".nav");
+    var marcar = function () { barra.classList.toggle("nav--bajando", window.scrollY > 8); };
+    marcar();
+    window.addEventListener("scroll", marcar, { passive: true });
   }
 
   var pie = document.getElementById("pie");
   if (pie) {
+    var raizPie = (lugar && lugar.getAttribute("data-raiz")) || pie.getAttribute("data-raiz") || "";
+    var enlacesPie = PAGINAS.slice(1).map(function (p) {
+      return '<li><a href="' + raizPie + p.ruta + '">' + p.texto + "</a></li>";
+    }).join("");
     pie.outerHTML =
-      '<footer class="sitio-pie"><div class="sitio-pie__fila">' +
-      "<span>Piko · equipo MugiWare · Jinotega, Nicaragua</span>" +
-      '<span>Software libre (MIT) · <a href="' + REPO + '">Código en GitHub</a></span>' +
-      "</div></footer>";
+      '<footer class="sitio-pie">' +
+      '<svg class="sitio-pie__ola" viewBox="0 0 1440 35" preserveAspectRatio="none" aria-hidden="true"><path d="M0 35V18C180 2 360 0 540 10s360 22 540 14 270-20 360-16v19z"/></svg>' +
+      '<div class="sitio-pie__grid">' +
+      '<div class="sitio-pie__marca"><img src="' + raizPie + 'assets/img/marca-negativo.svg" alt="Piko" width="170" height="91" loading="lazy">' +
+      "<p>Una app y un robot que enseñan las lenguas de la Costa Caribe en escuelas rurales, sin internet.</p></div>" +
+      '<div><h2>El sitio</h2><ul>' + enlacesPie + "</ul></div>" +
+      '<div><h2>El proyecto</h2><ul>' +
+      '<li><a href="' + REPO + '">Código en GitHub</a></li>' +
+      '<li><a href="' + REPO + '/releases">Descargar el APK</a></li>' +
+      '<li><a href="https://encuestas.piko.mugiware.com/e/tu-lengua">Tu lengua en Piko</a></li>' +
+      "</ul></div></div>" +
+      '<div class="sitio-pie__fila"><span>Piko · equipo MugiWare · Jinotega, Nicaragua</span><span>Software libre (MIT) · Hackathon Nicaragua 2026</span></div>' +
+      "</footer>";
   }
 })();

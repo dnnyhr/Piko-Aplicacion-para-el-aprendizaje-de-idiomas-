@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Aportá tu lengua · Piko</title>
-<meta name="description" content="¿Hablás miskito, mayangna, rama o garífuna? Así podés ayudar a que Piko enseñe tu lengua: la encuesta, la traducción de la app y las palabras en revisión.">
+<meta name="description" content="¿Hablás miskito, mayangna, rama o garífuna? Así podés ayudar a que Piko enseñe tu lengua: la encuesta, la traducción de la app y las correcciones.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
@@ -13,8 +13,8 @@
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="Equipo MugiWare">
 <!-- Íconos -->
-<link rel="icon" type="image/png" href="../assets/favicon.png">
-<link rel="icon" href="../assets/favicon.ico" sizes="any">
+<link rel="icon" href="../favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" href="../assets/favicon.png" sizes="192x192">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="manifest" href="../site.webmanifest">
 <!-- Al compartir (Open Graph y X/Twitter) -->
@@ -23,14 +23,14 @@
 <meta property="og:locale" content="es_NI">
 <meta property="og:url" content="https://piko.mugiware.com/aporta/">
 <meta property="og:title" content="Aportá tu lengua · Piko">
-<meta property="og:description" content="¿Hablás miskito, mayangna, rama o garífuna? Así podés ayudar a que Piko enseñe tu lengua: la encuesta, la traducción de la app y las palabras en revisión.">
+<meta property="og:description" content="¿Hablás miskito, mayangna, rama o garífuna? Así podés ayudar a que Piko enseñe tu lengua: la encuesta, la traducción de la app y las correcciones.">
 <meta property="og:image" content="https://piko.mugiware.com/assets/og/aporta.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Aportá tu lengua: Piko aprende de quienes hablan.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Aportá tu lengua · Piko">
-<meta name="twitter:description" content="¿Hablás miskito, mayangna, rama o garífuna? Así podés ayudar a que Piko enseñe tu lengua: la encuesta, la traducción de la app y las palabras en revisión.">
+<meta name="twitter:description" content="¿Hablás miskito, mayangna, rama o garífuna? Así podés ayudar a que Piko enseñe tu lengua: la encuesta, la traducción de la app y las correcciones.">
 <meta name="twitter:image" content="https://piko.mugiware.com/assets/og/aporta.png">
 <meta name="twitter:image:alt" content="Aportá tu lengua: Piko aprende de quienes hablan.">
 <script type="application/ld+json">
@@ -69,73 +69,115 @@
 <link rel="stylesheet" href="../assets/css/nav.css">
 <link rel="stylesheet" href="../assets/css/sitio.css">
 <style>
-  .formas{display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
-  .forma{display:flex; flex-direction:column; gap:.6rem}
+  .formas{display:grid; gap:1.1rem; grid-template-columns:repeat(3,minmax(0,1fr))}
+  @media (max-width:900px){ .formas{grid-template-columns:minmax(0,1fr)} }
+  .forma{display:flex; flex-direction:column; gap:.55rem; border-top:6px solid var(--color, var(--copete)); overflow:hidden}
+  .forma .icono-burbuja{background:color-mix(in srgb, var(--color, var(--copete)) 18%, #fff); color:var(--verde-piko); margin-bottom:.3rem}
   .forma h3{font-size:1.25rem; color:var(--verde-piko)}
-  .forma p{margin:0; flex:1}
-  .forma .btn{align-self:flex-start}
-  .forma__para{font-size:.85rem; color:var(--tinta-suave)}
-  .lenguas{display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
-  .lengua h3{font-size:1.3rem; color:var(--verde-piko); margin-bottom:.2rem}
-  .lengua__autonimo{font-size:.9rem; color:var(--tinta-suave); margin:0 0 .8rem}
-  .cifras{display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin:0}
-  .cifras div{background:var(--papel); border-radius:12px; padding:.5rem .7rem}
+  .forma p{margin:0; flex:1; color:var(--tinta)}
+  .forma .btn{align-self:flex-start; margin-top:.6rem}
+  .forma__para{font:600 .74rem Fredoka,sans-serif; letter-spacing:.1em; text-transform:uppercase; color:var(--tinta-suave)}
+  .forma--principal{
+    grid-column:1/-1; display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:1.4rem; align-items:center; border-top:none;
+    background:linear-gradient(120deg,#FFF6EC,#fff 60%); border:2px solid #F6D2B4;
+  }
+  .forma--principal img{width:110px; height:auto}
+  .forma--principal .btn{align-self:center; margin:0}
+  .forma--principal h3{font-size:clamp(1.4rem,2.6vw,1.9rem)}
+  @media (max-width:720px){ .forma--principal{grid-template-columns:1fr} .forma--principal img{display:none} }
+
+  .lenguas{display:grid; gap:1.1rem; grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr)); align-items:start}
+  .lengua--grande{grid-column:span 2}
+  @media (max-width:620px){ .lengua--grande{grid-column:auto} }
+  .lengua h3{font-size:1.35rem; color:var(--verde-piko); margin-bottom:.15rem}
+  .lengua__autonimo{font-size:.9rem; color:var(--tinta-suave); margin:0 0 .9rem}
+  .cifras{display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:.5rem; margin:0}
+  .cifras div{background:var(--papel); border-radius:14px; padding:.55rem .75rem}
   .cifras dt{font-size:.78rem; color:var(--tinta-suave); line-height:1.25}
-  .cifras dd{margin:0; font-family:Fredoka,sans-serif; font-weight:600; font-size:1.35rem; color:var(--verde-piko)}
-  .barra{height:8px; background:var(--papel-hondo); border-radius:999px; overflow:hidden; margin-top:.3rem}
-  .barra span{display:block; height:100%; background:var(--verde-pasto); border-radius:999px}
-  .lengua--vacia{background:rgba(255,255,255,.55); box-shadow:none; border:2px dashed rgba(15,93,61,.2)}
-  .creditos{display:grid; gap:.8rem; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); list-style:none; padding:0; margin:0}
-  .creditos li{background:#fff; border-radius:16px; padding:1rem 1.1rem; box-shadow:var(--sombra-chica)}
-  .creditos b{font-family:Fredoka,sans-serif; font-weight:600; color:var(--verde-piko); font-size:1.05rem}
-  .creditos small{display:block; color:var(--tinta-suave); margin-top:.2rem}
-  .revisar{list-style:none; padding:0; margin:0; display:grid; gap:.6rem}
-  .revisar li{background:#fff; border-radius:14px; padding:.8rem 1rem; box-shadow:var(--sombra-chica); border-left:5px solid var(--pico)}
-  .revisar a{font-family:Fredoka,sans-serif; font-weight:600; font-size:1.1rem; text-decoration:none; color:var(--verde-piko)}
-  .revisar p{margin:.2rem 0 0; font-size:.93rem}
-  .reglas-uso{display:grid; gap:.6rem; padding-left:1.2rem}
+  .cifras dd{margin:0; font:600 1.45rem Fredoka,sans-serif; color:var(--verde-piko)}
+  .barra{display:block; height:10px; background:var(--papel-hondo); border-radius:999px; overflow:hidden; margin-top:.4rem}
+  .barra span{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--verde-pasto),var(--verde-hoja)); border-radius:999px}
+  .lengua--vacia{background:rgba(255,255,255,.55); box-shadow:none; border:2px dashed rgba(15,93,61,.22)}
+  .lengua--vacia h3{color:var(--tinta)}
+  .semilla{width:44px; height:44px; float:right; margin:-.2rem -.2rem 0 .5rem; animation:flotar 3.2s ease-in-out infinite}
+
+  .revisar{list-style:none; padding:0; margin:0; display:grid; gap:.8rem; grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr))}
+  .revisar li{background:#fff; border-radius:18px; padding:1rem 1.1rem; box-shadow:var(--sombra-chica); border-left:6px solid var(--pico); transition:transform .3s ease, box-shadow .3s ease}
+  .revisar li:hover{transform:translateY(-3px); box-shadow:var(--sombra-flota)}
+  .revisar a{font:600 1.15rem Fredoka,sans-serif; text-decoration:none; color:var(--verde-piko)}
+  .revisar p{margin:.3rem 0 0; font-size:.93rem; color:var(--tinta)}
+
+  .creditos{display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr)); list-style:none; padding:0; margin:0}
+  .creditos li{display:flex; gap:.9rem; align-items:flex-start}
+  .avatar{flex:none; width:52px; height:52px; border-radius:50%; display:grid; place-items:center; font:600 1.3rem Fredoka,sans-serif; color:#fff; background:var(--copete); box-shadow:0 6px 14px rgba(233,121,39,.3)}
+  .avatar--libro{background:var(--lila); box-shadow:0 6px 14px rgba(156,136,201,.3)}
+  .avatar svg{width:24px; height:24px; fill:#fff}
+  .creditos b{font:600 1.08rem Fredoka,sans-serif; color:var(--verde-piko)}
+  .creditos small{display:block; color:var(--tinta-suave); line-height:1.45; margin-top:.15rem}
+
+  .cuidados{list-style:none; padding:0; margin:0; display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr))}
+  .cuidados li{display:flex; gap:.8rem; align-items:flex-start}
+  .cuidados li::before{content:""; flex:none; width:30px; height:30px; border-radius:50%; background:var(--verde-pasto) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230A4530' d='m9 16.2-3.5-3.5L4 14.2l5 5 11-11-1.4-1.4z'/%3E%3C/svg%3E") center/18px no-repeat}
+  .cuidados b{font-family:Fredoka,sans-serif; font-weight:600; color:var(--verde-piko)}
 </style>
 </head>
-<body class="pagina">
+<body class="pagina" data-pagina="aporta" data-raiz="../">
 
 <div id="nav" data-pagina="aporta" data-raiz="../"></div>
 
-<header class="cabeza contenedor">
+<header class="cabeza">
+  <div class="cabeza__escena" data-escena></div>
   <div class="cabeza__grid">
-    <div>
+    <div class="cabeza__texto">
       <p class="etiqueta">Aportá tu lengua</p>
       <h1>Piko aprende de <em>quienes hablan</em></h1>
       <p class="cabeza__bajada">Las palabras, las reglas y los ejercicios de Piko salen de lo que escriben hablantes de cada lengua. No hace falta saber programar: con un teléfono alcanza.</p>
+      <div class="cabeza__acciones">
+        <a class="btn btn--naranja" href="https://encuestas.piko.mugiware.com/e/tu-lengua" target="_blank" rel="noopener" data-entra>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.5-9.2C1 8.3 3.2 5 6.6 5c2 0 3.5 1.1 4.4 2.5h2C13.9 6.1 15.4 5 17.4 5c3.4 0 5.6 3.3 4.1 6.8C19.5 16.4 12 21 12 21z"/></svg>Contestar la encuesta
+        </a>
+        <a class="btn btn--linea" href="../diccionario/" data-entra>Ver el diccionario</a>
+      </div>
     </div>
-    <img class="cabeza__piko" src="../assets/img/piko.svg" alt="" width="150" height="246">
+    <img class="cabeza__piko" src="../assets/img/piko.svg" alt="" width="178" height="292">
   </div>
+  <svg class="cabeza__ola" viewBox="0 0 1440 56" preserveAspectRatio="none" aria-hidden="true"><path d="M0 56V30C240 6 480 0 720 14s480 34 720 22v20z"/></svg>
 </header>
 
 <main>
   <section class="bloque contenedor">
-    <h2>Cómo podés ayudar</h2>
-    <div class="formas">
-      <div class="tarjeta forma">
-        <span class="forma__para">Para hablantes · 15 minutos</span>
-        <h3>Contestá «Tu lengua en Piko»</h3>
-        <p>Escribís cómo se dicen palabras y frases en tu lengua: saludos, la familia, los números, los animales. Desde el teléfono, y elegís cómo querés que te nombremos.</p>
-        <a class="btn btn--solido" href="https://encuestas.piko.mugiware.com/e/tu-lengua" target="_blank" rel="noopener">Abrir la encuesta</a>
+    <div class="bloque__cabeza" data-aparece>
+      <p class="etiqueta">Cómo ayudar</p>
+      <h2>Cuatro maneras <em>de sumarte</em></h2>
+    </div>
+    <div class="formas" data-aparece="grupo">
+      <div class="tarjeta forma forma--principal">
+        <img src="../assets/img/piko.svg" alt="" width="110" height="180" loading="lazy">
+        <div>
+          <span class="forma__para">Para hablantes · 15 minutos</span>
+          <h3>Contestá «Tu lengua en Piko»</h3>
+          <p>Escribís cómo se dicen palabras y frases en tu lengua: saludos, la familia, los números, los animales. Desde el teléfono, y elegís cómo querés que te nombremos.</p>
+        </div>
+        <a class="btn btn--naranja" href="https://encuestas.piko.mugiware.com/e/tu-lengua" target="_blank" rel="noopener">Abrir la encuesta</a>
       </div>
-      <div class="tarjeta forma">
+      <div class="tarjeta tarjeta--viva forma" style="--color:var(--cielo)">
+        <span class="icono-burbuja"><svg viewBox="0 0 24 24"><path d="M3 5h10v2H9.9c-.5 2-1.4 3.8-2.6 5.3 1 .9 2.1 1.7 3.3 2.3l-.8 1.9c-1.4-.7-2.7-1.6-3.8-2.7A13 13 0 0 1 2.8 16l-.8-1.9c1.4-.5 2.6-1.2 3.6-2.1C4.8 11 4.2 9.9 3.7 8.7l1.9-.6c.3.9.8 1.7 1.3 2.5.8-1 1.4-2.2 1.8-3.6H3V5zm13 3h2l4 11h-2l-1-3h-4l-1 3h-2l4-11zm-.3 6h2.6L17 10.4 15.7 14z"/></svg></span>
         <span class="forma__para">Para hablantes de miskito</span>
-        <h3>Traducí la app al miskito</h3>
+        <h3>Traducí la app</h3>
         <p>Una planilla con cada texto de la app en español y una columna para el miskito. Se puede traducir de a poco: lo que falta se sigue viendo en español.</p>
         <a class="btn btn--linea" href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/blob/main/diccionario/miskito/interfaz.csv" target="_blank" rel="noopener">Ver la planilla</a>
       </div>
-      <div class="tarjeta forma">
+      <div class="tarjeta tarjeta--viva forma" style="--color:var(--pico)">
+        <span class="icono-burbuja"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 14a1.3 1.3 0 1 0 0 2.6 1.3 1.3 0 0 0 0-2.6zm0-10c-2.2 0-4 1.5-4 3.5h2c0-.9.9-1.5 2-1.5s2 .6 2 1.5c0 1.6-3 1.6-3 4.5h2c0-2 3-2.3 3-4.5C16 7.5 14.2 6 12 6z"/></svg></span>
         <span class="forma__para">Para hablantes y docentes</span>
-        <h3>Resolvé una palabra en revisión</h3>
-        <p>Hay palabras con una duda abierta: dos fuentes dicen distinto, o falta confirmar qué significan. Si sabés la respuesta, contanos.</p>
-        <a class="btn btn--linea" href="#revision">Ver las dudas</a>
+        <h3>Corregí una palabra</h3>
+        <p>¿Alguna palabra del diccionario se dice o se escribe distinto en tu comunidad? Contanos cómo la decís vos.</p>
+        <a class="btn btn--linea" href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/issues/new?template=aporte-linguistico.yml" target="_blank" rel="noopener">Contarnos</a>
       </div>
-      <div class="tarjeta forma">
+      <div class="tarjeta tarjeta--viva forma" style="--color:var(--lila)">
+        <span class="icono-burbuja"><svg viewBox="0 0 24 24"><path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3zm0 16a1 1 0 0 0 0 2h12v-2H6zm2-12v2h8V6H8zm0 4v2h6v-2H8z"/></svg></span>
         <span class="forma__para">Para quien conoce un material</span>
-        <h3>Contanos de un diccionario o un libro</h3>
+        <h3>Contanos de un libro</h3>
         <p>¿Conocés un diccionario, una cartilla o una grabación? Lo citamos como respaldo, con su autor, y nunca vale más que un hablante.</p>
         <a class="btn btn--linea" href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/issues/new?template=aporte-linguistico.yml" target="_blank" rel="noopener">Enviar un aporte</a>
       </div>
@@ -144,40 +186,45 @@
 
   <section class="bloque bloque--hondo">
     <div class="contenedor">
-      <h2>Cómo va cada lengua</h2>
-      <p class="bloque__bajada">Se actualiza solo cada vez que entra una tanda nueva al diccionario.</p>
+      <div class="bloque__cabeza" data-aparece>
+        <p class="etiqueta">Las lenguas</p>
+        <h2>Cómo va <em>cada lengua</em></h2>
+        <p class="bloque__bajada">Se actualiza sola cada vez que entra una tanda nueva al diccionario.</p>
+      </div>
       <div class="lenguas" id="lenguas"><p>Cargando…</p></div>
     </div>
   </section>
 
-  <section class="bloque contenedor" id="revision">
-    <h2>Palabras en revisión</h2>
-    <p class="bloque__bajada">No aparecen en los ejercicios hasta que alguien que habla la lengua las revise. Tocá una para ver todo lo que sabemos de ella.</p>
-    <ul class="revisar" id="revisar"></ul>
-    <p style="margin-top:1rem"><a class="btn btn--solido" href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/issues/new?template=aporte-linguistico.yml" target="_blank" rel="noopener">Sé la respuesta</a></p>
-  </section>
-
   <section class="bloque bloque--hondo">
     <div class="contenedor">
-      <h2>Quienes enseñaron</h2>
-      <p class="bloque__bajada">Cada palabra de Piko dice de quién viene. Gracias.</p>
+      <div class="bloque__cabeza" data-aparece>
+        <p class="etiqueta">Gracias</p>
+        <h2>Quienes <em>enseñaron</em></h2>
+        <p class="bloque__bajada">Cada palabra de Piko dice de quién viene.</p>
+      </div>
       <ul class="creditos" id="creditos"></ul>
     </div>
   </section>
 
   <section class="bloque contenedor">
-    <h2>Cómo cuidamos lo que aportás</h2>
-    <ul class="reglas-uso">
-      <li><b>Lo que escribís se guarda tal cual.</b> Las variantes y las formas de escribir de cada persona no se corrigen: son datos.</li>
-      <li><b>Tu contacto nunca se publica.</b> Sólo el nombre o apodo con el que elegiste aparecer, tu rol y tu comunidad.</li>
-      <li><b>Se usa para enseñar la lengua en Piko.</b> Cualquier otro uso requiere consultar a quienes aportaron y a sus comunidades.</li>
-      <li><b>Un hablante decide.</b> Un modelo de lenguaje busca patrones y los propone como hipótesis; los hablantes dicen qué es correcto. <a href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/blob/main/diccionario/metodologia.md" target="_blank" rel="noopener">Cómo trabajamos</a>.</li>
+    <div class="bloque__cabeza" data-aparece>
+      <p class="etiqueta">Tus datos</p>
+      <h2>Cómo cuidamos <em>lo que aportás</em></h2>
+    </div>
+    <ul class="cuidados" data-aparece="grupo">
+      <li class="tarjeta"><span><b>Lo que escribís se guarda tal cual.</b> Las variantes y las formas de escribir de cada persona no se corrigen: son datos.</span></li>
+      <li class="tarjeta"><span><b>Tu contacto nunca se publica.</b> Sólo el nombre o apodo con el que elegiste aparecer, tu rol y tu comunidad.</span></li>
+      <li class="tarjeta"><span><b>Se usa para enseñar la lengua en Piko.</b> Cualquier otro uso requiere consultar a quienes aportaron y a sus comunidades.</span></li>
+      <li class="tarjeta"><span><b>Un hablante decide.</b> Un modelo de lenguaje busca patrones y los propone como hipótesis; los hablantes dicen qué es correcto. <a href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/blob/main/diccionario/metodologia.md" target="_blank" rel="noopener">Cómo trabajamos</a>.</span></li>
     </ul>
   </section>
 </main>
 
 <div id="pie"></div>
 <script src="../assets/js/nav.js"></script>
-<script src="../assets/js/aporta.js"></script>
+<script src="../assets/js/gsap.min.js" defer></script>
+<script src="../assets/js/ScrollTrigger.min.js" defer></script>
+<script src="../assets/js/animaciones.js" defer></script>
+<script src="../assets/js/aporta.js" defer></script>
 </body>
 </html>

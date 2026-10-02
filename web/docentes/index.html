@@ -13,8 +13,8 @@
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="Equipo MugiWare">
 <!-- Íconos -->
-<link rel="icon" type="image/png" href="../assets/favicon.png">
-<link rel="icon" href="../assets/favicon.ico" sizes="any">
+<link rel="icon" href="../favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" href="../assets/favicon.png" sizes="192x192">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="manifest" href="../site.webmanifest">
 <!-- Al compartir (Open Graph y X/Twitter) -->
@@ -78,88 +78,151 @@
 <link rel="stylesheet" href="../assets/css/nav.css">
 <link rel="stylesheet" href="../assets/css/sitio.css">
 <style>
-  .indice{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.4rem}
-  .clase{display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); counter-reset:paso}
-  .clase .tarjeta{counter-increment:paso; position:relative; padding-top:3.2rem}
-  .clase .tarjeta::before{
-    content:counter(paso); position:absolute; top:1rem; left:1.2rem; width:2rem; height:2rem; border-radius:50%;
-    background:var(--pico); color:#3d2700; font-family:Fredoka,sans-serif; font-weight:700; display:grid; place-items:center;
+  .indice{display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.6rem}
+  /* Línea de tiempo de la clase */
+  .clase-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,340px); gap:2.4rem; align-items:start}
+  @media (max-width:960px){ .clase-grid{grid-template-columns:minmax(0,1fr)} }
+  .clase{list-style:none; margin:0; padding:0; display:grid; gap:1.1rem; position:relative; counter-reset:paso}
+  .necesitas{position:sticky; top:96px; background:#fff; border-radius:var(--radio); box-shadow:var(--sombra-chica); padding:1.5rem; overflow:hidden}
+  .necesitas::before{content:""; position:absolute; inset:0 0 auto 0; height:6px; background:linear-gradient(90deg,var(--pico),var(--verde-pasto))}
+  .necesitas h3{font-size:1.25rem; color:var(--verde-piko); margin:.2rem 0 .9rem}
+  .necesitas ul{list-style:none; margin:0 0 1rem; padding:0; display:grid; gap:.75rem}
+  .necesitas li{display:flex; gap:.7rem; align-items:flex-start; font-size:.96rem; color:var(--tinta)}
+  .necesitas li svg{flex:none; width:34px; height:34px; padding:7px; border-radius:12px; background:var(--acento-suave); fill:var(--verde-piko)}
+  .necesitas img{width:76px; height:auto; position:absolute; right:-6px; bottom:-12px}
+  .necesitas p{margin:0; font-size:.88rem; color:var(--tinta-suave); padding-right:72px; min-height:118px}
+  .clase__linea{position:absolute; left:27px; top:28px; bottom:28px; width:4px; border-radius:4px; background:linear-gradient(var(--pico),var(--verde-pasto)); transform-origin:top}
+  .paso{
+    counter-increment:paso; position:relative; margin-left:76px; background:#fff; border-radius:20px; padding:1.1rem 1.3rem;
+    box-shadow:var(--sombra-chica); transition:transform .3s cubic-bezier(.2,.8,.3,1.2), box-shadow .3s ease;
   }
-  .clase h3, .ideas h3{font-size:1.15rem; color:var(--verde-piko); margin-bottom:.4rem}
-  .clase p, .ideas p{margin:0; font-size:.96rem}
-  .quien{font-family:Fredoka,sans-serif; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--tinta-suave); display:block; margin-bottom:.3rem}
-  .ideas{display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
-  .ideas .tarjeta{border-left:5px solid var(--verde-pasto)}
-  .ej{font-family:Fredoka,sans-serif; font-weight:500; color:var(--verde-bosque); background:var(--papel); border-radius:10px; padding:.45rem .7rem; margin-top:.6rem; font-size:.98rem}
-  .ej small{display:block; font-family:"Nunito Sans",sans-serif; font-weight:400; color:var(--tinta-suave); font-size:.85rem}
-  .regla-ref{font-size:.82rem; margin-top:.5rem; display:inline-block}
-  table.tabla{width:100%; border-collapse:collapse; background:#fff; border-radius:var(--radio); overflow:hidden; box-shadow:var(--sombra-chica); font-size:.95rem}
-  .tabla th, .tabla td{padding:.6rem .8rem; text-align:left; border-bottom:1px solid var(--papel-hondo)}
-  .tabla th{font-family:Fredoka,sans-serif; font-weight:600; background:var(--verde-piko); color:var(--papel)}
-  .tabla td:first-child{font-family:Fredoka,sans-serif; font-weight:600; color:var(--verde-piko); width:3rem}
-  .tabla-caja{overflow-x:auto}
-  .consejos{display:grid; gap:.8rem; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); list-style:none; padding:0; margin:0}
-  .consejos li{background:#fff; border-radius:16px; padding:1rem 1.1rem; box-shadow:var(--sombra-chica)}
-  .consejos b{font-family:Fredoka,sans-serif; font-weight:600; color:var(--verde-piko); display:block; margin-bottom:.2rem}
-  .piko-dice{display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.5rem}
-  .piko-dice span{background:var(--nube); border-radius:999px; padding:.2rem .7rem; font-size:.88rem}
+  .paso:hover{transform:translateX(6px); box-shadow:var(--sombra-flota)}
+  .paso::before{
+    content:counter(paso); position:absolute; left:-76px; top:50%; margin-top:-29px; width:58px; height:58px; border-radius:50%;
+    background:#fff; border:4px solid var(--pico); color:var(--verde-piko); font:700 1.45rem/1 Fredoka,sans-serif;
+    display:grid; place-items:center; box-shadow:0 8px 18px rgba(10,69,48,.12); z-index:1;
+  }
+  .paso__quien{display:inline-flex; align-items:center; gap:.35rem; font:600 .72rem Fredoka,sans-serif; letter-spacing:.12em; text-transform:uppercase; color:#8A5A06; background:#FDF0D5; padding:.2rem .6rem; border-radius:999px; margin-bottom:.45rem}
+  .paso__quien svg{width:13px; height:13px; fill:currentColor}
+  .paso h3{font-size:1.2rem; color:var(--verde-piko); margin-bottom:.25rem}
+  .paso p{margin:0; color:var(--tinta)}
+  @media (max-width:560px){ .paso{margin-left:58px} .paso::before{left:-58px; width:44px; height:44px; margin-top:-22px; font-size:1.1rem} .clase__linea{left:20px} }
+
+  /* Las 10 ideas */
+  .ideas{display:grid; gap:1.1rem; grid-template-columns:repeat(auto-fill,minmax(min(270px,100%),1fr))}
+  .idea{padding-top:1.4rem; overflow:hidden}
+  .idea__n{
+    position:absolute; right:-.6rem; top:-1.4rem; font:700 6rem/1 Fredoka,sans-serif; color:var(--acento-suave);
+    z-index:0; transition:transform .5s cubic-bezier(.2,.8,.3,1.4), color .3s ease;
+  }
+  .idea:hover .idea__n{transform:rotate(-8deg) scale(1.08); color:#FBE3B3}
+  .idea h3, .idea p, .idea__ej, .idea__regla{position:relative; z-index:1}
+  .idea h3{font-size:1.18rem; color:var(--verde-piko); margin-bottom:.4rem; max-width:85%}
+  .idea p{color:var(--tinta); font-size:.97rem; margin-bottom:.8rem}
+  .idea__ej{background:var(--papel); border-radius:16px 16px 16px 4px; padding:.65rem .85rem; margin-bottom:.7rem}
+  .idea__ej span{display:block; font:600 1.08rem Fredoka,sans-serif; color:var(--verde-bosque)}
+  .idea__ej small{display:block; color:var(--tinta-suave); font-size:.86rem}
+  .idea__regla{font-size:.86rem}
+
+  /* Números */
+  .numeros{display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr); gap:2rem; align-items:start; margin-top:3rem}
+  @media (max-width:860px){ .numeros{grid-template-columns:1fr} }
+  .tabla-caja{overflow-x:auto; border-radius:var(--radio); box-shadow:var(--sombra-chica)}
+  table.tabla{width:100%; border-collapse:collapse; background:#fff; font-size:.96rem}
+  .tabla th, .tabla td{padding:.65rem .9rem; text-align:left; border-bottom:1px solid var(--papel-hondo)}
+  .tabla th{font:600 .95rem Fredoka,sans-serif; background:var(--verde-piko); color:var(--papel)}
+  .tabla td:first-child{font:700 1.15rem Fredoka,sans-serif; color:var(--verde-piko); width:3.2rem; text-align:center; background:var(--acento-suave)}
+  .tabla tbody tr{transition:background .2s ease}
+  .tabla tbody tr:hover{background:#FFFBF2}
+  .mano{background:#fff; border-radius:var(--radio); padding:1.4rem; box-shadow:var(--sombra-chica); text-align:center}
+  .mano svg{width:150px; height:150px; margin:0 auto .6rem; display:block}
+  .mano b{font:600 1.6rem Fredoka,sans-serif; color:var(--verde-piko); display:block}
+  .mano p{margin:.3rem 0 0; color:var(--tinta); font-size:.95rem}
+
+  /* Consejos */
+  .consejos{display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(min(290px,100%),1fr)); list-style:none; padding:0; margin:0}
+  .consejo h3{font-size:1.12rem; color:var(--verde-piko); margin-bottom:.35rem}
+  .consejo p{margin:0; color:var(--tinta); font-size:.97rem}
+  .piko-dice{display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.7rem}
+  .piko-dice span{background:var(--nube); border-radius:14px 14px 14px 4px; padding:.3rem .7rem; font-size:.88rem; color:#0B4D72}
 </style>
 </head>
-<body class="pagina">
+<body class="pagina" data-pagina="docentes" data-raiz="../">
 
 <div id="nav" data-pagina="docentes" data-raiz="../"></div>
 
-<header class="cabeza contenedor">
+<header class="cabeza">
+  <div class="cabeza__escena" data-escena></div>
   <div class="cabeza__grid">
-    <div>
+    <div class="cabeza__texto">
       <p class="etiqueta">Para docentes</p>
       <h1>Una clase con Piko, <em>sin internet</em></h1>
       <p class="cabeza__bajada">Tu teléfono abre la sala, los de tus estudiantes se conectan a su wifi y todos juegan la misma ronda. Acá está cómo, y lo que conviene saber del miskito para acompañarla.</p>
       <nav class="indice" aria-label="En esta página">
-        <a class="btn btn--linea" href="#clase">Paso a paso</a>
-        <a class="btn btn--linea" href="#miskito">El miskito en 10 ideas</a>
-        <a class="btn btn--linea" href="#consejos">Consejos</a>
+        <a class="btn btn--solido" href="#clase" data-entra>Paso a paso</a>
+        <a class="btn btn--linea" href="#miskito" data-entra>El miskito en 10 ideas</a>
+        <a class="btn btn--linea" href="#consejos" data-entra>Consejos</a>
       </nav>
     </div>
-    <img class="cabeza__piko" src="../assets/img/piko.svg" alt="" width="150" height="246">
+    <img class="cabeza__piko" src="../assets/img/piko.svg" alt="" width="178" height="292">
   </div>
+  <svg class="cabeza__ola" viewBox="0 0 1440 56" preserveAspectRatio="none" aria-hidden="true"><path d="M0 56V30C240 6 480 0 720 14s480 34 720 22v20z"/></svg>
 </header>
 
 <main>
   <section class="bloque contenedor" id="clase">
-    <h2>Paso a paso</h2>
-    <p class="bloque__bajada">Lo que necesitás: tu teléfono Android con Piko, y un teléfono con Piko por estudiante (o por pareja). No hace falta tener datos ni señal.</p>
-    <div class="clase">
-      <div class="tarjeta"><span class="quien">Vos</span><h3>Encendé el punto de acceso</h3><p>En los ajustes de tu teléfono, el <b>hotspot</b> o «punto de acceso». Es la red del aula.</p></div>
-      <div class="tarjeta"><span class="quien">Vos</span><h3>Cargá tu lista</h3><p>En Piko, «Soy el maestro». La primera vez cargás la lista de la clase, o probás con la de ejemplo.</p></div>
-      <div class="tarjeta"><span class="quien">Vos</span><h3>Abrí la sala</h3><p>«Abrir la sala». Piko muestra el <b>código de la clase</b> y una dirección por si algún teléfono no la encuentra solo.</p></div>
-      <div class="tarjeta"><span class="quien">Estudiantes</span><h3>Se conectan y entran</h3><p>Se conectan a tu wifi, tocan «Unirme a la clase» y eligen su nombre de la lista.</p></div>
-      <div class="tarjeta"><span class="quien">Vos</span><h3>Empezá una ronda</h3><p>Todos reciben los mismos ejercicios. En tu pantalla ves quién está conectado y cómo va la clase.</p></div>
-      <div class="tarjeta"><span class="quien">Al final</span><h3>Terminá y repasen</h3><p>«Terminar la ronda» y, cuando acaben, «Cerrar la sala». Buen momento para repasar en voz alta las palabras que más costaron.</p></div>
+    <div class="bloque__cabeza" data-aparece>
+      <p class="etiqueta">La clase</p>
+      <h2>Paso a paso, <em>en seis toques</em></h2>
+      <p class="bloque__bajada">Seis toques entre tu teléfono y los de la clase, y todos juegan la misma ronda.</p>
     </div>
-    <p class="aviso" style="margin-top:1.4rem">¿Sin teléfonos para todos? Cada estudiante puede practicar por su cuenta con «Practicar sola», o desde una computadora en <a href="../probar/">Probar Piko</a>.</p>
+    <div class="clase-grid">
+    <ol class="clase" data-aparece="grupo">
+      <li class="paso"><span class="paso__quien"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm-8 10c0-4.4 3.6-7 8-7s8 2.6 8 7H4z"/></svg>Vos</span><h3>Encendé el punto de acceso</h3><p>En los ajustes de tu teléfono, el <b>hotspot</b> o «punto de acceso». Es la red del aula.</p></li>
+      <li class="paso"><span class="paso__quien"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm-8 10c0-4.4 3.6-7 8-7s8 2.6 8 7H4z"/></svg>Vos</span><h3>Cargá tu lista</h3><p>En Piko, «Soy el maestro». La primera vez cargás la lista de la clase, o probás con la de ejemplo.</p></li>
+      <li class="paso"><span class="paso__quien"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm-8 10c0-4.4 3.6-7 8-7s8 2.6 8 7H4z"/></svg>Vos</span><h3>Abrí la sala</h3><p>«Abrir la sala». Piko muestra el <b>código de la clase</b> y una dirección por si algún teléfono no la encuentra solo.</p></li>
+      <li class="paso"><span class="paso__quien"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm8 0a3 3 0 1 1 0-6 3 3 0 0 1 0 6zM1 20c0-3.3 3.1-6 7-6s7 2.7 7 6H1zm15 0c0-2-.8-3.8-2.1-5.1.7-.2 1.4-.3 2.1-.3 3.3 0 6 2.4 6 5.4H16z"/></svg>Estudiantes</span><h3>Se conectan y entran</h3><p>Se conectan a tu wifi, tocan «Unirme a la clase» y eligen su nombre de la lista.</p></li>
+      <li class="paso"><span class="paso__quien"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm-8 10c0-4.4 3.6-7 8-7s8 2.6 8 7H4z"/></svg>Vos</span><h3>Empezá una ronda</h3><p>Todos reciben los mismos ejercicios. En tu pantalla ves quién está conectado y cómo va la clase.</p></li>
+      <li class="paso"><span class="paso__quien"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 16.2-3.5-3.5L4 14.2l5 5 11-11-1.4-1.4z"/></svg>Al final</span><h3>Terminá y repasen</h3><p>«Terminar la ronda» y, cuando acaben, «Cerrar la sala». Buen momento para repasar en voz alta las palabras que más costaron.</p></li>
+    </ol>
+    <aside class="necesitas" data-aparece aria-label="Lo que necesitás">
+      <h3>Lo que necesitás</h3>
+      <ul>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 3v13h10V5H7z"/></svg><span><b>Tu teléfono Android</b> con Piko instalada. Abre la sala y hace de wifi.</span></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm8 0a3 3 0 1 1 0-6 3 3 0 0 1 0 6zM1 20c0-3.3 3.1-6 7-6s7 2.7 7 6H1zm15 0c0-2-.8-3.8-2.1-5.1.7-.2 1.4-.3 2.1-.3 3.3 0 6 2.4 6 5.4H16z"/></svg><span><b>Un teléfono por estudiante</b>, o uno por pareja.</span></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 8a15 15 0 0 1 20 0l-2 2a12 12 0 0 0-16 0L2 8zm4 4a9 9 0 0 1 12 0l-2 2a6 6 0 0 0-8 0l-2-2zm4 4a3 3 0 0 1 4 0l-2 3-2-3zM3 3l18 18-1.4 1.4L1.6 4.4z"/></svg><span><b>Nada de internet.</b> Ni datos ni señal: todo pasa por la wifi de tu teléfono.</span></li>
+      </ul>
+      <p>¿Sin teléfonos para todos? Cada estudiante puede practicar por su cuenta con «Practicar sola», o en <a href="../probar/">Probar Piko</a>.</p>
+      <img src="../assets/img/piko.svg" alt="" width="96" height="158" loading="lazy">
+    </aside>
+    </div>
   </section>
 
   <section class="bloque bloque--hondo" id="miskito">
     <div class="contenedor">
-      <h2>El miskito en 10 ideas</h2>
-      <p class="bloque__bajada">Lo que encontramos en lo que escribieron dos hablantes de Raiti (Río Coco) y en dos diccionarios publicados. Cada idea lleva su regla en la <a href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/blob/main/diccionario/miskito/gramatica.md" target="_blank" rel="noopener">gramática</a>, con la evidencia y qué tan segura es. Si en tu comunidad se dice distinto, tu forma también vale.</p>
-      <div class="ideas">
-        <div class="tarjeta"><h3>1 · Tres vocales: a, i, u</h3><p>Ninguna palabra miskita lleva e ni o; sólo las que vienen de otra lengua.</p><div class="ej">kumi · tuktan · yapti<small>uno · niño · mamá</small></div><a class="regla-ref" href="../diccionario/?q=tuktan">S1 · ver en el diccionario</a></div>
-        <div class="tarjeta"><h3>2 · El verbo va al final</h3><p>Sujeto, objeto, verbo.</p><div class="ej">Yul plun pisa.<small>perro · comida · come: «el perro come»</small></div><a class="regla-ref" href="../diccionario/?q=pisa">O1</a></div>
-        <div class="tarjeta"><h3>3 · «A la casa» es «casa a»</h3><p>En lugar de preposiciones, posposiciones: van después.</p><div class="ej">utla ra · skul ra<small>a la casa · a la escuela</small></div><a class="regla-ref" href="../diccionario/?q=ra">O2</a></div>
-        <div class="tarjeta"><h3>4 · La persona va pegada al verbo</h3><p>-sna es yo, -sma es vos, -sa es él o ella. Por eso «yo» se puede omitir.</p><div class="ej">laiksna · iwisma · pisa<small>me gusta · vivís · come</small></div><a class="regla-ref" href="../diccionario/?q=laiksna">M2 · O5</a></div>
-        <div class="tarjeta"><h3>5 · «Estar» no tiene raíz</h3><p>Es sólo la terminación.</p><div class="ej">sna · sma · sa<small>estoy · estás · está</small></div><a class="regla-ref" href="../diccionario/?q=sna">M3</a></div>
-        <div class="tarjeta"><h3>6 · «Mi» se pega a la palabra</h3><p>La a final se vuelve i y se suma <i>ki</i>.</p><div class="ej">kuka → kuki ki · mama → mamiki<small>abuela → mi abuela · mamá → mi mamá</small></div><a class="regla-ref" href="../diccionario/?q=mamiki">M4</a></div>
-        <div class="tarjeta"><h3>7 · La familia se nombra con dueño</h3><p>Para «mamá» se suele decir «mi mamá». Lo mismo con partes del cuerpo.</p><div class="ej">yaptiki · papiki<small>mi mamá · mi papá</small></div><a class="regla-ref" href="../diccionario/?q=papiki">L9</a></div>
-        <div class="tarjeta"><h3>8 · Dos maneras de contar del 6 al 10</h3><p>Desde el seis o desde el cinco. Las dos son reales: mirá la tabla de abajo.</p><div class="ej">matsip = cinco<small>«mano completa»</small></div><a class="regla-ref" href="../diccionario/?q=matsip">N1 · N3</a></div>
-        <div class="tarjeta"><h3>9 · Palabras que vinieron de afuera</h3><p>El inglés y el español dejaron huella en la escuela y en las comidas, no en el cuerpo ni en los números.</p><div class="ej">skul · tingki<small>escuela (school) · gracias (thank ye)</small></div><a class="regla-ref" href="../diccionario/?q=skul">L1</a></div>
-        <div class="tarjeta"><h3>10 · Las palabras no tienen género</h3><p>Cuando hace falta, se agrega <i>waitna</i> (hombre) o <i>mairin</i> (mujer).</p><div class="ej">tuktan waitna · tuktan mairin<small>niño · niña</small></div><a class="regla-ref" href="../diccionario/?q=mairin">L2</a></div>
+      <div class="bloque__cabeza" data-aparece>
+        <p class="etiqueta">La lengua</p>
+        <h2>El miskito <em>en 10 ideas</em></h2>
+        <p class="bloque__bajada">Lo que encontramos en lo que escribieron dos hablantes de Raiti (Río Coco) y en dos diccionarios publicados. Si en tu comunidad se dice distinto, tu forma también vale.</p>
+      </div>
+      <div class="ideas" data-aparece="grupo">
+        <article class="idea tarjeta tarjeta--viva"><span class="idea__n">1</span><h3>Tres vocales: a, i, u</h3><p>Ninguna palabra miskita lleva e ni o; sólo las que vienen de otra lengua.</p><div class="idea__ej"><span lang="miq">kumi · tuktan · yapti</span><small>uno · niño · mamá</small></div><a class="idea__regla" href="../diccionario/?q=tuktan">Ver en el diccionario →</a></article>
+        <article class="idea tarjeta tarjeta--viva"><span class="idea__n">2</span><h3>El verbo va al final</h3><p>Sujeto, objeto, verbo.</p><div class="idea__ej"><span lang="miq">Yul plun pisa.</span><small>perro · comida · come: «el perro come»</small></div><a class="idea__regla" href="../diccionario/?q=pisa">Ver en el diccionario →</a></article>
+        <article class="idea tarjeta tarjeta--viva"><span class="idea__n">3</span><h3>«A la casa» es «casa a»</h3><p>En lugar de preposiciones, posposiciones: van después.</p><div class="idea__ej"><span lang="miq">utla ra · skul ra</span><small>a la casa · a la escuela</small></div><a class="idea__regla" href="../diccionario/?q=ra">Ver en el diccionario →</a></article>
+        <article class="idea tarjeta tarjeta--viva"><span class="idea__n">4</span><h3>La persona va pegada al verbo</h3><p>-sna es yo, -sma es vos, -sa es él o ella. Por eso «yo» se puede omitir.</p><div class="idea__ej"><span lang="miq">laiksna · iwisma · pisa</span><small>me gusta · vivís · come</small></div><a class="idea__regla" href="../diccionario/?q=laiksna">Ver en el diccionario →</a></article>
+        <article class="idea tarjeta tarjeta--viva"><span class="idea__n">5</span><h3>«Estar» no tiene raíz</h3><p>Es sólo la terminación.</p><div class="idea__ej"><span lang="miq">sna · sma · sa</span><small>estoy · estás · está</small></div><a class="idea__regla" href="../diccionario/?q=sna">Ver en el diccionario →</a></article>
+        <article class="idea tarjeta tarjeta--viva"><span class="idea__n">6</span><h3>«Mi» se pega a la palabra</h3><p>La a final se vuelve i y se suma <i>ki</i>.</p><div class="idea__ej"><span lang="miq">kuka → kuki ki · mama → mamiki</span><small>abuela → mi abuela · mamá → mi mamá</small></div><a class="idea__regla" href="../diccionario/?q=mamiki">Ver en el diccionario →</a></article>
+        <article class="idea tarjeta tarjeta--viva"><span class="idea__n">7</span><h3>La familia se nombra con dueño</h3><p>Para «mamá» se suele decir «mi mamá». Lo mismo con partes del cuerpo.</p><div class="idea__ej"><span lang="miq">yaptiki · papiki</span><small>mi mamá · mi papá</small></div><a class="idea__regla" href="../diccionario/?q=papiki">Ver en el diccionario →</a></article>
+        <article class="idea tarjeta tarjeta--viva"><span class="idea__n">8</span><h3>Dos maneras de contar del 6 al 10</h3><p>Desde el seis o desde el cinco. Las dos son reales: mirá la tabla de abajo.</p><div class="idea__ej"><span lang="miq">matsip = cinco</span><small>«mano completa»</small></div><a class="idea__regla" href="../diccionario/?q=matsip">Ver en el diccionario →</a></article>
+        <article class="idea tarjeta tarjeta--viva"><span class="idea__n">9</span><h3>Palabras que vinieron de afuera</h3><p>El inglés y el español dejaron huella en la escuela y en las comidas, no en el cuerpo ni en los números.</p><div class="idea__ej"><span lang="miq">skul · tingki</span><small>escuela (school) · gracias (thank ye)</small></div><a class="idea__regla" href="../diccionario/?q=skul">Ver en el diccionario →</a></article>
+        <article class="idea tarjeta tarjeta--viva"><span class="idea__n">10</span><h3>Las palabras no tienen género</h3><p>Cuando hace falta, se agrega <i>waitna</i> (hombre) o <i>mairin</i> (mujer).</p><div class="idea__ej"><span lang="miq">tuktan waitna · tuktan mairin</span><small>niño · niña</small></div><a class="idea__regla" href="../diccionario/?q=mairin">Ver en el diccionario →</a></article>
       </div>
 
-      <h3 style="margin:2.2rem 0 .8rem; font-size:1.35rem">Los números, en las dos maneras</h3>
-      <div class="tabla-caja">
-        <table class="tabla">
+      <div class="numeros">
+        <div data-aparece>
+          <h3 style="margin:0 0 1rem; font-size:1.45rem">Los números, en las dos maneras</h3>
+          <div class="tabla-caja">
+            <table class="tabla">
           <thead><tr><th></th><th>Desde el seis (Teacher Smith)</th><th>Desde el cinco (Tangni)</th></tr></thead>
           <tbody>
             <tr><td>1</td><td colspan="2">kumi</td></tr>
@@ -174,26 +237,65 @@
             <tr><td>10</td><td>mata walsip (manos dos completas)</td><td>matsip pura matsip (5 + 5)</td></tr>
           </tbody>
         </table>
+          </div>
+          <p class="bloque__bajada" style="margin-top:.9rem; font-size:.95rem">Dentro de un número, «uno» es <i>kum</i>, no <i>kumi</i>. Piko enseña por ahora la manera desde el seis, la de los materiales publicados; qué sistema enseñar lo decide la comunidad con sus docentes.</p>
+        </div>
+        <div class="mano" data-aparece>
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="56" fill="#EEF6DC"/>
+            <g fill="#E8A429" stroke="#B9860F" stroke-width="2" stroke-linejoin="round">
+              <rect class="dedo" x="30" y="30" width="11" height="34" rx="5.5"/>
+              <rect class="dedo" x="43" y="20" width="11" height="44" rx="5.5"/>
+              <rect class="dedo" x="56" y="18" width="11" height="46" rx="5.5"/>
+              <rect class="dedo" x="69" y="24" width="11" height="40" rx="5.5"/>
+              <rect class="dedo" x="80" y="52" width="11" height="28" rx="5.5" transform="rotate(-38 85 66)"/>
+              <path d="M30 58h50v20a22 22 0 0 1-22 22h-6a22 22 0 0 1-22-22V58z"/>
+            </g>
+          </svg>
+          <b lang="miq">matsip</b>
+          <p>Cinco parece ser «mano completa»: <i>mat</i> (mano) + <i>sip</i> (completa). Diez, para Teacher Smith, es <i>mata walsip</i>: «manos dos completas».</p>
+        </div>
       </div>
-      <p class="bloque__bajada" style="margin-top:.8rem; font-size:.95rem">Dentro de un número, «uno» es <i>kum</i>, no <i>kumi</i>. Piko enseña por ahora la manera desde el seis, la de los materiales publicados; qué sistema enseñar lo decide la comunidad con sus docentes.</p>
     </div>
   </section>
 
   <section class="bloque contenedor" id="consejos">
-    <h2>Consejos para el aula</h2>
-    <ul class="consejos">
-      <li><b>Las variantes no son errores.</b> <i>Tinki</i> y <i>tingki</i>, <i>yapti</i> y <i>mama</i>: en el miskito conviven formas de distintas zonas y generaciones. Si un estudiante dice otra, pregúntenle de dónde la aprendió.</li>
-      <li><b>Piko nunca dice «mal».</b> Cuando alguien se equivoca, reconoce el intento y muestra la respuesta. Vale la pena hacer lo mismo en voz alta.
+    <div class="bloque__cabeza" data-aparece>
+      <p class="etiqueta">En el aula</p>
+      <h2>Consejos <em>que funcionan</em></h2>
+    </div>
+    <ul class="consejos" data-aparece="grupo">
+      <li class="tarjeta tarjeta--viva consejo"><span class="icono-burbuja"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></span>
+        <h3>Las variantes no son errores</h3><p><i>Tinki</i> y <i>tingki</i>, <i>yapti</i> y <i>mama</i>: en el miskito conviven formas de distintas zonas y generaciones. Si un estudiante dice otra, pregúntenle de dónde la aprendió. <a href="../diccionario/#etiquetas">Mirá las variantes en el diccionario</a>.</p></li>
+      <li class="tarjeta tarjeta--viva consejo"><span class="icono-burbuja"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3V4zm4 5v2h8V9H8z"/></svg></span>
+        <h3>Piko nunca dice «mal»</h3><p>Cuando alguien se equivoca, reconoce el intento y muestra la respuesta. Vale la pena hacer lo mismo en voz alta.</p>
         <span class="piko-dice"><span>Casi. Mirá cómo es:</span><span>Buen intento. Es así:</span><span>La próxima sale.</span></span></li>
-      <li><b>La voz es provisional.</b> El miskito suena con una voz en español, <b>para mientras</b> conseguimos grabaciones. Tu pronunciación vale más que la del teléfono: decí la palabra vos también.</li>
-      <li><b>Rondas cortas.</b> Mejor dos rondas de cinco minutos con una charla en el medio que una larga.</li>
-      <li><b>En miskito, también español.</b> Con la app en «Miskitu», un hablante de miskito practica español desde su lengua.</li>
-      <li><b>¿Algo no se dice así en tu comunidad?</b> Avisanos en <a href="../aporta/">Aportá tu lengua</a>. Así se corrigen las palabras «en revisión».</li>
+      <li class="tarjeta tarjeta--viva consejo"><span class="icono-burbuja"><svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V21h2v-3.1A7 7 0 0 0 19 11h-2z"/></svg></span>
+        <h3>Tu voz vale más</h3><p>El miskito suena con una voz en español, <b>para mientras</b> conseguimos grabaciones. Tu pronunciación vale más que la del teléfono: decí la palabra vos también.</p></li>
+      <li class="tarjeta tarjeta--viva consejo"><span class="icono-burbuja"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm1 5h-2v6l5 3 1-1.7-4-2.3V7z"/></svg></span>
+        <h3>Rondas cortas</h3><p>Mejor dos rondas de cinco minutos con una charla en el medio que una larga.</p></li>
+      <li class="tarjeta tarjeta--viva consejo"><span class="icono-burbuja"><svg viewBox="0 0 24 24"><path d="M7 7h11l-3-3 1.4-1.4L21.8 8l-5.4 5.4L15 12l3-3H7V7zm10 10H6l3 3-1.4 1.4L2.2 16l5.4-5.4L9 12l-3 3h11v2z"/></svg></span>
+        <h3>En miskito, también español</h3><p>Con la app en «Miskitu», un hablante de miskito practica español desde su lengua.</p></li>
+      <li class="tarjeta tarjeta--viva consejo"><span class="icono-burbuja"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.5-9.2C1 8.3 3.2 5 6.6 5c2 0 3.5 1.1 4.4 2.5h2C13.9 6.1 15.4 5 17.4 5c3.4 0 5.6 3.3 4.1 6.8C19.5 16.4 12 21 12 21z"/></svg></span>
+        <h3>¿Se dice distinto en tu comunidad?</h3><p>Avisanos en <a href="../aporta/">Aportá tu lengua</a>: así el diccionario guarda también tu forma.</p></li>
     </ul>
   </section>
 </main>
 
 <div id="pie"></div>
 <script src="../assets/js/nav.js"></script>
+<script src="../assets/js/gsap.min.js" defer></script>
+<script src="../assets/js/ScrollTrigger.min.js" defer></script>
+<script src="../assets/js/animaciones.js" defer></script>
+<script>
+  // La línea de la clase se dibuja al bajar, y los dedos de la mano cuentan hasta cinco.
+  document.addEventListener("DOMContentLoaded", function () {
+    var clase = document.querySelector(".clase");
+    if (clase) clase.insertAdjacentHTML("afterbegin", '<span class="clase__linea" aria-hidden="true"></span>');
+    if (!window.PikoAnim || !PikoAnim.animar) return;
+    gsap.from(".clase__linea", { scaleY: 0, ease: "none", scrollTrigger: { trigger: ".clase", start: "top 75%", end: "bottom 60%", scrub: .6 } });
+    gsap.from(".mano .dedo", { scaleY: 0, transformOrigin: "50% 100%", duration: .5, stagger: .18, ease: "back.out(2)", scrollTrigger: { trigger: ".mano", start: "top 85%", once: true } });
+  });
+</script>
 </body>
 </html>

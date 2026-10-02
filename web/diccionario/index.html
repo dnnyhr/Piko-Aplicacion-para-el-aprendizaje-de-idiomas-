@@ -13,8 +13,8 @@
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="Equipo MugiWare">
 <!-- Íconos -->
-<link rel="icon" type="image/png" href="../assets/favicon.png">
-<link rel="icon" href="../assets/favicon.ico" sizes="any">
+<link rel="icon" href="../favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" href="../assets/favicon.png" sizes="192x192">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="manifest" href="../site.webmanifest">
 <!-- Al compartir (Open Graph y X/Twitter) -->
@@ -74,86 +74,168 @@
 <link rel="stylesheet" href="../assets/css/nav.css">
 <link rel="stylesheet" href="../assets/css/sitio.css">
 <style>
-  .buscador{display:grid; gap:.9rem; position:sticky; top:58px; z-index:5; background:var(--papel); padding:.8rem 0 1rem}
-  .buscador__campo{position:relative}
-  .buscador__campo svg{position:absolute; left:1rem; top:50%; transform:translateY(-50%); width:22px; height:22px; fill:var(--verde-hoja)}
+  /* Panel de búsqueda: flota sobre el borde del paisaje y acompaña al bajar */
+  .panel{
+    position:sticky; top:72px; z-index:20; margin-top:-2.6rem;
+    background:rgba(255,255,255,.94); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border-radius:26px; box-shadow:var(--sombra); padding:1rem 1.1rem .8rem; display:grid; grid-template-columns:minmax(0,1fr); gap:.7rem;
+  }
+  .buscador{position:relative; display:flex; align-items:center; gap:.6rem}
+  .buscador > svg{position:absolute; left:1.05rem; width:24px; height:24px; fill:var(--verde-hoja); pointer-events:none}
   .buscador input{
-    width:100%; font:inherit; font-size:1.1rem; padding:.9rem 1rem .9rem 3rem;
-    border-radius:999px; border:2px solid rgba(15,93,61,.18); background:#fff; color:var(--grafito);
+    flex:1; min-width:0; font:inherit; font-size:1.12rem; padding:.95rem 1rem .95rem 3.2rem;
+    border-radius:999px; border:2px solid rgba(15,93,61,.14); background:var(--papel); color:var(--grafito);
+    transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
   }
-  .buscador input:focus{outline:none; border-color:var(--verde-piko); box-shadow:0 0 0 4px rgba(151,193,55,.25)}
-  .filtros{display:flex; gap:.4rem; overflow-x:auto; padding-bottom:.2rem; scrollbar-width:thin}
+  .buscador input:focus{outline:none; background:#fff; border-color:var(--verde-piko); box-shadow:0 0 0 5px rgba(151,193,55,.28)}
+  .azar{
+    flex:none; display:inline-flex; align-items:center; gap:.45rem; cursor:pointer;
+    font:600 .95rem Fredoka,sans-serif; color:var(--verde-piko); background:var(--acento-suave);
+    border:2px solid transparent; border-radius:999px; padding:.8rem 1.1rem; transition:transform .2s ease, background .2s ease;
+  }
+  .azar svg{width:20px; height:20px; fill:currentColor; transition:transform .5s cubic-bezier(.2,.8,.3,1.4)}
+  .azar:hover{background:#E2F0C4; transform:translateY(-1px)}
+  .azar:hover svg{transform:rotate(200deg)}
+  .filtros{display:flex; gap:.4rem; overflow-x:auto; padding:.15rem .1rem .35rem; scrollbar-width:thin; align-items:center}
+  .filtros__nombre{flex:none; font:600 .74rem Fredoka,sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--tinta-suave); margin-right:.2rem}
   .filtro{
-    flex:none; font-family:Fredoka,sans-serif; font-weight:500; font-size:.88rem; cursor:pointer;
-    background:#fff; color:var(--verde-piko); border:2px solid rgba(15,93,61,.14); border-radius:999px; padding:.3rem .85rem;
+    flex:none; display:inline-flex; align-items:center; gap:.35rem; cursor:pointer;
+    font:500 .88rem Fredoka,sans-serif; background:#fff; color:var(--verde-piko);
+    border:2px solid rgba(15,93,61,.12); border-radius:999px; padding:.32rem .85rem;
+    transition:background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
   }
+  .filtro svg{width:14px; height:14px; fill:currentColor}
+  .filtro:hover{transform:translateY(-1px); border-color:rgba(15,93,61,.3)}
   .filtro[aria-pressed="true"]{background:var(--verde-piko); color:var(--papel); border-color:var(--verde-piko)}
-  .filtro--revision[aria-pressed="true"]{background:var(--pico); border-color:var(--pico); color:#3d2700}
-  .cuenta{font-size:.92rem; color:var(--tinta-suave)}
+  .filtro small{opacity:.7; font-size:.78em}
+  .cuenta{font-size:.9rem; color:var(--tinta-suave); padding:0 .3rem}
+  .cuenta b{color:var(--verde-piko)}
+  @media (max-width:820px){ .panel{position:relative; top:auto; margin-top:-1.6rem} .azar span{display:none} }
 
-  .palabras{display:grid; gap:.9rem; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); align-items:start}
-  .palabra{background:#fff; border-radius:var(--radio); box-shadow:var(--sombra-chica); padding:1.1rem 1.2rem; border-top:5px solid var(--verde-pasto); scroll-margin-top:190px}
-  .palabra--revision{border-top-color:var(--pico)}
-  .palabra--publicada{border-top-color:#9C88C9}
-  .palabra:target{box-shadow:0 0 0 3px var(--pico), var(--sombra-chica)}
-  .palabra__fila{display:flex; align-items:flex-start; gap:.6rem}
-  .palabra__forma{font-family:Fredoka,sans-serif; font-weight:600; font-size:1.5rem; color:var(--verde-piko); line-height:1.15; flex:1; word-break:break-word}
-  .palabra__es{font-size:1.05rem; margin:.25rem 0 .6rem}
-  .palabra__insignias{display:flex; flex-wrap:wrap; gap:.35rem}
-  .escuchar{
-    flex:none; width:42px; height:42px; border-radius:50%; border:none; cursor:pointer;
-    background:var(--cielo); display:grid; place-items:center; box-shadow:0 6px 14px rgba(96,197,250,.45);
+  /* Palabra del día */
+  .destacada{
+    margin:2rem 0 .6rem; border-radius:calc(var(--radio) + 8px); overflow:hidden; position:relative;
+    background:radial-gradient(130% 160% at 100% 0%, #2A8A5C 0%, var(--verde-piko) 45%, var(--verde-hondo) 100%);
+    color:#E6F2EB; padding:clamp(1.5rem,3.5vw,2.4rem) clamp(1.4rem,4vw,2.8rem);
+    display:grid; grid-template-columns:minmax(0,1fr) auto; gap:1.2rem 2rem; align-items:center; box-shadow:var(--sombra);
   }
-  .escuchar svg{width:22px; height:22px; fill:#fff}
-  .escuchar:focus-visible{outline:3px solid var(--pico); outline-offset:2px}
-  .palabra details{margin-top:.8rem; border-top:1px dashed rgba(15,93,61,.18); padding-top:.6rem}
-  .palabra summary{cursor:pointer; font-family:Fredoka,sans-serif; font-weight:500; color:var(--verde-bosque); font-size:.92rem}
-  .detalle{display:grid; gap:.55rem; margin-top:.6rem; font-size:.93rem}
-  .detalle dt{font-family:Fredoka,sans-serif; font-weight:600; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--tinta-suave)}
-  .detalle dd{margin:0}
-  .glosa{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.85rem; background:var(--papel); border-radius:10px; padding:.45rem .6rem; display:grid; gap:.1rem}
-  .regla{display:inline-block; margin:0 .3rem .3rem 0; font-size:.85rem}
-  .revision{background:#FDF0D5; border-radius:12px; padding:.6rem .75rem; font-size:.9rem; color:#5C3D02; margin-top:.7rem}
+  .destacada::before{content:""; position:absolute; width:300px; height:300px; right:-60px; bottom:-150px; border-radius:50%; background:radial-gradient(circle,rgba(151,193,55,.35),transparent 65%)}
+  .destacada__etiqueta{font:600 .78rem Fredoka,sans-serif; letter-spacing:.16em; text-transform:uppercase; color:var(--verde-pasto); margin:0 0 .5rem}
+  .destacada__forma{font:600 clamp(2.6rem,7vw,4.4rem)/1 Fredoka,sans-serif; color:#fff; margin:0 0 .4rem; letter-spacing:-.01em}
+  .destacada__es{font-size:1.25rem; margin:0 0 .9rem; color:#DCEBE2}
+  .destacada .palabra__insignias{margin-bottom:0}
+  .destacada__acciones{display:flex; flex-direction:column; align-items:center; gap:.7rem; position:relative}
+  .destacada .escuchar{width:76px; height:76px}
+  .destacada .escuchar svg{width:36px; height:36px}
+  .destacada a{color:#fff; font-size:.92rem}
+  @media (max-width:620px){ .destacada{grid-template-columns:1fr} .destacada__acciones{flex-direction:row; justify-content:flex-start} }
+
+  /* Las palabras */
+  .palabras{display:grid; gap:1.1rem; grid-template-columns:repeat(auto-fill,minmax(min(290px,100%),1fr)); align-items:start; margin-top:1.4rem}
+  .palabra{
+    --tema:var(--verde-pasto);
+    background:#fff; border-radius:var(--radio); box-shadow:var(--sombra-chica); padding:1.05rem 1.2rem 1.1rem;
+    position:relative; overflow:hidden; scroll-margin-top:280px; min-width:0;
+    transition:transform .3s cubic-bezier(.2,.8,.3,1.2), box-shadow .3s ease;
+  }
+  .palabra::before{content:""; position:absolute; left:0; right:0; top:0; height:6px; background:var(--tema)}
+  .palabra:hover{transform:translateY(-4px); box-shadow:var(--sombra-flota)}
+  .palabra--revision{background:linear-gradient(180deg,#FFFBF2,#fff 40%)}
+  .palabra:target,.palabra--brilla{box-shadow:0 0 0 4px var(--pico), var(--sombra-flota)}
+  .palabra__tope{display:flex; justify-content:space-between; align-items:center; gap:.5rem; margin:.25rem 0 .55rem}
+  .palabra__tema{display:inline-flex; align-items:center; gap:.35rem; font:600 .74rem Fredoka,sans-serif; letter-spacing:.1em; text-transform:uppercase; color:var(--tinta-suave)}
+  .palabra__tema i{width:10px; height:10px; border-radius:50%; background:var(--tema); display:inline-block}
+  .palabra__fila{display:flex; align-items:flex-start; gap:.7rem}
+  .palabra__forma{font:600 1.6rem/1.12 Fredoka,sans-serif; color:var(--verde-piko); flex:1; word-break:break-word; margin:0}
+  .palabra__es{font-size:1.06rem; margin:.3rem 0 .75rem; color:var(--tinta)}
+  .palabra__insignias{display:flex; flex-wrap:wrap; gap:.35rem; margin-bottom:.2rem}
+  .escuchar{
+    flex:none; width:46px; height:46px; border-radius:50%; border:none; cursor:pointer;
+    background:var(--cielo); display:grid; place-items:center; box-shadow:0 8px 16px rgba(96,197,250,.45);
+    transition:transform .2s cubic-bezier(.2,.8,.3,1.5);
+  }
+  .escuchar svg{width:23px; height:23px; fill:#fff}
+  .escuchar:hover{transform:scale(1.1) rotate(-6deg)}
+  .escuchar:active{transform:scale(.94)}
+  .escuchar--sonando{animation:latido 1s ease-out infinite}
+  .palabra details{margin-top:.85rem; border-top:1px dashed rgba(15,93,61,.18); padding-top:.7rem}
+  .palabra summary{cursor:pointer; font:500 .93rem Fredoka,sans-serif; color:var(--verde-bosque); list-style:none; display:flex; align-items:center; gap:.4rem}
+  .palabra summary::-webkit-details-marker{display:none}
+  .palabra summary::before{content:""; width:8px; height:8px; border-right:2.5px solid currentColor; border-bottom:2.5px solid currentColor; transform:rotate(-45deg); transition:transform .25s ease; margin-right:.2rem}
+  .palabra details[open] summary::before{transform:rotate(45deg)}
+  .detalle{display:grid; gap:.65rem; margin:.7rem 0 0; font-size:.93rem}
+  .detalle dt{font:600 .74rem Fredoka,sans-serif; letter-spacing:.09em; text-transform:uppercase; color:var(--tinta-suave)}
+  .detalle dd{margin:.1rem 0 0}
+  .glosa{overflow-wrap:anywhere; font:500 .86rem ui-monospace,SFMono-Regular,Menlo,monospace; background:var(--papel); border-radius:10px; padding:.5rem .65rem; display:grid; gap:.1rem}
+  .formas{display:flex; flex-wrap:wrap; gap:.35rem}
+  .forma-chip{background:var(--papel); border-radius:10px; padding:.25rem .55rem; font-size:.88rem}
+  .forma-chip i{font-style:normal; font-family:Fredoka,sans-serif; font-weight:600; color:var(--verde-piko)}
+  .forma-chip small{color:var(--tinta-suave)}
+  .regla{margin:0 .3rem .3rem 0; white-space:normal}
+  .revision{background:#FDF0D5; border-radius:14px; padding:.65rem .8rem; font-size:.9rem; color:#5C3D02; margin:.8rem 0 0}
+  .copiar-enlace{font-size:.82rem; display:inline-flex; align-items:center; gap:.3rem; margin-top:.7rem}
+  .vacio{grid-column:1/-1; text-align:center; color:var(--tinta-suave); padding:3rem 1rem}
+  .vacio img{width:110px; margin:0 auto 1rem; display:block; opacity:.9}
   .estatico{grid-column:1/-1; columns:3 240px; list-style:none; padding:0; margin:0}
   .estatico li{break-inside:avoid; padding:.2rem 0}
   .estatico b{font-family:Fredoka,sans-serif; font-weight:600; color:var(--verde-piko)}
-  .vacio{text-align:center; color:var(--tinta-suave); padding:3rem 0}
-  .fuentes-lista{display:grid; gap:.6rem; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); padding:0; list-style:none; margin:1rem 0 0}
-  .fuentes-lista li{background:#fff; border-radius:14px; padding:.8rem 1rem; box-shadow:var(--sombra-chica); font-size:.93rem}
-  .fuentes-lista b{font-family:Fredoka,sans-serif; font-weight:600; color:var(--verde-piko)}
-  @media (max-width:760px){ .buscador{top:92px} .palabra{scroll-margin-top:230px} .cabeza__piko{display:none} }
+
+  /* Leyenda de las etiquetas */
+  .leyenda{display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr))}
+  .leyenda .tarjeta p{margin:.6rem 0 .4rem; font-size:.95rem; color:var(--tinta)}
+  .leyenda button{all:unset; cursor:pointer; color:var(--verde-bosque); font-size:.88rem; text-decoration:underline; text-underline-offset:3px}
+  .fuentes-lista{display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr)); padding:0; list-style:none; margin:0}
+  .fuentes-lista li{display:flex; gap:.9rem; align-items:flex-start}
+  .avatar{flex:none; width:46px; height:46px; border-radius:50%; display:grid; place-items:center; font:600 1.1rem Fredoka,sans-serif; color:#fff; background:var(--verde-hoja)}
+  .avatar--libro{background:var(--lila)}
+  .fuentes-lista b{font-family:Fredoka,sans-serif; font-weight:600; color:var(--verde-piko); font-size:1.05rem}
+  .fuentes-lista small{display:block; color:var(--tinta-suave); line-height:1.45}
+  .avisos{display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))}
 </style>
 </head>
-<body class="pagina">
+<body class="pagina" data-pagina="diccionario" data-raiz="../">
 
 <div id="nav" data-pagina="diccionario" data-raiz="../"></div>
 
-<header class="cabeza contenedor">
+<header class="cabeza">
+  <div class="cabeza__escena" data-escena></div>
   <div class="cabeza__grid">
-    <div>
+    <div class="cabeza__texto">
       <p class="etiqueta">Diccionario</p>
       <h1><em>Miskitu</em> ↔ español</h1>
-      <p class="cabeza__bajada" id="bajada">Buscá en miskito o en español. Cada palabra dice de dónde sale: hablantes de Raiti (Río Coco) y diccionarios publicados.</p>
+      <p class="cabeza__bajada">Buscá en miskito o en español, y tocá el botón celeste para escuchar. Son palabras que nos enseñaron hablantes de Raiti y que están en diccionarios publicados.</p>
+      <div class="cifras-fila">
+        <div class="cifra-chica" data-entra><b data-contar="251" id="n-palabras">251</b><span>palabras y frases</span></div>
+        <div class="cifra-chica" data-entra><b data-contar="96" id="n-variantes">96</b><span>con variantes</span></div>
+        <div class="cifra-chica" data-entra><b data-contar="4" id="n-fuentes">4</b><span>fuentes</span></div>
+      </div>
     </div>
-    <img class="cabeza__piko" src="../assets/img/piko.svg" alt="" width="150" height="246">
+    <img class="cabeza__piko" src="../assets/img/piko.svg" alt="" width="178" height="292">
   </div>
+  <svg class="cabeza__ola" viewBox="0 0 1440 56" preserveAspectRatio="none" aria-hidden="true"><path d="M0 56V30C240 6 480 0 720 14s480 34 720 22v20z"/></svg>
 </header>
 
 <main class="contenedor">
-  <div class="buscador">
-    <label class="buscador__campo">
-      <span style="position:absolute;left:-9999px">Buscar en el diccionario</span>
+  <div class="panel" id="panel">
+    <form class="buscador" role="search" onsubmit="return false">
+      <label class="oculto" for="q">Buscar en el diccionario</label>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 0 1 6.3 12.9l5.4 5.4-1.4 1.4-5.4-5.4A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
       <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Buscá: yul, perro, mano, kumi…">
-    </label>
+      <button class="azar" type="button" id="azar" title="Mostrar una palabra al azar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm2.5 3a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm9 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM12 10.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM7.5 15a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm9 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/></svg>
+        <span>Al azar</span>
+      </button>
+    </form>
     <div class="filtros" id="filtros" role="group" aria-label="Filtrar por tema"></div>
+    <div class="filtros" id="filtros-variantes" role="group" aria-label="Filtrar por variantes"></div>
     <div class="cuenta" id="cuenta" aria-live="polite"></div>
   </div>
+
+  <section class="destacada" id="destacada" hidden aria-label="Palabra del día"></section>
 
   <div class="palabras" id="palabras">
 <!-- palabras:inicio · lo escribe npm run contenido, no se edita a mano -->
 <ul class="estatico">
-<li id="ai"><b lang="miq">ai</b> · (pronombre; ver M11)</li>
 <li id="aikabaisa"><b lang="miq">aikabaisa</b> · va a vomitar</li>
 <li id="aisa"><b lang="miq">aisa</b> · papá</li>
 <li id="aisa_almuk"><b lang="miq">aisa almuk</b> · abuelo</li>
@@ -177,9 +259,7 @@
 <li id="atki_briaia"><b lang="miq">atki briaia</b> · comprar para tenerlo</li>
 <li id="au"><b lang="miq">au</b> · sí</li>
 <li id="auhwisa"><b lang="miq">auhwisa</b> · cae (la lluvia)</li>
-<li id="bal"><b lang="miq">bal</b> · venir</li>
 <li id="balaya"><b lang="miq">balaya</b> · venir</li>
-<li id="bara"><b lang="miq">bara</b> · hola</li>
 <li id="bibi"><b lang="miq">bibi</b> · bebé</li>
 <li id="bila"><b lang="miq">bila</b> · boca</li>
 <li id="bila_aisanka"><b lang="miq">bila aisanka</b> · idioma</li>
@@ -214,7 +294,6 @@
 <li id="ingk"><b lang="miq">ingk</b> · lápiz</li>
 <li id="inska"><b lang="miq">inska</b> · pescado, pez</li>
 <li id="frase.me_gusta_el_pescado"><b lang="miq">inska laiksna</b> · Me gusta el pescado.</li>
-<li id="iris"><b lang="miq">iris</b> · loro</li>
 <li id="islu"><b lang="miq">islu</b> · iguana</li>
 <li id="ispara"><b lang="miq">ispara</b> · machete</li>
 <li id="iwisma"><b lang="miq">iwisma</b> · vivís</li>
@@ -230,7 +309,6 @@
 <li id="kat"><b lang="miq">kat</b> · hasta</li>
 <li id="kati"><b lang="miq">kati</b> · luna</li>
 <li id="kati_mes"><b lang="miq">kâti</b> · mes</li>
-<li id="frase.vamos_a_la_escuela.2"><b lang="miq">kaya skul ra</b> · Vamos a la escuela.</li>
 <li id="ki_pregunta"><b lang="miq">ki</b> · (marca de pregunta de sí o no, al final)</li>
 <li id="kiama"><b lang="miq">kiama</b> · oreja</li>
 <li id="kikaia"><b lang="miq">kikaia</b> · reír</li>
@@ -253,7 +331,6 @@
 <li id="kuswa_mahbra"><b lang="miq">kuswa mahbra</b> · huevo de tortuga</li>
 <li id="kwala"><b lang="miq">kwala</b> · ropa</li>
 <li id="laik_takaia"><b lang="miq">laik takaia</b> · enamorar</li>
-<li id="laikra"><b lang="miq">laikra</b> · hermana</li>
 <li id="laiksna"><b lang="miq">laiksna</b> · me gusta</li>
 <li id="lal"><b lang="miq">lal</b> · cabeza</li>
 <li id="lalahni"><b lang="miq">lalahni</b> · amarillo</li>
@@ -262,7 +339,6 @@
 <li id="li"><b lang="miq">li</b> · agua; lluvia</li>
 <li id="li_auhaia"><b lang="miq">li auhaia</b> · llover</li>
 <li id="frase.esta_lloviendo"><b lang="miq">li auhwisa</b> · Está lloviendo.</li>
-<li id="li_ausisa"><b lang="miq">li ausisa</b> · lluvia</li>
 <li id="frase.quiero_agua"><b lang="miq">li want</b> · Quiero agua.</li>
 <li id="limi"><b lang="miq">limi</b> · tigre (jaguar)</li>
 <li id="luhpa_watlara"><b lang="miq">luhpa watlara</b> · útero (en «Luhpa watlara trabil briba»)</li>
@@ -277,7 +353,6 @@
 <li id="mamiki"><b lang="miq">mamiki</b> · mi mamá</li>
 <li id="frase.mi_mama_esta_en_la_casa.2"><b lang="miq">mamiki utlara sa</b> · Mi mamá está en la casa.</li>
 <li id="mani"><b lang="miq">mani</b> · año</li>
-<li id="mata"><b lang="miq">mata</b> · mano (en los números)</li>
 <li id="mata_walsip"><b lang="miq">mata walsip</b> · diez</li>
 <li id="matlalkahbi"><b lang="miq">matlalkahbi</b> · seis</li>
 <li id="matlalkahbi_pura_kum"><b lang="miq">matlalkahbi pura kum</b> · siete</li>
@@ -292,9 +367,7 @@
 <li id="micki"><b lang="miq">micki</b> · gato</li>
 <li id="mihta"><b lang="miq">mihta</b> · mano</li>
 <li id="mina"><b lang="miq">mina</b> · pie</li>
-<li id="muih"><b lang="miq">muih</b> · hermano</li>
 <li id="muihnika"><b lang="miq">muihnika</b> · hermano (su hermano)</li>
-<li id="muiki"><b lang="miq">muiki</b> · hermana (mi hermana)</li>
 <li id="nahki"><b lang="miq">nahki</b> · ¿cómo?</li>
 <li id="nahkisma"><b lang="miq">nahkisma</b> · ¿cómo estás?</li>
 <li id="nakra"><b lang="miq">nakra</b> · ojo</li>
@@ -327,7 +400,6 @@
 <li id="piyaya"><b lang="miq">piyaya</b> · comer</li>
 <li id="platu"><b lang="miq">platu</b> · plátano</li>
 <li id="plun"><b lang="miq">plun</b> · comida</li>
-<li id="frase.tengo_hambre.2"><b lang="miq">plun aidauki</b> · Tengo hambre.</li>
 <li id="frase.tengo_hambre"><b lang="miq">plun aidauksa</b> · Tengo hambre.</li>
 <li id="plun_apu"><b lang="miq">plun apu</b> · no hay comida</li>
 <li id="plun_piyaya"><b lang="miq">plun piyaya</b> · comer</li>
@@ -346,7 +418,6 @@
 <li id="sibrinkira"><b lang="miq">sibrinkira</b> · miedoso</li>
 <li id="siksa"><b lang="miq">siksa</b> · negro</li>
 <li id="skul"><b lang="miq">skul</b> · escuela</li>
-<li id="frase.vamos_a_la_escuela"><b lang="miq">skul ra wapp</b> · Vamos a la escuela.</li>
 <li id="skul_tuktan"><b lang="miq">skul tuktan</b> · estudiante</li>
 <li id="skul_watla"><b lang="miq">skul watla</b> · escuela</li>
 <li id="slilmika"><b lang="miq">slilmika</b> · hamaca</li>
@@ -366,7 +437,6 @@
 <li id="tingki"><b lang="miq">tingki</b> · gracias</li>
 <li id="frase.gracias_amigo"><b lang="miq">tingki painika</b> · Gracias, amigo.</li>
 <li id="titan"><b lang="miq">titan</b> · mañana (la parte del día)</li>
-<li id="frase.hasta_manana.2"><b lang="miq">titan pruabia</b> · Hasta mañana.</li>
 <li id="titan_yamni"><b lang="miq">titan yamni</b> · buenos días</li>
 <li id="frase.buenos_dias_maestra.2"><b lang="miq">titan yamni maistro</b> · Buenos días, maestra.</li>
 <li id="frase.buenos_dias_maestra"><b lang="miq">titan yamni smasmalkra mairin</b> · Buenos días, maestra.</li>
@@ -377,7 +447,6 @@
 <li id="tuktan_watla_laika"><b lang="miq">tuktan watla laîka</b> · líquido amniótico</li>
 <li id="tutni"><b lang="miq">tutni</b> · tarde</li>
 <li id="tutni_yamni"><b lang="miq">tutni yamni</b> · buenas tardes</li>
-<li id="twi_maplalka"><b lang="miq">twi maplalka</b> · verde</li>
 <li id="ulbaya"><b lang="miq">ulbaya</b> · escribir</li>
 <li id="ulu_watla"><b lang="miq">ulu watla</b> · panal</li>
 <li id="unta"><b lang="miq">unta</b> · monte</li>
@@ -389,7 +458,6 @@
 <li id="walhwal"><b lang="miq">walhwal</b> · cuatro</li>
 <li id="walpa"><b lang="miq">walpa</b> · piedra</li>
 <li id="wan"><b lang="miq">wan</b> · nuestro (de todos, incluyéndote)</li>
-<li id="wap"><b lang="miq">wap</b> · ir</li>
 <li id="wapaya"><b lang="miq">wapaya</b> · caminar</li>
 <li id="wari_takisma"><b lang="miq">wâri takisma</b> · estás pensando</li>
 <li id="wark_takaya"><b lang="miq">wark takaya</b> · trabajar</li>
@@ -397,8 +465,6 @@
 <li id="wauhtaya"><b lang="miq">wauhtaya</b> · cuaderno</li>
 <li id="waya"><b lang="miq">waya</b> · ir</li>
 <li id="wina"><b lang="miq">wina</b> · carne</li>
-<li id="wuirku"><b lang="miq">wuirku</b> · cerdo</li>
-<li id="yaikra"><b lang="miq">yaikra</b> · hermano</li>
 <li id="frase.me_gusta_el_pescado.2"><b lang="miq">yaiksna inska</b> · Me gusta el pescado.</li>
 <li id="yamni"><b lang="miq">yamni</b> · bueno; bien</li>
 <li id="yamni_yaps"><b lang="miq">yamni yaps</b> · buenas noches</li>
@@ -407,7 +473,6 @@
 <li id="frase.aporte_tangni"><b lang="miq">yang nini Tangni 18 mani brisna Jinotega ra skul dimisna</b> · Mi nombre es Tangni, tengo 18 años y estudio en Jinotega.</li>
 <li id="yapan"><b lang="miq">yapan</b> · durmió</li>
 <li id="yapaya"><b lang="miq">yapaya</b> · dormir</li>
-<li id="yapta"><b lang="miq">yapta</b> · sol</li>
 <li id="yapti"><b lang="miq">yapti</b> · mamá</li>
 <li id="yaptiki"><b lang="miq">yaptiki</b> · mi mamá</li>
 <li id="frase.mi_mama_esta_en_la_casa"><b lang="miq">yaptiki utla ra sa</b> · Mi mamá está en la casa.</li>
@@ -426,20 +491,34 @@
 <!-- palabras:fin -->
 </div>
 
-  <section class="bloque">
-    <p class="aviso"><b>Sobre la voz.</b> El botón celeste usa la voz en español del teléfono o la computadora, preparada para acercarse al miskito, <b>para mientras</b> conseguimos grabaciones de hablantes. No distingue las vocales largas (<i>kati</i>, luna, y <i>kâti</i>, mes, suenan igual).</p>
-    <p class="aviso aviso--pico" style="margin-top:.8rem"><b>Las palabras «en revisión»</b> tienen una duda abierta: dos fuentes dicen distinto, o falta confirmar el significado. No aparecen en los ejercicios de la app hasta que un hablante las revise.</p>
+  <section class="bloque" id="etiquetas">
+    <div class="bloque__cabeza" data-aparece>
+      <p class="etiqueta">Las etiquetas</p>
+      <h2>Una lengua viva <em>se dice de muchas formas</em></h2>
+      <p class="bloque__bajada">El miskito cambia de un lugar a otro y de una persona a otra. Ninguna forma es «la correcta»: el diccionario las guarda todas. Estas etiquetas te avisan cuando una palabra tiene más de una forma.</p>
+    </div>
+    <div class="leyenda" id="leyenda" data-aparece="grupo"></div>
+  </section>
+
+  <section class="avisos" data-aparece="grupo">
+    <div class="aviso"><p><b>Sobre la voz.</b> El botón celeste usa la voz en español de tu teléfono o computadora, <b>para mientras</b> conseguimos grabaciones de hablantes de miskito. Puede sonar un poco distinto a como se dice de verdad.</p></div>
   </section>
 
   <section class="bloque">
-    <h2>De dónde salen las palabras</h2>
-    <p class="bloque__bajada">Lo que escribió cada persona se guarda tal cual. Lo de los libros se cita, no se copia entero.</p>
-    <ul class="fuentes-lista" id="fuentes"></ul>
+    <div class="bloque__cabeza" data-aparece>
+      <p class="etiqueta">Fuentes</p>
+      <h2>De dónde salen <em>las palabras</em></h2>
+      <p class="bloque__bajada">Cada palabra dice quién la enseñó.</p>
+    </div>
+    <ul class="fuentes-lista" id="fuentes" data-aparece="grupo"></ul>
   </section>
 </main>
 
 <div id="pie"></div>
 <script src="../assets/js/nav.js"></script>
-<script src="../assets/js/diccionario.js"></script>
+<script src="../assets/js/gsap.min.js" defer></script>
+<script src="../assets/js/ScrollTrigger.min.js" defer></script>
+<script src="../assets/js/animaciones.js" defer></script>
+<script src="../assets/js/diccionario.js" defer></script>
 </body>
 </html>

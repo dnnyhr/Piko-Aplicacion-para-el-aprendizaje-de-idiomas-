@@ -17,7 +17,8 @@
     "contenido": "tsx ../diccionario/herramientas/contenido.ts",
     "contenido:comprobar": "tsx ../diccionario/herramientas/contenido.ts --comprobar",
     "gen:svg": "tsx tools/gen-svg.ts",
-    "web:sitio": "expo export --platform web --output-dir ../web/probar/app --clear"
+    "web:sitio": "expo export --platform web --output-dir ../web/probar/app --clear && tsx tools/sitio-web.ts",
+    "web:comprobar": "tsx tools/sitio-web.ts --comprobar"
   },
   "dependencies": {
     "@expo-google-fonts/fredoka": "^0.4.1",
