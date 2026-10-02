@@ -77,6 +77,7 @@
 </script>
 <link rel="stylesheet" href="../assets/css/nav.css">
 <link rel="stylesheet" href="../assets/css/sitio.css">
+<link rel="preload" href="../assets/img/escena.svg" as="fetch" type="image/svg+xml" crossorigin>
 <style>
   .cabeza--probar{min-height:clamp(560px,86vh,760px)}
   .cabeza--probar .cabeza__grid{grid-template-columns:minmax(0,1fr) auto; align-items:center}
@@ -130,7 +131,7 @@
     <div class="escenario">
       <div class="telefono">
         <span class="telefono__brillo" aria-hidden="true"></span>
-        <iframe src="app/" title="Piko, la app" loading="lazy" allow="autoplay"></iframe>
+        <iframe data-src="app/" title="Piko, la app" allow="autoplay"></iframe>
       </div>
       <img class="escenario__piko cabeza__piko" src="../assets/img/piko.svg" alt="" width="178" height="292">
       <span class="burbuja" aria-hidden="true">¡Tocá «Practicar»!</span>
@@ -214,6 +215,11 @@
 <script src="../assets/js/animaciones.js" defer></script>
 <script>
   // El teléfono entra después del texto, y la burbuja de Piko aparece al final.
+  // La app pesa más que toda la página: se carga cuando la página ya terminó.
+  window.addEventListener("load", function () {
+    var marco = document.querySelector(".telefono iframe");
+    if (marco && !marco.src) marco.src = marco.getAttribute("data-src");
+  });
   document.addEventListener("DOMContentLoaded", function () {
     if (!window.PikoAnim || !PikoAnim.animar) return;
     gsap.from(".telefono", { y: 80, opacity: 0, rotate: 4, duration: 1.2, delay: .4, ease: "back.out(1.3)" });

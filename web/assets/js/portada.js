@@ -35,11 +35,21 @@
       .from(".hero__piko .piko-fig", {y:80, opacity:0, duration:1.2, ease:"back.out(1.4)"}, .55);
 
     /* ---- Vida propia: arranca cuando la entrada termina, para no pelearse con ella ---- */
+    /* Lo que se repite sin fin sólo corre mientras se ve: fuera de pantalla
+       recalculaba la página 60 veces por segundo para nada. */
+    var enPausaFuera = function(tweens, disparador){
+      ScrollTrigger.create({
+        trigger:disparador, start:"top bottom", end:"bottom top",
+        onToggle:function(st){ tweens.forEach(function(t){ st.isActive ? t.resume() : t.pause(); }); }
+      });
+    };
     entrada.eventCallback("onComplete", function(){
-      gsap.to(capa("Cumulo de nubes"), {x:36,  duration:16, ease:"sine.inOut", repeat:-1, yoyo:true});
-      gsap.to(capa("Nube"),            {x:-28, duration:13, ease:"sine.inOut", repeat:-1, yoyo:true});
-      gsap.to(capa("Vapor de volcan"), {opacity:.6, x:8, duration:4.5, ease:"sine.inOut", repeat:-1, yoyo:true});
-      gsap.to(".hero__piko .piko-fig", {yPercent:-4, duration:2.4, ease:"sine.inOut", repeat:-1, yoyo:true});
+      enPausaFuera([
+        gsap.to(capa("Cumulo de nubes"), {x:36,  duration:16, ease:"sine.inOut", repeat:-1, yoyo:true}),
+        gsap.to(capa("Nube"),            {x:-28, duration:13, ease:"sine.inOut", repeat:-1, yoyo:true}),
+        gsap.to(capa("Vapor de volcan"), {opacity:.6, x:8, duration:4.5, ease:"sine.inOut", repeat:-1, yoyo:true}),
+        gsap.to(".hero__piko .piko-fig", {yPercent:-4, duration:2.4, ease:"sine.inOut", repeat:-1, yoyo:true})
+      ], ".hero");
     });
 
     /* ---- Parallax del paisaje: cada capa a su ritmo ---- */
@@ -104,7 +114,7 @@
         scrollTrigger:{trigger:".rutas", start:"top 95%", once:true},
         onComplete:function(){
           gsap.set(camino, {strokeDasharray:"8 8", strokeDashoffset:0});
-          gsap.to(camino, {strokeDashoffset:-16, duration:.9, ease:"none", repeat:-1});
+          enPausaFuera([gsap.to(camino, {strokeDashoffset:-16, duration:.9, ease:"none", repeat:-1})], ".rutas");
         }
       });
     });

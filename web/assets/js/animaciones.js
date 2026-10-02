@@ -26,6 +26,15 @@
     ScrollTrigger.config({ ignoreMobileResize: true });
   }
 
+  /** Lo que se repite sin fin sólo corre mientras se ve. */
+  function enPausaFuera(tweens, disparador) {
+    if (!tweens.length || !disparador) return;
+    ScrollTrigger.create({
+      trigger: disparador, start: "top bottom", end: "bottom top",
+      onToggle: function (st) { tweens.forEach(function (t) { st.isActive ? t.resume() : t.pause(); }); },
+    });
+  }
+
   /* ---------- El paisaje del encabezado ---------- */
   var lugar = document.querySelector("[data-escena]");
   function capa(nombre) { return lugar ? lugar.querySelector("[id='" + nombre + "']") : null; }
@@ -40,10 +49,12 @@
       if (el) entrada.from(el, { opacity: 0, scaleY: c[2], transformOrigin: "50% 100%" }, c[1]);
     });
     entrada.eventCallback("onComplete", function () {
-      if (nubes[0]) gsap.to(nubes[0], { x: 34, duration: 16, ease: "sine.inOut", repeat: -1, yoyo: true });
-      if (nubes[1]) gsap.to(nubes[1], { x: -26, duration: 13, ease: "sine.inOut", repeat: -1, yoyo: true });
+      var bucles = [];
+      if (nubes[0]) bucles.push(gsap.to(nubes[0], { x: 34, duration: 16, ease: "sine.inOut", repeat: -1, yoyo: true }));
+      if (nubes[1]) bucles.push(gsap.to(nubes[1], { x: -26, duration: 13, ease: "sine.inOut", repeat: -1, yoyo: true }));
       var vapor = capa("Vapor de volcan");
-      if (vapor) gsap.to(vapor, { opacity: .6, x: 8, duration: 4.5, ease: "sine.inOut", repeat: -1, yoyo: true });
+      if (vapor) bucles.push(gsap.to(vapor, { opacity: .6, x: 8, duration: 4.5, ease: "sine.inOut", repeat: -1, yoyo: true }));
+      enPausaFuera(bucles, lugar.closest(".cabeza"));
     });
     // Parallax suave: cada capa a su ritmo al bajar.
     var cabeza = lugar.closest(".cabeza");
@@ -76,7 +87,7 @@
     if (piko) {
       t.from(piko, { y: 90, opacity: 0, rotate: -6, duration: 1.1, ease: "back.out(1.5)" }, .35);
       t.eventCallback("onComplete", function () {
-        gsap.to(piko, { yPercent: -4, rotate: 1.5, duration: 2.4, ease: "sine.inOut", repeat: -1, yoyo: true });
+        enPausaFuera([gsap.to(piko, { yPercent: -4, rotate: 1.5, duration: 2.4, ease: "sine.inOut", repeat: -1, yoyo: true })], piko.closest(".cabeza") || piko);
       });
       // Piko saluda si le pasan el mouse.
       piko.addEventListener("mouseenter", function () {
@@ -88,18 +99,29 @@
   }
 
   /* ---------- Apariciones y contadores ---------- */
-  /** Devuelve los ScrollTrigger creados, para que quien redibuja pueda descartarlos. */
+  /**
+   * Hace entrar los nodos cuando llegan a la pantalla. Usa un solo
+   * IntersectionObserver (no un ScrollTrigger por nodo: el diccionario dibuja
+   * 251 tarjetas en cada búsqueda). Devuelve algo con `kill()` para descartarlo.
+   */
   function aparecer(nodos, opciones) {
-    if (!animar || !nodos || !nodos.length) return [];
+    if (!animar || !nodos || !nodos.length || !("IntersectionObserver" in window)) return [];
     var o = opciones || {};
     var lista = Array.prototype.slice.call(nodos);
     gsap.set(lista, { opacity: 0, y: o.y || 34 });
-    return ScrollTrigger.batch(lista, {
-      start: "top 94%", once: true,
-      onEnter: function (lote) {
-        gsap.to(lote, { opacity: 1, y: 0, duration: o.duracion || .7, stagger: o.stagger || .08, overwrite: true, clearProps: "transform" });
-      },
-    });
+    var cola = [], pendiente = false;
+    var io = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (e) { if (e.isIntersecting) { cola.push(e.target); io.unobserve(e.target); } });
+      if (cola.length && !pendiente) {
+        pendiente = true;
+        requestAnimationFrame(function () {
+          gsap.to(cola, { opacity: 1, y: 0, duration: o.duracion || .7, stagger: o.stagger || .08, overwrite: true, clearProps: "transform" });
+          cola = []; pendiente = false;
+        });
+      }
+    }, { rootMargin: "0px 0px -6% 0px" });
+    lista.forEach(function (n) { io.observe(n); });
+    return [{ kill: function () { io.disconnect(); } }];
   }
 
   function contar(raizNodo) {

@@ -53,6 +53,13 @@ blanco esperando las tipografías. Por eso `npm run web:sitio` termina con
 referencias. `npm run web:comprobar` (también en CI) revisa que cada archivo
 que pide la app esté en el repositorio.
 
+## Publicación
+
+Netlify publica `web/` sola en cada merge a `main`, y arma una vista previa
+para cada PR. La configuración está en `netlify.toml`, en la raíz del
+repositorio: la carpeta que se publica y las cabeceras (caché larga para los
+archivos con huella de la app del navegador, y el tipo del manifest).
+
 ## Movimiento
 
 Las páginas interiores cargan GSAP y `assets/js/animaciones.js`: el paisaje
@@ -60,6 +67,13 @@ del encabezado (el mismo de la portada) se arma por capas y se mueve, Piko
 entra y flota, y lo marcado con `data-aparece` entra al bajar. Con «reducir
 movimiento» activado en el sistema, o sin JavaScript, todo se ve quieto y
 completo.
+
+Para que no cueste de más: lo que se repite sin fin (nubes, vapor, Piko
+flotando) se pausa cuando sale de la pantalla; las apariciones usan un solo
+IntersectionObserver en vez de un ScrollTrigger por elemento; y las tarjetas
+del diccionario que están lejos no se dibujan hasta acercarse
+(`content-visibility`). La app de «Probar» se pide recién cuando la página
+terminó de cargar.
 
 ## Cada página interior
 
