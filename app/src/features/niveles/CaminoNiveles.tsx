@@ -24,9 +24,18 @@ import { color, fuente } from '../../ui/tokens';
 
 // ------------------------------------------------------------------ geometría
 
-const PASO = 150;
+/**
+ * Forma de un madroño de verdad: tronco corto y grueso con las raíces
+ * abiertas, que se parte en ramas gruesas, y una copa ancha y esponjosa. Los
+ * primeros nidos van en ramas bajas del tronco; los demás, dentro de la copa,
+ * alternando de lado, y el último arriba al centro.
+ */
 const SUELO = 130;
-const COPA = 230;
+const PASO_TRONCO = 130;
+const ENTRADA_COPA = 150;
+const PASO_COPA = 80;
+const ARRIBA = 150;
+const EN_TRONCO = 2;
 const NODO = { ancho: 110, alto: 80 } as const;
 const ALTO_PIKO = 74;
 
@@ -34,16 +43,37 @@ export interface Geometria {
   ancho: number;
   alto: number;
   /** Centro del nido de cada nivel, por número (índice 0 = nivel 1). */
-  nodos: { x: number; y: number; lado: 'izq' | 'der' }[];
+  nodos: { x: number; y: number; lado: 'izq' | 'der'; enCopa: boolean }[];
+  /** Borde de arriba y de abajo de la copa. */
+  copa: { arriba: number; abajo: number };
+  /** Altura donde el tronco se parte en ramas. */
+  horquilla: number;
 }
 
 export function geometriaCamino(cantidad: number, ancho: number): Geometria {
-  const alto = SUELO + Math.max(0, cantidad - 1) * PASO + COPA;
-  const nodos = Array.from({ length: cantidad }, (_, i) => {
-    const lado = i % 2 === 0 ? ('izq' as const) : ('der' as const);
-    return { x: ancho * (lado === 'izq' ? 0.25 : 0.75), y: alto - SUELO - i * PASO, lado };
+  // Primero en coordenadas relativas al nido 1 (y = 0, hacia arriba negativo).
+  const rel = Array.from({ length: cantidad }, (_, i) => {
+    if (i < EN_TRONCO) {
+      const lado = i % 2 === 0 ? ('izq' as const) : ('der' as const);
+      return { x: ancho * (lado === 'izq' ? 0.25 : 0.75), y: -i * PASO_TRONCO, lado, enCopa: false };
+    }
+    const k = i - EN_TRONCO;
+    const lado = k % 2 === 0 ? ('izq' as const) : ('der' as const);
+    const ultimo = i === cantidad - 1 && cantidad > EN_TRONCO + 1;
+    const x = ultimo ? ancho * 0.5 : ancho * (lado === 'izq' ? 0.23 : 0.77);
+    const y = -(Math.min(cantidad, EN_TRONCO) - 1) * PASO_TRONCO - ENTRADA_COPA - k * PASO_COPA;
+    return { x, y, lado, enCopa: true };
   });
-  return { ancho, alto, nodos };
+  const tope = Math.min(0, ...rel.map((n) => n.y));
+  const alto = SUELO - tope + ARRIBA;
+  const y1 = alto - SUELO;
+  const nodos = rel.map((n) => ({ ...n, y: y1 + n.y }));
+
+  const enCopa = nodos.filter((n) => n.enCopa);
+  const primeroCopa = enCopa[0];
+  const abajo = primeroCopa ? primeroCopa.y + 95 : (nodos[nodos.length - 1]?.y ?? y1) - 70;
+  const arriba = Math.min(...nodos.map((n) => n.y)) - 125;
+  return { ancho, alto, nodos, copa: { arriba, abajo }, horquilla: abajo + 24 };
 }
 
 /** Dónde se para Piko en un nivel: en el borde del nido, del lado del tronco. */
@@ -59,103 +89,148 @@ function lugarDePiko(g: Geometria, numero: number) {
 
 function ArbolDelCamino({ g }: { g: Geometria }) {
   const cx = g.ancho / 2;
-  const tope = COPA * 0.55;
-  const base = g.alto - 36;
+  const base = g.alto - 30;
+  const F = g.horquilla;
+  const { arriba, abajo } = g.copa;
+  const cy = (arriba + abajo) / 2;
+  const hh = (abajo - arriba) / 2;
+  const hw = g.ancho / 2 - 4;
+  const lobulo = Math.min(hw, hh) * 0.34;
+
+  // Lóbulos del borde de la copa: le dan la forma de nube del madroño. Van
+  // por dentro del ancho de la pantalla, para que la copa no quede cortada.
+  const borde = Array.from({ length: 18 }, (_, k) => {
+    const t = (k / 18) * Math.PI * 2;
+    return { x: cx + (hw - lobulo) * Math.cos(t), y: cy + (hh - lobulo * 0.6) * Math.sin(t) };
+  });
+  // Flores repartidas parejo por la copa (ángulo de oro: sin amontonarse).
+  const flores = Array.from({ length: 22 }, (_, k) => {
+    const r = Math.sqrt((k + 0.5) / 22) * 0.82;
+    const t = k * 2.39996;
+    return { x: cx + hw * r * Math.cos(t), y: cy + hh * r * Math.sin(t) };
+  });
+  const ramasMadre = [
+    { x: cx - g.ancho * 0.3, y: cy + hh * 0.25, w: 20 },
+    { x: cx + g.ancho * 0.3, y: cy + hh * 0.1, w: 18 },
+    { x: cx + 6, y: cy - hh * 0.3, w: 14 },
+  ];
+
   return (
     <Svg width={g.ancho} height={g.alto} style={StyleSheet.absoluteFill}>
       {/* Suelo */}
-      <Ellipse cx={cx} cy={g.alto - 26} rx={g.ancho * 0.62} ry={34} fill={color.verdePasto} />
-      <Ellipse cx={cx} cy={g.alto - 30} rx={g.ancho * 0.4} ry={18} fill={color.verdeHoja} opacity={0.45} />
+      <Ellipse cx={cx} cy={g.alto - 22} rx={g.ancho * 0.62} ry={30} fill={color.verdePasto} />
+      <Ellipse cx={cx} cy={g.alto - 26} rx={g.ancho * 0.4} ry={16} fill={color.verdeHoja} opacity={0.45} />
 
-      {/* Follaje a lo largo del tronco, del lado contrario a cada rama: así se
-          lee como un árbol frondoso y no como un poste. */}
-      {g.nodos.map((n, i) => {
-        const otro = n.lado === 'izq' ? 1 : -1;
-        const y = n.y + PASO / 2;
-        return (
-          <G key={`f${i}`}>
-            <Circle cx={cx + otro * 44} cy={y + 4} r={30} fill={ARBOL_COLOR.hojaHonda} />
-            <Circle cx={cx + otro * 70} cy={y - 18} r={22} fill={ARBOL_COLOR.hoja} />
-            <Circle cx={cx + otro * 30} cy={y - 26} r={18} fill={ARBOL_COLOR.hojaLuz} opacity={0.85} />
-            <Racimo x={cx + otro * 58} y={y - 4} r={5} />
-            <Racimo x={cx + otro * 34} y={y - 30} r={4.5} />
-          </G>
-        );
-      })}
+      {/* Copa: fondo oscuro con borde de nube */}
+      <Ellipse cx={cx} cy={cy} rx={hw - lobulo * 0.6} ry={hh - lobulo * 0.4} fill={ARBOL_COLOR.hojaHonda} />
+      {borde.map((p, k) => (
+        <Circle key={`b${k}`} cx={p.x} cy={p.y} r={lobulo} fill={ARBOL_COLOR.hojaHonda} />
+      ))}
+      {/* Capa del medio, un poco más arriba: la luz viene de arriba */}
+      {borde.map((p, k) => (
+        <Circle
+          key={`m${k}`}
+          cx={cx + (p.x - cx) * 0.62}
+          cy={cy - hh * 0.12 + (p.y - cy) * 0.6}
+          r={lobulo * 0.95}
+          fill={ARBOL_COLOR.hoja}
+        />
+      ))}
 
-      {/* Ramas, detrás del tronco. Cada una llega por debajo de su nido y se
-          abre en dos ramitas que lo sostienen. */}
-      {g.nodos.map((n, i) => {
-        const desdeX = cx + (n.lado === 'izq' ? -10 : 10);
-        const afuera = n.lado === 'izq' ? -1 : 1;
-        const puntaX = n.x - afuera * 6;
-        const puntaY = n.y + 30;
-        return (
-          <G key={i}>
-            <Circle cx={n.x + afuera * 50} cy={n.y - 4} r={26} fill={ARBOL_COLOR.hojaHonda} />
-            <Circle cx={n.x - afuera * 30} cy={n.y - 22} r={18} fill={ARBOL_COLOR.hoja} />
-            <Circle cx={n.x + afuera * 26} cy={n.y - 30} r={16} fill={ARBOL_COLOR.hojaLuz} opacity={0.85} />
-            <Racimo x={n.x + afuera * 56} y={n.y - 10} r={5} />
+      {/* Ramas madre: salen de la horquilla y se meten en la copa */}
+      {ramasMadre.map((r, k) => (
+        <Path
+          key={`r${k}`}
+          d={`M${cx} ${F} C ${cx + (r.x - cx) * 0.2} ${F - 40}, ${r.x} ${r.y + 60}, ${r.x} ${r.y}`}
+          stroke={ARBOL_COLOR.corteza}
+          strokeWidth={r.w}
+          strokeLinecap="round"
+          fill="none"
+        />
+      ))}
+      {/* Una rama hacia cada nido de la copa */}
+      {g.nodos
+        .filter((n) => n.enCopa)
+        .map((n, k) => (
+          <G key={`c${k}`}>
             <Path
-              d={`M${desdeX} ${n.y + 54} C ${(desdeX + puntaX) / 2} ${n.y + 50}, ${puntaX} ${n.y + 44}, ${puntaX} ${puntaY}`}
+              d={`M${cx} ${F} C ${cx} ${F - 50}, ${n.x} ${n.y + 90}, ${n.x} ${n.y + 32}`}
               stroke={ARBOL_COLOR.corteza}
-              strokeWidth={14}
+              strokeWidth={10}
               strokeLinecap="round"
               fill="none"
             />
-            <Path
-              d={`M${puntaX} ${puntaY} Q ${n.x - 26} ${n.y + 26}, ${n.x - 40} ${n.y + 12} M${puntaX} ${puntaY} Q ${n.x + 26} ${n.y + 26}, ${n.x + 40} ${n.y + 12}`}
-              stroke={ARBOL_COLOR.corteza}
-              strokeWidth={5}
-              strokeLinecap="round"
-              fill="none"
-            />
-            <Circle cx={(cx + n.x) / 2} cy={n.y + 64} r={13} fill={ARBOL_COLOR.hoja} />
+            {/* Un colchón de hojas claras detrás del nido, para que resalte */}
+            <Circle cx={n.x} cy={n.y - 8} r={44} fill={ARBOL_COLOR.hojaLuz} opacity={0.55} />
           </G>
-        );
-      })}
+        ))}
 
-      {/* Tronco: ancho abajo, angosto arriba */}
+      {/* Brillos de arriba: los copos más claros, como en la copa real */}
+      <Circle cx={cx - hw * 0.42} cy={arriba + hh * 0.42} r={lobulo * 0.9} fill={ARBOL_COLOR.hojaLuz} opacity={0.8} />
+      <Circle cx={cx - hw * 0.05} cy={arriba + hh * 0.22} r={lobulo} fill={ARBOL_COLOR.hojaLuz} opacity={0.7} />
+      <Circle cx={cx + hw * 0.4} cy={arriba + hh * 0.36} r={lobulo * 0.8} fill={ARBOL_COLOR.hojaLuz} opacity={0.6} />
+
+      {flores.map((f, k) => (
+        <Racimo key={`f${k}`} x={f.x} y={f.y} r={5.5} />
+      ))}
+
+      {/* Tronco corto y grueso, con las raíces abiertas */}
       <Path
-        d={`M${cx - 30} ${base} C ${cx - 22} ${base - 200}, ${cx - 16} ${tope + 200}, ${cx - 13} ${tope} L ${cx + 13} ${tope} C ${cx + 16} ${tope + 200}, ${cx + 22} ${base - 200}, ${cx + 30} ${base} Z`}
+        d={`M${cx - 66} ${base + 4} Q ${cx - 38} ${base - 2} ${cx - 32} ${base - 26} C ${cx - 26} ${base - 90}, ${cx - 22} ${F + 60}, ${cx - 36} ${F} L ${cx + 36} ${F} C ${cx + 22} ${F + 60}, ${cx + 26} ${base - 90}, ${cx + 32} ${base - 26} Q ${cx + 38} ${base - 2} ${cx + 66} ${base + 4} Z`}
         fill={ARBOL_COLOR.corteza}
       />
+      <Path d={`M${cx - 18} ${base - 6} Q ${cx} ${base + 14} ${cx + 18} ${base - 6} Z`} fill={ARBOL_COLOR.corteza} />
+      {/* Corteza lisa que se pela: las manchas claras del madroño */}
       <Path
-        d={`M${cx - 6} ${base - 20} C ${cx - 4} ${base - 260}, ${cx - 3} ${tope + 160}, ${cx - 2} ${tope + 30}`}
+        d={`M${cx - 10} ${base - 20} C ${cx - 8} ${base - 100}, ${cx - 6} ${F + 80}, ${cx - 12} ${F + 20}`}
         stroke={ARBOL_COLOR.cortezaLuz}
-        strokeWidth={5}
+        strokeWidth={6}
         strokeLinecap="round"
         fill="none"
       />
-      <Path
-        d={`M${cx + 9} ${base - 70} C ${cx + 10} ${base - 140}, ${cx + 9} ${base - 200}, ${cx + 8} ${base - 260}`}
-        stroke={ARBOL_COLOR.cortezaLuz}
-        strokeWidth={3}
-        strokeLinecap="round"
-        fill="none"
-        opacity={0.7}
-      />
+      <Ellipse cx={cx + 14} cy={(base + F) / 2} rx={6} ry={18} fill={ARBOL_COLOR.cortezaLuz} opacity={0.7} />
+      <Ellipse cx={cx + 8} cy={base - 50} rx={5} ry={10} fill={ARBOL_COLOR.cortezaLuz} opacity={0.6} />
 
-      {/* Copa con flores del madroño */}
-      <Circle cx={cx - 80} cy={tope + 10} r={52} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={cx + 82} cy={tope + 4} r={54} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={cx} cy={tope - 20} r={86} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={cx - 40} cy={tope - 64} r={44} fill={ARBOL_COLOR.hojaLuz} opacity={0.85} />
-      <Circle cx={cx + 46} cy={tope - 56} r={46} fill={ARBOL_COLOR.hoja} />
-      {[
-        [-70, 0],
-        [-30, -40],
-        [10, 6],
-        [52, -24],
-        [86, 14],
-        [-6, -78],
-        [40, -88],
-        [-56, -64],
-        [24, -44],
-        [-100, 20],
-      ].map(([dx, dy], i) => (
-        <Racimo key={i} x={cx + (dx as number)} y={tope + (dy as number)} r={6} />
-      ))}
+      {/* Nidos del tronco: una rama baja para cada uno */}
+      {g.nodos
+        .filter((n) => !n.enCopa)
+        .map((n, i) => {
+          const afuera = n.lado === 'izq' ? -1 : 1;
+          const desdeX = cx + afuera * 18;
+          const puntaX = n.x - afuera * 6;
+          return (
+            <G key={`t${i}`}>
+              <Circle cx={n.x + afuera * 50} cy={n.y - 4} r={26} fill={ARBOL_COLOR.hojaHonda} />
+              <Circle cx={n.x - afuera * 30} cy={n.y - 22} r={18} fill={ARBOL_COLOR.hoja} />
+              <Circle cx={n.x + afuera * 26} cy={n.y - 30} r={16} fill={ARBOL_COLOR.hojaLuz} opacity={0.85} />
+              <Racimo x={n.x + afuera * 56} y={n.y - 10} r={5} />
+              <Path
+                d={`M${desdeX} ${n.y + 60} C ${(desdeX + puntaX) / 2} ${n.y + 54}, ${puntaX} ${n.y + 46}, ${puntaX} ${n.y + 30}`}
+                stroke={ARBOL_COLOR.corteza}
+                strokeWidth={14}
+                strokeLinecap="round"
+                fill="none"
+              />
+            </G>
+          );
+        })}
+
+      {/* Las dos ramitas que sostienen cada nido */}
+      {g.nodos.map((n, i) => {
+        const afuera = n.lado === 'izq' ? -1 : 1;
+        const puntaX = n.enCopa ? n.x : n.x - afuera * 6;
+        const puntaY = n.y + 30;
+        return (
+          <Path
+            key={`s${i}`}
+            d={`M${puntaX} ${puntaY} Q ${n.x - 26} ${n.y + 26}, ${n.x - 40} ${n.y + 12} M${puntaX} ${puntaY} Q ${n.x + 26} ${n.y + 26}, ${n.x + 40} ${n.y + 12}`}
+            stroke={ARBOL_COLOR.corteza}
+            strokeWidth={5}
+            strokeLinecap="round"
+            fill="none"
+          />
+        );
+      })}
     </Svg>
   );
 }
