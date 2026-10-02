@@ -26,7 +26,7 @@ diccionario/
 
 | Lengua | Versión | Fuentes | Léxico | Reglas | Ejercicios |
 |---|---|---|---|---|---|
-| Miskito (`miq`) | 0.1 | 1 hablante (Raiti, Río Coco) | 137 entradas, 10 por revisar | 35 (10 A · 19 B · 5 C · 1 mixta) | 13 paquetes, 102 ítems |
+| Miskito (`miq`) | 0.2 | 2 hablantes (Raiti, Río Coco) | 201 entradas, 20 por revisar, 60 dichas por las dos | 40 (17 A · 15 B · 7 C · 1 mixta) | 16 paquetes, 139 ítems |
 | Mayangna (`sum`) | — | — | — | — | — |
 | Rama (`rma`) | — | — | — | — | — |
 | Garífuna (`cab`) | — | — | — | — | — |
@@ -75,13 +75,13 @@ cd app && npm run validate:diccionario
 | `reglas` | Las reglas de `gramatica.md` en las que participa |
 | `de` | Si salió de una frase, de cuál |
 | `revisar` | Qué hay que preguntarle a un hablante. **Si existe, la entrada no se usa en ejercicios** |
-| `estado` | `un_hablante` → `probable` (3 personas, 2 zonas) → `confirmada` (la validó un hablante) |
+| `estado` | `un_hablante` → `varios_hablantes` (la dieron 2 personas o más) → `probable` (3 personas, 2 zonas) → `confirmada` (la validó un hablante) |
 
 ## Los ejercicios todavía no están en la app
 
-Salen de una sola persona y ninguna regla está validada. Por eso viven acá y
+Salen de dos personas de una sola comunidad y ninguna regla está validada. Por eso viven acá y
 no en `app/content/packs/`. Ya tienen el formato exacto de la app y pasan su
-mismo validador. Cuando un hablante los revise (Teacher Smith se ofreció),
+mismo validador. Cuando un hablante los revise (Teacher Smith y Tangni se ofrecieron),
 pasarlos es copiarlos:
 
 1. Copiar `miskito/ejercicios/*.json` a `app/content/packs/miq/`.
@@ -116,9 +116,11 @@ aportaron y a sus comunidades. Más detalle en
 ## Quienes enseñaron
 
 - **Teacher Smith**, docente, Raiti, Río Coco. Miskito.
+- **Tangni**, estudiante, Raiti, Río Coco. Miskito.
 
 ## Historial
 
 | Versión | Fecha | Qué cambió | Predicciones |
 |---|---|---|---|
 | miskito 0.1 | 2026-09-29 | Primera tanda: 1 hablante, 80 palabras, 15 frases y una oración libre | 26 abiertas · sin tanda anterior para medir aciertos |
+| miskito 0.2 | 2026-10-02 | Segunda tanda: otra hablante de Raiti, de otra generación. Animales, comida y naturaleza; dos sistemas de números; hermanos según quién habla; «hermano» y «hermana» salen de los ejercicios | 3 comprobables: 2 acertadas y 1 a medias (2,5 / 3) · 23 siguen abiertas |

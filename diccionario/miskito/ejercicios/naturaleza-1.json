@@ -1,0 +1,129 @@
+{
+  "id": "miq.naturaleza.1",
+  "lang": "miq",
+  "theme": "naturaleza",
+  "difficulty": 1,
+  "title": "La naturaleza",
+  "items": [
+    {
+      "id": "miq.naturaleza.1.a",
+      "type": "choice",
+      "skill": "miq.naturaleza",
+      "prompt": "tierra",
+      "answer": "tasba",
+      "options": [
+        "tasba",
+        "walpa",
+        "unta"
+      ]
+    },
+    {
+      "id": "miq.naturaleza.1.b",
+      "type": "choice",
+      "skill": "miq.naturaleza",
+      "prompt": "río",
+      "answer": "tikni",
+      "options": [
+        "tikni",
+        "kabu",
+        "li"
+      ]
+    },
+    {
+      "id": "miq.naturaleza.1.c",
+      "type": "choice",
+      "skill": "miq.naturaleza",
+      "prompt": "mar",
+      "answer": "kabu",
+      "options": [
+        "kabu",
+        "tikni",
+        "tasba"
+      ]
+    },
+    {
+      "id": "miq.naturaleza.1.d",
+      "type": "choice",
+      "skill": "miq.naturaleza",
+      "prompt": "sol",
+      "answer": "yapta",
+      "options": [
+        "yapta",
+        "kati",
+        "slisma"
+      ]
+    },
+    {
+      "id": "miq.naturaleza.1.e",
+      "type": "choice",
+      "skill": "miq.naturaleza",
+      "prompt": "luna",
+      "answer": "kati",
+      "options": [
+        "kati",
+        "yapta",
+        "slisma"
+      ]
+    },
+    {
+      "id": "miq.naturaleza.1.f",
+      "type": "choice",
+      "skill": "miq.naturaleza",
+      "prompt": "estrella",
+      "answer": "slisma",
+      "options": [
+        "slisma",
+        "kati",
+        "yapta"
+      ]
+    },
+    {
+      "id": "miq.naturaleza.1.g",
+      "type": "choice",
+      "skill": "miq.naturaleza",
+      "prompt": "árbol",
+      "answer": "dus",
+      "options": [
+        "dus",
+        "unta",
+        "pasa"
+      ]
+    },
+    {
+      "id": "miq.naturaleza.1.h",
+      "type": "choice",
+      "skill": "miq.naturaleza",
+      "prompt": "monte",
+      "answer": "unta",
+      "options": [
+        "unta",
+        "dus",
+        "tasba"
+      ]
+    },
+    {
+      "id": "miq.naturaleza.1.i",
+      "type": "choice",
+      "skill": "miq.naturaleza",
+      "prompt": "piedra",
+      "answer": "walpa",
+      "options": [
+        "walpa",
+        "tasba",
+        "dus"
+      ]
+    },
+    {
+      "id": "miq.naturaleza.1.j",
+      "type": "choice",
+      "skill": "miq.naturaleza",
+      "prompt": "viento",
+      "answer": "pasa",
+      "options": [
+        "pasa",
+        "yapta",
+        "walpa"
+      ]
+    }
+  ]
+}

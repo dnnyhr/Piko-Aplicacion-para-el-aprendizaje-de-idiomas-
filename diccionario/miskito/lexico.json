@@ -1,8 +1,8 @@
 {
   "$comentario": "Diccionario miskito de Piko. Ver diccionario/README.md. «registrado» es lo que escribió la persona, tal cual; «forma» es la forma de trabajo. Las entradas con «revisar» no se usan en ejercicios.",
   "lengua": "miq",
-  "version": "0.1.0",
-  "actualizado": "2026-09-29",
+  "version": "0.2.0",
+  "actualizado": "2026-10-02",
   "entradas": [
     {
       "id": "bara",
@@ -102,7 +102,8 @@
       "forma": "tingki",
       "registrado": [
         "tingki",
-        "Tignki"
+        "Tignki",
+        "Tinki"
       ],
       "es": "gracias",
       "categoria": "interjeccion",
@@ -113,14 +114,16 @@
         "confianza": "C"
       },
       "normalizacion": "En la lista de palabras está «tingki»; en la frase «Gracias, amigo», «Tignki». Se toma «tingki»: ng es un solo sonido, como en «ingk».",
+      "notas": "Tangni escribe «Tinki»: la ng se oye como n antes de k (S4).",
       "reglas": [
         "S4",
         "L1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "du_plis",
@@ -177,14 +180,15 @@
       "forma": "nahkisma",
       "registrado": [
         "nahkisma",
-        "Nahkisma?"
+        "Nahkisma?",
+        "Naki sma"
       ],
       "es": "¿cómo estás?",
       "categoria": "expresion",
       "tema": "saludos",
       "analisis": "nahki-sma",
       "glosa": "cómo-PRS.2",
-      "notas": "La misma persona la escribió igual en las palabras y en las frases.",
+      "notas": "La misma persona la escribió igual en las palabras y en las frases. Tangni la escribe separada y sin h, «Naki sma»: corta la palabra justo donde la cortó el análisis (nahki + sma).",
       "reglas": [
         "M2",
         "M3",
@@ -192,9 +196,10 @@
         "S3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "yapti",
@@ -237,7 +242,7 @@
       "es": "hermano",
       "categoria": "sustantivo",
       "tema": "familia",
-      "notas": "¿Cambia según si habla un hombre o una mujer? Ver L7.",
+      "revisar": "Teacher Smith: hermano = muih, hermana = laikra. Tangni: hermano = yaikra, hermana = muiki (muih + ki). Encaja si la palabra depende de si los hermanos son del mismo sexo. Hay que preguntarlo antes de enseñarla.",
       "reglas": [
         "L7"
       ],
@@ -255,7 +260,7 @@
       "es": "hermana",
       "categoria": "sustantivo",
       "tema": "familia",
-      "notas": "¿Cambia según si habla un hombre o una mujer? Ver L7.",
+      "revisar": "Teacher Smith: hermano = muih, hermana = laikra. Tangni: hermano = yaikra, hermana = muiki (muih + ki). Encaja si la palabra depende de si los hermanos son del mismo sexo. Hay que preguntarlo antes de enseñarla.",
       "reglas": [
         "L7"
       ],
@@ -285,7 +290,8 @@
       "id": "mama_almuk",
       "forma": "mama almuk",
       "registrado": [
-        "Mama almuk"
+        "Mama almuk",
+        "mama almuk"
       ],
       "es": "abuela",
       "categoria": "expresion",
@@ -297,9 +303,10 @@
         "L8"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "dama",
@@ -338,13 +345,15 @@
       "id": "luhpi_waitna",
       "forma": "luhpi waitna",
       "registrado": [
-        "Luhpi waitna"
+        "Luhpi waitna",
+        "lupha waitna"
       ],
       "es": "hijo",
       "categoria": "expresion",
       "tema": "familia",
       "analisis": "luhpi waitna",
       "glosa": "hijo.o.hija hombre",
+      "notas": "Tangni escribe «lupha»: ¿luhpi o lupha? La h cambia de lugar (S3) y la vocal final también.",
       "reglas": [
         "O3",
         "L2",
@@ -352,21 +361,24 @@
         "S3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "luhpi_mairin",
       "forma": "luhpi mairin",
       "registrado": [
-        "Luhpi mairin"
+        "Luhpi mairin",
+        "lupha mairin"
       ],
       "es": "hija",
       "categoria": "expresion",
       "tema": "familia",
       "analisis": "luhpi mairin",
       "glosa": "hijo.o.hija mujer",
+      "notas": "Tangni escribe «lupha».",
       "reglas": [
         "O3",
         "L2",
@@ -374,15 +386,17 @@
         "S3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "tahti",
       "forma": "tahti",
       "registrado": [
-        "Tahti"
+        "Tahti",
+        "tahti"
       ],
       "es": "tío",
       "categoria": "sustantivo",
@@ -391,15 +405,17 @@
         "S3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "anti",
       "forma": "anti",
       "registrado": [
-        "Anti"
+        "Anti",
+        "anti"
       ],
       "es": "tía",
       "categoria": "sustantivo",
@@ -413,9 +429,10 @@
         "L1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "tuktan",
@@ -426,14 +443,16 @@
       "es": "niño o niña",
       "categoria": "sustantivo",
       "tema": "familia",
+      "notas": "Tangni la dio para «bebé»; Teacher Smith, para «niño o niña».",
       "reglas": [
         "L2",
         "L3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "bibi",
@@ -471,9 +490,10 @@
         "N2"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "wal",
@@ -488,13 +508,14 @@
         "N1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
-      "id": "yumhpa",
-      "forma": "yumhpa",
+      "id": "yumpha",
+      "forma": "yumpha",
       "registrado": [
         "yumgpa",
         "yumpha"
@@ -502,21 +523,23 @@
       "es": "tres",
       "categoria": "numeral",
       "tema": "numeros",
-      "normalizacion": "La misma persona lo escribió «yumgpa» (tres) y «yumpha» (dentro de nueve). Se toma «yumhpa»: la g y la h ante consonante son el mismo sonido (S3), y así se escribe en los materiales escolares publicados.",
+      "normalizacion": "Teacher Smith escribió «yumgpa» y «yumpha»; Tangni, «yumpha» dos veces. Se toma «yumpha», la forma que usan las dos personas. Los materiales publicados escriben «yumhpa»: g, h y hg junto a la consonante son el mismo sonido (S3).",
       "reglas": [
         "S3",
         "N1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "walhwal",
       "forma": "walhwal",
       "registrado": [
-        "walg walg"
+        "walg walg",
+        "walhwal"
       ],
       "es": "cuatro",
       "categoria": "numeral",
@@ -524,21 +547,24 @@
       "analisis": "wal-h-wal",
       "glosa": "dos-h-dos",
       "normalizacion": "Registrado «walg walg». La g ante consonante se toma como h (S3) y se escribe junto, como en los materiales escolares publicados.",
+      "notas": "Tangni lo escribió exactamente así: la normalización de la primera tanda se confirmó.",
       "reglas": [
         "S3",
         "N1",
         "M10"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "matsip",
       "forma": "matsip",
       "registrado": [
-        "matchip"
+        "matchip",
+        "matsip"
       ],
       "es": "cinco",
       "categoria": "numeral",
@@ -546,14 +572,16 @@
       "analisis": "mat-sip",
       "glosa": "mano-completa(?)",
       "normalizacion": "Registrado «matchip». La ch sale del encuentro de t + s (mat + sip, como en «mata wal sip»); se escribe «matsip».",
+      "notas": "Tangni lo escribió exactamente así: la normalización de la primera tanda se confirmó.",
       "reglas": [
         "S5",
         "N1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "matlalkahbi",
@@ -622,8 +650,8 @@
       "estado": "un_hablante"
     },
     {
-      "id": "matlalkahbi_pura_yumhpa",
-      "forma": "matlalkahbi pura yumhpa",
+      "id": "matlalkahbi_pura_yumpha",
+      "forma": "matlalkahbi pura yumpha",
       "registrado": [
         "matlal kahbi pura yumpha"
       ],
@@ -632,7 +660,7 @@
       "tema": "numeros",
       "analisis": "matlalkahbi pura yumhpa",
       "glosa": "seis encima tres",
-      "normalizacion": "Junto, como en seis; «yumpha» → «yumhpa» (S3).",
+      "normalizacion": "Junto, como en seis (S6).",
       "reglas": [
         "N1",
         "O2",
@@ -675,9 +703,10 @@
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "nakra",
@@ -689,9 +718,10 @@
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "kakma",
@@ -703,9 +733,10 @@
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "kiama",
@@ -717,15 +748,17 @@
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "bila",
       "forma": "bila",
       "registrado": [
-        "Bila"
+        "Bila",
+        "bila"
       ],
       "es": "boca",
       "categoria": "sustantivo",
@@ -735,28 +768,31 @@
         "L5"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "mihta",
       "forma": "mihta",
       "registrado": [
-        "Mihta"
+        "Mihta",
+        "mitha"
       ],
       "es": "mano",
       "categoria": "sustantivo",
       "tema": "cuerpo",
-      "notas": "En los números aparece como «mat-» y «mata» (cinco, diez).",
+      "notas": "En los números aparece como «mat-» y «mata» (cinco, diez). Tangni escribe «mitha»: la h va antes o después de la t según quien escribe (S3).",
       "reglas": [
         "S3",
         "N1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "mina",
@@ -768,9 +804,10 @@
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "napa",
@@ -782,9 +819,10 @@
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "tawa",
@@ -796,9 +834,10 @@
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "kupia",
@@ -810,9 +849,10 @@
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "utla",
@@ -1364,9 +1404,10 @@
         "M1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "yapaya",
@@ -1383,9 +1424,10 @@
         "M1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "wapaya",
@@ -1402,9 +1444,10 @@
         "M1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "aisaya",
@@ -1421,9 +1464,10 @@
         "M1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "walaya",
@@ -1440,9 +1484,10 @@
         "M1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "kaikaya",
@@ -1459,9 +1504,10 @@
         "M1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "aiwanaya",
@@ -1478,15 +1524,17 @@
         "M1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "pulaya",
       "forma": "pulaya",
       "registrado": [
-        "Pulaya"
+        "Pulaya",
+        "pulaya"
       ],
       "es": "jugar",
       "categoria": "verbo",
@@ -1497,9 +1545,10 @@
         "M1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "wark_takaya",
@@ -1523,9 +1572,10 @@
         "L1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "wap",
@@ -1536,7 +1586,7 @@
       "es": "ir",
       "categoria": "verbo",
       "tema": "acciones",
-      "revisar": "Se dio la raíz sola, y «caminar» es «wapaya». ¿Cuál es el infinitivo de «ir»? ¿«wap» es una orden («¡andá!»)?",
+      "revisar": "Tangni dio el infinitivo de «ir»: «waya». ¿«wap» es la orden («¡andá!») o la raíz de «caminar» (wapaya)?",
       "reglas": [
         "M1"
       ],
@@ -1554,7 +1604,7 @@
       "es": "venir",
       "categoria": "verbo",
       "tema": "acciones",
-      "revisar": "Se dio la raíz sola. ¿El infinitivo es «balaya»? ¿«bal» es una orden («¡vení!»)?",
+      "revisar": "Tangni dio el infinitivo, «balaya». ¿«bal» es la orden («¡vení!»)?",
       "reglas": [
         "M1"
       ],
@@ -1609,13 +1659,15 @@
       "id": "frase.me_llamo_ana",
       "forma": "yang nini Ana",
       "registrado": [
-        "Yang nini Ana."
+        "Yang nini Ana.",
+        "Yang nuni ana"
       ],
       "es": "Me llamo Ana.",
       "categoria": "frase",
       "tema": "frases",
       "analisis": "yang nin-i Ana",
       "glosa": "yo nombre-1POSS Ana",
+      "normalizacion": "Tangni escribió «nuni»; en su propia presentación escribe «Nini».",
       "notas": "Literalmente «yo, mi nombre Ana».",
       "reglas": [
         "M4",
@@ -1623,15 +1675,17 @@
         "O6"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "frase.estoy_bien",
       "forma": "pain sna",
       "registrado": [
-        "Pain sna."
+        "Pain sna.",
+        "Pain sna"
       ],
       "es": "Estoy bien.",
       "categoria": "frase",
@@ -1644,9 +1698,10 @@
         "L1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "frase.tengo_hambre",
@@ -1674,22 +1729,25 @@
       "id": "frase.quiero_agua",
       "forma": "li want",
       "registrado": [
-        "Li want"
+        "Li want",
+        "Lii want"
       ],
       "es": "Quiero agua.",
       "categoria": "frase",
       "tema": "frases",
       "analisis": "li want",
       "glosa": "agua «want»",
+      "normalizacion": "Tangni escribe «Lii» (vocal larga, S8).",
       "notas": "«want» va sin terminación de persona; comparar con «laiksna».",
       "reglas": [
         "O1",
         "L1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "frase.vamos_a_la_escuela",
@@ -1780,21 +1838,23 @@
       "id": "frase.gracias_amigo",
       "forma": "tingki painika",
       "registrado": [
-        "Tignki painika"
+        "Tignki painika",
+        "Tinki painika"
       ],
       "es": "Gracias, amigo.",
       "categoria": "frase",
       "tema": "frases",
       "analisis": "tingki painika",
       "glosa": "gracias amigo",
-      "normalizacion": "«Tignki» → «tingki», como en la lista de palabras.",
+      "normalizacion": "«Tignki» → «tingki», como en la lista de palabras. Tangni escribe «Tinki», sin g.",
       "reglas": [
         "S4"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "frase.donde_vivis",
@@ -1814,9 +1874,10 @@
         "O7"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "frase.me_gusta_el_pescado",
@@ -1845,22 +1906,25 @@
       "id": "frase.esta_lloviendo",
       "forma": "li auhwisa",
       "registrado": [
-        "Li auhwisa"
+        "Li auhwisa",
+        "Lii ahwisa"
       ],
       "es": "Está lloviendo.",
       "categoria": "frase",
       "tema": "frases",
       "analisis": "li auhw-isa",
       "glosa": "agua caer(?)-PRS.3",
+      "normalizacion": "Tangni escribe «Lii ahwisa»: vocal larga (S8) y la h en otro lugar (S3).",
       "notas": "Literalmente «el agua cae».",
       "reglas": [
         "M2",
         "L5"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "frase.aporte_abuela_coco",
@@ -1890,81 +1954,94 @@
       "id": "yul",
       "forma": "yul",
       "registrado": [
-        "Yul"
+        "Yul",
+        "yul"
       ],
       "es": "perro",
       "categoria": "sustantivo",
       "tema": "animales",
       "de": "frase.el_perro_come",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "inska",
       "forma": "inska",
       "registrado": [
-        "Inska"
+        "Inska",
+        "inska"
       ],
       "es": "pescado, pez",
       "categoria": "sustantivo",
       "tema": "comida",
       "de": "frase.me_gusta_el_pescado",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "li",
       "forma": "li",
       "registrado": [
-        "Li"
+        "Li",
+        "lii",
+        "Lii"
       ],
       "es": "agua; lluvia",
       "categoria": "sustantivo",
       "tema": "comida",
       "de": "frase.quiero_agua",
-      "notas": "«Quiero agua» y «está lloviendo» («el agua cae») usan la misma palabra.",
+      "notas": "«Quiero agua» y «está lloviendo» («el agua cae») usan la misma palabra. Tangni escribe siempre «lii», con la vocal doble: probablemente una i larga (S8).",
       "reglas": [
-        "L5"
+        "L5",
+        "S8"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "plun",
       "forma": "plun",
       "registrado": [
-        "Plun"
+        "Plun",
+        "plun"
       ],
       "es": "comida",
       "categoria": "sustantivo",
       "tema": "comida",
       "de": "frase.tengo_hambre",
-      "revisar": "Sale de «Tengo hambre», que no se traduce palabra por palabra. ¿«plun» es «comida»?",
+      "notas": "Confirmado por contexto: Tangni dice «plun piyaya» (comer) y «Yul plun pisa» (el perro come comida).",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "kuku",
       "forma": "kuku",
       "registrado": [
-        "kuku"
+        "kuku",
+        "coco"
       ],
       "es": "coco",
       "categoria": "sustantivo",
       "tema": "comida",
       "de": "frase.aporte_abuela_coco",
+      "notas": "Tangni escribió «coco», con la ortografía del español; Teacher Smith, «kuku» (S1).",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "titan",
@@ -2058,9 +2135,10 @@
         "L1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "painika",
@@ -2072,11 +2150,12 @@
       "categoria": "sustantivo",
       "tema": "saludos",
       "de": "frase.gracias_amigo",
-      "revisar": "¿«painika» es «amigo» o «mi amigo»? ¿Tiene que ver con «pain» (bien)?",
+      "notas": "Las dos personas la usan igual para «amigo». Queda por saber si tiene que ver con «pain» (bien).",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "waitna",
@@ -2092,9 +2171,10 @@
         "L2"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "mairin",
@@ -2110,9 +2190,10 @@
         "L2"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "almuk",
@@ -2136,7 +2217,8 @@
       "id": "mama",
       "forma": "mama",
       "registrado": [
-        "Mama"
+        "Mama",
+        "mama"
       ],
       "es": "mamá (en «mama almuk»)",
       "categoria": "sustantivo",
@@ -2146,9 +2228,10 @@
         "L8"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "smasmalkra_mairin",
@@ -2175,7 +2258,8 @@
       "id": "luhpi",
       "forma": "luhpi",
       "registrado": [
-        "Luhpi"
+        "Luhpi",
+        "lupha"
       ],
       "es": "hijo o hija",
       "categoria": "sustantivo",
@@ -2186,9 +2270,10 @@
         "S3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "skul",
@@ -2209,9 +2294,10 @@
         "L1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "watla",
@@ -2279,21 +2365,25 @@
       "id": "nini",
       "forma": "nini",
       "registrado": [
-        "nini"
+        "nini",
+        "Nini",
+        "nuni"
       ],
       "es": "mi nombre",
       "categoria": "forma_flexionada",
       "tema": "gramatica",
       "analisis": "nin-i",
       "glosa": "nombre-1POSS",
+      "normalizacion": "Tangni escribió «Nini» en su presentación y «nuni» en «Me llamo Ana»; se toma la primera, que coincide con Teacher Smith.",
       "de": "frase.me_llamo_ana",
       "reglas": [
         "M4"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "ninam",
@@ -2331,15 +2421,17 @@
         "M2"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "laiksna",
       "forma": "laiksna",
       "registrado": [
-        "laiksna"
+        "laiksna",
+        "Yaiksna"
       ],
       "es": "me gusta",
       "categoria": "forma_flexionada",
@@ -2352,14 +2444,17 @@
         "confianza": "A"
       },
       "de": "frase.me_gusta_el_pescado",
+      "notas": "Tangni escribe «Yaiksna», con y (S7).",
       "reglas": [
         "M2",
-        "L1"
+        "L1",
+        "S7"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "iwisma",
@@ -2377,15 +2472,17 @@
         "M2"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "auhwisa",
       "forma": "auhwisa",
       "registrado": [
-        "auhwisa"
+        "auhwisa",
+        "ahwisa"
       ],
       "es": "cae (la lluvia)",
       "categoria": "forma_flexionada",
@@ -2393,14 +2490,16 @@
       "analisis": "auhw-isa",
       "glosa": "caer(?)-PRS.3",
       "de": "frase.esta_lloviendo",
+      "notas": "Tangni: «ahwisa» en la frase y «ausisa» en la palabra «lluvia».",
       "reglas": [
         "M2",
         "S3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "kikisa",
@@ -2457,9 +2556,10 @@
         "M3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "sa",
@@ -2476,9 +2576,10 @@
         "M3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "yang",
@@ -2494,9 +2595,10 @@
         "O5"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "dia",
@@ -2533,15 +2635,17 @@
         "O7"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "ra",
       "forma": "ra",
       "registrado": [
-        "ra"
+        "ra",
+        "Ra"
       ],
       "es": "a, en (lugar)",
       "categoria": "posposicion",
@@ -2552,9 +2656,10 @@
         "O2"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "raiti-2026-09-30"
       ],
-      "estado": "un_hablante"
+      "estado": "varios_hablantes"
     },
     {
       "id": "kat",
@@ -2647,6 +2752,1186 @@
       ],
       "fuentes": [
         "raiti-2026-09-28"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "yaikra",
+      "forma": "yaikra",
+      "registrado": [
+        "yaikra"
+      ],
+      "es": "hermano",
+      "categoria": "sustantivo",
+      "tema": "familia",
+      "revisar": "¿Es la misma palabra que «laikra» (l → y, S7)? Ver L7.",
+      "reglas": [
+        "L7",
+        "S7"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "muiki",
+      "forma": "muiki",
+      "registrado": [
+        "muiki"
+      ],
+      "es": "hermana (mi hermana)",
+      "categoria": "forma_flexionada",
+      "tema": "familia",
+      "analisis": "muih-ki",
+      "glosa": "hermano.o.hermana-1POSS",
+      "revisar": "Ver L7: es «muih» con «mi» (-ki), dicho para una hermana.",
+      "reglas": [
+        "L7",
+        "M4",
+        "L9"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "mamiki",
+      "forma": "mamiki",
+      "registrado": [
+        "mamiki",
+        "Mamiki"
+      ],
+      "es": "mi mamá",
+      "categoria": "forma_flexionada",
+      "tema": "familia",
+      "analisis": "mam-i-ki",
+      "glosa": "mamá-1POSS",
+      "notas": "Tangni la dio para «mamá»: en la familia se nombra con dueño (L9).",
+      "reglas": [
+        "M4",
+        "L8",
+        "L9"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "papiki",
+      "forma": "papiki",
+      "registrado": [
+        "Papiki"
+      ],
+      "es": "mi papá",
+      "categoria": "forma_flexionada",
+      "tema": "familia",
+      "analisis": "pap-i-ki",
+      "glosa": "papá-1POSS",
+      "notas": "Confirma la regla de M4 (a final → i + ki) con otra raíz: la predicción era «aisiki».",
+      "reglas": [
+        "M4",
+        "L8",
+        "L9"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "papa_almuk",
+      "forma": "papa almuk",
+      "registrado": [
+        "papá almuk"
+      ],
+      "es": "abuelo",
+      "categoria": "expresion",
+      "tema": "familia",
+      "analisis": "papa almuk",
+      "glosa": "papá viejo",
+      "normalizacion": "Registrado con tilde, «papá almuk», como en español.",
+      "reglas": [
+        "O3",
+        "L8"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "tuktan_mairin",
+      "forma": "tuktan mairin",
+      "registrado": [
+        "tuktan mairin"
+      ],
+      "es": "niña",
+      "categoria": "expresion",
+      "tema": "familia",
+      "glosa": "niño.o.niña mujer",
+      "notas": "Acertó la predicción 13 de la versión 0.1.",
+      "reglas": [
+        "L2",
+        "O3"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "tuktan_waitna",
+      "forma": "tuktan waitna",
+      "registrado": [
+        "tuktan waitna"
+      ],
+      "es": "niño",
+      "categoria": "expresion",
+      "tema": "familia",
+      "glosa": "niño.o.niña hombre",
+      "reglas": [
+        "L2",
+        "O3"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "matsip_pura_kum",
+      "forma": "matsip pura kum",
+      "registrado": [
+        "matsip pura kum"
+      ],
+      "es": "seis",
+      "categoria": "numeral",
+      "tema": "numeros",
+      "analisis": "matsip pura kum",
+      "glosa": "cinco encima uno",
+      "notas": "Sistema de Tangni: todo se cuenta desde el cinco. Teacher Smith cuenta desde el seis (N1, N3).",
+      "reglas": [
+        "N3",
+        "O2"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "matsip_pura_wal",
+      "forma": "matsip pura wal",
+      "registrado": [
+        "matsip pura wal"
+      ],
+      "es": "siete",
+      "categoria": "numeral",
+      "tema": "numeros",
+      "analisis": "matsip pura wal",
+      "glosa": "cinco encima dos",
+      "notas": "Sistema de Tangni: todo se cuenta desde el cinco. Teacher Smith cuenta desde el seis (N1, N3).",
+      "reglas": [
+        "N3",
+        "O2"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "matsip_pura_yumpha",
+      "forma": "matsip pura yumpha",
+      "registrado": [
+        "matsip pura yumpha"
+      ],
+      "es": "ocho",
+      "categoria": "numeral",
+      "tema": "numeros",
+      "analisis": "matsip pura yumpha",
+      "glosa": "cinco encima tres",
+      "notas": "Sistema de Tangni: todo se cuenta desde el cinco. Teacher Smith cuenta desde el seis (N1, N3).",
+      "reglas": [
+        "N3",
+        "O2"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "matsip_pura_walhwal",
+      "forma": "matsip pura walhwal",
+      "registrado": [
+        "Matsip pura walhwal"
+      ],
+      "es": "nueve",
+      "categoria": "numeral",
+      "tema": "numeros",
+      "analisis": "matsip pura walhwal",
+      "glosa": "cinco encima cuatro",
+      "notas": "Sistema de Tangni: todo se cuenta desde el cinco. Teacher Smith cuenta desde el seis (N1, N3).",
+      "reglas": [
+        "N3",
+        "O2"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "matsip_pura_matsip",
+      "forma": "matsip pura matsip",
+      "registrado": [
+        "matsip pura matsip"
+      ],
+      "es": "diez",
+      "categoria": "numeral",
+      "tema": "numeros",
+      "analisis": "matsip pura matsip",
+      "glosa": "cinco encima cinco",
+      "notas": "Sistema de Tangni: todo se cuenta desde el cinco. Teacher Smith cuenta desde el seis (N1, N3).",
+      "reglas": [
+        "N3",
+        "O2"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "balaya",
+      "forma": "balaya",
+      "registrado": [
+        "balaya"
+      ],
+      "es": "venir",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "analisis": "bal-aya",
+      "glosa": "venir-INF",
+      "notas": "Acertó la predicción 9 de la versión 0.1.",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "waya",
+      "forma": "waya",
+      "registrado": [
+        "waya"
+      ],
+      "es": "ir",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "analisis": "w-aya",
+      "glosa": "ir-INF",
+      "notas": "Otras fuentes escriben «waia».",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "plun_piyaya",
+      "forma": "plun piyaya",
+      "registrado": [
+        "plun piyaya"
+      ],
+      "es": "comer",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "analisis": "plun pi-y-aya",
+      "glosa": "comida comer-INF",
+      "notas": "Literalmente «comer comida»: el objeto va antes del verbo (O1).",
+      "reglas": [
+        "O1",
+        "M1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "nahki",
+      "forma": "nahki",
+      "registrado": [
+        "Naki",
+        "naki"
+      ],
+      "es": "¿cómo?",
+      "categoria": "interrogativo",
+      "tema": "gramatica",
+      "normalizacion": "Se toma «nahki», con la h de Teacher Smith (S3).",
+      "notas": "Tangni la escribe sola, «naki», en «Naki sma» y en «Niman naki». Teacher Smith la escribe pegada y con h: «nahkisma».",
+      "reglas": [
+        "O7",
+        "S3"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "urus",
+      "forma": "urus",
+      "registrado": [
+        "urus"
+      ],
+      "es": "mono",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "limi",
+      "forma": "limi",
+      "registrado": [
+        "limi"
+      ],
+      "es": "tigre (jaguar)",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "micki",
+      "forma": "micki",
+      "registrado": [
+        "micki"
+      ],
+      "es": "gato",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "notas": "¿Del español «michi», como se le dice al gato?",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "galila",
+      "forma": "galila",
+      "registrado": [
+        "galila"
+      ],
+      "es": "gallina",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "prestamo": {
+        "de": "español",
+        "origen": "gallina",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1",
+        "S1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "bip",
+      "forma": "bip",
+      "registrado": [
+        "bip"
+      ],
+      "es": "vaca",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "beef (carne de res)",
+        "confianza": "B"
+      },
+      "notas": "La palabra inglesa de la carne pasó a nombrar al animal.",
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "aras",
+      "forma": "aras",
+      "registrado": [
+        "aras"
+      ],
+      "es": "caballo",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "kuswa",
+      "forma": "kuswa",
+      "registrado": [
+        "kuswa"
+      ],
+      "es": "tortuga",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "kakamuk",
+      "forma": "kakamuk",
+      "registrado": [
+        "kakamuk"
+      ],
+      "es": "iguana",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "iris",
+      "forma": "iris",
+      "registrado": [
+        "iris"
+      ],
+      "es": "loro",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "piuta",
+      "forma": "piuta",
+      "registrado": [
+        "piuta"
+      ],
+      "es": "culebra",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "wuirku",
+      "forma": "wuirku",
+      "registrado": [
+        "wuirku"
+      ],
+      "es": "cerdo",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "revisar": "Otras fuentes escriben «kuirku». ¿Es «wuirku» o «kuirku»?",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "daiwan_nawira",
+      "forma": "daiwan nawira",
+      "registrado": [
+        "daiwan nawira"
+      ],
+      "es": "pájaro",
+      "categoria": "expresion",
+      "tema": "animales",
+      "revisar": "¿«daiwan» quiere decir «animal»? ¿«pájaro» es «daiwan nawira» o alcanza con «nawira»?",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "rais",
+      "forma": "rais",
+      "registrado": [
+        "rais"
+      ],
+      "es": "arroz",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "rice",
+        "confianza": "A"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "bins",
+      "forma": "bins",
+      "registrado": [
+        "bins"
+      ],
+      "es": "frijoles",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "beans",
+        "confianza": "A"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "yaura",
+      "forma": "yaura",
+      "registrado": [
+        "yaura"
+      ],
+      "es": "yuca",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "platu",
+      "forma": "platu",
+      "registrado": [
+        "platu"
+      ],
+      "es": "plátano",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "prestamo": {
+        "de": "español",
+        "origen": "plátano",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "tama",
+      "forma": "tama",
+      "registrado": [
+        "tama"
+      ],
+      "es": "banano",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "wina",
+      "forma": "wina",
+      "registrado": [
+        "wina"
+      ],
+      "es": "carne",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "bret",
+      "forma": "bret",
+      "registrado": [
+        "bret"
+      ],
+      "es": "pan",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "bread",
+        "confianza": "A"
+      },
+      "notas": "Conserva la e del inglés (S1).",
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "sal",
+      "forma": "sal",
+      "registrado": [
+        "sal"
+      ],
+      "es": "sal",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "prestamo": {
+        "de": "español o inglés",
+        "origen": "sal / salt",
+        "confianza": "C"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "cafi",
+      "forma": "cafi",
+      "registrado": [
+        "cafi"
+      ],
+      "es": "café",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "prestamo": {
+        "de": "español",
+        "origen": "café",
+        "confianza": "B"
+      },
+      "notas": "La e final se volvió i (S1).",
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "haya",
+      "forma": "haya",
+      "registrado": [
+        "haya"
+      ],
+      "es": "maíz",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "galila_mabra",
+      "forma": "galila mabra",
+      "registrado": [
+        "galila mabra"
+      ],
+      "es": "huevo",
+      "categoria": "expresion",
+      "tema": "comida",
+      "analisis": "galila mabra",
+      "glosa": "gallina huevo",
+      "notas": "Literalmente «huevo de gallina»: el poseedor va antes (O4).",
+      "reglas": [
+        "O4",
+        "L1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "tasba",
+      "forma": "tasba",
+      "registrado": [
+        "tasba"
+      ],
+      "es": "tierra",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "tikni",
+      "forma": "tikni",
+      "registrado": [
+        "tikni"
+      ],
+      "es": "río",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "kabu",
+      "forma": "kabu",
+      "registrado": [
+        "kabu"
+      ],
+      "es": "mar",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "yapta",
+      "forma": "yapta",
+      "registrado": [
+        "yapta"
+      ],
+      "es": "sol",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "kati",
+      "forma": "kati",
+      "registrado": [
+        "kati"
+      ],
+      "es": "luna",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "slisma",
+      "forma": "slisma",
+      "registrado": [
+        "slisma"
+      ],
+      "es": "estrella",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "dus",
+      "forma": "dus",
+      "registrado": [
+        "dus"
+      ],
+      "es": "árbol",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "unta",
+      "forma": "unta",
+      "registrado": [
+        "unta"
+      ],
+      "es": "monte",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "walpa",
+      "forma": "walpa",
+      "registrado": [
+        "walpa"
+      ],
+      "es": "piedra",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "pasa",
+      "forma": "pasa",
+      "registrado": [
+        "pasa"
+      ],
+      "es": "viento",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "li_ausisa",
+      "forma": "li ausisa",
+      "registrado": [
+        "li ausisa"
+      ],
+      "es": "lluvia",
+      "categoria": "expresion",
+      "tema": "naturaleza",
+      "analisis": "li aus-isa",
+      "glosa": "agua caer(?)-PRS.3",
+      "notas": "«La lluvia» se dice «el agua cae», como en «Está lloviendo» (L5).",
+      "revisar": "¿«ausisa» es la misma palabra que «auhwisa» / «ahwisa»?",
+      "reglas": [
+        "L5",
+        "M2",
+        "S3"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "pauta_klawi",
+      "forma": "pauta klawi",
+      "registrado": [
+        "pauta klawi"
+      ],
+      "es": "fuego",
+      "categoria": "expresion",
+      "tema": "naturaleza",
+      "revisar": "¿Qué quiere decir cada palabra? ¿«pauta» sola es «fuego»?",
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "maistro",
+      "forma": "maistro",
+      "registrado": [
+        "Maistro"
+      ],
+      "es": "maestro",
+      "categoria": "sustantivo",
+      "tema": "escuela",
+      "prestamo": {
+        "de": "español",
+        "origen": "maestro",
+        "confianza": "A"
+      },
+      "notas": "Conserva la o del español. Teacher Smith dice «smasmalkra».",
+      "reglas": [
+        "L1",
+        "S1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "frase.como_te_llamas.2",
+      "forma": "niman naki",
+      "registrado": [
+        "Niman naki"
+      ],
+      "es": "¿Cómo te llamás?",
+      "categoria": "frase",
+      "tema": "frases",
+      "analisis": "nim-an naki",
+      "glosa": "nombre-2POSS cómo",
+      "notas": "Teacher Smith pregunta «¿tu nombre qué?» (Ninam dia); Tangni, «¿tu nombre cómo?». En las dos está la m de «tu» (M4).",
+      "reglas": [
+        "M4",
+        "O7"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "frase.buenos_dias_maestra.2",
+      "forma": "titan yamni maistro",
+      "registrado": [
+        "Titan yamni Maistro"
+      ],
+      "es": "Buenos días, maestra.",
+      "categoria": "frase",
+      "tema": "frases",
+      "glosa": "mañana buena maestro",
+      "reglas": [
+        "O3",
+        "L1"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "frase.tengo_hambre.2",
+      "forma": "plun aidauki",
+      "registrado": [
+        "Plun aidauki"
+      ],
+      "es": "Tengo hambre.",
+      "categoria": "frase",
+      "tema": "frases",
+      "revisar": "Teacher Smith dijo «aidauksa». ¿Qué diferencia hay con «aidauki»?",
+      "reglas": [
+        "M11"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "frase.vamos_a_la_escuela.2",
+      "forma": "kaya skul ra",
+      "registrado": [
+        "Kaya skul ra"
+      ],
+      "es": "Vamos a la escuela.",
+      "categoria": "frase",
+      "tema": "frases",
+      "revisar": "¿«kaya» quiere decir «vamos»? Es la única frase donde el verbo (si lo es) va primero.",
+      "reglas": [
+        "O1",
+        "O2"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "frase.mi_mama_esta_en_la_casa.2",
+      "forma": "mamiki utlara sa",
+      "registrado": [
+        "Mamiki utlara sa"
+      ],
+      "es": "Mi mamá está en la casa.",
+      "categoria": "frase",
+      "tema": "frases",
+      "analisis": "mam-i-ki utla=ra sa",
+      "glosa": "mamá-1POSS casa=LOC PRS.3",
+      "notas": "La misma estructura que la de Teacher Smith, con «ra» pegada (S6).",
+      "reglas": [
+        "M3",
+        "M4",
+        "O1",
+        "O2",
+        "S6"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "frase.el_perro_come.2",
+      "forma": "yul plun pisa",
+      "registrado": [
+        "Yul plun pisa"
+      ],
+      "es": "El perro come.",
+      "categoria": "frase",
+      "tema": "frases",
+      "analisis": "yul plun pi-sa",
+      "glosa": "perro comida comer-PRS.3",
+      "notas": "Sujeto, objeto y verbo, en ese orden (O1).",
+      "reglas": [
+        "O1",
+        "M2"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "frase.hasta_manana.2",
+      "forma": "titan pruabia",
+      "registrado": [
+        "Titan pruabia"
+      ],
+      "es": "Hasta mañana.",
+      "categoria": "frase",
+      "tema": "frases",
+      "revisar": "Teacher Smith dijo «Yauhka kat». ¿Qué es «pruabia»? ¿«titan» también es «mañana, el día siguiente»? (L4)",
+      "reglas": [
+        "L4"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "frase.me_gusta_el_pescado.2",
+      "forma": "yaiksna inska",
+      "registrado": [
+        "Yaiksna inska"
+      ],
+      "es": "Me gusta el pescado.",
+      "categoria": "frase",
+      "tema": "frases",
+      "analisis": "yaik-sna inska",
+      "glosa": "«like»-PRS.1 pescado",
+      "notas": "La única frase del corpus con el verbo antes del objeto; Teacher Smith dijo «Inska laiksna». Puede ser el orden del español (O1).",
+      "reglas": [
+        "O1",
+        "S7"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "frase.aporte_tangni",
+      "forma": "yang nini Tangni 18 mani brisna Jinotega ra skul dimisna",
+      "registrado": [
+        "Yang Nini Tangni 18 mani brisna Jinotega Ra skul dimisna"
+      ],
+      "es": "Mi nombre es Tangni, tengo 18 años y estudio en Jinotega.",
+      "categoria": "frase",
+      "tema": "frases",
+      "analisis": "yang nin-i Tangni | 18 mani bri-sna | Jinotega ra skul dim-isna",
+      "glosa": "yo nombre-1POSS Tangni | 18 año tener-PRS.1 | Jinotega LOC escuela entrar(?)-PRS.1",
+      "notas": "La escribió Tangni como aporte libre, con su traducción.",
+      "reglas": [
+        "M2",
+        "M4",
+        "O1",
+        "O2",
+        "O6",
+        "O9"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "mani",
+      "forma": "mani",
+      "registrado": [
+        "mani"
+      ],
+      "es": "año",
+      "categoria": "sustantivo",
+      "tema": "tiempo",
+      "de": "frase.aporte_tangni",
+      "reglas": [
+        "O9"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "brisna",
+      "forma": "brisna",
+      "registrado": [
+        "brisna"
+      ],
+      "es": "tengo",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "bri-sna",
+      "glosa": "tener-PRS.1",
+      "de": "frase.aporte_tangni",
+      "reglas": [
+        "M2"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
+      ],
+      "estado": "un_hablante"
+    },
+    {
+      "id": "dimisna",
+      "forma": "dimisna",
+      "registrado": [
+        "dimisna"
+      ],
+      "es": "entro, estudio («skul dimisna»)",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "dim-isna",
+      "glosa": "entrar(?)-PRS.1",
+      "de": "frase.aporte_tangni",
+      "revisar": "«skul dimisna» se tradujo «estudio». ¿«dimaya» es «entrar»?",
+      "reglas": [
+        "M2"
+      ],
+      "fuentes": [
+        "raiti-2026-09-30"
       ],
       "estado": "un_hablante"
     }

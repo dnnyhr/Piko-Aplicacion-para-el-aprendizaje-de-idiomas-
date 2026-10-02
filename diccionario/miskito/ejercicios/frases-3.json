@@ -37,6 +37,41 @@
         "pisa"
       ],
       "gloss": "Mi abuela sonríe al ver su coco"
+    },
+    {
+      "id": "miq.frases.3.c",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Yul plun pisa",
+      "blocks": [
+        "Yul",
+        "plun",
+        "pisa",
+        "piyaya",
+        "li"
+      ],
+      "gloss": "El perro come (comida)"
+    },
+    {
+      "id": "miq.frases.3.d",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Yang nini Tangni 18 mani brisna Jinotega ra skul dimisna",
+      "blocks": [
+        "Yang",
+        "nini",
+        "Tangni",
+        "18",
+        "mani",
+        "brisna",
+        "Jinotega",
+        "ra",
+        "skul",
+        "dimisna",
+        "sna",
+        "utla"
+      ],
+      "gloss": "Mi nombre es Tangni, tengo 18 años y estudio en Jinotega"
     }
   ]
 }
