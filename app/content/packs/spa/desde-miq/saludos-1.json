@@ -1,0 +1,131 @@
+{
+  "id": "miq.spa.saludos.1",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "saludos",
+  "difficulty": 1,
+  "title": "Saludos",
+  "items": [
+    {
+      "id": "miq.spa.saludos.1.a",
+      "type": "choice",
+      "skill": "spa.saludos",
+      "prompt": "Titan yamni",
+      "answer": "Buenos días",
+      "options": [
+        "Buenos días",
+        "Buenas tardes",
+        "Buenas noches"
+      ]
+    },
+    {
+      "id": "miq.spa.saludos.1.b",
+      "type": "choice",
+      "skill": "spa.saludos",
+      "prompt": "Tutni yamni",
+      "answer": "Buenas tardes",
+      "options": [
+        "Buenas tardes",
+        "Buenos días",
+        "Buenas noches"
+      ]
+    },
+    {
+      "id": "miq.spa.saludos.1.c",
+      "type": "choice",
+      "skill": "spa.saludos",
+      "prompt": "Yamni yaps",
+      "answer": "Buenas noches",
+      "options": [
+        "Buenas noches",
+        "Buenos días",
+        "Buenas tardes"
+      ]
+    },
+    {
+      "id": "miq.spa.saludos.1.d",
+      "type": "choice",
+      "skill": "spa.saludos",
+      "prompt": "Tingki",
+      "answer": "Gracias",
+      "options": [
+        "Gracias",
+        "Por favor",
+        "Adiós"
+      ]
+    },
+    {
+      "id": "miq.spa.saludos.1.e",
+      "type": "choice",
+      "skill": "spa.saludos",
+      "prompt": "Du plis",
+      "answer": "Por favor",
+      "options": [
+        "Por favor",
+        "Gracias",
+        "No"
+      ]
+    },
+    {
+      "id": "miq.spa.saludos.1.f",
+      "type": "choice",
+      "skill": "spa.saludos",
+      "prompt": "Au",
+      "answer": "Sí",
+      "options": [
+        "Sí",
+        "No",
+        "Gracias"
+      ]
+    },
+    {
+      "id": "miq.spa.saludos.1.g",
+      "type": "choice",
+      "skill": "spa.saludos",
+      "prompt": "Apia",
+      "answer": "No",
+      "options": [
+        "No",
+        "Sí",
+        "Adiós"
+      ]
+    },
+    {
+      "id": "miq.spa.saludos.1.h",
+      "type": "choice",
+      "skill": "spa.saludos",
+      "prompt": "Aisaby",
+      "answer": "Adiós",
+      "options": [
+        "Adiós",
+        "Gracias",
+        "Sí"
+      ]
+    },
+    {
+      "id": "miq.spa.saludos.1.i",
+      "type": "choice",
+      "skill": "spa.saludos",
+      "prompt": "Nahkisma",
+      "answer": "¿Cómo estás?",
+      "options": [
+        "¿Cómo estás?",
+        "Gracias",
+        "Adiós"
+      ]
+    },
+    {
+      "id": "miq.spa.saludos.1.j",
+      "type": "build",
+      "skill": "spa.saludos",
+      "target": "Hasta mañana",
+      "blocks": [
+        "Hasta",
+        "mañana",
+        "buenos",
+        "días"
+      ],
+      "gloss": "Yauhka kat"
+    }
+  ]
+}

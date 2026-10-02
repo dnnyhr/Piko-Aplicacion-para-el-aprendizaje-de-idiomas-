@@ -20,6 +20,7 @@ que el generador escribe.
 | Código | Lengua | Estado |
 |---|---|---|
 | `eng` | Inglés | ✅ 6 paquetes, 43 ítems |
+| `spa` | Español, desde el miskito | ✅ 18 paquetes, 151 ítems, dando vuelta las recetas del miskito |
 | `miq` | Miskito | ✅ 19 paquetes, 167 ítems, de dos hablantes de Raiti y dos diccionarios publicados. Escucha con voz en español para mientras |
 | `sum` | Mayangna | ⬜ Vacío — necesita hablantes |
 | `rma` | Rama | ⬜ Vacío — necesita hablantes |
@@ -49,7 +50,8 @@ Los códigos son ISO 639-3.
 | Campo | Qué es |
 |---|---|
 | `id` | Único en todo el proyecto. Convención: `<lang>.<tema>.<nivel>` |
-| `lang` | `eng`, `miq`, `sum`, `rma` o `cab` |
+| `lang` | La lengua que se aprende: `eng`, `miq`, `sum`, `rma`, `cab` o `spa` |
+| `desde` | La lengua desde la que se aprende: la de las preguntas y las traducciones. Si falta, español. El español se aprende desde el miskito (`"lang": "spa", "desde": "miq"`) |
 | `theme` | Agrupa paquetes; el maestro elige temas al armar un preset |
 | `difficulty` | `1`, `2` o `3` |
 | `title` | Lo que ve el maestro en pantalla |
@@ -73,7 +75,7 @@ selección adaptativa agrupan bien.
 }
 ```
 
-`prompt` va en español y `answer` en la lengua que se enseña. La respuesta
+`prompt` va en la lengua de partida (`desde`, por defecto español) y `answer` en la lengua que se enseña. La respuesta
 correcta **tiene que estar** dentro de `options`; el orden se baraja al
 presentarlo, así que no importa en qué posición se escriba.
 

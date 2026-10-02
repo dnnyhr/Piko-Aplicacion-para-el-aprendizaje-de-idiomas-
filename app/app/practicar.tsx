@@ -13,18 +13,20 @@ import { Globo } from '../src/ui/components/Globo';
 import { Pantalla } from '../src/ui/components/Pantalla';
 import { Opcion } from '../src/ui/components/Opcion';
 import { PikoMascota } from '../src/ui/piko/PikoMascota';
-import { FIN_BIEN, FIN_NORMAL, elegir } from '../src/ui/piko/frases';
+import { elegir } from '../src/ui/piko/frases';
+import { useTextos } from '../src/ui/textos/useTextos';
+import { esClave } from '../src/ui/textos/traducir';
 import { Runner, type ResultadoRonda } from '../src/features/exercises/Runner';
 import { useProgreso } from '../src/features/progreso/store';
 import { color, espacio, radio, texto } from '../src/ui/tokens';
 import { PACKS } from '../content';
 import { pickAdaptive, temasDe } from '../src/core/content/selector';
-import { LANGS, LANG_NOMBRE, type LangCode } from '../src/core/content/schema';
+import { LANGS, type LangCode } from '../src/core/content/schema';
 
 const ITEMS_POR_RONDA = 8;
 
-/** Sólo se ofrecen las lenguas que ya tienen ejercicios. */
-const CON_CONTENIDO = LANGS.filter((l) => temasDe(PACKS, l).length > 0);
+/** Las lenguas que se pueden aprender desde `desde`: las que tienen ejercicios. */
+const conContenido = (desde: LangCode) => LANGS.filter((l) => temasDe(PACKS, l, desde).length > 0);
 
 type Fase = 'elegir' | 'jugando' | 'resultado';
 
@@ -37,8 +39,16 @@ export default function Practicar() {
   const [tema, setTema] = useState<string | null>(null);
   const [resultado, setResultado] = useState<ResultadoRonda | null>(null);
 
-  const [lang, setLang] = useState<LangCode>('eng');
-  const temas = useMemo(() => temasDe(PACKS, lang), [lang]);
+  const { t, frases, desde } = useTextos();
+  const disponibles = useMemo(() => conContenido(desde), [desde]);
+  const [elegida, setLang] = useState<LangCode>('eng');
+  // Al cambiar la lengua de la app cambian las que se pueden aprender.
+  const lang: LangCode = disponibles.includes(elegida) ? elegida : (disponibles[0] ?? elegida);
+  const temas = useMemo(() => temasDe(PACKS, lang, desde), [lang, desde]);
+  const nombreTema = (tema: string): string => {
+    const clave = `tema.${tema}`;
+    return esClave(clave) ? t(clave) : tema.charAt(0).toLocaleUpperCase() + tema.slice(1);
+  };
 
   const [items, setItems] = useState<ReturnType<typeof pickAdaptive>>([]);
 
@@ -46,6 +56,7 @@ export default function Practicar() {
     (elegido: string | null) => {
       const seleccion = pickAdaptive(PACKS, {
         lang,
+        desde,
         themes: elegido ? [elegido] : undefined,
         count: ITEMS_POR_RONDA,
         state: estado,
@@ -55,7 +66,7 @@ export default function Practicar() {
       setItems(seleccion);
       setFase('jugando');
     },
-    [estado, lang],
+    [estado, lang, desde],
   );
 
   if (fase === 'jugando') {
@@ -81,20 +92,20 @@ export default function Practicar() {
       <Pantalla>
         <View style={styles.fin}>
           <PikoMascota estado={bien ? 'celebrando' : 'alegre'} tam={190} />
-          <Globo hacia="abajo">{bien ? elegir(FIN_BIEN) : elegir(FIN_NORMAL)}</Globo>
+          <Globo hacia="abajo">{elegir(frases(bien ? 'piko.fin_bien' : 'piko.fin_normal'))}</Globo>
 
           <View style={styles.marcador}>
-            <Dato valor={`${resultado.aciertos}/${resultado.respondidas}`} etiqueta="Correctas" />
-            <Dato valor={String(estado.xp)} etiqueta="XP total" />
-            <Dato valor={String(estado.bestStreak)} etiqueta="Mejor racha" />
+            <Dato valor={`${resultado.aciertos}/${resultado.respondidas}`} etiqueta={t('resultado.correctas')} />
+            <Dato valor={String(estado.xp)} etiqueta={t('comun.xp_total')} />
+            <Dato valor={String(estado.bestStreak)} etiqueta={t('resultado.mejor_racha')} />
           </View>
 
           <View style={styles.acciones}>
             <Boton ancho onPress={() => empezar(tema)}>
-              Otra ronda
+              {t('resultado.otra_ronda')}
             </Boton>
             <Boton ancho tono="papel" onPress={() => setFase('elegir')}>
-              Cambiar de tema
+              {t('resultado.cambiar_tema')}
             </Boton>
           </View>
         </View>
@@ -108,21 +119,23 @@ export default function Practicar() {
         <View style={styles.cabecera}>
           <PikoMascota estado="idle" tam={96} />
           <View style={styles.cabeceraTexto}>
-            <Text style={styles.titulo}>{LANG_NOMBRE[lang]}</Text>
+            <Text style={styles.titulo}>{t(`lengua.${lang}`)}</Text>
             <Text style={styles.sub}>
-              {estado.xp} XP · {estado.correct}/{estado.answered} correctas
+              {t('comun.xp_correctas', { xp: estado.xp, correctas: estado.correct, respondidas: estado.answered })}
             </Text>
           </View>
         </View>
 
-        {CON_CONTENIDO.length > 1 && (
+        {disponibles.length === 0 && <Text style={styles.sub}>{t('practicar.sin_contenido')}</Text>}
+
+        {disponibles.length > 1 && (
           <>
-            <Text style={styles.instruccion}>Elegí la lengua</Text>
+            <Text style={styles.instruccion}>{t('practicar.elegir_lengua')}</Text>
             <View style={styles.lenguas}>
-              {CON_CONTENIDO.map((l) => (
+              {disponibles.map((l) => (
                 <View key={l} style={styles.lengua}>
                   <Opcion estado={l === lang ? 'elegida' : 'normal'} onPress={() => setLang(l)}>
-                    {LANG_NOMBRE[l]}
+                    {t(`lengua.${l}`)}
                   </Opcion>
                 </View>
               ))}
@@ -130,19 +143,19 @@ export default function Practicar() {
           </>
         )}
 
-        <Text style={styles.instruccion}>Elegí un tema</Text>
+        <Text style={styles.instruccion}>{t('practicar.elegir_tema')}</Text>
 
         <View style={styles.temas}>
-          <Opcion onPress={() => empezar(null)}>Todo mezclado</Opcion>
-          {temas.map((t) => (
-            <Opcion key={t} onPress={() => empezar(t)}>
-              {capitalizar(t)}
+          <Opcion onPress={() => empezar(null)}>{t('practicar.todo_mezclado')}</Opcion>
+          {temas.map((tema) => (
+            <Opcion key={tema} onPress={() => empezar(tema)}>
+              {nombreTema(tema)}
             </Opcion>
           ))}
         </View>
 
         <Boton ancho tono="fantasma" onPress={() => router.back()}>
-          Volver
+          {t('comun.volver')}
         </Boton>
       </ScrollView>
     </Pantalla>
@@ -158,7 +171,6 @@ function Dato({ valor, etiqueta }: { valor: string; etiqueta: string }) {
   );
 }
 
-const capitalizar = (s: string) => s.charAt(0).toLocaleUpperCase() + s.slice(1);
 
 const styles = StyleSheet.create({
   contenido: { gap: espacio.xl, paddingBottom: espacio.xl },

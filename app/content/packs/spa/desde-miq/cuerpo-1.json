@@ -1,0 +1,130 @@
+{
+  "id": "miq.spa.cuerpo.1",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "cuerpo",
+  "difficulty": 1,
+  "title": "El cuerpo",
+  "items": [
+    {
+      "id": "miq.spa.cuerpo.1.a",
+      "type": "choice",
+      "skill": "spa.cuerpo",
+      "prompt": "lal",
+      "answer": "cabeza",
+      "options": [
+        "cabeza",
+        "ojo",
+        "pie"
+      ]
+    },
+    {
+      "id": "miq.spa.cuerpo.1.b",
+      "type": "choice",
+      "skill": "spa.cuerpo",
+      "prompt": "nakra",
+      "answer": "ojo",
+      "options": [
+        "ojo",
+        "nariz",
+        "oreja"
+      ]
+    },
+    {
+      "id": "miq.spa.cuerpo.1.c",
+      "type": "choice",
+      "skill": "spa.cuerpo",
+      "prompt": "kakma",
+      "answer": "nariz",
+      "options": [
+        "nariz",
+        "oreja",
+        "diente"
+      ]
+    },
+    {
+      "id": "miq.spa.cuerpo.1.d",
+      "type": "choice",
+      "skill": "spa.cuerpo",
+      "prompt": "kiama",
+      "answer": "oreja",
+      "options": [
+        "oreja",
+        "nariz",
+        "pelo"
+      ]
+    },
+    {
+      "id": "miq.spa.cuerpo.1.e",
+      "type": "choice",
+      "skill": "spa.cuerpo",
+      "prompt": "bila",
+      "answer": "boca",
+      "options": [
+        "boca",
+        "diente",
+        "pie"
+      ]
+    },
+    {
+      "id": "miq.spa.cuerpo.1.f",
+      "type": "choice",
+      "skill": "spa.cuerpo",
+      "prompt": "mihta",
+      "answer": "mano",
+      "options": [
+        "mano",
+        "pie",
+        "cabeza"
+      ]
+    },
+    {
+      "id": "miq.spa.cuerpo.1.g",
+      "type": "choice",
+      "skill": "spa.cuerpo",
+      "prompt": "mina",
+      "answer": "pie",
+      "options": [
+        "pie",
+        "mano",
+        "diente"
+      ]
+    },
+    {
+      "id": "miq.spa.cuerpo.1.h",
+      "type": "choice",
+      "skill": "spa.cuerpo",
+      "prompt": "napa",
+      "answer": "diente",
+      "options": [
+        "diente",
+        "boca",
+        "pelo"
+      ]
+    },
+    {
+      "id": "miq.spa.cuerpo.1.i",
+      "type": "choice",
+      "skill": "spa.cuerpo",
+      "prompt": "tawa",
+      "answer": "pelo",
+      "options": [
+        "pelo",
+        "cabeza",
+        "corazón"
+      ]
+    },
+    {
+      "id": "miq.spa.cuerpo.1.j",
+      "type": "choice",
+      "skill": "spa.cuerpo",
+      "prompt": "kupia",
+      "answer": "corazón",
+      "options": [
+        "corazón",
+        "oreja",
+        "ojo"
+      ]
+    }
+  ]
+}

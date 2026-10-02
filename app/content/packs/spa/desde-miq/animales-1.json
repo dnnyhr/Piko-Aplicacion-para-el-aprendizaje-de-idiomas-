@@ -1,0 +1,130 @@
+{
+  "id": "miq.spa.animales.1",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "animales",
+  "difficulty": 1,
+  "title": "Animales",
+  "items": [
+    {
+      "id": "miq.spa.animales.1.a",
+      "type": "choice",
+      "skill": "spa.animales",
+      "prompt": "yul",
+      "answer": "perro",
+      "options": [
+        "perro",
+        "mono",
+        "caballo"
+      ]
+    },
+    {
+      "id": "miq.spa.animales.1.b",
+      "type": "choice",
+      "skill": "spa.animales",
+      "prompt": "urus",
+      "answer": "mono",
+      "options": [
+        "mono",
+        "perro",
+        "tigre"
+      ]
+    },
+    {
+      "id": "miq.spa.animales.1.c",
+      "type": "choice",
+      "skill": "spa.animales",
+      "prompt": "limi",
+      "answer": "tigre",
+      "options": [
+        "tigre",
+        "gato",
+        "mono"
+      ]
+    },
+    {
+      "id": "miq.spa.animales.1.d",
+      "type": "choice",
+      "skill": "spa.animales",
+      "prompt": "micki",
+      "answer": "gato",
+      "options": [
+        "gato",
+        "tigre",
+        "perro"
+      ]
+    },
+    {
+      "id": "miq.spa.animales.1.e",
+      "type": "choice",
+      "skill": "spa.animales",
+      "prompt": "galila",
+      "answer": "gallina",
+      "options": [
+        "gallina",
+        "mono",
+        "vaca"
+      ]
+    },
+    {
+      "id": "miq.spa.animales.1.f",
+      "type": "choice",
+      "skill": "spa.animales",
+      "prompt": "bip",
+      "answer": "vaca",
+      "options": [
+        "vaca",
+        "caballo",
+        "gallina"
+      ]
+    },
+    {
+      "id": "miq.spa.animales.1.g",
+      "type": "choice",
+      "skill": "spa.animales",
+      "prompt": "aras",
+      "answer": "caballo",
+      "options": [
+        "caballo",
+        "vaca",
+        "tortuga"
+      ]
+    },
+    {
+      "id": "miq.spa.animales.1.h",
+      "type": "choice",
+      "skill": "spa.animales",
+      "prompt": "kuswa",
+      "answer": "tortuga",
+      "options": [
+        "tortuga",
+        "iguana",
+        "culebra"
+      ]
+    },
+    {
+      "id": "miq.spa.animales.1.i",
+      "type": "choice",
+      "skill": "spa.animales",
+      "prompt": "kakamuk",
+      "answer": "iguana",
+      "options": [
+        "iguana",
+        "tortuga",
+        "culebra"
+      ]
+    },
+    {
+      "id": "miq.spa.animales.1.j",
+      "type": "choice",
+      "skill": "spa.animales",
+      "prompt": "piuta",
+      "answer": "culebra",
+      "options": [
+        "culebra",
+        "tortuga",
+        "mono"
+      ]
+    }
+  ]
+}

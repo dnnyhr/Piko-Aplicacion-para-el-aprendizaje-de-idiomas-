@@ -18,7 +18,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { LANGS, LANG_NOMBRE, validatePack } from '../../app/src/core/content/schema';
-import { armar, leerDiccionario, leerLenguas, palabras, paraLaApp, RAIZ_DICCIONARIO, type Entrada, type Lengua } from './recetas';
+import { armar, armarAlEspanol, leerCsv, leerDiccionario, leerLenguas, palabras, paraLaApp, RAIZ_DICCIONARIO, type Entrada, type Lengua } from './recetas';
 
 const RAIZ = RAIZ_DICCIONARIO;
 
@@ -38,29 +38,6 @@ function contiene(todo: string[], parte: string[]): boolean {
     if (parte.every((p, j) => todo[i + j] === p)) return true;
   }
   return false;
-}
-
-/** CSV con comillas dobles, como lo exportan las planillas. */
-function leerCsv(texto: string): string[][] {
-  const filas: string[][] = [];
-  let fila: string[] = [];
-  let campo = '';
-  let entreComillas = false;
-  for (let i = 0; i < texto.length; i++) {
-    const c = texto[i];
-    if (entreComillas) {
-      if (c === '"' && texto[i + 1] === '"') { campo += '"'; i++; }
-      else if (c === '"') entreComillas = false;
-      else campo += c;
-    } else if (c === '"') entreComillas = true;
-    else if (c === ',') { fila.push(campo); campo = ''; }
-    else if (c === '\n' || c === '\r') {
-      if (c === '\r' && texto[i + 1] === '\n') i++;
-      fila.push(campo); filas.push(fila); fila = []; campo = '';
-    } else campo += c;
-  }
-  if (campo || fila.length) { fila.push(campo); filas.push(fila); }
-  return filas;
 }
 
 async function leerJson<T>(archivo: string): Promise<T> {
@@ -160,12 +137,39 @@ async function verificarLengua(lengua: Lengua): Promise<string[]> {
   }
   const enApp = d ? paraLaApp(d, armados).reduce((n, a) => n + a.pack.items.length, 0) : 0;
 
+  // Español desde esta lengua: las mismas recetas dadas vuelta.
+  let alEspanol = 0;
+  if (d && lengua.ensena?.includes('spa')) {
+    for (const a of armarAlEspanol(d, 'es-US')) {
+      const r = validatePack(a.pack);
+      if (!r.ok) errores.push(...r.errors.map((e) => `español desde ${lengua.codigo}, ${a.pack.id}: ${e}`));
+      alEspanol += a.pack.items.length;
+    }
+  }
+
+  // ── Interfaz traducida: cada traducción conserva los {valores} del español.
+  const interfaz = path.join(dir, 'interfaz.csv');
+  if (await existe(interfaz)) {
+    const [cab, ...filasInterfaz] = leerCsv(await fs.readFile(interfaz, 'utf8'));
+    const c = cab?.indexOf(lengua.codigo) ?? -1;
+    for (const f of filasInterfaz) {
+      const [clave = '', es = ''] = f;
+      const trad = (f[c] ?? '').trim();
+      if (!trad) continue;
+      const marcas = (t: string) => [...t.matchAll(/\{\w+\}/g)].map((m) => m[0]).sort().join(' ');
+      if (marcas(trad) !== marcas(es)) {
+        errores.push(`interfaz.csv «${clave}»: la traducción tiene que llevar ${marcas(es) || 'ningún {valor}'}, igual que el español`);
+      }
+    }
+  }
+
   const revisar = lexico.entradas.filter((e: Entrada) => e.revisar).length;
   console.log(`  ${lengua.nombre} (${lengua.codigo})`);
   console.log(`    fuentes     ${String(fuentes.length).padStart(4)}`);
   console.log(`    corpus      ${String(corpus.length).padStart(4)} registros`);
   console.log(`    léxico      ${String(lexico.entradas.length).padStart(4)} entradas (${revisar} por revisar)`);
   console.log(`    ejercicios  ${String(armados.length).padStart(4)} paquetes, ${items} ítems (${items - enApp} esperan revisión)`);
+  if (alEspanol) console.log(`    al español  ${String(alEspanol).padStart(4)} ítems (las mismas recetas dadas vuelta)`);
   return errores;
 }
 
@@ -182,6 +186,8 @@ async function verificarLenguas(lenguas: Lengua[]): Promise<string[]> {
     const prueba = (ttsLang: string) =>
       validatePack({
         id: 'p', lang: l.codigo, theme: 't', difficulty: 1, title: 't',
+        // El español se aprende siempre desde otra lengua.
+        ...(l.codigo === 'spa' ? { desde: 'miq' } : {}),
         items: [{ id: 'i', type: 'listen', skill: 's', tts: 'a', ttsLang, answer: 'a', options: ['a', 'b'], gloss: 'g' }],
       }).ok;
     if (l.voz && !prueba(l.voz)) errores.push(`lenguas.json ${l.codigo}: la app no deja sonar con la voz ${l.voz}`);

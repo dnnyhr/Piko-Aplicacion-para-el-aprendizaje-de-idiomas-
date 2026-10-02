@@ -21,6 +21,7 @@ diccionario/
 │   ├── recetas.ts            convierte recetas + léxico en paquetes de la app
 │   ├── contenido.ts          npm run contenido: escribe app/content/packs/ e index.ts
 │   ├── voz.ts                prepara cada palabra para la voz sintética
+│   ├── interfaz.ts           la planilla de traducción de la interfaz
 │   └── verificar.ts          npm run validate:diccionario: de la fuente al ejercicio
 ├── ingles/
 │   ├── fuentes.json · corpus.csv · lexico.json    escrito y revisado por el equipo
@@ -30,7 +31,8 @@ diccionario/
     ├── corpus.csv            lo que escribió cada persona o la obra publicada, tal cual
     ├── lexico.json           el diccionario: cada entrada con su análisis
     ├── gramatica.md          los patrones y reglas encontrados, con evidencia y confianza
-    └── ejercicios.json       recetas de ejercicios: apuntan al léxico por id
+    ├── ejercicios.json       recetas de ejercicios: apuntan al léxico por id
+    └── interfaz.csv          la interfaz de la app en miskito: la llenan hablantes
 ```
 
 ## Estado
@@ -127,6 +129,36 @@ Los ejercicios de escuchar del miskito suenan con la voz en español **para
 mientras** se consiguen grabaciones de hablantes (decisión 16). La palabra se
 le pasa a la voz preparada por [`herramientas/voz.ts`](herramientas/voz.ts), y
 sólo usan palabras que dieron igual las dos personas.
+
+## Español desde el miskito
+
+Las mismas recetas del miskito, dadas vuelta, enseñan español a quien habla
+miskito: la pregunta va en miskito (la `forma`) y la respuesta en español (la
+traducción del léxico, `es`). No hay recetas aparte. Lo marca `"ensena":
+["spa"]` en `lenguas.json`, y `npm run contenido` arma los paquetes en
+`app/content/packs/spa/desde-miq/`. Se salta lo que al darse vuelta queda
+ambiguo (dos opciones que en español dicen lo mismo) o trivial (una frase de
+una sola palabra para ordenar).
+
+Con la app en miskito, la pantalla de práctica ofrece esto. Inglés desde el
+miskito necesita pares inglés–miskito revisados; todavía no está.
+
+## La interfaz en miskito
+
+`miskito/interfaz.csv` tiene una fila por cada texto de la app: la clave, el
+español, la columna `miq` para la traducción y notas para quien traduce. Se
+llena con una planilla (Excel, LibreOffice o Google Sheets), sin tocar código.
+Después:
+
+```bash
+cd app && npm run contenido
+```
+
+Eso vuelca lo traducido en `app/src/ui/textos/miq.ts`. Lo que queda vacío se
+sigue mostrando en español, así que se puede traducir de a poco. Las frases
+de Piko van una por fila (`piko.acierto#1`, `#2`…), y la traducción no tiene
+que tener la misma cantidad. Los `{valores}` se dejan tal cual: el verificador
+avisa si una traducción los pierde.
 
 ## Cómo se suma una tanda nueva
 

@@ -7,8 +7,12 @@
  * sobre todo `content/packs/`.
  */
 
-/** ISO 639-3. `eng` es el único con contenido verificado hoy. */
-export const LANGS = ['eng', 'miq', 'sum', 'rma', 'cab'] as const;
+/**
+ * ISO 639-3. Las lenguas que se pueden aprender, y también desde las que se
+ * puede aprender: el español se aprende desde el miskito, y el miskito desde
+ * el español (ver `Pack.desde`).
+ */
+export const LANGS = ['eng', 'miq', 'sum', 'rma', 'cab', 'spa'] as const;
 export type LangCode = (typeof LANGS)[number];
 
 export const LANG_NOMBRE: Record<LangCode, string> = {
@@ -17,7 +21,11 @@ export const LANG_NOMBRE: Record<LangCode, string> = {
   sum: 'Mayangna',
   rma: 'Rama',
   cab: 'Garífuna',
+  spa: 'Español',
 };
+
+/** La lengua de partida de los paquetes que no dicen otra cosa. */
+export const DESDE_POR_DEFECTO: LangCode = 'spa';
 
 export type Difficulty = 1 | 2 | 3;
 export type ItemType = 'choice' | 'listen' | 'build';
@@ -31,7 +39,7 @@ interface ItemBase {
 /** Traducción por selección múltiple. */
 export interface ChoiceItem extends ItemBase {
   type: 'choice';
-  /** Lo que se le muestra al estudiante, en español. */
+  /** Lo que se le muestra al estudiante, en la lengua de partida (`Pack.desde`). */
   prompt: string;
   /** Respuesta correcta, en la lengua meta. */
   answer: string;
@@ -57,7 +65,7 @@ export interface ListenItem extends ItemBase {
   ttsLang?: string;
   answer: string;
   options: string[];
-  /** Significado en español, se revela después de responder. */
+  /** Significado en la lengua de partida, se revela después de responder. */
   gloss: string;
 }
 
@@ -68,7 +76,7 @@ export interface BuildItem extends ItemBase {
   target: string;
   /** Bloques ofrecidos: los de `target` más distractores. */
   blocks: string[];
-  /** Significado en español. */
+  /** Significado en la lengua de partida. */
   gloss: string;
 }
 
@@ -76,7 +84,13 @@ export type Item = ChoiceItem | ListenItem | BuildItem;
 
 export interface Pack {
   id: string;
+  /** La lengua que se aprende: la de las respuestas. */
   lang: LangCode;
+  /**
+   * La lengua desde la que se aprende: la de las preguntas y las traducciones.
+   * Si falta, español (`DESDE_POR_DEFECTO`).
+   */
+  desde?: LangCode;
   theme: string;
   difficulty: Difficulty;
   title: string;
@@ -109,7 +123,11 @@ export function words(sentence: string): string[] {
 const VOZ_SINTETICA: Readonly<Record<string, (ttsLang: string) => boolean>> = {
   eng: (l) => l.startsWith('en'),
   miq: (l) => l.startsWith('es'),
+  spa: (l) => l.startsWith('es'),
 };
+
+/** La lengua de partida de un paquete. */
+export const desdeDe = (pack: Pick<Pack, 'desde'>): LangCode => pack.desde ?? DESDE_POR_DEFECTO;
 
 function validateItem(raw: unknown, at: string, errors: string[], lang: unknown): Item | null {
   if (typeof raw !== 'object' || raw === null) {
@@ -207,6 +225,15 @@ export function validatePack(raw: unknown): ValidationResult {
   if (!isStr(o.theme)) errors.push('falta `theme`');
   if (!isStr(o.lang) || !(LANGS as readonly string[]).includes(o.lang)) {
     errors.push(`\`lang\` inválido (${String(o.lang)}); se espera uno de ${LANGS.join(', ')}`);
+  }
+  if (o.desde !== undefined) {
+    if (!isStr(o.desde) || !(LANGS as readonly string[]).includes(o.desde)) {
+      errors.push(`\`desde\` inválido (${String(o.desde)}); se espera uno de ${LANGS.join(', ')}`);
+    } else if (o.desde === o.lang) {
+      errors.push('`desde` tiene que ser otra lengua que `lang`');
+    }
+  } else if (o.lang === DESDE_POR_DEFECTO) {
+    errors.push(`un paquete de ${String(o.lang)} necesita \`desde\`: la lengua de partida no puede ser la misma`);
   }
   if (o.difficulty !== 1 && o.difficulty !== 2 && o.difficulty !== 3) {
     errors.push('`difficulty` debe ser 1, 2 o 3');

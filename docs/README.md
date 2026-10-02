@@ -53,9 +53,12 @@ diga que la habla mal.
   reconexión y semáforo de rezago para el maestro.
 - Identidad y progreso que siguen al estudiante entre dispositivos.
 - Contenido en inglés (6 paquetes, 43 ítems) y en miskito (19 paquetes, 167
-  ítems), generado desde `diccionario/`. Mayangna, rama y garífuna esperan
+  ítems), y español desde el miskito (18 paquetes, 151 ítems), generado desde
+  `diccionario/`.
+- La interfaz en español o en miskito, a elección; la traducción al miskito la
+  llenan hablantes en `diccionario/miskito/interfaz.csv`. Mayangna, rama y garífuna esperan
   material de hablantes nativos.
-- 124 pruebas automatizadas y un simulador que levanta un aula entera sin
+- 135 pruebas automatizadas y un simulador que levanta un aula entera sin
   necesidad de teléfonos.
 
 ## Qué falta

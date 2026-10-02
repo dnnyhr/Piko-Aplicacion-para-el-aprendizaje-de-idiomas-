@@ -18,6 +18,7 @@ import { abrirBase, guardarRoster, leerRoster } from '../../src/db';
 import { PACKS } from '../../content';
 import { PUERTO_AULA, type PresetSummary } from '../../src/core/protocol/messages';
 import type { Semaforo } from '../../src/core/progress/rezago';
+import { useTextos } from '../../src/ui/textos/useTextos';
 
 const PRESET_BASE: PresetSummary = {
   id: 'base',
@@ -47,6 +48,7 @@ export default function PanelMaestro() {
   const iniciarRonda = useAnfitrion((s) => s.iniciarRonda);
   const terminarRonda = useAnfitrion((s) => s.terminarRonda);
   const cerrar = useAnfitrion((s) => s.cerrar);
+  const { t } = useTextos();
 
   const [roster, setRoster] = useState(() => leerRoster(abrirBase().sql));
 
@@ -79,20 +81,22 @@ export default function PanelMaestro() {
         <View style={styles.cabecera}>
           <PikoMascota estado={abierta ? 'idle' : 'dormido'} tam={80} />
           <View style={styles.cabeceraTexto}>
-            <Text style={styles.titulo}>Mi clase</Text>
+            <Text style={styles.titulo}>{t('maestro.titulo')}</Text>
             <Text style={styles.sub}>
-              {abierta ? `${conectados} conectado${conectados === 1 ? '' : 's'}` : 'Sala cerrada'}
+              {abierta
+                ? t(conectados === 1 ? 'maestro.conectado' : 'maestro.conectados', { n: conectados })
+                : t('maestro.sala_cerrada')}
             </Text>
           </View>
         </View>
 
         {!abierta && (
           <View style={styles.aviso}>
-            <Text style={styles.avisoTitulo}>Antes de abrir la sala</Text>
+            <Text style={styles.avisoTitulo}>{t('maestro.antes_de_abrir')}</Text>
             <Text style={styles.avisoTexto}>
-              Encendé el <Text style={styles.negrita}>punto de acceso</Text> (hotspot) desde los
-              ajustes de tu teléfono. Los estudiantes se conectan a esa red y ahí te encuentran.
-              No hace falta que tengas datos ni internet.
+              {t('maestro.aviso_1')}
+              <Text style={styles.negrita}>{t('maestro.aviso_negrita')}</Text>
+              {t('maestro.aviso_2')}
             </Text>
           </View>
         )}
@@ -101,11 +105,11 @@ export default function PanelMaestro() {
 
         {abierta && (
           <View style={styles.tarjetaSala}>
-            <Text style={styles.etiquetaSala}>Código de la clase</Text>
+            <Text style={styles.etiquetaSala}>{t('maestro.codigo')}</Text>
             <Text style={styles.codigo}>{roomCode}</Text>
             {ip && (
               <Text style={styles.ip}>
-                Si algún teléfono no encuentra la sala, que escriba {ip}:{PUERTO_AULA}
+                {t('maestro.si_no_encuentra', { direccion: `${ip}:${PUERTO_AULA}` })}
               </Text>
             )}
           </View>
@@ -113,17 +117,15 @@ export default function PanelMaestro() {
 
         {roster.length === 0 ? (
           <View style={styles.vacio}>
-            <Text style={styles.vacioTexto}>
-              Todavía no cargaste la lista de tu clase.
-            </Text>
+            <Text style={styles.vacioTexto}>{t('maestro.sin_lista')}</Text>
             <Boton ancho tono="papel" onPress={sembrarEjemplo}>
-              Usar una lista de ejemplo
+              {t('maestro.usar_ejemplo')}
             </Boton>
           </View>
         ) : (
           <View style={styles.lista}>
             <Text style={styles.instruccion}>
-              {enRonda ? 'Cómo va la clase' : `${roster.length} estudiantes en la lista`}
+              {enRonda ? t('comun.como_va_la_clase') : t('maestro.en_la_lista', { n: roster.length })}
             </Text>
 
             {semaforo.length > 0
@@ -161,26 +163,26 @@ export default function PanelMaestro() {
                 })
               }
             >
-              {abriendo ? 'Abriendo…' : 'Abrir la sala'}
+              {t(abriendo ? 'maestro.abriendo' : 'maestro.abrir')}
             </Boton>
           ) : enRonda ? (
             <Boton ancho tono="pico" onPress={terminarRonda}>
-              Terminar la ronda
+              {t('maestro.terminar_ronda')}
             </Boton>
           ) : (
             <Boton ancho onPress={() => iniciarRonda({ count: 8, duracionMs: 300_000 })}>
-              Empezar una ronda
+              {t('maestro.empezar_ronda')}
             </Boton>
           )}
 
           {abierta && (
             <Boton ancho tono="papel" onPress={() => void cerrar()}>
-              Cerrar la sala
+              {t('maestro.cerrar')}
             </Boton>
           )}
 
           <Boton ancho tono="fantasma" onPress={() => router.back()}>
-            Volver
+            {t('comun.volver')}
           </Boton>
         </View>
       </ScrollView>

@@ -36,6 +36,13 @@ Lo último no es burocracia. Estas lenguas tienen variantes entre comunidades, y
 queremos poder decirle a un maestro de dónde viene lo que su alumno está
 aprendiendo.
 
+### Si querés traducir la interfaz
+
+La app también puede estar en miskito. Todos sus textos están en
+[`diccionario/miskito/interfaz.csv`](diccionario/miskito/interfaz.csv): se
+abre con cualquier planilla y se llena la columna `miq`. Lo que quede vacío se
+sigue mostrando en español, así que sirve traducir aunque sea una parte.
+
 ### Si preferís mandarlo como código
 
 Todo el contenido sale de [`diccionario/`](diccionario/README.md): las
@@ -69,7 +76,7 @@ npm install
 ### Antes de mandar cualquier cambio
 
 ```bash
-npm test              # 124 pruebas sobre el núcleo puro y la persistencia
+npm test              # 135 pruebas sobre el núcleo puro y la persistencia
 npm run typecheck     # app + herramientas de Node
 npm run validate:packs
 ```

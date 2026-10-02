@@ -1,0 +1,150 @@
+{
+  "id": "miq.spa.escucha.2",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "escucha",
+  "difficulty": 2,
+  "title": "Escuchá: palabras que se parecen",
+  "items": [
+    {
+      "id": "miq.spa.escucha.2.a",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "dormir",
+      "ttsLang": "es-US",
+      "answer": "dormir",
+      "options": [
+        "dormir",
+        "caminar",
+        "beber"
+      ],
+      "gloss": "yapaya"
+    },
+    {
+      "id": "miq.spa.escucha.2.b",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "caminar",
+      "ttsLang": "es-US",
+      "answer": "caminar",
+      "options": [
+        "caminar",
+        "dormir",
+        "escuchar"
+      ],
+      "gloss": "wapaya"
+    },
+    {
+      "id": "miq.spa.escucha.2.c",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "beber",
+      "ttsLang": "es-US",
+      "answer": "beber",
+      "options": [
+        "beber",
+        "comer",
+        "dormir"
+      ],
+      "gloss": "diyaya"
+    },
+    {
+      "id": "miq.spa.escucha.2.d",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "nariz",
+      "ttsLang": "es-US",
+      "answer": "nariz",
+      "options": [
+        "nariz",
+        "oreja",
+        "ver"
+      ],
+      "gloss": "kakma"
+    },
+    {
+      "id": "miq.spa.escucha.2.e",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "diente",
+      "ttsLang": "es-US",
+      "answer": "diente",
+      "options": [
+        "diente",
+        "ojo",
+        "pie"
+      ],
+      "gloss": "napa"
+    },
+    {
+      "id": "miq.spa.escucha.2.f",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "hablar",
+      "ttsLang": "es-US",
+      "answer": "hablar",
+      "options": [
+        "hablar",
+        "cantar",
+        "escuchar"
+      ],
+      "gloss": "aisaya"
+    },
+    {
+      "id": "miq.spa.escucha.2.g",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "escuchar",
+      "ttsLang": "es-US",
+      "answer": "escuchar",
+      "options": [
+        "escuchar",
+        "dos",
+        "caminar"
+      ],
+      "gloss": "walaya"
+    },
+    {
+      "id": "miq.spa.escucha.2.h",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "ver",
+      "ttsLang": "es-US",
+      "answer": "ver",
+      "options": [
+        "ver",
+        "nariz",
+        "jugar"
+      ],
+      "gloss": "kaikaya"
+    },
+    {
+      "id": "miq.spa.escucha.2.i",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "cuatro",
+      "ttsLang": "es-US",
+      "answer": "cuatro",
+      "options": [
+        "cuatro",
+        "dos",
+        "cinco"
+      ],
+      "gloss": "walhwal"
+    },
+    {
+      "id": "miq.spa.escucha.2.j",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "tres",
+      "ttsLang": "es-US",
+      "answer": "tres",
+      "options": [
+        "tres",
+        "perro",
+        "uno"
+      ],
+      "gloss": "yumpha"
+    }
+  ]
+}

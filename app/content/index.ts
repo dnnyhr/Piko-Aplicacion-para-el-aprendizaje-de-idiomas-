@@ -36,6 +36,24 @@ import miqNumeros1 from './packs/miq/numeros-1.json';
 import miqNumeros2 from './packs/miq/numeros-2.json';
 import miqPosesion2 from './packs/miq/posesion-2.json';
 import miqSaludos1 from './packs/miq/saludos-1.json';
+import spaDesdeMiqAcciones1 from './packs/spa/desde-miq/acciones-1.json';
+import spaDesdeMiqAnimales1 from './packs/spa/desde-miq/animales-1.json';
+import spaDesdeMiqCasa1 from './packs/spa/desde-miq/casa-1.json';
+import spaDesdeMiqColores1 from './packs/spa/desde-miq/colores-1.json';
+import spaDesdeMiqComida1 from './packs/spa/desde-miq/comida-1.json';
+import spaDesdeMiqCuerpo1 from './packs/spa/desde-miq/cuerpo-1.json';
+import spaDesdeMiqEscucha1 from './packs/spa/desde-miq/escucha-1.json';
+import spaDesdeMiqEscucha2 from './packs/spa/desde-miq/escucha-2.json';
+import spaDesdeMiqEscucha3 from './packs/spa/desde-miq/escucha-3.json';
+import spaDesdeMiqEscuela1 from './packs/spa/desde-miq/escuela-1.json';
+import spaDesdeMiqFamilia1 from './packs/spa/desde-miq/familia-1.json';
+import spaDesdeMiqFrases2 from './packs/spa/desde-miq/frases-2.json';
+import spaDesdeMiqFrases3 from './packs/spa/desde-miq/frases-3.json';
+import spaDesdeMiqNaturaleza1 from './packs/spa/desde-miq/naturaleza-1.json';
+import spaDesdeMiqNumeros1 from './packs/spa/desde-miq/numeros-1.json';
+import spaDesdeMiqNumeros2 from './packs/spa/desde-miq/numeros-2.json';
+import spaDesdeMiqPosesion2 from './packs/spa/desde-miq/posesion-2.json';
+import spaDesdeMiqSaludos1 from './packs/spa/desde-miq/saludos-1.json';
 
 export const PACKS: Pack[] = [
   engAnimales1,
@@ -63,6 +81,24 @@ export const PACKS: Pack[] = [
   miqNumeros2,
   miqPosesion2,
   miqSaludos1,
+  spaDesdeMiqAcciones1,
+  spaDesdeMiqAnimales1,
+  spaDesdeMiqCasa1,
+  spaDesdeMiqColores1,
+  spaDesdeMiqComida1,
+  spaDesdeMiqCuerpo1,
+  spaDesdeMiqEscucha1,
+  spaDesdeMiqEscucha2,
+  spaDesdeMiqEscucha3,
+  spaDesdeMiqEscuela1,
+  spaDesdeMiqFamilia1,
+  spaDesdeMiqFrases2,
+  spaDesdeMiqFrases3,
+  spaDesdeMiqNaturaleza1,
+  spaDesdeMiqNumeros1,
+  spaDesdeMiqNumeros2,
+  spaDesdeMiqPosesion2,
+  spaDesdeMiqSaludos1,
 ] as Pack[];
 
 export default PACKS;

@@ -1,0 +1,118 @@
+{
+  "id": "miq.spa.posesion.2",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "posesion",
+  "difficulty": 2,
+  "title": "Mío y tuyo",
+  "items": [
+    {
+      "id": "miq.spa.posesion.2.a",
+      "type": "choice",
+      "skill": "spa.posesion",
+      "prompt": "yaptiki",
+      "answer": "mi mamá",
+      "options": [
+        "mi mamá",
+        "mamá",
+        "abuela"
+      ]
+    },
+    {
+      "id": "miq.spa.posesion.2.b",
+      "type": "choice",
+      "skill": "spa.posesion",
+      "prompt": "yapti",
+      "answer": "mamá",
+      "options": [
+        "mamá",
+        "mi mamá",
+        "papá"
+      ]
+    },
+    {
+      "id": "miq.spa.posesion.2.c",
+      "type": "choice",
+      "skill": "spa.posesion",
+      "prompt": "kuki ki",
+      "answer": "mi abuela",
+      "options": [
+        "mi abuela",
+        "abuela",
+        "mi mamá"
+      ]
+    },
+    {
+      "id": "miq.spa.posesion.2.d",
+      "type": "choice",
+      "skill": "spa.posesion",
+      "prompt": "nini",
+      "answer": "mi nombre",
+      "options": [
+        "mi nombre",
+        "tu nombre",
+        "mi mamá"
+      ]
+    },
+    {
+      "id": "miq.spa.posesion.2.e",
+      "type": "choice",
+      "skill": "spa.posesion",
+      "prompt": "ninam",
+      "answer": "tu nombre",
+      "options": [
+        "tu nombre",
+        "mi nombre",
+        "¿cómo estás?"
+      ]
+    },
+    {
+      "id": "miq.spa.posesion.2.f",
+      "type": "choice",
+      "skill": "spa.posesion",
+      "prompt": "Ninam dia",
+      "answer": "¿Cómo te llamás?",
+      "options": [
+        "¿Cómo te llamás?",
+        "Me llamo Ana",
+        "¿Cómo estás?"
+      ]
+    },
+    {
+      "id": "miq.spa.posesion.2.g",
+      "type": "choice",
+      "skill": "spa.posesion",
+      "prompt": "Yang nini Ana",
+      "answer": "Me llamo Ana",
+      "options": [
+        "Me llamo Ana",
+        "¿Cómo te llamás?",
+        "Estoy bien"
+      ]
+    },
+    {
+      "id": "miq.spa.posesion.2.h",
+      "type": "choice",
+      "skill": "spa.posesion",
+      "prompt": "mamiki",
+      "answer": "mi mamá",
+      "options": [
+        "mi mamá",
+        "mamá",
+        "mi papá"
+      ]
+    },
+    {
+      "id": "miq.spa.posesion.2.i",
+      "type": "choice",
+      "skill": "spa.posesion",
+      "prompt": "papiki",
+      "answer": "mi papá",
+      "options": [
+        "mi papá",
+        "mi mamá",
+        "papá"
+      ]
+    }
+  ]
+}

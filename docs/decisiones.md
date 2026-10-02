@@ -16,7 +16,7 @@ probar.
 **Decisión.** Todo eso vive en `src/core/` como TypeScript puro, sin una sola
 importación de React Native.
 
-**Por qué.** Porque así corre en Node. Las 124 pruebas se ejecutan en cuatro
+**Por qué.** Porque así corre en Node. Las 135 pruebas se ejecutan en cuatro
 segundos sin emulador, y `tools/sim.ts` puede levantar un aula entera —
 anfitrión y ocho estudiantes reales sobre TCP — en la computadora.
 
@@ -309,6 +309,32 @@ se puede rastrear hasta su fuente, y CI rechaza un paquete editado a mano.
 inglés pasaron de `saludos.json` a `saludos-1.json`, el mismo nombre que usa
 cualquier lengua. El id de un ejercicio sale de su posición en la receta: los
 nuevos se agregan al final para no mezclar el progreso de los estudiantes.
+
+---
+
+## 18. La app también en miskito, para aprender desde el miskito
+
+**Contexto.** Piko nació para que los niños aprendan miskito desde el español.
+Pero en las comunidades miskitas muchos niños hablan miskito en la casa y
+aprenden español e inglés en la escuela: la educación bilingüe parte de su
+primera lengua.
+
+**Decisión.** La lengua de la interfaz es una opción (`Español` / `Miskitu`,
+en la portada) y se guarda en el teléfono. De ella sale desde qué lengua se
+aprende: cada paquete dice su lengua de partida (`desde`; si falta, español).
+El español pasa a ser una lengua que se aprende, desde el miskito, con las
+mismas recetas del miskito dadas vuelta. Los textos de la interfaz salen de un
+catálogo (`src/ui/textos/es.ts`), y la traducción vive en
+`diccionario/miskito/interfaz.csv`, que llenan hablantes.
+
+**Por qué.** No se reemplaza el español: las dos direcciones conviven, y el
+maestro o la familia eligen. Y no se inventa nada en miskito: lo que todavía
+no está traducido se muestra en español.
+
+**Costo.** Inglés desde el miskito necesita pares revisados, que todavía no
+hay. El aula del maestro sigue armando rondas desde el español. Los mensajes
+que manda el teléfono del maestro (por ejemplo, un rechazo al entrar) siguen
+en español.
 
 ---
 

@@ -14,7 +14,8 @@ import { Boton } from '../../src/ui/components/Boton';
 import { Globo } from '../../src/ui/components/Globo';
 import { Pantalla } from '../../src/ui/components/Pantalla';
 import { PikoMascota } from '../../src/ui/piko/PikoMascota';
-import { ESPERANDO, FIN_BIEN, FIN_NORMAL, elegir } from '../../src/ui/piko/frases';
+import { elegir } from '../../src/ui/piko/frases';
+import { useTextos } from '../../src/ui/textos/useTextos';
 import { Runner, type ResultadoRonda } from '../../src/features/exercises/Runner';
 import { useAulaCliente } from '../../src/features/aula/cliente';
 import { useProgreso } from '../../src/features/progreso/store';
@@ -27,6 +28,7 @@ export default function Jugar() {
   const limpiarRonda = useAulaCliente((s) => s.limpiarRonda);
   const salir = useAulaCliente((s) => s.salir);
   const estado = useProgreso((s) => s.estado);
+  const { t, frases } = useTextos();
 
   const [resultado, setResultado] = useState<ResultadoRonda | null>(null);
 
@@ -50,8 +52,8 @@ export default function Jugar() {
         {desconectado && (
           <View style={styles.cintaCaida}>
             <Text style={styles.cintaTexto}>
-              Sin señal — seguí jugando, se guarda todo
-              {reintentaEnMs ? ` · reintento en ${Math.round(reintentaEnMs / 1000)} s` : ''}
+              {t('jugar.sin_senal')}
+              {reintentaEnMs ? t('jugar.reintento', { segundos: Math.round(reintentaEnMs / 1000) }) : ''}
             </Text>
           </View>
         )}
@@ -72,17 +74,17 @@ export default function Jugar() {
       <Pantalla>
         <ScrollView contentContainerStyle={styles.fin} showsVerticalScrollIndicator={false}>
           <PikoMascota estado={bien ? 'celebrando' : 'alegre'} tam={170} />
-          <Globo hacia="abajo">{bien ? elegir(FIN_BIEN) : elegir(FIN_NORMAL)}</Globo>
+          <Globo hacia="abajo">{elegir(frases(bien ? 'piko.fin_bien' : 'piko.fin_normal'))}</Globo>
 
           <View style={styles.marcador}>
-            <Dato valor={`${resultado.aciertos}/${resultado.respondidas}`} etiqueta="Esta ronda" />
-            <Dato valor={String(estado.xp)} etiqueta="XP total" />
-            <Dato valor={String(miFila?.correct ?? estado.correct)} etiqueta="En la clase" />
+            <Dato valor={`${resultado.aciertos}/${resultado.respondidas}`} etiqueta={t('jugar.esta_ronda')} />
+            <Dato valor={String(estado.xp)} etiqueta={t('comun.xp_total')} />
+            <Dato valor={String(miFila?.correct ?? estado.correct)} etiqueta={t('jugar.en_la_clase')} />
           </View>
 
           {board.length > 1 && (
             <View style={styles.tabla}>
-              <Text style={styles.instruccion}>Cómo va la clase</Text>
+              <Text style={styles.instruccion}>{t('comun.como_va_la_clase')}</Text>
               {board.slice(0, 8).map((fila, i) => (
                 <View
                   key={fila.studentId}
@@ -96,7 +98,7 @@ export default function Jugar() {
             </View>
           )}
 
-          <Text style={styles.esperando}>{elegir(ESPERANDO)}</Text>
+          <Text style={styles.esperando}>{elegir(frases('piko.esperando'))}</Text>
 
           <Boton
             ancho
@@ -106,7 +108,7 @@ export default function Jugar() {
               setResultado(null);
             }}
           >
-            Esperar la próxima ronda
+            {t('jugar.esperar_ronda')}
           </Boton>
         </ScrollView>
       </Pantalla>
@@ -118,14 +120,14 @@ export default function Jugar() {
       <View style={styles.espera}>
         <PikoMascota estado={desconectado ? 'dormido' : 'idle'} tam={170} />
         <Globo hacia="abajo">
-          {desconectado ? 'Se cortó la señal. Ya vuelvo a intentar.' : elegir(ESPERANDO)}
+          {desconectado ? t('jugar.se_corto') : elegir(frases('piko.esperando'))}
         </Globo>
 
         {yo && (
           <View style={styles.credencial}>
             <Text style={styles.credencialNombre}>{yo.nombre}</Text>
             <Text style={styles.credencialXp}>
-              {estado.xp} XP · {estado.correct}/{estado.answered} correctas
+              {t('comun.xp_correctas', { xp: estado.xp, correctas: estado.correct, respondidas: estado.answered })}
             </Text>
           </View>
         )}
@@ -138,7 +140,7 @@ export default function Jugar() {
             router.replace('/');
           }}
         >
-          Salir de la clase
+          {t('jugar.salir')}
         </Boton>
       </View>
     </Pantalla>

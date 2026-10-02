@@ -1,0 +1,70 @@
+{
+  "id": "miq.spa.escuela.1",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "escuela",
+  "difficulty": 1,
+  "title": "La escuela",
+  "items": [
+    {
+      "id": "miq.spa.escuela.1.a",
+      "type": "choice",
+      "skill": "spa.escuela",
+      "prompt": "smasmalkra",
+      "answer": "maestro o maestra",
+      "options": [
+        "maestro o maestra",
+        "estudiante",
+        "libro"
+      ]
+    },
+    {
+      "id": "miq.spa.escuela.1.b",
+      "type": "choice",
+      "skill": "spa.escuela",
+      "prompt": "buk",
+      "answer": "libro",
+      "options": [
+        "libro",
+        "lápiz",
+        "cuaderno"
+      ]
+    },
+    {
+      "id": "miq.spa.escuela.1.c",
+      "type": "choice",
+      "skill": "spa.escuela",
+      "prompt": "wauhtaya",
+      "answer": "cuaderno",
+      "options": [
+        "cuaderno",
+        "libro",
+        "lápiz"
+      ]
+    },
+    {
+      "id": "miq.spa.escuela.1.d",
+      "type": "choice",
+      "skill": "spa.escuela",
+      "prompt": "ingk",
+      "answer": "lápiz",
+      "options": [
+        "lápiz",
+        "libro",
+        "cuaderno"
+      ]
+    },
+    {
+      "id": "miq.spa.escuela.1.e",
+      "type": "choice",
+      "skill": "spa.escuela",
+      "prompt": "ulbaya",
+      "answer": "escribir",
+      "options": [
+        "escribir",
+        "leer",
+        "aprender"
+      ]
+    }
+  ]
+}

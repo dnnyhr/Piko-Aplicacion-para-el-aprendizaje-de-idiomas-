@@ -1,0 +1,130 @@
+{
+  "id": "miq.spa.casa.1",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "casa",
+  "difficulty": 1,
+  "title": "La casa",
+  "items": [
+    {
+      "id": "miq.spa.casa.1.a",
+      "type": "choice",
+      "skill": "spa.casa",
+      "prompt": "utla",
+      "answer": "casa",
+      "options": [
+        "casa",
+        "puerta",
+        "cama"
+      ]
+    },
+    {
+      "id": "miq.spa.casa.1.b",
+      "type": "choice",
+      "skill": "spa.casa",
+      "prompt": "dur",
+      "answer": "puerta",
+      "options": [
+        "puerta",
+        "casa",
+        "zapato"
+      ]
+    },
+    {
+      "id": "miq.spa.casa.1.c",
+      "type": "choice",
+      "skill": "spa.casa",
+      "prompt": "krikri",
+      "answer": "cama",
+      "options": [
+        "cama",
+        "hamaca",
+        "ropa"
+      ]
+    },
+    {
+      "id": "miq.spa.casa.1.d",
+      "type": "choice",
+      "skill": "spa.casa",
+      "prompt": "slilmika",
+      "answer": "hamaca",
+      "options": [
+        "hamaca",
+        "cama",
+        "olla"
+      ]
+    },
+    {
+      "id": "miq.spa.casa.1.e",
+      "type": "choice",
+      "skill": "spa.casa",
+      "prompt": "dikua",
+      "answer": "olla",
+      "options": [
+        "olla",
+        "cuchillo",
+        "canoa"
+      ]
+    },
+    {
+      "id": "miq.spa.casa.1.f",
+      "type": "choice",
+      "skill": "spa.casa",
+      "prompt": "kisura",
+      "answer": "cuchillo",
+      "options": [
+        "cuchillo",
+        "machete",
+        "olla"
+      ]
+    },
+    {
+      "id": "miq.spa.casa.1.g",
+      "type": "choice",
+      "skill": "spa.casa",
+      "prompt": "ispara",
+      "answer": "machete",
+      "options": [
+        "machete",
+        "cuchillo",
+        "zapato"
+      ]
+    },
+    {
+      "id": "miq.spa.casa.1.h",
+      "type": "choice",
+      "skill": "spa.casa",
+      "prompt": "duary",
+      "answer": "canoa",
+      "options": [
+        "canoa",
+        "puerta",
+        "olla"
+      ]
+    },
+    {
+      "id": "miq.spa.casa.1.i",
+      "type": "choice",
+      "skill": "spa.casa",
+      "prompt": "kwala",
+      "answer": "ropa",
+      "options": [
+        "ropa",
+        "zapato",
+        "cama"
+      ]
+    },
+    {
+      "id": "miq.spa.casa.1.j",
+      "type": "choice",
+      "skill": "spa.casa",
+      "prompt": "sus",
+      "answer": "zapato",
+      "options": [
+        "zapato",
+        "ropa",
+        "puerta"
+      ]
+    }
+  ]
+}

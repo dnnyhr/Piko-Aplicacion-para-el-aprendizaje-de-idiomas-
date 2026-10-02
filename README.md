@@ -186,7 +186,7 @@ flowchart TD
     APP --> CORE["🧠 src/core/<br/><sub>protocolo · sync · progreso</sub>"]
     APP --> RESTO["src/net · src/db · src/ui<br/><sub>red, datos e interfaz</sub>"]
     APP --> CONTENT["🗣️ content/<br/><sub>las lenguas, en JSON</sub>"]
-    APP --> TESTS["✅ tests/ · tools/<br/><sub>124 pruebas · simulador de aula</sub>"]
+    APP --> TESTS["✅ tests/ · tools/<br/><sub>135 pruebas · simulador de aula</sub>"]
 
     ROBOT --> FIRM["⚙️ firmware/<br/><sub>Arduino: motores y luces</sub>"]
     ROBOT --> PANEL["🌉 panel/<br/><sub>puente Node ↔ navegador</sub>"]
@@ -217,6 +217,7 @@ simulador juega una clase entera sin un solo teléfono.</sub></p>
 | 📚 Ver el diccionario y las reglas que se van encontrando de una lengua | `diccionario/` — ver [diccionario/README.md](diccionario/README.md) |
 | ✅ Revisar las palabras que manda la gente y pasarlas a la app | Pestaña **Palabras** de `/admin` en las encuestas — ver [encuestas/README.md](encuestas/README.md#palabras-para-la-app) |
 | 🔌 Tocar el protocolo del aula o la sincronización | `app/src/core/` — recordá: nada de React Native ahí adentro |
+| 🌎 Traducir la interfaz al miskito | `diccionario/miskito/interfaz.csv` y `npm run contenido` |
 | 🎨 Cambiar una pantalla, un ejercicio o el diseño | `app/src/ui/` · `app/src/features/` |
 | 🤖 Arreglar algo del robot físico | `robot/firmware/` (Arduino) · `robot/panel/` (el puente) |
 | 🌐 Editar el sitio piko.mugiware.com | `web/index.html` |
@@ -304,7 +305,7 @@ mientras** se consiguen grabaciones de hablantes ([decisión 16](docs/decisiones
 | | |
 |---|---|
 | <img src="https://api.iconify.design/mdi/translate.svg?color=%232F6B4F" width="18"/> **¿Hablás una de estas lenguas?** | Contestá [**Tu lengua en Piko**](https://encuestas.piko.mugiware.com/e/tu-lengua): escribís cómo se dicen palabras y frases en tu lengua, desde el teléfono. O abrí un [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml). No hace falta saber programar ni usar Git. |
-| <img src="https://api.iconify.design/mdi/code-braces.svg?color=%231F4E5F" width="18"/> **¿Querés aportar código?** | Todo está en [CONTRIBUTING.md](CONTRIBUTING.md): cómo correr el proyecto, las 124 pruebas, el simulador de aula y las restricciones que no son negociables. |
+| <img src="https://api.iconify.design/mdi/code-braces.svg?color=%231F4E5F" width="18"/> **¿Querés aportar código?** | Todo está en [CONTRIBUTING.md](CONTRIBUTING.md): cómo correr el proyecto, las 135 pruebas, el simulador de aula y las restricciones que no son negociables. |
 
 </div>
 

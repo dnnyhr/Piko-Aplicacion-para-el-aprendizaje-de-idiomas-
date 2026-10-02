@@ -11,6 +11,7 @@ import { Bloque } from '../../ui/components/Bloque';
 import { PikoMascota } from '../../ui/piko/PikoMascota';
 import { color, espacio, radio, texto } from '../../ui/tokens';
 import type { BuildItem } from '../../core/content/schema';
+import { useTextos } from '../../ui/textos/useTextos';
 
 export interface EjercicioBloquesProps {
   item: BuildItem;
@@ -29,6 +30,7 @@ export function EjercicioBloques({
   onArmado,
   revelado,
 }: EjercicioBloquesProps) {
+  const { t } = useTextos();
   const colocar = (indice: number) => {
     if (revelado || armado.includes(indice)) return;
     onArmado([...armado, indice]);
@@ -44,7 +46,7 @@ export function EjercicioBloques({
       <View style={styles.cabecera}>
         <PikoMascota estado={revelado ? 'idle' : 'pensando'} tam={92} />
         <View style={styles.enunciado}>
-          <Text style={styles.instruccion}>Armá esta oración</Text>
+          <Text style={styles.instruccion}>{t('ejercicio.arma_oracion')}</Text>
           <Text style={styles.frase}>{item.gloss}</Text>
         </View>
       </View>
@@ -53,7 +55,7 @@ export function EjercicioBloques({
           dónde van a caer las palabras. */}
       <View style={styles.renglon}>
         {armado.length === 0 ? (
-          <Text style={styles.pista}>Tocá las palabras de abajo</Text>
+          <Text style={styles.pista}>{t('ejercicio.toca_palabras')}</Text>
         ) : (
           <View style={styles.fichas}>
             {armado.map((indice, posicion) => (

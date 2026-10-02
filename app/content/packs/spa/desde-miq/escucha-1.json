@@ -1,0 +1,178 @@
+{
+  "id": "miq.spa.escucha.1",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "escucha",
+  "difficulty": 1,
+  "title": "Escuchá: palabras de todos los días",
+  "items": [
+    {
+      "id": "miq.spa.escucha.1.a",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "uno",
+      "ttsLang": "es-US",
+      "answer": "uno",
+      "options": [
+        "uno",
+        "dos",
+        "cabeza"
+      ],
+      "gloss": "kumi"
+    },
+    {
+      "id": "miq.spa.escucha.1.b",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "dos",
+      "ttsLang": "es-US",
+      "answer": "dos",
+      "options": [
+        "dos",
+        "cabeza",
+        "pie"
+      ],
+      "gloss": "wal"
+    },
+    {
+      "id": "miq.spa.escucha.1.c",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "cinco",
+      "ttsLang": "es-US",
+      "answer": "cinco",
+      "options": [
+        "cinco",
+        "mano",
+        "nariz"
+      ],
+      "gloss": "matsip"
+    },
+    {
+      "id": "miq.spa.escucha.1.d",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "cabeza",
+      "ttsLang": "es-US",
+      "answer": "cabeza",
+      "options": [
+        "cabeza",
+        "dos",
+        "agua"
+      ],
+      "gloss": "lal"
+    },
+    {
+      "id": "miq.spa.escucha.1.e",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "ojo",
+      "ttsLang": "es-US",
+      "answer": "ojo",
+      "options": [
+        "ojo",
+        "diente",
+        "nariz"
+      ],
+      "gloss": "nakra"
+    },
+    {
+      "id": "miq.spa.escucha.1.f",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "oreja",
+      "ttsLang": "es-US",
+      "answer": "oreja",
+      "options": [
+        "oreja",
+        "nariz",
+        "corazón"
+      ],
+      "gloss": "kiama"
+    },
+    {
+      "id": "miq.spa.escucha.1.g",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "mano",
+      "ttsLang": "es-US",
+      "answer": "mano",
+      "options": [
+        "mano",
+        "pie",
+        "cinco"
+      ],
+      "gloss": "mihta"
+    },
+    {
+      "id": "miq.spa.escucha.1.h",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "corazón",
+      "ttsLang": "es-US",
+      "answer": "corazón",
+      "options": [
+        "corazón",
+        "oreja",
+        "niño o niña"
+      ],
+      "gloss": "kupia"
+    },
+    {
+      "id": "miq.spa.escucha.1.i",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "perro",
+      "ttsLang": "es-US",
+      "answer": "perro",
+      "options": [
+        "perro",
+        "agua",
+        "cabeza"
+      ],
+      "gloss": "yul"
+    },
+    {
+      "id": "miq.spa.escucha.1.j",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "pescado",
+      "ttsLang": "es-US",
+      "answer": "pescado",
+      "options": [
+        "pescado",
+        "tía",
+        "pie"
+      ],
+      "gloss": "inska"
+    },
+    {
+      "id": "miq.spa.escucha.1.k",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "tío",
+      "ttsLang": "es-US",
+      "answer": "tío",
+      "options": [
+        "tío",
+        "tía",
+        "mamá"
+      ],
+      "gloss": "tahti"
+    },
+    {
+      "id": "miq.spa.escucha.1.l",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "Gracias",
+      "ttsLang": "es-US",
+      "answer": "Gracias",
+      "options": [
+        "Gracias",
+        "Niño o niña",
+        "Bien"
+      ],
+      "gloss": "Tingki"
+    }
+  ]
+}

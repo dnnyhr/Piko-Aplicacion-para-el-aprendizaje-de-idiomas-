@@ -16,6 +16,7 @@ import { color, espacio, radio, texto } from '../../ui/tokens';
 import { mulberry32, shuffle } from '../../core/ids';
 import { normalizar } from '../../core/content/verificar';
 import type { ChoiceItem, ListenItem } from '../../core/content/schema';
+import { useTextos } from '../../ui/textos/useTextos';
 
 export interface EjercicioOpcionesProps {
   item: ChoiceItem | ListenItem;
@@ -41,6 +42,7 @@ export function EjercicioOpciones({
   );
 
   const esEscucha = item.type === 'listen';
+  const { t } = useTextos();
 
   const hablar = () => {
     if (item.type !== 'listen') return;
@@ -88,7 +90,7 @@ export function EjercicioOpciones({
                   fill={color.blanco}
                 />
               </Svg>
-              <Text style={styles.bocinaTexto}>Tocá para escuchar</Text>
+              <Text style={styles.bocinaTexto}>{t('ejercicio.tocar_para_escuchar')}</Text>
             </Pressable>
           ) : (
             <Text style={styles.frase}>{(item as ChoiceItem).prompt}</Text>
@@ -97,7 +99,7 @@ export function EjercicioOpciones({
       </View>
 
       <Text style={styles.instruccion}>
-        {esEscucha ? '¿Qué escuchaste?' : 'Elegí la traducción correcta'}
+        {t(esEscucha ? 'ejercicio.que_escuchaste' : 'ejercicio.elegir_traduccion')}
       </Text>
 
       <View style={styles.opciones}>

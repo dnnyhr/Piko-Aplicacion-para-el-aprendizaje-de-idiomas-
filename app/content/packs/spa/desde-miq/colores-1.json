@@ -1,0 +1,70 @@
+{
+  "id": "miq.spa.colores.1",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "colores",
+  "difficulty": 1,
+  "title": "Colores",
+  "items": [
+    {
+      "id": "miq.spa.colores.1.a",
+      "type": "choice",
+      "skill": "spa.colores",
+      "prompt": "pauni",
+      "answer": "rojo",
+      "options": [
+        "rojo",
+        "blanco",
+        "negro"
+      ]
+    },
+    {
+      "id": "miq.spa.colores.1.b",
+      "type": "choice",
+      "skill": "spa.colores",
+      "prompt": "pihni",
+      "answer": "blanco",
+      "options": [
+        "blanco",
+        "rojo",
+        "amarillo"
+      ]
+    },
+    {
+      "id": "miq.spa.colores.1.c",
+      "type": "choice",
+      "skill": "spa.colores",
+      "prompt": "siksa",
+      "answer": "negro",
+      "options": [
+        "negro",
+        "azul",
+        "blanco"
+      ]
+    },
+    {
+      "id": "miq.spa.colores.1.d",
+      "type": "choice",
+      "skill": "spa.colores",
+      "prompt": "lalahni",
+      "answer": "amarillo",
+      "options": [
+        "amarillo",
+        "rojo",
+        "azul"
+      ]
+    },
+    {
+      "id": "miq.spa.colores.1.e",
+      "type": "choice",
+      "skill": "spa.colores",
+      "prompt": "sangni",
+      "answer": "azul",
+      "options": [
+        "azul",
+        "negro",
+        "amarillo"
+      ]
+    }
+  ]
+}

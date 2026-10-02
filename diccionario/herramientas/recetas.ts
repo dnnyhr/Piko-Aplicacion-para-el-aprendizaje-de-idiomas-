@@ -30,6 +30,8 @@ export interface Lengua {
   carpeta: string | null;
   /** Voz sintética con que puede sonar (BCP-47); null = sólo grabaciones. */
   voz: string | null;
+  /** Lenguas que se aprenden desde esta, con su mismo léxico (hoy: el español). */
+  ensena?: LangCode[];
 }
 
 export interface Entrada {
@@ -93,6 +95,35 @@ export function palabras(texto: string): string[] {
     .filter(Boolean);
 }
 
+/** CSV con comillas dobles, como lo exportan las planillas. */
+export function leerCsv(texto: string): string[][] {
+  const filas: string[][] = [];
+  let fila: string[] = [];
+  let campo = '';
+  let entreComillas = false;
+  for (let i = 0; i < texto.length; i++) {
+    const c = texto[i];
+    if (entreComillas) {
+      if (c === '"' && texto[i + 1] === '"') { campo += '"'; i++; }
+      else if (c === '"') entreComillas = false;
+      else campo += c;
+    } else if (c === '"') entreComillas = true;
+    else if (c === ',') { fila.push(campo); campo = ''; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && texto[i + 1] === '\n') i++;
+      fila.push(campo); filas.push(fila); fila = []; campo = '';
+    } else campo += c;
+  }
+  if (campo || fila.length) { fila.push(campo); filas.push(fila); }
+  return filas;
+}
+
+/** Escribe un CSV que abre bien una planilla: comillas sólo donde hacen falta. */
+export function escribirCsv(filas: readonly (readonly string[])[]): string {
+  const campo = (c: string) => (/[",\n\r]/.test(c) ? `"${c.replace(/"/g, '""')}"` : c);
+  return filas.map((f) => f.map(campo).join(',')).join('\n') + '\n';
+}
+
 const leerJson = <T>(archivo: string): T => JSON.parse(fs.readFileSync(archivo, 'utf8')) as T;
 
 export function leerLenguas(): Lengua[] {
@@ -120,7 +151,7 @@ export const usable = (e: Entrada) => !e.revisar;
 
 export interface Armado {
   pack: Pack;
-  /** Nombre del archivo en `app/content/packs/<codigo>/`. */
+  /** Ruta del archivo dentro de `app/content/packs/`. */
   archivo: string;
   /** Por cada ítem, las entradas que usa y los bloques extra. */
   usa: { entradas: string[]; extra: string[] }[];
@@ -129,7 +160,8 @@ export interface Armado {
 }
 
 const letra = (i: number) => (i < 26 ? String.fromCharCode(97 + i) : `z${i - 25}`);
-const mayus = (t: string) => t.charAt(0).toLocaleUpperCase('es') + t.slice(1);
+/** Primera letra en mayúscula, saltando los signos de apertura: «¿cómo…» → «¿Cómo…». */
+const mayus = (t: string) => t.replace(/^([¿¡"«(]*)(.)/u, (_, signos: string, c: string) => signos + c.toLocaleUpperCase('es'));
 
 /** Arma todos los paquetes de una lengua, con todos sus ítems. */
 export function armar(d: DiccionarioDeLengua): Armado[] {
@@ -186,7 +218,7 @@ export function armar(d: DiccionarioDeLengua): Armado[] {
     });
 
     const pack: Pack = { id, lang: codigo, theme: rp.tema, difficulty: rp.nivel, title: rp.titulo, items };
-    return { pack, archivo: `${rp.tema}-${rp.nivel}.json`, usa, errores: [...new Set(errores)] };
+    return { pack, archivo: `${codigo}/${rp.tema}-${rp.nivel}.json`, usa, errores: [...new Set(errores)] };
   });
 }
 
@@ -211,6 +243,86 @@ export function paraLaApp(d: DiccionarioDeLengua, armados: Armado[]): Armado[] {
     .map((a) => {
       const items = a.pack.items.filter((_, i) => listo(a.usa[i] as Armado['usa'][number]));
       return { ...a, pack: { ...a.pack, items }, usa: a.usa.filter((u) => listo(u)) };
+    })
+    .filter((a) => a.pack.items.length > 0);
+}
+
+/**
+ * El español de una entrada, como respuesta: la primera traducción, sin las
+ * aclaraciones entre paréntesis. «pescado, pez» → «pescado»; «mamá (en «mama
+ * almuk»)» → «mamá». Las frases quedan enteras, sin el punto final.
+ */
+export function espanolDe(e: Entrada): string {
+  const sin = e.es.replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  if (e.categoria === 'frase' || e.categoria === 'expresion') return sin.replace(/\.$/, '');
+  return (sin.split(/[;,]/)[0] ?? '').trim();
+}
+
+/**
+ * Los paquetes para aprender español desde esta lengua, con las mismas recetas
+ * dadas vuelta: la pregunta en la lengua (su `forma`) y la respuesta en español
+ * (su traducción del léxico). Sólo con palabras usables, y se salta lo que al
+ * darlo vuelta queda ambiguo (dos opciones que en español son la misma
+ * palabra) o trivial (una frase para ordenar de una sola palabra).
+ *
+ * Los ids salen de la posición en la receta, igual que en `armar`.
+ */
+export function armarAlEspanol(d: DiccionarioDeLengua, vozEspanol: string): Armado[] {
+  const porId = new Map(d.entradas.map((e) => [e.id, e]));
+  const desde = d.lengua.codigo;
+  const clave = (t: string) => t.toLocaleLowerCase('es');
+
+  return d.paquetes
+    .map((rp): Armado => {
+      const id = `${desde}.spa.${rp.tema}.${rp.nivel}`;
+      const skill = `spa.${rp.tema}`;
+      const usa: Armado['usa'] = [];
+      const listas = (ids: string[]) => {
+        const es = ids.map((i) => porId.get(i));
+        return es.every((e): e is Entrada => e !== undefined && usable(e)) ? es : null;
+      };
+      // Las palabras en español de cada ítem del paquete, para despistar al
+      // ordenar bloques. La primera va en minúscula: con mayúscula delataría
+      // que no es la primera de la frase.
+      const espanolDeCadaItem = rp.items.map((r) => {
+        const e = porId.get('armar' in r ? r.armar : 'elegir' in r ? r.elegir : r.escuchar);
+        const ps = e && usable(e) ? palabras(espanolDe(e)) : [];
+        return ps.map((p, k) => (k === 0 ? p.charAt(0).toLocaleLowerCase('es') + p.slice(1) : p));
+      });
+
+      const items = rp.items.flatMap((r, i): Item[] => {
+        const itemId = `${id}.${letra(i)}`;
+        const conMayuscula = r.mayuscula ?? rp.mayuscula;
+        const original = (e: Entrada) => (conMayuscula ? mayus(e.forma) : e.forma);
+        const espanol = (e: Entrada) => (conMayuscula ? mayus(espanolDe(e)) : espanolDe(e));
+
+        if ('armar' in r) {
+          const [e] = listas([r.armar]) ?? [];
+          if (!e) return [];
+          const objetivo = palabras(espanolDe(e));
+          if (objetivo.length < 2) return [];
+          const propias = new Set(objetivo.map(clave));
+          // Se empieza por el ítem siguiente, así cada frase recibe otros distractores.
+          const otras = [...espanolDeCadaItem.slice(i + 1), ...espanolDeCadaItem.slice(0, i)].flat();
+          const extra = [...new Map(otras.filter((p) => !propias.has(clave(p))).map((p) => [clave(p), p])).values()].slice(0, 2);
+          usa.push({ entradas: [e.id], extra: [] });
+          return [{ id: itemId, type: 'build', skill, target: objetivo.join(' '), blocks: [...objetivo, ...extra], gloss: original(e) }];
+        }
+
+        const ref = 'elegir' in r ? r.elegir : r.escuchar;
+        const es = listas([ref, ...r.opciones]);
+        if (!es) return [];
+        const [e, ...opciones] = es as [Entrada, ...Entrada[]];
+        const answer = espanol(e);
+        const options = opciones.map(espanol);
+        if (!answer || options.some((o) => !o) || new Set(options.map(clave)).size !== options.length) return [];
+        usa.push({ entradas: es.map((x) => x.id), extra: [] });
+        if ('elegir' in r) return [{ id: itemId, type: 'choice', skill, prompt: original(e), answer, options }];
+        return [{ id: itemId, type: 'listen', skill, tts: answer, ttsLang: vozEspanol, answer, options, gloss: original(e) }];
+      });
+
+      const pack: Pack = { id, lang: 'spa', desde, theme: rp.tema, difficulty: rp.nivel, title: rp.titulo, items };
+      return { pack, archivo: `spa/desde-${desde}/${rp.tema}-${rp.nivel}.json`, usa, errores: [] };
     })
     .filter((a) => a.pack.items.length > 0);
 }

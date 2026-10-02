@@ -1,0 +1,46 @@
+{
+  "id": "miq.spa.numeros.2",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "numeros",
+  "difficulty": 2,
+  "title": "Números: del 7 al 9 (seis más…)",
+  "items": [
+    {
+      "id": "miq.spa.numeros.2.a",
+      "type": "choice",
+      "skill": "spa.numeros",
+      "prompt": "matlalkahbi pura kum",
+      "answer": "siete",
+      "options": [
+        "siete",
+        "ocho",
+        "nueve"
+      ]
+    },
+    {
+      "id": "miq.spa.numeros.2.b",
+      "type": "choice",
+      "skill": "spa.numeros",
+      "prompt": "matlalkahbi pura wal",
+      "answer": "ocho",
+      "options": [
+        "ocho",
+        "nueve",
+        "siete"
+      ]
+    },
+    {
+      "id": "miq.spa.numeros.2.c",
+      "type": "choice",
+      "skill": "spa.numeros",
+      "prompt": "matlalkahbi pura yumpha",
+      "answer": "nueve",
+      "options": [
+        "nueve",
+        "siete",
+        "ocho"
+      ]
+    }
+  ]
+}

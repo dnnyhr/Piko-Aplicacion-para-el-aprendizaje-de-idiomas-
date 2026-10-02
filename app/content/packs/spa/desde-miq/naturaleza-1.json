@@ -1,0 +1,118 @@
+{
+  "id": "miq.spa.naturaleza.1",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "naturaleza",
+  "difficulty": 1,
+  "title": "La naturaleza",
+  "items": [
+    {
+      "id": "miq.spa.naturaleza.1.a",
+      "type": "choice",
+      "skill": "spa.naturaleza",
+      "prompt": "tasba",
+      "answer": "tierra",
+      "options": [
+        "tierra",
+        "piedra",
+        "monte"
+      ]
+    },
+    {
+      "id": "miq.spa.naturaleza.1.b",
+      "type": "choice",
+      "skill": "spa.naturaleza",
+      "prompt": "tikni",
+      "answer": "río",
+      "options": [
+        "río",
+        "mar",
+        "agua"
+      ]
+    },
+    {
+      "id": "miq.spa.naturaleza.1.c",
+      "type": "choice",
+      "skill": "spa.naturaleza",
+      "prompt": "kabu",
+      "answer": "mar",
+      "options": [
+        "mar",
+        "río",
+        "tierra"
+      ]
+    },
+    {
+      "id": "miq.spa.naturaleza.1.d",
+      "type": "choice",
+      "skill": "spa.naturaleza",
+      "prompt": "kati",
+      "answer": "luna",
+      "options": [
+        "luna",
+        "estrella",
+        "mar"
+      ]
+    },
+    {
+      "id": "miq.spa.naturaleza.1.e",
+      "type": "choice",
+      "skill": "spa.naturaleza",
+      "prompt": "slisma",
+      "answer": "estrella",
+      "options": [
+        "estrella",
+        "luna",
+        "árbol"
+      ]
+    },
+    {
+      "id": "miq.spa.naturaleza.1.f",
+      "type": "choice",
+      "skill": "spa.naturaleza",
+      "prompt": "dus",
+      "answer": "árbol",
+      "options": [
+        "árbol",
+        "monte",
+        "viento"
+      ]
+    },
+    {
+      "id": "miq.spa.naturaleza.1.g",
+      "type": "choice",
+      "skill": "spa.naturaleza",
+      "prompt": "unta",
+      "answer": "monte",
+      "options": [
+        "monte",
+        "árbol",
+        "tierra"
+      ]
+    },
+    {
+      "id": "miq.spa.naturaleza.1.h",
+      "type": "choice",
+      "skill": "spa.naturaleza",
+      "prompt": "walpa",
+      "answer": "piedra",
+      "options": [
+        "piedra",
+        "tierra",
+        "árbol"
+      ]
+    },
+    {
+      "id": "miq.spa.naturaleza.1.i",
+      "type": "choice",
+      "skill": "spa.naturaleza",
+      "prompt": "pasa",
+      "answer": "viento",
+      "options": [
+        "viento",
+        "tierra",
+        "piedra"
+      ]
+    }
+  ]
+}
