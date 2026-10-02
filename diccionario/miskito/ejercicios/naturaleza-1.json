@@ -45,28 +45,16 @@
       "id": "miq.naturaleza.1.d",
       "type": "choice",
       "skill": "miq.naturaleza",
-      "prompt": "sol",
-      "answer": "yapta",
-      "options": [
-        "yapta",
-        "kati",
-        "slisma"
-      ]
-    },
-    {
-      "id": "miq.naturaleza.1.e",
-      "type": "choice",
-      "skill": "miq.naturaleza",
       "prompt": "luna",
       "answer": "kati",
       "options": [
         "kati",
-        "yapta",
-        "slisma"
+        "slisma",
+        "kabu"
       ]
     },
     {
-      "id": "miq.naturaleza.1.f",
+      "id": "miq.naturaleza.1.e",
       "type": "choice",
       "skill": "miq.naturaleza",
       "prompt": "estrella",
@@ -74,11 +62,11 @@
       "options": [
         "slisma",
         "kati",
-        "yapta"
+        "dus"
       ]
     },
     {
-      "id": "miq.naturaleza.1.g",
+      "id": "miq.naturaleza.1.f",
       "type": "choice",
       "skill": "miq.naturaleza",
       "prompt": "árbol",
@@ -90,7 +78,7 @@
       ]
     },
     {
-      "id": "miq.naturaleza.1.h",
+      "id": "miq.naturaleza.1.g",
       "type": "choice",
       "skill": "miq.naturaleza",
       "prompt": "monte",
@@ -102,7 +90,7 @@
       ]
     },
     {
-      "id": "miq.naturaleza.1.i",
+      "id": "miq.naturaleza.1.h",
       "type": "choice",
       "skill": "miq.naturaleza",
       "prompt": "piedra",
@@ -114,14 +102,14 @@
       ]
     },
     {
-      "id": "miq.naturaleza.1.j",
+      "id": "miq.naturaleza.1.i",
       "type": "choice",
       "skill": "miq.naturaleza",
       "prompt": "viento",
       "answer": "pasa",
       "options": [
         "pasa",
-        "yapta",
+        "tasba",
         "walpa"
       ]
     }
