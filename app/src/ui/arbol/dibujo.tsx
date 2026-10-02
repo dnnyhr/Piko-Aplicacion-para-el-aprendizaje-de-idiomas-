@@ -88,115 +88,72 @@ function Arbolito() {
 }
 
 /**
- * Tronco del árbol grande, de "hojas" en adelante: corto y grueso, con las
- * raíces abiertas, y partido en tres ramas que se meten en la copa. Así es el
- * madroño: más ancho que alto, con la corteza lisa color cobre.
+ * Un copo de hojas: el montón de follaje en la punta de cada rama. El madroño
+ * no tiene una copa de una pieza sino ramas separadas, cada una con su copo
+ * redondo y esponjoso; con esto se arma tanto el árbol que crece como el
+ * camino de niveles. `s` escala el copo y `flores` dice cuántos racimos lleva.
  */
-function Tronco() {
+const COPO = {
+  hondo: [[-56, 16, 26], [-30, 24, 30], [0, 28, 32], [30, 24, 30], [56, 16, 26], [-44, -4, 28], [44, -4, 28], [0, -10, 30]],
+  medio: [[-34, 4, 26], [0, 8, 30], [34, 4, 26], [-14, -14, 24], [18, -14, 24]],
+  luz: [[-22, -22, 16, 0.85], [14, -26, 14, 0.7]],
+  flores: [[-50, 8], [46, 10], [0, 32], [-22, -8], [24, -4], [-6, -30], [36, 26], [-38, 26]],
+} as const;
+
+export function Copo({ x, y, s = 1, flores = 0 }: { x: number; y: number; s?: number; flores?: number }) {
   return (
     <G>
-      <Path d="M100 180 C 96 160, 70 150, 50 130" stroke={ARBOL_COLOR.corteza} strokeWidth={10} fill="none" strokeLinecap="round" />
-      <Path d="M100 180 C 104 160, 132 152, 152 132" stroke={ARBOL_COLOR.corteza} strokeWidth={10} fill="none" strokeLinecap="round" />
-      <Path d="M100 180 C 100 160, 98 140, 102 110" stroke={ARBOL_COLOR.corteza} strokeWidth={8} fill="none" strokeLinecap="round" />
+      {COPO.hondo.map(([dx, dy, r], i) => (
+        <Circle key={`h${i}`} cx={x + dx * s} cy={y + dy * s} r={r * s} fill={ARBOL_COLOR.hojaHonda} />
+      ))}
+      {COPO.medio.map(([dx, dy, r], i) => (
+        <Circle key={`m${i}`} cx={x + dx * s} cy={y + dy * s} r={r * s} fill={ARBOL_COLOR.hoja} />
+      ))}
+      {COPO.luz.map(([dx, dy, r, o], i) => (
+        <Circle key={`l${i}`} cx={x + dx * s} cy={y + dy * s} r={r * s} fill={ARBOL_COLOR.hojaLuz} opacity={o} />
+      ))}
+      {COPO.flores.slice(0, flores).map(([dx, dy], i) => (
+        <Racimo key={`f${i}`} x={x + dx * s} y={y + dy * s} r={Math.max(3.2, 6 * s)} />
+      ))}
+    </G>
+  );
+}
+
+/** Ramas del árbol grande: hasta dónde llega cada una y dónde va su copo. */
+const RAMAS = [
+  { d: 'M92 204 C 76 196, 58 184, 46 170', ancho: 9, copo: { x: 42, y: 156, s: 0.52 } },
+  { d: 'M108 176 C 124 166, 142 152, 156 138', ancho: 8, copo: { x: 158, y: 124, s: 0.52 } },
+  { d: 'M96 146 C 84 132, 70 116, 58 102', ancho: 7, copo: { x: 54, y: 88, s: 0.48 } },
+  { d: 'M104 122 C 116 108, 132 94, 146 80', ancho: 6, copo: { x: 148, y: 66, s: 0.44 } },
+] as const;
+const COPO_ARRIBA = { x: 100, y: 62 };
+
+/**
+ * El árbol grande, de "hojas" en adelante: tronco grueso con las raíces
+ * abiertas y la corteza lisa color cobre, y ramas separadas, cada una con su
+ * copo. Con cada etapa salen más ramas y más flores.
+ */
+function ArbolGrande({ ramas, arriba, flores }: { ramas: number; arriba: number; flores: number }) {
+  const lista = RAMAS.slice(0, ramas);
+  return (
+    <G>
+      {lista.map((r, i) => (
+        <Path key={i} d={r.d} stroke={ARBOL_COLOR.corteza} strokeWidth={r.ancho} fill="none" strokeLinecap="round" />
+      ))}
       <Path
-        d="M56 253 Q 78 251 82 236 C 86 214, 88 196, 80 176 L 120 176 C 112 196, 114 214, 118 236 Q 122 251 144 253 Z"
+        d="M60 253 Q 80 251 84 236 C 88 210, 91 160, 95 92 L 105 92 C 109 160, 112 210, 116 236 Q 120 251 140 253 Z"
         fill={ARBOL_COLOR.corteza}
       />
       <Path d="M90 249 Q 100 260 110 249 Z" fill={ARBOL_COLOR.corteza} />
-      <Path d="M95 244 C 96 222, 96 202, 91 184" stroke={ARBOL_COLOR.cortezaLuz} strokeWidth={3} fill="none" strokeLinecap="round" />
-      <Ellipse cx={108} cy={214} rx={3} ry={8} fill={ARBOL_COLOR.cortezaLuz} opacity={0.7} />
+      <Path d="M96 244 C 97 214, 97 170, 98 112" stroke={ARBOL_COLOR.cortezaLuz} strokeWidth={3} fill="none" strokeLinecap="round" />
+      <Ellipse cx={107} cy={210} rx={3} ry={8} fill={ARBOL_COLOR.cortezaLuz} opacity={0.7} />
+      {lista.map((r, i) => (
+        <Copo key={i} x={r.copo.x} y={r.copo.y} s={r.copo.s} flores={flores} />
+      ))}
+      <Copo x={COPO_ARRIBA.x} y={COPO_ARRIBA.y} s={arriba} flores={flores} />
     </G>
   );
 }
-
-/** Copa de "árbol con hojas": ya ancha, todavía sin flores. */
-function CopaHojas() {
-  return (
-    <G>
-      <Ellipse cx={100} cy={112} rx={70} ry={40} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={38} cy={120} r={24} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={56} cy={92} r={26} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={86} cy={76} r={28} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={120} cy={76} r={28} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={150} cy={92} r={26} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={164} cy={120} r={24} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={140} cy={140} r={22} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={100} cy={144} r={24} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={60} cy={140} r={22} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={60} cy={108} r={22} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={90} cy={92} r={24} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={124} cy={94} r={22} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={146} cy={112} r={20} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={100} cy={118} r={24} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={72} cy={128} r={18} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={128} cy={128} r={18} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={78} cy={86} r={16} fill={ARBOL_COLOR.hojaLuz} opacity={0.8} />
-      <Circle cx={112} cy={80} r={14} fill={ARBOL_COLOR.hojaLuz} opacity={0.7} />
-    </G>
-  );
-}
-
-/** Copa grande, la de las flores: una nube ancha de copos. */
-function CopaGrande({ conCima }: { conCima: boolean }) {
-  return (
-    <G>
-      <Ellipse cx={100} cy={96} rx={90} ry={60} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={14} cy={108} r={26} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={26} cy={76} r={28} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={52} cy={50} r={30} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={86} cy={36} r={32} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={122} cy={36} r={32} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={154} cy={50} r={30} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={178} cy={76} r={28} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={188} cy={108} r={26} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={170} cy={136} r={26} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={132} cy={148} r={26} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={94} cy={150} r={26} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={56} cy={146} r={26} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={28} cy={134} r={24} fill={ARBOL_COLOR.hojaHonda} />
-      <Circle cx={44} cy={100} r={26} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={70} cy={72} r={28} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={104} cy={62} r={30} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={136} cy={72} r={28} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={160} cy={100} r={26} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={130} cy={112} r={26} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={96} cy={106} r={28} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={64} cy={124} r={22} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={142} cy={132} r={20} fill={ARBOL_COLOR.hoja} />
-      <Circle cx={64} cy={70} r={20} fill={ARBOL_COLOR.hojaLuz} opacity={0.8} />
-      <Circle cx={100} cy={50} r={20} fill={ARBOL_COLOR.hojaLuz} opacity={0.7} />
-      <Circle cx={138} cy={62} r={16} fill={ARBOL_COLOR.hojaLuz} opacity={0.6} />
-      {conCima && <Circle cx={100} cy={26} r={22} fill={ARBOL_COLOR.hoja} />}
-      {conCima && <Circle cx={94} cy={20} r={12} fill={ARBOL_COLOR.hojaLuz} opacity={0.8} />}
-    </G>
-  );
-}
-
-const FLORES_PRIMERAS = [
-  { x: 52, y: 96 },
-  { x: 150, y: 96 },
-  { x: 100, y: 70 },
-  { x: 76, y: 124 },
-  { x: 128, y: 120 },
-  { x: 172, y: 118 },
-];
-
-const FLORES_TODAS = [
-  ...FLORES_PRIMERAS,
-  { x: 30, y: 110 },
-  { x: 64, y: 58 },
-  { x: 120, y: 44 },
-  { x: 144, y: 80 },
-  { x: 88, y: 96 },
-  { x: 112, y: 130 },
-  { x: 44, y: 134 },
-  { x: 162, y: 62 },
-  { x: 92, y: 38 },
-  { x: 184, y: 98 },
-  { x: 140, y: 146 },
-  { x: 70, y: 146 },
-  { x: 100, y: 18 },
-];
 
 /** Pétalos caídos alrededor del tronco: el árbol en su punto. */
 function PetalosCaidos() {
@@ -222,9 +179,9 @@ export const ENCUADRE: Record<EtapaId, string> = {
   semilla: '62 200 76 68',
   brote: '58 186 84 82',
   arbolito: '46 130 108 138',
-  hojas: '18 30 164 238',
-  flores: '-6 -6 212 274',
-  florecido: '-6 -8 212 276',
+  hojas: '6 28 188 236',
+  flores: '6 16 188 248',
+  florecido: '6 8 188 256',
 };
 
 /**
@@ -260,11 +217,9 @@ export function DibujoArbol({ etapa }: { etapa: EtapaId }) {
       {etapa === 'semilla' && <Semilla />}
       {etapa === 'brote' && <Brote />}
       {etapa === 'arbolito' && <Arbolito />}
-      {(etapa === 'hojas' || etapa === 'flores' || etapa === 'florecido') && <Tronco />}
-      {etapa === 'hojas' && <CopaHojas />}
-      {(etapa === 'flores' || etapa === 'florecido') && <CopaGrande conCima={etapa === 'florecido'} />}
-      {etapa === 'flores' && FLORES_PRIMERAS.map((f, i) => <Racimo key={i} x={f.x} y={f.y} />)}
-      {etapa === 'florecido' && FLORES_TODAS.map((f, i) => <Racimo key={i} x={f.x} y={f.y} r={4.4} />)}
+      {etapa === 'hojas' && <ArbolGrande ramas={2} arriba={0.55} flores={0} />}
+      {etapa === 'flores' && <ArbolGrande ramas={3} arriba={0.6} flores={2} />}
+      {etapa === 'florecido' && <ArbolGrande ramas={4} arriba={0.66} flores={6} />}
       {etapa === 'florecido' && <PetalosCaidos />}
     </G>
   );
