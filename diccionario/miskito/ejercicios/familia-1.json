@@ -33,30 +33,6 @@
       "id": "miq.familia.1.c",
       "type": "choice",
       "skill": "miq.familia",
-      "prompt": "hermano",
-      "answer": "muih",
-      "options": [
-        "muih",
-        "laikra",
-        "tahti"
-      ]
-    },
-    {
-      "id": "miq.familia.1.d",
-      "type": "choice",
-      "skill": "miq.familia",
-      "prompt": "hermana",
-      "answer": "laikra",
-      "options": [
-        "laikra",
-        "muih",
-        "anti"
-      ]
-    },
-    {
-      "id": "miq.familia.1.e",
-      "type": "choice",
-      "skill": "miq.familia",
       "prompt": "abuela",
       "answer": "kuka",
       "options": [
@@ -66,7 +42,7 @@
       ]
     },
     {
-      "id": "miq.familia.1.f",
+      "id": "miq.familia.1.d",
       "type": "choice",
       "skill": "miq.familia",
       "prompt": "abuelo",
@@ -78,7 +54,7 @@
       ]
     },
     {
-      "id": "miq.familia.1.g",
+      "id": "miq.familia.1.e",
       "type": "choice",
       "skill": "miq.familia",
       "prompt": "tío",
@@ -86,11 +62,11 @@
       "options": [
         "tahti",
         "anti",
-        "muih"
+        "dama"
       ]
     },
     {
-      "id": "miq.familia.1.h",
+      "id": "miq.familia.1.f",
       "type": "choice",
       "skill": "miq.familia",
       "prompt": "tía",
@@ -98,11 +74,11 @@
       "options": [
         "anti",
         "tahti",
-        "laikra"
+        "kuka"
       ]
     },
     {
-      "id": "miq.familia.1.i",
+      "id": "miq.familia.1.g",
       "type": "choice",
       "skill": "miq.familia",
       "prompt": "niño o niña",
@@ -114,7 +90,7 @@
       ]
     },
     {
-      "id": "miq.familia.1.j",
+      "id": "miq.familia.1.h",
       "type": "choice",
       "skill": "miq.familia",
       "prompt": "bebé",

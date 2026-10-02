@@ -14,7 +14,7 @@
       "options": [
         "matlalkahbi pura kum",
         "matlalkahbi pura wal",
-        "matlalkahbi pura yumhpa"
+        "matlalkahbi pura yumpha"
       ]
     },
     {
@@ -25,7 +25,7 @@
       "answer": "matlalkahbi pura wal",
       "options": [
         "matlalkahbi pura wal",
-        "matlalkahbi pura yumhpa",
+        "matlalkahbi pura yumpha",
         "matlalkahbi pura kum"
       ]
     },
@@ -34,9 +34,9 @@
       "type": "choice",
       "skill": "miq.numeros",
       "prompt": "nueve",
-      "answer": "matlalkahbi pura yumhpa",
+      "answer": "matlalkahbi pura yumpha",
       "options": [
-        "matlalkahbi pura yumhpa",
+        "matlalkahbi pura yumpha",
         "matlalkahbi pura kum",
         "matlalkahbi pura wal"
       ]
@@ -51,7 +51,7 @@
         "pura",
         "kum",
         "wal",
-        "yumhpa"
+        "yumpha"
       ],
       "gloss": "siete"
     },
@@ -65,7 +65,7 @@
         "pura",
         "wal",
         "kum",
-        "yumhpa"
+        "yumpha"
       ],
       "gloss": "ocho"
     },
@@ -73,11 +73,11 @@
       "id": "miq.numeros.2.f",
       "type": "build",
       "skill": "miq.numeros",
-      "target": "matlalkahbi pura yumhpa",
+      "target": "matlalkahbi pura yumpha",
       "blocks": [
         "matlalkahbi",
         "pura",
-        "yumhpa",
+        "yumpha",
         "kum",
         "wal"
       ],

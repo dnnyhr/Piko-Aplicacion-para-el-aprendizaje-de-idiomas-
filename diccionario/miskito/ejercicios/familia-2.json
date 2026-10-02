@@ -69,6 +69,32 @@
         "almuk"
       ],
       "gloss": "maestra"
+    },
+    {
+      "id": "miq.familia.2.f",
+      "type": "build",
+      "skill": "miq.familia",
+      "target": "tuktan mairin",
+      "blocks": [
+        "tuktan",
+        "mairin",
+        "waitna",
+        "luhpi"
+      ],
+      "gloss": "niña"
+    },
+    {
+      "id": "miq.familia.2.g",
+      "type": "build",
+      "skill": "miq.familia",
+      "target": "tuktan waitna",
+      "blocks": [
+        "tuktan",
+        "waitna",
+        "mairin",
+        "almuk"
+      ],
+      "gloss": "niño"
     }
   ]
 }

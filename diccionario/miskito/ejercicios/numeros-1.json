@@ -14,7 +14,7 @@
       "options": [
         "kumi",
         "wal",
-        "yumhpa"
+        "yumpha"
       ]
     },
     {
@@ -34,9 +34,9 @@
       "type": "choice",
       "skill": "miq.numeros",
       "prompt": "tres",
-      "answer": "yumhpa",
+      "answer": "yumpha",
       "options": [
-        "yumhpa",
+        "yumpha",
         "wal",
         "matsip"
       ]
@@ -50,7 +50,7 @@
       "options": [
         "walhwal",
         "wal",
-        "yumhpa"
+        "yumpha"
       ]
     },
     {

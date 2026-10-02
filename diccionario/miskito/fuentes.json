@@ -21,6 +21,22 @@
       "puede_revisar_y_grabar": true,
       "contenido": "80 palabras, 15 frases y una oración libre",
       "notas": "Primera tanda real. La respuesta anterior de la misma encuesta (2026-09-25) fue de prueba y no se usa."
+    },
+    {
+      "id": "raiti-2026-09-30",
+      "tipo": "encuesta",
+      "encuesta": "tu-lengua",
+      "respuesta": "a9d3d383-7865-4f74-a149-6cd7107bc6ff",
+      "fecha": "2026-09-30",
+      "zona": "rio_coco",
+      "comunidad": "Raiti, Río Coco",
+      "relacion": "lengua materna",
+      "rol": "estudiante",
+      "permiso": true,
+      "credito": "Tangni",
+      "puede_revisar_y_grabar": true,
+      "contenido": "84 palabras, 15 frases y una oración libre",
+      "notas": "Segunda tanda. Misma comunidad que la primera fuente, otra generación: estudiante de 18 años que estudia en Jinotega."
     }
   ]
 }

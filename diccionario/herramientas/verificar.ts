@@ -26,7 +26,7 @@ const CATEGORIAS = new Set([
   'sustantivo', 'verbo', 'adjetivo', 'adverbio', 'numeral', 'pronombre', 'interrogativo',
   'posposicion', 'interjeccion', 'particula', 'expresion', 'frase', 'forma_flexionada',
 ]);
-const ESTADOS = new Set(['un_hablante', 'probable', 'confirmada']);
+const ESTADOS = new Set(['un_hablante', 'varios_hablantes', 'probable', 'confirmada']);
 const TIPOS_CORPUS = new Set(['palabra', 'frase', 'aporte']);
 
 interface Entrada {

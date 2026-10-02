@@ -260,6 +260,7 @@ Cada entrada del léxico avanza por tres estados:
 | Estado | Criterio |
 |---|---|
 | `un_hablante` | La dio una sola persona |
+| `varios_hablantes` | La dieron 2 personas o más, sin llegar todavía al criterio de `probable` |
 | `probable` | La dieron igual 3 personas o más, de 2 zonas o más (el mismo criterio del panel de encuestas) |
 | `confirmada` | La validó un hablante revisor |
 
@@ -294,7 +295,9 @@ modelo con datos reservados.
 
 Una predicción fallida no es un fracaso del método: es la información más útil
 de la tanda, porque dice dónde está incompleta la regla. La versión 0.1 del
-miskito deja 26 predicciones abiertas ([`miskito/gramatica.md`](miskito/gramatica.md#qué-preguntar-en-la-próxima-tanda)).
+miskito dejó 26 predicciones abiertas; la segunda tanda pudo comprobar 3 y
+acertó 2,5. Las que siguen abiertas están en
+[`miskito/gramatica.md`](miskito/gramatica.md#qué-preguntar-en-la-próxima-tanda).
 
 ---
 
