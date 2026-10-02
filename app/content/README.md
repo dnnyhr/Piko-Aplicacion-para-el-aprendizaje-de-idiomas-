@@ -26,7 +26,8 @@ que el generador escribe.
 | `rma` | Rama | ⬜ Vacío — necesita hablantes |
 | `cab` | Garífuna | ⬜ Vacío — necesita hablantes |
 
-Los códigos son ISO 639-3.
+Los códigos son ISO 639-3. Inglés tiene hoy 6 paquetes con 43 ítems
+(saludos, números, familia, colores, animales y escuela).
 
 > **Ninguna palabra se inventa.** El vocabulario y la pronunciación vienen de
 > hablantes nativos o de material lingüístico publicado, y el diccionario
@@ -98,6 +99,8 @@ El sonido sale de una de dos fuentes:
 
 - **`tts` + `ttsLang`** — síntesis de voz del sistema. Para inglés, y para miskito con voz en español (abajo).
 - **`audio`** — ruta relativa dentro de `content/audio/`, p. ej. `miq/saludos/naksa.m4a`.
+  La carpeta todavía no existe porque no hay grabaciones: se crea con la
+  primera. El validador comprueba que cada archivo referenciado esté.
 
 Android no tiene voces sintéticas para miskito, mayangna, rama ni garífuna, y
 hacerlas "hablar" con una voz en español enseñaría una pronunciación falsa. Por
@@ -112,6 +115,9 @@ Cuando llegue la grabación, el ítem pasa a `audio`. Ver la decisión 16 de
 `docs/decisiones.md`.
 
 Para que el APK siga siendo liviano, las grabaciones van en mono a unos 24 kbps.
+
+`gloss` es el significado en español, que se revela después de responder. Es
+obligatorio en `listen` y en `build`.
 
 ### `build` — construcción de oraciones por bloques
 
@@ -136,3 +142,20 @@ oración usa "is" dos veces, hay que ofrecer dos bloques "is".
 2. Escribir las recetas en `diccionario/<lengua>/ejercicios.json` (ver
    [diccionario/README.md](../../diccionario/README.md#las-recetas-de-ejercicios)).
 3. `npm run contenido` y `npm run validate:diccionario`.
+
+El contrato completo —qué campos son obligatorios y qué se valida— está en
+[`src/core/content/schema.ts`](../src/core/content/schema.ts).
+
+## Palabras que vienen de las encuestas
+
+La encuesta [*Tu lengua en Piko*](../../encuestas/README.md#palabras-para-la-app)
+junta palabras y frases escritas por hablantes. Entran a la app por el
+diccionario: lo que escribió cada persona se suma tal cual a
+`diccionario/<lengua>/corpus.csv` y de ahí al léxico (ver
+[cómo se suma una tanda nueva](../../diccionario/README.md#cómo-se-suma-una-tanda-nueva)).
+Los paquetes que descarga el panel de encuestas quedan para uso interno del
+equipo y no se copian a `packs/` (decisión 18).
+
+Si una palabra viene de otra fuente, anotá de dónde en el pull request (ver
+[CONTRIBUTING.md](../../CONTRIBUTING.md)): estas lenguas varían entre
+comunidades y el maestro tiene que poder saber de dónde sale lo que enseña.
