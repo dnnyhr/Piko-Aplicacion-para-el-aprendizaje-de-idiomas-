@@ -10,6 +10,7 @@
 
 import { compareEvents, type AnswerPayload, type ProgressEvent } from './events';
 import { sacuanjochesPorLeccion } from './arbol';
+import { PACK_MEZCLA, estrellasDe } from './niveles';
 
 export const XP_ACIERTO = 10;
 export const XP_INTENTO = 2;
@@ -43,6 +44,8 @@ export interface StudentState {
    * las gasta. Ver `arbol.ts`.
    */
   sacuanjoches: number;
+  /** Mejores estrellas (1 a 3) de cada nivel, por `packId`. Ver `niveles.ts`. */
+  stars: Record<string, number>;
   lastActiveAt: number;
   /** Mayor `seq` aplicado. Los eventos locales sin sincronizar no lo mueven. */
   throughSeq: number;
@@ -60,6 +63,7 @@ export function emptyState(studentId: string): StudentState {
     packsDone: [],
     lessons: 0,
     sacuanjoches: 0,
+    stars: {},
     lastActiveAt: 0,
     throughSeq: 0,
   };
@@ -76,6 +80,7 @@ export function cloneState(s: StudentState): StudentState {
     packsDone: s.packsDone.slice(),
     lessons: s.lessons ?? 0,
     sacuanjoches: s.sacuanjoches ?? 0,
+    stars: { ...(s.stars ?? {}) },
   };
 }
 
@@ -138,6 +143,10 @@ function step(state: StudentState, ev: ProgressEvent): void {
       if (typeof correct === 'number' && typeof total === 'number') {
         state.lessons += 1;
         state.sacuanjoches += sacuanjochesPorLeccion(correct, total);
+        if (packId !== PACK_MEZCLA) {
+          const e = estrellasDe(correct, total);
+          if (e > (state.stars[packId] ?? 0)) state.stars[packId] = e;
+        }
       }
       return;
     }

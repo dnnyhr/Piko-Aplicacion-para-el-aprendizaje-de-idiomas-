@@ -3,28 +3,23 @@ import { lessonDoneEvent, type ProgressEvent } from '@core/progress/events';
 import { cloneState, emptyState, project, type StudentState } from '@core/progress/projection';
 import {
   ETAPAS,
-  NIVELES,
-  NIVEL_MAX,
   SACUANJOCHES_BASE,
   SACUANJOCHES_MAX,
   etapaDe,
-  lugarDePiko,
-  nivelDe,
   progresoEtapa,
-  progresoNivel,
   recompensaEntre,
   sacuanjochesPorLeccion,
 } from '@core/progress/arbol';
 import { MemoryEventLog } from '@core/sync/log';
 import { fabricaEventos } from './helpers';
 
-function leccion(studentId: string, n: number, correct: number, total: number): ProgressEvent {
+function leccion(studentId: string, n: number, correct: number, total: number, packId = 'eng.saludos.1'): ProgressEvent {
   return lessonDoneEvent({
     id: `leccion-${n}`,
     studentId,
     originDevice: 'dev-a',
     createdAt: 1_700_000_000_000 + n,
-    packId: 'eng.saludos.1',
+    packId,
     correct,
     total,
   });
@@ -53,7 +48,12 @@ describe('proyección de lecciones', () => {
     const s = project('ana', [leccion('ana', 1, 8, 8), leccion('ana', 2, 2, 8)]);
     expect(s.lessons).toBe(2);
     expect(s.sacuanjoches).toBe(5 + 3);
-    expect(s.packsDone).toEqual(['eng.saludos.1']);
+  });
+
+  it('las rondas mezcladas también dan sacuanjoches', () => {
+    const s = project('ana', [leccion('ana', 1, 6, 8, 'mezcla')]);
+    expect(s.sacuanjoches).toBe(4);
+    expect(s.stars).toEqual({});
   });
 
   it('el total nunca baja, haga lo que haga después', () => {
@@ -96,82 +96,51 @@ describe('proyección de lecciones', () => {
     const viejo = { ...emptyState('ana'), xp: 40 } as Partial<StudentState>;
     delete viejo.sacuanjoches;
     delete viejo.lessons;
+    delete viejo.stars;
     const s = project('ana', [leccion('ana', 1, 6, 8)], viejo as StudentState);
     expect(s.xp).toBe(40);
     expect(s.sacuanjoches).toBe(4);
     expect(s.lessons).toBe(1);
+    expect(s.stars).toEqual({ 'eng.saludos.1': 2 });
     expect(cloneState(viejo as StudentState).sacuanjoches).toBe(0);
   });
 });
 
-describe('niveles y etapas', () => {
-  it('los umbrales suben y cada etapa empieza en un nivel', () => {
-    for (let i = 1; i < NIVELES.length; i++) {
-      expect(NIVELES[i]).toBeGreaterThan(NIVELES[i - 1] as number);
+describe('etapas del madroño', () => {
+  it('seis etapas, en orden y con umbrales que suben', () => {
+    expect(ETAPAS.map((e) => e.id)).toEqual(['semilla', 'brote', 'arbolito', 'hojas', 'flores', 'florecido']);
+    for (let i = 1; i < ETAPAS.length; i++) {
+      expect((ETAPAS[i] as { desde: number }).desde).toBeGreaterThan((ETAPAS[i - 1] as { desde: number }).desde);
     }
-    for (const etapa of ETAPAS) expect(NIVELES).toContain(etapa.desde);
-    expect(ETAPAS.map((e) => e.id)).toEqual([
-      'semilla',
-      'brote',
-      'arbolito',
-      'hojas',
-      'flores',
-      'florecido',
-    ]);
   });
 
-  it('arranca en semilla, nivel 1', () => {
-    expect(nivelDe(0)).toBe(1);
+  it('arranca en semilla y la primera lección la hace brotar', () => {
     expect(etapaDe(0).id).toBe('semilla');
-    expect(lugarDePiko(1)).toMatch(/semilla/);
-  });
-
-  it('las primeras sacuanjoches hacen brotar la semilla', () => {
-    expect(etapaDe(3).id).toBe('semilla');
-    expect(etapaDe(4).id).toBe('brote');
-    expect(nivelDe(4)).toBe(2);
+    expect(etapaDe(sacuanjochesPorLeccion(0, 8)).id).toBe('brote');
   });
 
   it('crece de a una etapa: nunca salta de semilla a árbol entero en una lección', () => {
     for (let total = 0; total <= 200; total++) {
       const r = recompensaEntre(total, total + SACUANJOCHES_MAX);
       expect(r.etapaDespues.indice - r.etapaAntes.indice).toBeLessThanOrEqual(1);
-      expect(r.nivelDespues - r.nivelAntes).toBeLessThanOrEqual(1);
     }
   });
 
-  it('el árbol cambia sólo cuando Piko sube de nivel', () => {
-    for (let total = 0; total <= 200; total++) {
-      const r = recompensaEntre(total, total + 1);
-      if (r.crecioArbol) expect(r.subioNivel).toBe(true);
-    }
-  });
-
-  it('progreso hacia el siguiente nivel y la siguiente etapa', () => {
-    const n = progresoNivel(8);
-    expect(n.nivel).toBe(2);
-    expect(n.desde).toBe(4);
-    expect(n.hasta).toBe(12);
-    expect(n.fraccion).toBe(0.5);
-    expect(n.faltan).toBe(4);
-
-    const e = progresoEtapa(24);
+  it('avance hacia la siguiente etapa', () => {
+    const e = progresoEtapa(21);
     expect(e.etapa.id).toBe('arbolito');
     expect(e.siguiente?.id).toBe('hojas');
-    expect(e.faltan).toBe(11);
+    expect(e.fraccion).toBe(0.5);
+    expect(e.faltan).toBe(9);
   });
 
-  it('en la cima no hay más que pedir', () => {
-    const tope = 1000;
-    expect(nivelDe(tope)).toBe(NIVEL_MAX);
-    expect(progresoNivel(tope)).toMatchObject({ hasta: null, fraccion: 1, faltan: 0 });
-    expect(progresoEtapa(tope)).toMatchObject({ siguiente: null, fraccion: 1, faltan: 0 });
-    expect(etapaDe(tope).id).toBe('florecido');
+  it('en la última etapa no hay más que pedir', () => {
+    expect(progresoEtapa(1000)).toMatchObject({ siguiente: null, fraccion: 1, faltan: 0 });
+    expect(etapaDe(1000).id).toBe('florecido');
   });
 
-  it('la recompensa cuenta lo ganado y si subió', () => {
-    const r = recompensaEntre(10, 14);
-    expect(r).toMatchObject({ ganadas: 4, nivelAntes: 2, nivelDespues: 3, subioNivel: true, crecioArbol: true });
-    expect(recompensaEntre(13, 16)).toMatchObject({ ganadas: 3, subioNivel: false, crecioArbol: false });
+  it('la recompensa cuenta lo ganado y si creció el árbol', () => {
+    expect(recompensaEntre(10, 14)).toMatchObject({ ganadas: 4, crecioArbol: true });
+    expect(recompensaEntre(13, 16)).toMatchObject({ ganadas: 3, crecioArbol: false });
   });
 });

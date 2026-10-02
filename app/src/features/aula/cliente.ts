@@ -18,7 +18,7 @@ import {
   type RosterEntry,
 } from '../../core/protocol/messages';
 import type { Item } from '../../core/content/schema';
-import { packPrincipal, useProgreso } from '../progreso/store';
+import { packDeRonda, useProgreso } from '../progreso/store';
 
 export type EstadoConexion = 'suelto' | 'conectando' | 'conectado' | 'caido';
 
@@ -156,7 +156,7 @@ export const useAulaCliente = create<AulaCliente>((set, get) => ({
   terminarLeccion(items, correctas) {
     const cliente = get().cliente;
     if (cliente) {
-      cliente.terminarLeccion({ packId: packPrincipal(items), correct: correctas, total: items.length });
+      cliente.terminarLeccion({ packId: packDeRonda(items), correct: correctas, total: items.length });
       useProgreso.getState().recomputar();
     } else {
       useProgreso.getState().terminarLeccion(items, correctas);

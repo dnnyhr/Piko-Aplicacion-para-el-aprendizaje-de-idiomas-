@@ -11,6 +11,7 @@ import { abrirBase } from '../../db';
 import { uuidv4 } from '../../core/ids';
 import { answerEvent, lessonDoneEvent } from '../../core/progress/events';
 import { recompensaEntre, type Recompensa } from '../../core/progress/arbol';
+import { PACK_MEZCLA } from '../../core/progress/niveles';
 import { emptyState, project, type StudentState } from '../../core/progress/projection';
 import type { Item } from '../../core/content/schema';
 import { PACKS } from '../../../content';
@@ -21,25 +22,17 @@ const PACK_DE_ITEM = new Map<string, string>();
 for (const pack of PACKS) for (const it of pack.items) PACK_DE_ITEM.set(it.id, pack.id);
 
 /**
- * El paquete del que salió la mayoría de los ítems de una ronda. Con eso se
- * anota la lección en `packsDone` aunque la ronda haya sido mezclada.
- * Empata por id, para que sea determinista.
+ * El paquete de una ronda, si todos sus ítems salieron del mismo. Es el que
+ * cuenta para el camino de niveles; una ronda mezclada no supera ninguno.
  */
-export function packPrincipal(items: readonly Item[]): string {
-  const cuenta = new Map<string, number>();
+export function packDeRonda(items: readonly Item[]): string {
+  let pack: string | null = null;
   for (const it of items) {
-    const pack = PACK_DE_ITEM.get(it.id);
-    if (pack) cuenta.set(pack, (cuenta.get(pack) ?? 0) + 1);
+    const p = PACK_DE_ITEM.get(it.id);
+    if (!p || (pack !== null && p !== pack)) return PACK_MEZCLA;
+    pack = p;
   }
-  let mejor = 'desconocido';
-  let max = 0;
-  for (const [pack, n] of [...cuenta].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))) {
-    if (n > max) {
-      mejor = pack;
-      max = n;
-    }
-  }
-  return mejor;
+  return pack ?? PACK_MEZCLA;
 }
 
 /** Identidad para la práctica en solitario, mientras no haya sala. */
@@ -109,7 +102,7 @@ export const useProgreso = create<ProgresoStore>((set, get) => ({
         studentId,
         originDevice: deviceId,
         createdAt: Date.now(),
-        packId: packPrincipal(items),
+        packId: packDeRonda(items),
         correct: correctas,
         total: items.length,
       }),
