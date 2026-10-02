@@ -246,6 +246,43 @@ img{max-width:100%; display:block}
 .repo__copiar:hover{background:#A9D341; transform:translateY(-1px)}
 .repo__copiar[data-listo="si"]{background:var(--pico)}
 
+/* Descarga del APK */
+.descarga{
+  background:#fff; border-radius:calc(var(--radio) + 8px); box-shadow:var(--sombra);
+  border-top:8px solid var(--verde-pasto); padding:clamp(1.8rem,3.5vw,2.8rem);
+  display:grid; grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);
+  gap:clamp(1.8rem,3.5vw,3rem); align-items:center;
+}
+.descarga h2{font-size:clamp(1.5rem,2.8vw,2.15rem); margin-bottom:.8rem}
+.descarga__texto > p{color:#3B4C42; margin-bottom:1.6rem}
+.descarga__datos{list-style:none; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:1rem 2.2rem}
+.descarga__datos li{display:flex; flex-direction:column; gap:.15rem}
+.descarga__datos span{
+  font-family:Fredoka,sans-serif; font-size:.7rem; letter-spacing:.11em;
+  text-transform:uppercase; color:#6B7A70;
+}
+.descarga__datos b{font-family:Fredoka,sans-serif; font-weight:600; font-size:1.05rem; color:var(--verde-piko)}
+.descarga__accion{display:flex; flex-direction:column; gap:.9rem; text-align:center}
+/* Naranja del copete: el lima se confundía con el pasto del paisaje del hero */
+.btn--apk{background:var(--copete); color:var(--grafito); box-shadow:0 10px 24px rgba(233,121,39,.35)}
+.btn--apk:hover{background:#F2892F; transform:translateY(-2px); box-shadow:0 14px 30px rgba(233,121,39,.42)}
+.btn--apk svg{width:20px; height:20px}
+.btn--apk:hover svg{animation:apk-baja .6s ease}
+@keyframes apk-baja{0%,100%{transform:translateY(0)} 50%{transform:translateY(3px)}}
+/* Mientras no haya un APK publicado el botón sigue siendo un enlace real, pero apagado */
+.btn--apk[data-estado="sin-apk"]{background:var(--papel-hondo); color:#4E5F55; box-shadow:none}
+.btn--apk[data-estado="sin-apk"]:hover{background:#E3D6BE; transform:none; box-shadow:none}
+.btn--apk[data-estado="sin-apk"]:hover svg{animation:none}
+/* En la tarjeta de descarga el botón es el protagonista; en el hero va a la par de los otros */
+.descarga__accion .btn--apk{width:100%; justify-content:center; font-size:1.05rem; padding:1.05rem 1.4rem}
+.descarga__accion .btn--apk svg{width:22px; height:22px}
+.descarga__nota{font-size:.82rem; line-height:1.5; color:#6B7A70; margin:0}
+.descarga__todas{
+  font-size:.86rem; color:var(--verde-bosque); text-decoration:none;
+  border-bottom:1px solid rgba(25,114,73,.3); align-self:center;
+}
+.descarga__todas:hover{color:var(--verde-piko); border-bottom-color:var(--verde-piko)}
+
 /* Footer */
 .pie{background:var(--verde-piko); color:#CFE2D6; padding:clamp(3.5rem,6vw,5rem) 0 2.5rem}
 .pie__grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:2.5rem; align-items:center}
@@ -268,7 +305,7 @@ img{max-width:100%; display:block}
   .hero__texto{padding-bottom:2rem}
   .marca{width:min(280px,70%)}
   .piko-fig{width:min(250px,60%)}
-  .problema__grid,.mascota__grid,.proceso__grid,.codigo__grid,.pie__grid{grid-template-columns:1fr}
+  .problema__grid,.mascota__grid,.proceso__grid,.codigo__grid,.descarga,.pie__grid{grid-template-columns:1fr}
   .rutas,.principios{grid-template-columns:1fr}
   .bifurcacion{display:none}
   .pregunta{margin-bottom:1.6rem}
@@ -326,6 +363,10 @@ img{max-width:100%; display:block}
   .repo__stats li{padding:.7rem .3rem}
   .repo__stats b{font-size:1.4rem}
   .repo__stats span{font-size:.66rem; letter-spacing:.04em}
+
+  /* Descarga */
+  .descarga{padding:1.6rem 1.35rem; gap:1.6rem}
+  .descarga__datos{gap:.9rem 1.6rem}
 
   .pie__meta{flex-direction:column; align-items:flex-start; gap:.9rem}
 }
@@ -445,6 +486,12 @@ img{max-width:100%; display:block}
         <a class="btn btn--codigo" href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-" target="_blank" rel="noopener">
           <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
           Ver el código
+        </a>
+        <a class="btn btn--apk" data-apk-enlace
+           href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/releases/latest"
+           target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.3a1 1 0 1 1 1.4 1.42l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.42l2.3 2.3V4a1 1 0 0 1 1-1Zm-7 13a1 1 0 0 1 1 1v2h12v-2a1 1 0 1 1 2 0v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z"/></svg>
+          <span data-apk="etiqueta-hero">Descargar APK</span>
         </a>
       </div>
     </div>
@@ -833,6 +880,34 @@ img{max-width:100%; display:block}
   </div>
 </section>
 
+<section class="seccion seccion--hondo" id="descargar">
+  <div class="wrap">
+    <div class="descarga">
+      <div class="descarga__texto">
+        <p class="eyebrow">Probala</p>
+        <h2>Bajate Piko y llevala al aula.</h2>
+        <p>El APK se instala directo en el teléfono, sin tienda de aplicaciones y sin crear ninguna cuenta. Una vez instalado, nada de lo que hace la app vuelve a necesitar internet.</p>
+        <ul class="descarga__datos">
+          <li><span>Versión</span><b data-apk="version">—</b></li>
+          <li><span>Publicada</span><b data-apk="fecha">—</b></li>
+          <li><span>Tamaño</span><b data-apk="tamano">—</b></li>
+        </ul>
+      </div>
+
+      <div class="descarga__accion">
+        <a class="btn btn--apk" data-apk-enlace
+           href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/releases/latest"
+           target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.3a1 1 0 1 1 1.4 1.42l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.42l2.3 2.3V4a1 1 0 0 1 1-1Zm-7 13a1 1 0 0 1 1 1v2h12v-2a1 1 0 1 1 2 0v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z"/></svg>
+          <span data-apk="etiqueta">Descargar APK</span>
+        </a>
+        <p class="descarga__nota" data-apk="nota">Android. Al instalar por fuera de Play Store, el teléfono va a pedir permiso para orígenes desconocidos.</p>
+        <a class="descarga__todas" href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/releases" target="_blank" rel="noopener">Ver todas las versiones</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer class="pie">
   <div class="wrap">
     <div class="pie__grid">
@@ -1029,6 +1104,14 @@ img{max-width:100%; display:block}
     gsap.from(".repo__relleno", {scaleX:0, duration:1.2, ease:"power2.out",
       scrollTrigger:{trigger:".repo__avance", start:"top 92%", once:true}});
 
+    /* ---- Descarga ---- */
+    gsap.from(".descarga", {y:55, opacity:0, scale:.98, duration:1,
+      scrollTrigger:{trigger:".descarga", start:"top 86%", once:true}});
+    gsap.from(".descarga__datos li", {y:18, opacity:0, duration:.6, stagger:.11,
+      scrollTrigger:{trigger:".descarga__datos", start:"top 92%", once:true}});
+    gsap.from(".descarga__accion > *", {y:20, opacity:0, duration:.7, stagger:.12,
+      scrollTrigger:{trigger:".descarga__accion", start:"top 92%", once:true}});
+
     /* ---- Pie ---- */
     gsap.from(".marca-neg", {y:30, opacity:0, duration:.9,
       scrollTrigger:{trigger:".pie__grid", start:"top 88%", once:true}});
@@ -1171,6 +1254,96 @@ img{max-width:100%; display:block}
       .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
       .then(pintarLenguajes)
       .catch(function(){ /* se queda la barra de respaldo */ });
+  }
+
+  /* ============================================================
+     4. Descarga del APK: apuntar al archivo de la última release
+     ============================================================ */
+
+  /* Si siempre subís el APK con el mismo nombre de archivo, poné ese nombre acá
+     (por ejemplo "piko.apk") y el botón usará el enlace permanente de GitHub
+     .../releases/latest/download/piko.apk, que funciona sin consultar la API.
+     Vacío = se resuelve por API, que sirve aunque el nombre cambie en cada versión. */
+  var APK_NOMBRE_FIJO = "";
+
+  /* Hay dos botones: el del hero y el de la tarjeta de descarga */
+  var enlacesApk = [].slice.call(document.querySelectorAll("[data-apk-enlace]"));
+
+  function ponerApk(nombre, valor){
+    if (!valor) return;
+    document.querySelectorAll('[data-apk="' + nombre + '"]').forEach(function(el){
+      el.textContent = valor;
+    });
+  }
+
+  function pesoLegible(bytes){
+    if (!bytes) return null;
+    var mb = bytes / 1048576;
+    return (mb >= 10 ? Math.round(mb) : mb.toFixed(1)).toString().replace(".", ",") + " MB";
+  }
+
+  function fechaLegible(iso){
+    var d = new Date(iso);
+    if (isNaN(d)) return null;
+    return d.toLocaleDateString("es-NI", {day:"numeric", month:"short", year:"numeric"});
+  }
+
+  if (enlacesApk.length) {
+    if (APK_NOMBRE_FIJO) {
+      enlacesApk.forEach(function(a){
+        a.href = "https://github.com/" + REPO + "/releases/latest/download/" + APK_NOMBRE_FIJO;
+      });
+    }
+
+    if (window.fetch) {
+      fetch("https://api.github.com/repos/" + REPO + "/releases?per_page=10")
+        .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+        .then(function(lista){
+          if (!Array.isArray(lista)) return;
+          var publicadas = lista.filter(function(rel){ return !rel.draft; });
+
+          /* La primera release (las más nuevas van primero) que traiga un .apk.
+             Se recorren todas porque puede haber versiones sin binario. */
+          var release = null, apk = null;
+          publicadas.some(function(rel){
+            var encontrado = (rel.assets || []).filter(function(a){
+              return /\.apk$/i.test(a.name);
+            })[0];
+            if (encontrado) { release = rel; apk = encontrado; return true; }
+            return false;
+          });
+
+          if (apk) {
+            enlacesApk.forEach(function(a){
+              a.href = apk.browser_download_url;         /* directo al archivo */
+              a.removeAttribute("data-estado");
+            });
+            ponerApk("etiqueta", "Descargar APK");
+            ponerApk("etiqueta-hero", "Descargar APK");
+            ponerApk("version", release.tag_name);
+            ponerApk("fecha", fechaLegible(release.published_at));
+            ponerApk("tamano", pesoLegible(apk.size));
+            return;
+          }
+
+          /* Hay releases pero ninguna trae APK todavía: mejor decirlo que
+             dejar un botón que descarga un 404. */
+          if (publicadas.length) {
+            var ultima = publicadas[0];
+            enlacesApk.forEach(function(a){
+              a.href = ultima.html_url;
+              a.setAttribute("data-estado", "sin-apk");
+            });
+            ponerApk("etiqueta", "Ver la release " + ultima.tag_name);
+            ponerApk("etiqueta-hero", "Todavía sin APK");
+            ponerApk("version", ultima.tag_name);
+            ponerApk("fecha", fechaLegible(ultima.published_at));
+            ponerApk("tamano", "sin APK");
+            ponerApk("nota", "Todavía no hay un APK publicado. Cuando se suba uno a una release, este botón lo va a bajar directo.");
+          }
+        })
+        .catch(function(){ /* sin conexión: el botón queda apuntando a releases/latest */ });
+    }
   }
 })();
 </script>
