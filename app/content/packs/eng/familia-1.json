@@ -11,7 +11,11 @@
       "skill": "eng.familia",
       "prompt": "madre",
       "answer": "mother",
-      "options": ["mother", "father", "sister"]
+      "options": [
+        "mother",
+        "father",
+        "sister"
+      ]
     },
     {
       "id": "eng.familia.1.b",
@@ -19,7 +23,11 @@
       "skill": "eng.familia",
       "prompt": "padre",
       "answer": "father",
-      "options": ["father", "brother", "mother"]
+      "options": [
+        "father",
+        "brother",
+        "mother"
+      ]
     },
     {
       "id": "eng.familia.1.c",
@@ -27,7 +35,11 @@
       "skill": "eng.familia",
       "prompt": "hermana",
       "answer": "sister",
-      "options": ["sister", "brother", "daughter"]
+      "options": [
+        "sister",
+        "brother",
+        "daughter"
+      ]
     },
     {
       "id": "eng.familia.1.d",
@@ -35,7 +47,11 @@
       "skill": "eng.familia",
       "prompt": "abuela",
       "answer": "grandmother",
-      "options": ["grandmother", "grandfather", "aunt"]
+      "options": [
+        "grandmother",
+        "grandfather",
+        "aunt"
+      ]
     },
     {
       "id": "eng.familia.1.e",
@@ -44,7 +60,11 @@
       "tts": "my brother",
       "ttsLang": "en-US",
       "answer": "my brother",
-      "options": ["my brother", "my mother", "my father"],
+      "options": [
+        "my brother",
+        "my mother",
+        "my father"
+      ],
       "gloss": "mi hermano"
     },
     {
@@ -52,7 +72,14 @@
       "type": "build",
       "skill": "eng.familia",
       "target": "This is my mother",
-      "blocks": ["This", "is", "my", "mother", "your", "are"],
+      "blocks": [
+        "This",
+        "is",
+        "my",
+        "mother",
+        "your",
+        "are"
+      ],
       "gloss": "Esta es mi madre"
     },
     {
@@ -60,7 +87,14 @@
       "type": "build",
       "skill": "eng.familia",
       "target": "My family is big",
-      "blocks": ["My", "family", "is", "big", "small", "are"],
+      "blocks": [
+        "My",
+        "family",
+        "is",
+        "big",
+        "small",
+        "are"
+      ],
       "gloss": "Mi familia es grande"
     }
   ]

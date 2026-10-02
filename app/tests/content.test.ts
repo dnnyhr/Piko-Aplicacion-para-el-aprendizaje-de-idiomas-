@@ -176,3 +176,38 @@ describe('voz sintética por lengua', () => {
     }
   });
 });
+
+describe('lengua de partida', () => {
+  const espanolDesdeMiskito = {
+    ...packDemo,
+    id: 'miq.spa.demo.1',
+    lang: 'spa',
+    desde: 'miq',
+    items: [{ id: 'c1', type: 'choice', skill: 'spa.demo', prompt: 'yul', answer: 'perro', options: ['perro', 'gato'] }],
+  };
+
+  it('un paquete puede aprenderse desde otra lengua', () => {
+    expect(validatePack(espanolDesdeMiskito).ok).toBe(true);
+  });
+
+  it('el español necesita decir desde dónde se aprende', () => {
+    const { desde: _, ...sinDesde } = espanolDesdeMiskito;
+    const r = validatePack(sinDesde);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.join(' ')).toContain('desde');
+  });
+
+  it('desde no puede ser la misma lengua que se aprende', () => {
+    const r = validatePack({ ...espanolDesdeMiskito, desde: 'spa' });
+    expect(r.ok).toBe(false);
+  });
+
+  it('la selección separa por lengua de partida', () => {
+    const packs = [packDemo, espanolDesdeMiskito as typeof packDemo];
+    expect(poolDe(packs, { lang: 'spa', desde: 'miq' })).toHaveLength(1);
+    expect(poolDe(packs, { lang: 'spa' })).toHaveLength(0);
+    expect(poolDe(packs, { lang: 'eng', desde: 'miq' })).toHaveLength(0);
+    expect(temasDe(packs, 'spa', 'miq')).toEqual([packDemo.theme]);
+    expect(temasDe(packs, 'eng')).toEqual(temasDe([packDemo], 'eng'));
+  });
+});

@@ -19,6 +19,7 @@ import { useAulaCliente } from '../../src/features/aula/cliente';
 import { buscarAnfitrion, ipValida } from '../../src/net/descubrir';
 import { hayRed, transporteDelDispositivo } from '../../src/net/transporte';
 import { abrirBase, ultimoHost } from '../../src/db';
+import { useTextos } from '../../src/ui/textos/useTextos';
 
 export default function Unirse() {
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function Unirse() {
   const conectar = useAulaCliente((s) => s.conectar);
   const reclamar = useAulaCliente((s) => s.reclamar);
   const salir = useAulaCliente((s) => s.salir);
+  const { t } = useTextos();
 
   const [buscando, setBuscando] = useState(false);
   const [mensaje, setMensaje] = useState<string | null>(null);
@@ -35,10 +37,7 @@ export default function Unirse() {
 
   const buscar = useCallback(async () => {
     if (!hayRed) {
-      setMensaje(
-        'El aula necesita un teléfono: los navegadores no pueden abrir sockets TCP. ' +
-          'Desde la computadora podés jugar la práctica en solitario.',
-      );
+      setMensaje(t('unirse.sin_red'));
       setBuscando(false);
       return;
     }
@@ -63,13 +62,13 @@ export default function Unirse() {
     }
 
     const encontrada = await buscarAnfitrion(transporteDelDispositivo(), {
-      onProgreso: setMensaje,
+      onProgreso: (paso) => setMensaje(t(paso === 'barrido' ? 'unirse.revisando_red' : 'unirse.buscando_maestro')),
       señal: señal.current,
     });
 
     if (!encontrada) {
       setBuscando(false);
-      setMensaje('No encontré la clase. ¿Está encendido el hotspot del maestro?');
+      setMensaje(t('unirse.no_encontre'));
       setMostrarManual(true);
       return;
     }
@@ -77,11 +76,11 @@ export default function Unirse() {
     try {
       await conectar(encontrada);
     } catch {
-      setMensaje('Encontré la sala pero no pude entrar. Probá de nuevo.');
+      setMensaje(t('unirse.no_pude_entrar'));
       setMostrarManual(true);
     }
     setBuscando(false);
-  }, [conectar]);
+  }, [conectar, t]);
 
   useEffect(() => {
     if (conexion === 'suelto') void buscar();
@@ -99,14 +98,14 @@ export default function Unirse() {
 
   const conectarManual = async () => {
     if (!ipValida(manual)) {
-      setMensaje('Esa dirección no parece válida. Tiene que ser algo como 192.168.43.1');
+      setMensaje(t('unirse.ip_invalida'));
       return;
     }
     setMensaje(null);
     try {
       await conectar(manual.trim());
     } catch {
-      setMensaje('No hubo respuesta en esa dirección.');
+      setMensaje(t('unirse.sin_respuesta'));
     }
   };
 
@@ -119,8 +118,8 @@ export default function Unirse() {
           <PikoMascota estado={conectado ? 'alegre' : 'pensando'} tam={110} />
           <Globo style={styles.globo}>
             {conectado
-              ? `¡Entraste a la clase ${roomCode ?? ''}! ¿Cuál sos vos?`
-              : (mensaje ?? 'Buscando al maestro…')}
+              ? t('unirse.entraste', { codigo: roomCode ?? '' })
+              : (mensaje ?? t('unirse.buscando_maestro'))}
           </Globo>
         </View>
 
@@ -139,19 +138,19 @@ export default function Unirse() {
                 <Text style={[styles.alumnoNombre, alumno.tomado && styles.alumnoNombreTomado]}>
                   {alumno.nombre}
                 </Text>
-                {alumno.tomado && <Text style={styles.tomado}>ya está jugando</Text>}
+                {alumno.tomado && <Text style={styles.tomado}>{t('unirse.ya_esta_jugando')}</Text>}
               </Pressable>
             ))}
           </View>
         ) : (
           <View style={styles.acciones}>
             <Boton ancho disabled={buscando} onPress={() => void buscar()}>
-              {buscando ? 'Buscando…' : 'Buscar otra vez'}
+              {t(buscando ? 'unirse.buscando' : 'unirse.buscar_otra_vez')}
             </Boton>
 
             {mostrarManual && (
               <View style={styles.manual}>
-                <Text style={styles.instruccion}>Escribí la dirección que ve el maestro</Text>
+                <Text style={styles.instruccion}>{t('unirse.escribi_direccion')}</Text>
                 <TextInput
                   value={manual}
                   onChangeText={setManual}
@@ -163,7 +162,7 @@ export default function Unirse() {
                   style={styles.entrada}
                 />
                 <Boton ancho tono="cielo" onPress={() => void conectarManual()}>
-                  Entrar
+                  {t('unirse.entrar')}
                 </Boton>
               </View>
             )}
@@ -179,7 +178,7 @@ export default function Unirse() {
             router.back();
           }}
         >
-          Volver
+          {t('comun.volver')}
         </Boton>
       </ScrollView>
     </Pantalla>

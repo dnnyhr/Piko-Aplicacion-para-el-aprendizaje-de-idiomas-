@@ -61,8 +61,12 @@ async function responde(
 
 export interface OpcionesBusqueda {
   puerto?: number;
-  /** Se avisa cada vez que cambia lo que se está probando, para la pantalla. */
-  onProgreso?: (mensaje: string) => void;
+  /**
+   * Se avisa cada vez que cambia lo que se está probando, para la pantalla:
+   * primero las direcciones típicas, después el barrido de la red. La pantalla
+   * decide qué texto mostrar, en la lengua de la app.
+   */
+  onProgreso?: (paso: 'primeras' | 'barrido') => void;
   señal?: { cancelado: boolean };
 }
 
@@ -89,7 +93,7 @@ export async function buscarAnfitrion(
     (ip, i, todas) => todas.indexOf(ip) === i && ip !== propia,
   );
 
-  onProgreso?.('Buscando al maestro…');
+  onProgreso?.('primeras');
   for (const ip of primeras) {
     if (cancelado()) return null;
     if (await responde(transporte, ip, puerto, 1200)) return ip;
@@ -98,7 +102,7 @@ export async function buscarAnfitrion(
   if (!prefijo) return null;
 
   // 2. Barrido del resto de la subred, de a 24 por vez.
-  onProgreso?.('Revisando la red del aula…');
+  onProgreso?.('barrido');
   const TANDA = 24;
   const finales: number[] = [];
   for (let n = 2; n <= 254; n++) {

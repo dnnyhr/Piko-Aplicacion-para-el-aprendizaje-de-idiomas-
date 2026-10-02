@@ -1,0 +1,90 @@
+{
+  "$comentario": "Recetas de ejercicios: cada una apunta a entradas de lexico.json por su id. `npm run contenido` las convierte en los paquetes de la app, sólo con lo confirmado. Ver diccionario/README.md.",
+  "paquetes": [
+    {
+      "tema": "animales",
+      "nivel": 1,
+      "titulo": "Animales",
+      "items": [
+        { "elegir": "bird", "opciones": ["bird", "fish", "dog"] },
+        { "elegir": "dog", "opciones": ["dog", "cat", "cow"] },
+        { "elegir": "fish", "opciones": ["fish", "bird", "horse"] },
+        { "elegir": "cow", "opciones": ["cow", "horse", "pig"] },
+        { "escuchar": "a_small_bird", "opciones": ["a_small_bird", "a_small_fish", "a_tall_bird"] },
+        { "armar": "the_bird_can_fly", "extra": ["swim", "fish"] }
+      ]
+    },
+    {
+      "tema": "colores",
+      "nivel": 1,
+      "titulo": "Colores",
+      "items": [
+        { "elegir": "green", "opciones": ["green", "blue", "grey"] },
+        { "elegir": "blue", "opciones": ["blue", "black", "brown"] },
+        { "elegir": "red", "opciones": ["red", "pink", "orange"] },
+        { "elegir": "yellow", "opciones": ["yellow", "white", "orange"] },
+        { "escuchar": "the_green_tree", "opciones": ["the_green_tree", "the_grey_tree", "the_green_three"] },
+        { "armar": "the_bird_is_green", "extra": ["blue", "are"] }
+      ]
+    },
+    {
+      "tema": "escuela",
+      "nivel": 2,
+      "titulo": "En la escuela",
+      "items": [
+        { "elegir": "teacher", "opciones": ["teacher", "student", "school"] },
+        { "elegir": "book", "opciones": ["book", "pencil", "paper"] },
+        { "elegir": "may_i_come_in", "opciones": ["may_i_come_in", "can_i_go_out", "where_is_the_door"] },
+        { "escuchar": "open_your_book", "opciones": ["open_your_book", "close_your_book", "open_your_bag"] },
+        { "armar": "i_go_to_school_every_day", "extra": ["week", "the"] },
+        { "armar": "the_teacher_is_reading_a_book", "extra": ["writing", "student"] },
+        { "armar": "i_do_not_understand", "extra": ["know", "you"] }
+      ]
+    },
+    {
+      "tema": "familia",
+      "nivel": 1,
+      "titulo": "La familia",
+      "items": [
+        { "elegir": "mother", "opciones": ["mother", "father", "sister"] },
+        { "elegir": "father", "opciones": ["father", "brother", "mother"] },
+        { "elegir": "sister", "opciones": ["sister", "brother", "daughter"] },
+        { "elegir": "grandmother", "opciones": ["grandmother", "grandfather", "aunt"] },
+        { "escuchar": "my_brother", "opciones": ["my_brother", "my_mother", "my_father"] },
+        { "armar": "this_is_my_mother", "extra": ["your", "are"] },
+        { "armar": "my_family_is_big", "extra": ["small", "are"] }
+      ]
+    },
+    {
+      "tema": "numeros",
+      "nivel": 1,
+      "titulo": "Números",
+      "items": [
+        { "elegir": "one", "opciones": ["one", "two", "ten"] },
+        { "elegir": "three", "opciones": ["three", "two", "eight"] },
+        { "elegir": "five", "opciones": ["five", "four", "nine"] },
+        { "elegir": "seven", "opciones": ["seven", "six", "ten"] },
+        { "elegir": "ten", "opciones": ["ten", "nine", "three"] },
+        { "escuchar": "three", "opciones": ["three", "tree", "free"] },
+        { "escuchar": "eight", "opciones": ["eight", "eighty", "ate"] },
+        { "armar": "i_have_two_brothers", "extra": ["sisters", "am"] }
+      ]
+    },
+    {
+      "tema": "saludos",
+      "nivel": 1,
+      "titulo": "Saludos",
+      "items": [
+        { "elegir": "good_morning", "opciones": ["good_morning", "good_night", "good_afternoon"] },
+        { "elegir": "good_night", "opciones": ["good_night", "good_morning", "good_evening"] },
+        { "elegir": "thank_you", "opciones": ["thank_you", "please", "sorry"] },
+        { "elegir": "please", "opciones": ["please", "thank_you", "welcome"] },
+        { "elegir": "goodbye", "opciones": ["goodbye", "hello", "see_you"] },
+        { "escuchar": "good_morning", "opciones": ["good_morning", "good_night", "good_afternoon"] },
+        { "escuchar": "thank_you_very_much", "opciones": ["thank_you_very_much", "thank_you", "see_you_later"] },
+        { "armar": "how_are_you", "extra": ["is", "the"] },
+        { "armar": "see_you_tomorrow", "extra": ["today", "me"] }
+      ]
+    }
+  ]
+}

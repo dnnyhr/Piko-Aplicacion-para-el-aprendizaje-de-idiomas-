@@ -14,6 +14,8 @@ de cada vuelta.
 | 15 | ~~El robot queda fuera de alcance~~ — reemplazada por la 21 | Robot |
 | 16 | El miskito suena con la voz en español, para mientras | Contenido |
 | 17 | El progreso se ve como un madroño que crece | App |
+| 18–19 | El diccionario es la única fuente del contenido; la app también en miskito | Contenido |
+| 20 | El sitio, de folleto a herramienta | Sitio |
 | 21–23 | El robot: proyecto aparte, la cara es un teléfono, el maestro escucha | Robot |
 | 24 | Las encuestas corren en un servidor, fuera del aula | Encuestas |
 
@@ -29,7 +31,7 @@ probar.
 **Decisión.** Todo eso vive en `src/core/` como TypeScript puro, sin una sola
 importación de React Native.
 
-**Por qué.** Porque así corre en Node. Las 140 pruebas se ejecutan en cuatro
+**Por qué.** Porque así corre en Node. Las 151 pruebas se ejecutan en cuatro
 segundos sin emulador, y `tools/sim.ts` puede levantar un aula entera —
 anfitrión y ocho estudiantes reales sobre TCP — en la computadora.
 
@@ -352,6 +354,89 @@ y su total; las sacuanjoches las calcula la proyección, como el XP.
 
 ---
 
+## 18. El diccionario es la única fuente del contenido
+
+**Contexto.** Había tres maneras de producir un paquete: a mano (inglés), con un
+script que no estaba en el repositorio (miskito) y desde el panel de
+encuestas. Cada una con su convención de nombres. Los ejercicios copiaban las
+palabras como texto, así que corregir una palabra era editar cada archivo
+donde aparecía. La lista de lenguas estaba repetida en cuatro lugares.
+
+**Decisión.** Cada lengua tiene una carpeta en `diccionario/` con su léxico y
+sus recetas de ejercicios, y las recetas apuntan a las palabras por id. `npm
+run contenido` genera `app/content/packs/` y `index.ts`, sólo con los
+ejercicios cuyas palabras no están marcadas para revisar.
+`diccionario/lenguas.json` es la lista de lenguas, y el verificador comprueba
+que coincida con `schema.ts`. El panel de encuestas queda como herramienta
+interna del equipo y no produce paquetes para la app.
+
+**Por qué.** Una palabra se corrige en un solo lugar. Lo que ve un estudiante
+se puede rastrear hasta su fuente, y CI rechaza un paquete editado a mano.
+
+**Costo.** El formato de la app (`schema.ts`) no cambió, pero los archivos de
+inglés pasaron de `saludos.json` a `saludos-1.json`, el mismo nombre que usa
+cualquier lengua. El id de un ejercicio sale de su posición en la receta: los
+nuevos se agregan al final para no mezclar el progreso de los estudiantes.
+
+---
+
+## 19. La app también en miskito, para aprender desde el miskito
+
+**Contexto.** Piko nació para que los niños aprendan miskito desde el español.
+Pero en las comunidades miskitas muchos niños hablan miskito en la casa y
+aprenden español e inglés en la escuela: la educación bilingüe parte de su
+primera lengua.
+
+**Decisión.** La lengua de la interfaz es una opción (`Español` / `Miskitu`,
+en la portada) y se guarda en el teléfono. De ella sale desde qué lengua se
+aprende: cada paquete dice su lengua de partida (`desde`; si falta, español).
+El español pasa a ser una lengua que se aprende, desde el miskito, con las
+mismas recetas del miskito dadas vuelta. Los textos de la interfaz salen de un
+catálogo (`src/ui/textos/es.ts`), y la traducción vive en
+`diccionario/miskito/interfaz.csv`, que llenan hablantes.
+
+**Por qué.** No se reemplaza el español: las dos direcciones conviven, y el
+maestro o la familia eligen. Y no se inventa nada en miskito: lo que todavía
+no está traducido se muestra en español.
+
+**Costo.** Inglés desde el miskito necesita pares revisados, que todavía no
+hay. El aula del maestro sigue armando rondas desde el español. Los mensajes
+que manda el teléfono del maestro (por ejemplo, un rechazo al entrar) siguen
+en español.
+
+---
+
+## 20. El sitio, de folleto a herramienta: páginas separadas y sin compilar
+
+**Contexto.** piko.mugiware.com era una sola página de scroll, sólo
+informativa, de 856 KB: las fotos iban en base64 y los logos repetidos dentro
+del HTML. Mientras tanto el repositorio ya tenía un diccionario, ejercicios y
+una app que corre en el navegador.
+
+**Decisión.** La portada queda como estaba, y una barra común lleva a cuatro
+páginas propias: el diccionario consultable, Piko en el navegador, la guía
+para docentes y «Aportá tu lengua». Sigue siendo un sitio estático, sin paso de
+compilación: HTML a mano, CSS y JS compartidos en `web/assets/`. Lo que sale
+de datos lo escribe `npm run contenido` (`web/datos/`, la lista de palabras
+del diccionario y el `sitemap.xml`), así el sitio nunca queda atrás del
+diccionario y CI lo comprueba. La app del navegador es el `expo export` de
+`app/` en `web/probar/app/`, con una carga por pantalla (`asyncRoutes` sólo en
+web).
+
+**Por qué.** Un docente o un hablante encuentra en el sitio lo mismo que usa
+la app, sin instalar nada. Sin compilación, cualquiera del equipo edita una
+página con un editor de texto. Separar fotos, logos, estilos y scripts en
+archivos deja la portada en 48 KB de HTML y permite que el navegador guarde
+en caché lo que se repite entre páginas.
+
+**Costo.** La copia de la app en `web/probar/app/` hay que regenerarla a mano
+(`npm run web:sitio`) cuando cambia la app. Las imágenes para compartir
+también (`web/herramientas/og.mjs`). El diccionario del sitio sólo muestra lo
+publicado en el repositorio: no muestra nada de las encuestas que no haya
+pasado al diccionario.
+
+---
+
 ## 21. El robot es un proyecto aparte, en `robot/`
 
 **Contexto.** Una vez que la app estuvo andando, hubo tiempo para la Ruta 2.
@@ -432,9 +517,9 @@ directo a la app: siempre las confirma alguien que habla la lengua.
 
 ## Pendientes conocidos
 
-- **El contenido de las cuatro lenguas indígenas.** El riesgo principal. *Tu
-  lengua en Piko* ya está juntando palabras; faltan las grabaciones para los
-  ejercicios de escucha.
+- **El contenido de mayangna, rama y garífuna, y grabaciones de hablantes de
+  miskito.** El riesgo principal. *Tu lengua en Piko* ya está juntando
+  palabras; faltan las grabaciones para los ejercicios de escucha.
 - **Presets de aula guardados** e importación de listas por archivo.
 - **Compartir el APK por Bluetooth** desde la propia aplicación: requiere un
   módulo nativo pequeño que lea la ruta del paquete instalado y lance el

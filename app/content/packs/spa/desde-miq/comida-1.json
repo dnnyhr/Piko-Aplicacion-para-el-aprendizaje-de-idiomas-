@@ -1,0 +1,166 @@
+{
+  "id": "miq.spa.comida.1",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "comida",
+  "difficulty": 1,
+  "title": "La comida",
+  "items": [
+    {
+      "id": "miq.spa.comida.1.a",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "li",
+      "answer": "agua",
+      "options": [
+        "agua",
+        "carne",
+        "maíz"
+      ]
+    },
+    {
+      "id": "miq.spa.comida.1.b",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "plun",
+      "answer": "comida",
+      "options": [
+        "comida",
+        "agua",
+        "arroz"
+      ]
+    },
+    {
+      "id": "miq.spa.comida.1.c",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "rais",
+      "answer": "arroz",
+      "options": [
+        "arroz",
+        "frijoles",
+        "maíz"
+      ]
+    },
+    {
+      "id": "miq.spa.comida.1.d",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "bins",
+      "answer": "frijoles",
+      "options": [
+        "frijoles",
+        "arroz",
+        "pan"
+      ]
+    },
+    {
+      "id": "miq.spa.comida.1.e",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "yaura",
+      "answer": "yuca",
+      "options": [
+        "yuca",
+        "banano",
+        "plátano"
+      ]
+    },
+    {
+      "id": "miq.spa.comida.1.f",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "platu",
+      "answer": "plátano",
+      "options": [
+        "plátano",
+        "banano",
+        "yuca"
+      ]
+    },
+    {
+      "id": "miq.spa.comida.1.g",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "tama",
+      "answer": "banano",
+      "options": [
+        "banano",
+        "plátano",
+        "coco"
+      ]
+    },
+    {
+      "id": "miq.spa.comida.1.h",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "kuku",
+      "answer": "coco",
+      "options": [
+        "coco",
+        "banano",
+        "café"
+      ]
+    },
+    {
+      "id": "miq.spa.comida.1.i",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "inska",
+      "answer": "pescado",
+      "options": [
+        "pescado",
+        "carne",
+        "frijoles"
+      ]
+    },
+    {
+      "id": "miq.spa.comida.1.j",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "wina",
+      "answer": "carne",
+      "options": [
+        "carne",
+        "pescado",
+        "pan"
+      ]
+    },
+    {
+      "id": "miq.spa.comida.1.k",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "bret",
+      "answer": "pan",
+      "options": [
+        "pan",
+        "frijoles",
+        "café"
+      ]
+    },
+    {
+      "id": "miq.spa.comida.1.l",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "cafi",
+      "answer": "café",
+      "options": [
+        "café",
+        "pan",
+        "agua"
+      ]
+    },
+    {
+      "id": "miq.spa.comida.1.m",
+      "type": "choice",
+      "skill": "spa.comida",
+      "prompt": "haya",
+      "answer": "maíz",
+      "options": [
+        "maíz",
+        "arroz",
+        "yuca"
+      ]
+    }
+  ]
+}

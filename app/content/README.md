@@ -1,21 +1,27 @@
 # Contenido de Piko
 
-Todo el contenido es **data, no código**. Un maestro o un lingüista puede escribir
-un paquete completo sin tocar la aplicación: se agrega un archivo `.json` en
-`packs/<idioma>/`, se registra en `index.ts` y listo.
-
-Para comprobar que un paquete está bien antes de usarlo:
+Todo el contenido es **data, no código**, y tiene una sola fuente: el
+[diccionario](../../diccionario/README.md). Los paquetes de `packs/` y
+`index.ts` los **genera** `npm run contenido` a partir de las recetas de
+`diccionario/<lengua>/ejercicios.json` y su léxico. No se editan a mano: un
+cambio hecho acá se pierde la próxima vez que se generen, y CI lo rechaza.
 
 ```bash
-npm run validate:packs
+npm run contenido              # genera packs/ e index.ts desde el diccionario
+npm run contenido:comprobar    # comprueba que estén al día (lo corre CI)
+npm run validate:packs         # el formato de cada paquete
 ```
+
+Este documento describe el **formato** de un paquete: lo que la app lee y lo
+que el generador escribe.
 
 ## Estado actual
 
 | Código | Lengua | Estado |
 |---|---|---|
-| `eng` | Inglés | ✅ Con contenido |
-| `miq` | Miskito | 🟨 Borradores en [`diccionario/miskito/ejercicios/`](../../diccionario/miskito/ejercicios/) — falta validarlos con hablantes |
+| `eng` | Inglés | ✅ 6 paquetes, 43 ítems |
+| `spa` | Español, desde el miskito | ✅ 18 paquetes, 151 ítems, dando vuelta las recetas del miskito |
+| `miq` | Miskito | ✅ 19 paquetes, 167 ítems, de dos hablantes de Raiti y dos diccionarios publicados. Escucha con voz en español para mientras |
 | `sum` | Mayangna | ⬜ Vacío — necesita hablantes |
 | `rma` | Rama | ⬜ Vacío — necesita hablantes |
 | `cab` | Garífuna | ⬜ Vacío — necesita hablantes |
@@ -23,11 +29,11 @@ npm run validate:packs
 Los códigos son ISO 639-3. Inglés tiene hoy 6 paquetes con 43 ítems
 (saludos, números, familia, colores, animales y escuela).
 
-> **Las cuatro lenguas indígenas están vacías a propósito.** El vocabulario y la
-> pronunciación tienen que venir de hablantes nativos o de material lingüístico
-> publicado. Inventarlos sería enseñar una lengua falsa a los niños que
-> justamente están tratando de conservarla. El formato ya está listo para
-> recibirlos; lo que falta conseguir son las fuentes.
+> **Ninguna palabra se inventa.** El vocabulario y la pronunciación vienen de
+> hablantes nativos o de material lingüístico publicado, y el diccionario
+> rastrea cada palabra hasta su fuente. Lo que tiene una duda abierta queda
+> marcado para revisar y no llega a la app. Mayangna, rama y garífuna esperan
+> sus fuentes.
 
 ## Estructura de un paquete
 
@@ -45,7 +51,8 @@ Los códigos son ISO 639-3. Inglés tiene hoy 6 paquetes con 43 ítems
 | Campo | Qué es |
 |---|---|
 | `id` | Único en todo el proyecto. Convención: `<lang>.<tema>.<nivel>` |
-| `lang` | `eng`, `miq`, `sum`, `rma` o `cab` |
+| `lang` | La lengua que se aprende: `eng`, `miq`, `sum`, `rma`, `cab` o `spa` |
+| `desde` | La lengua desde la que se aprende: la de las preguntas y las traducciones. Si falta, español. El español se aprende desde el miskito (`"lang": "spa", "desde": "miq"`) |
 | `theme` | Agrupa paquetes; el maestro elige temas al armar un preset |
 | `difficulty` | `1`, `2` o `3` |
 | `title` | Lo que ve el maestro en pantalla |
@@ -69,7 +76,7 @@ selección adaptativa agrupan bien.
 }
 ```
 
-`prompt` va en español y `answer` en la lengua que se enseña. La respuesta
+`prompt` va en la lengua de partida (`desde`, por defecto español) y `answer` en la lengua que se enseña. La respuesta
 correcta **tiene que estar** dentro de `options`; el orden se baraja al
 presentarlo, así que no importa en qué posición se escriba.
 
@@ -131,28 +138,24 @@ oración usa "is" dos veces, hay que ofrecer dos bloques "is".
 
 ## Cómo agregar un paquete
 
-1. Crear `packs/<lang>/<tema>.json` siguiendo el formato de arriba.
-2. Importarlo en `content/index.ts` y agregarlo al arreglo `PACKS`.
-3. Correr `npm run validate:packs`. Avisa también si quedó un archivo en
-   `packs/` sin registrar en el índice.
+1. Agregar las palabras que falten a `diccionario/<lengua>/lexico.json`, con su fuente.
+2. Escribir las recetas en `diccionario/<lengua>/ejercicios.json` (ver
+   [diccionario/README.md](../../diccionario/README.md#las-recetas-de-ejercicios)).
+3. `npm run contenido` y `npm run validate:diccionario`.
 
 El contrato completo —qué campos son obligatorios y qué se valida— está en
 [`src/core/content/schema.ts`](../src/core/content/schema.ts).
 
-## Paquetes que vienen de las encuestas
+## Palabras que vienen de las encuestas
 
 La encuesta [*Tu lengua en Piko*](../../encuestas/README.md#palabras-para-la-app)
-junta palabras y frases escritas por hablantes. Desde su panel, lo que un
-hablante confirmó se descarga ya en este formato: un paquete `choice` por tema
-y uno `build` con frases.
+junta palabras y frases escritas por hablantes. Entran a la app por el
+diccionario: lo que escribió cada persona se suma tal cual a
+`diccionario/<lengua>/corpus.csv` y de ahí al léxico (ver
+[cómo se suma una tanda nueva](../../diccionario/README.md#cómo-se-suma-una-tanda-nueva)).
+Los paquetes que descarga el panel de encuestas quedan para uso interno del
+equipo y no se copian a `packs/` (decisión 18).
 
-Esos paquetes entran por el mismo camino que cualquier otro — se copian a
-`packs/<lang>/`, se registran en `index.ts` y se validan — y conviene
-revisarlos antes: los distractores y la dificultad (siempre `1`) los arma el
-exportador, no una persona, y sus `id` usan guiones (`miq-saludos`) en lugar de
-la convención `<lang>.<tema>.<nivel>`. Lo que no traen son ejercicios `listen`, porque para eso hacen
-falta grabaciones.
-
-Si un paquete viene de otra fuente, anotá de dónde en el pull request (ver
+Si una palabra viene de otra fuente, anotá de dónde en el pull request (ver
 [CONTRIBUTING.md](../../CONTRIBUTING.md)): estas lenguas varían entre
 comunidades y el maestro tiene que poder saber de dónde sale lo que enseña.

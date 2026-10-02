@@ -129,7 +129,7 @@ All three parts need **Node 22+** (the tests use `node:sqlite`).
 cd app
 npm install
 
-npm test              # 124 tests over the pure core and persistence
+npm test              # 135 tests over the pure core and persistence
 npm run typecheck
 npm run validate:packs
 

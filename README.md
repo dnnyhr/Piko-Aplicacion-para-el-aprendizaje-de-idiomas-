@@ -190,7 +190,7 @@ flowchart TD
     APP --> CORE["🧠 src/core/<br/><sub>protocolo · sync · progreso</sub>"]
     APP --> RESTO["src/net · src/db · src/ui<br/><sub>red, datos e interfaz</sub>"]
     APP --> CONTENT["🗣️ content/<br/><sub>las lenguas, en JSON</sub>"]
-    APP --> TESTS["✅ tests/ · tools/<br/><sub>140 pruebas · simulador de aula</sub>"]
+    APP --> TESTS["✅ tests/ · tools/<br/><sub>151 pruebas · simulador de aula</sub>"]
 
     ROBOT --> FIRM["⚙️ firmware/<br/><sub>Arduino: motores y luces</sub>"]
     ROBOT --> PANEL["🌉 panel/<br/><sub>puente Node ↔ navegador</sub>"]
@@ -220,13 +220,14 @@ simulador juega una clase entera sin un solo teléfono.</sub></p>
 
 | Quiero… | Voy a… |
 |---|---|
-| 🗣️ Corregir o agregar una palabra de una lengua | `app/content/packs/<idioma>/` — o, sin tocar código, el [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml) |
+| 🗣️ Corregir o agregar una palabra o un ejercicio | `diccionario/<lengua>/` y `npm run contenido` — o, sin tocar código, el [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml) |
 | 📚 Ver el diccionario y las reglas que se van encontrando de una lengua | `diccionario/` — ver [diccionario/README.md](diccionario/README.md) |
 | ✅ Revisar las palabras que manda la gente y pasarlas a la app | Pestaña **Palabras** de `/admin` en las encuestas — ver [encuestas/README.md](encuestas/README.md#palabras-para-la-app) |
 | 🔌 Tocar el protocolo del aula o la sincronización | `app/src/core/` — recordá: nada de React Native ahí adentro |
+| 🌎 Traducir la interfaz al miskito | `diccionario/miskito/interfaz.csv` y `npm run contenido` |
 | 🎨 Cambiar una pantalla, un ejercicio o el diseño | `app/src/ui/` · `app/src/features/` |
 | 🤖 Arreglar algo del robot físico | `robot/firmware/` (Arduino) · `robot/panel/` (el puente) |
-| 🌐 Editar el sitio piko.mugiware.com | `web/index.html` |
+| 🌐 Editar el sitio piko.mugiware.com | `web/` — ver [web/README.md](web/README.md) |
 | 📋 Crear o editar una encuesta | `encuestas/definiciones/` — ver [encuestas/README.md](encuestas/README.md) |
 | 🧪 Correr las pruebas antes de mandar un cambio | Ver [Probarlo](#probarlo), más abajo |
 | 📖 Entender por qué se decidió algo así | `docs/decisiones.md` |
@@ -260,7 +261,7 @@ se instala y se prueba por separado:
 ```bash
 # La app
 cd app && npm install
-npm test                 # 140 pruebas del núcleo y la persistencia
+npm test                 # 151 pruebas del núcleo y la persistencia
 npm run typecheck
 npm run validate:packs
 npm run web              # la interfaz y la práctica en solitario, en el navegador
@@ -338,8 +339,10 @@ La mascota se llama **Piko**, y también le da nombre a la app. Piko es un choco
 
 Piko es software libre, y la contribución que más falta le hace **no es código.**
 
-Hoy la aplicación sólo tiene contenido en inglés. Las cuatro lenguas indígenas
-tienen el formato listo y están vacías **a propósito**: el vocabulario y la
+Hoy la aplicación tiene contenido en inglés y en miskito. El miskito sale de
+hablantes de Raiti y de diccionarios publicados, y cada palabra se puede
+rastrear hasta su fuente ([diccionario/](diccionario/README.md)). Mayangna,
+rama y garífuna esperan sus fuentes **a propósito**: el vocabulario y la
 pronunciación tienen que venir de hablantes nativos o de material lingüístico
 publicado. Inventarlos sería enseñarle una lengua falsa justo a los niños que
 están tratando de conservarla. Por eso el validador de contenido **rechaza la

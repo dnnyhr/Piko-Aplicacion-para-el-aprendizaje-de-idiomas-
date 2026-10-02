@@ -67,7 +67,7 @@ respecto del teléfono, ambas deliberadas:
 npm test
 ```
 
-140 pruebas sobre el núcleo puro y la persistencia. Corren en unos cuatro
+151 pruebas sobre el núcleo puro y la persistencia. Corren en unos cuatro
 segundos, sin emulador. Cubren el troceado de mensajes partidos a mitad de
 paquete, la convergencia de la sincronización, el determinismo de la
 proyección, los umbrales del semáforo, la corrección de respuestas y el
@@ -271,12 +271,14 @@ Conviene correr localmente los de la parte que tocaste antes de abrir el PR.
 Ver [../app/content/README.md](../app/content/README.md) para el formato
 completo.
 
-1. Crear `app/content/packs/<lengua>/<tema>.json`.
-2. Importarlo en `app/content/index.ts` y agregarlo al arreglo `PACKS`.
-3. `npm run validate:packs`.
+1. Agregar las palabras a `diccionario/<lengua>/lexico.json` y las recetas a
+   `diccionario/<lengua>/ejercicios.json`.
+2. `npm run contenido`: genera `app/content/packs/` y `app/content/index.ts`.
+3. `npm run validate:diccionario` y `npm run validate:packs`.
 
 Metro no puede recorrer directorios en tiempo de ejecución, de ahí el índice
-estático. El validador avisa si quedó un archivo sin registrar.
+estático; ahora lo escribe el generador. CI corre `npm run
+contenido:comprobar` para que nadie edite los paquetes a mano.
 
 ---
 

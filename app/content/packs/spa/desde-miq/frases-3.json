@@ -1,0 +1,78 @@
+{
+  "id": "miq.spa.frases.3",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "frases",
+  "difficulty": 3,
+  "title": "Frases largas",
+  "items": [
+    {
+      "id": "miq.spa.frases.3.a",
+      "type": "build",
+      "skill": "spa.frases",
+      "target": "Buenos días maestra",
+      "blocks": [
+        "Buenos",
+        "días",
+        "maestra",
+        "mi",
+        "abuela"
+      ],
+      "gloss": "Titan yamni smasmalkra mairin"
+    },
+    {
+      "id": "miq.spa.frases.3.b",
+      "type": "build",
+      "skill": "spa.frases",
+      "target": "Mi abuela sonríe al ver su coco",
+      "blocks": [
+        "Mi",
+        "abuela",
+        "sonríe",
+        "al",
+        "ver",
+        "su",
+        "coco",
+        "el",
+        "perro"
+      ],
+      "gloss": "Kuki ki ai kuku ka kaiki kikisa"
+    },
+    {
+      "id": "miq.spa.frases.3.c",
+      "type": "build",
+      "skill": "spa.frases",
+      "target": "El perro come",
+      "blocks": [
+        "El",
+        "perro",
+        "come",
+        "mi",
+        "nombre"
+      ],
+      "gloss": "Yul plun pisa"
+    },
+    {
+      "id": "miq.spa.frases.3.d",
+      "type": "build",
+      "skill": "spa.frases",
+      "target": "Mi nombre es Tangni tengo 18 años y estudio en Jinotega",
+      "blocks": [
+        "Mi",
+        "nombre",
+        "es",
+        "Tangni",
+        "tengo",
+        "18",
+        "años",
+        "y",
+        "estudio",
+        "en",
+        "Jinotega",
+        "buenos",
+        "días"
+      ],
+      "gloss": "Yang nini Tangni 18 mani brisna Jinotega ra skul dimisna"
+    }
+  ]
+}

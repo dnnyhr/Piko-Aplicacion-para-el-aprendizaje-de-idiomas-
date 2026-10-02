@@ -12,10 +12,12 @@
 
 import { mulberry32, shuffle, type Rng } from '../ids';
 import type { StudentState } from '../progress/projection';
-import type { Difficulty, Item, ItemType, LangCode, Pack } from './schema';
+import { desdeDe, DESDE_POR_DEFECTO, type Difficulty, type Item, type ItemType, type LangCode, type Pack } from './schema';
 
 export interface FiltroContenido {
   lang: LangCode;
+  /** Desde qué lengua se aprende. Ausente = español. */
+  desde?: LangCode;
   /** Vacío o ausente = todos los temas del idioma. */
   themes?: readonly string[];
   /** Vacío o ausente = todas las dificultades. */
@@ -35,8 +37,9 @@ export function poolDe(packs: readonly Pack[], filtro: FiltroContenido): ItemCon
   const tipos = filtro.types && filtro.types.length > 0 ? new Set<string>(filtro.types) : null;
 
   const out: ItemConOrigen[] = [];
+  const desde = filtro.desde ?? DESDE_POR_DEFECTO;
   for (const pack of packs) {
-    if (pack.lang !== filtro.lang) continue;
+    if (pack.lang !== filtro.lang || desdeDe(pack) !== desde) continue;
     if (temas && !temas.has(pack.theme)) continue;
     if (filtro.difficulty !== undefined && pack.difficulty !== filtro.difficulty) continue;
     for (const item of pack.items) {
@@ -122,8 +125,8 @@ export function bloquesBarajados(item: Item, rng: Rng): string[] {
 }
 
 /** Temas disponibles para un idioma, ordenados. Alimenta la pantalla de presets. */
-export function temasDe(packs: readonly Pack[], lang: LangCode): string[] {
+export function temasDe(packs: readonly Pack[], lang: LangCode, desde: LangCode = DESDE_POR_DEFECTO): string[] {
   const set = new Set<string>();
-  for (const p of packs) if (p.lang === lang) set.add(p.theme);
+  for (const p of packs) if (p.lang === lang && desdeDe(p) === desde) set.add(p.theme);
   return [...set].sort();
 }

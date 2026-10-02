@@ -1,0 +1,106 @@
+{
+  "id": "miq.spa.familia.1",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "familia",
+  "difficulty": 1,
+  "title": "La familia",
+  "items": [
+    {
+      "id": "miq.spa.familia.1.a",
+      "type": "choice",
+      "skill": "spa.familia",
+      "prompt": "yapti",
+      "answer": "mamá",
+      "options": [
+        "mamá",
+        "papá",
+        "abuela"
+      ]
+    },
+    {
+      "id": "miq.spa.familia.1.b",
+      "type": "choice",
+      "skill": "spa.familia",
+      "prompt": "aisa",
+      "answer": "papá",
+      "options": [
+        "papá",
+        "mamá",
+        "abuelo"
+      ]
+    },
+    {
+      "id": "miq.spa.familia.1.c",
+      "type": "choice",
+      "skill": "spa.familia",
+      "prompt": "kuka",
+      "answer": "abuela",
+      "options": [
+        "abuela",
+        "abuelo",
+        "mamá"
+      ]
+    },
+    {
+      "id": "miq.spa.familia.1.d",
+      "type": "choice",
+      "skill": "spa.familia",
+      "prompt": "dama",
+      "answer": "abuelo",
+      "options": [
+        "abuelo",
+        "abuela",
+        "papá"
+      ]
+    },
+    {
+      "id": "miq.spa.familia.1.e",
+      "type": "choice",
+      "skill": "spa.familia",
+      "prompt": "tahti",
+      "answer": "tío",
+      "options": [
+        "tío",
+        "tía",
+        "abuelo"
+      ]
+    },
+    {
+      "id": "miq.spa.familia.1.f",
+      "type": "choice",
+      "skill": "spa.familia",
+      "prompt": "anti",
+      "answer": "tía",
+      "options": [
+        "tía",
+        "tío",
+        "abuela"
+      ]
+    },
+    {
+      "id": "miq.spa.familia.1.g",
+      "type": "choice",
+      "skill": "spa.familia",
+      "prompt": "tuktan",
+      "answer": "niño o niña",
+      "options": [
+        "niño o niña",
+        "bebé",
+        "abuelo"
+      ]
+    },
+    {
+      "id": "miq.spa.familia.1.h",
+      "type": "choice",
+      "skill": "spa.familia",
+      "prompt": "bibi",
+      "answer": "bebé",
+      "options": [
+        "bebé",
+        "niño o niña",
+        "tía"
+      ]
+    }
+  ]
+}

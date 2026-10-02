@@ -1,0 +1,94 @@
+{
+  "id": "miq.spa.numeros.1",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "numeros",
+  "difficulty": 1,
+  "title": "Números: del 1 al 6, y el 10",
+  "items": [
+    {
+      "id": "miq.spa.numeros.1.a",
+      "type": "choice",
+      "skill": "spa.numeros",
+      "prompt": "kumi",
+      "answer": "uno",
+      "options": [
+        "uno",
+        "dos",
+        "tres"
+      ]
+    },
+    {
+      "id": "miq.spa.numeros.1.b",
+      "type": "choice",
+      "skill": "spa.numeros",
+      "prompt": "wal",
+      "answer": "dos",
+      "options": [
+        "dos",
+        "uno",
+        "cuatro"
+      ]
+    },
+    {
+      "id": "miq.spa.numeros.1.c",
+      "type": "choice",
+      "skill": "spa.numeros",
+      "prompt": "yumpha",
+      "answer": "tres",
+      "options": [
+        "tres",
+        "dos",
+        "cinco"
+      ]
+    },
+    {
+      "id": "miq.spa.numeros.1.d",
+      "type": "choice",
+      "skill": "spa.numeros",
+      "prompt": "walhwal",
+      "answer": "cuatro",
+      "options": [
+        "cuatro",
+        "dos",
+        "tres"
+      ]
+    },
+    {
+      "id": "miq.spa.numeros.1.e",
+      "type": "choice",
+      "skill": "spa.numeros",
+      "prompt": "matsip",
+      "answer": "cinco",
+      "options": [
+        "cinco",
+        "diez",
+        "cuatro"
+      ]
+    },
+    {
+      "id": "miq.spa.numeros.1.f",
+      "type": "choice",
+      "skill": "spa.numeros",
+      "prompt": "matlalkahbi",
+      "answer": "seis",
+      "options": [
+        "seis",
+        "cinco",
+        "cuatro"
+      ]
+    },
+    {
+      "id": "miq.spa.numeros.1.g",
+      "type": "choice",
+      "skill": "spa.numeros",
+      "prompt": "mata walsip",
+      "answer": "diez",
+      "options": [
+        "diez",
+        "cinco",
+        "seis"
+      ]
+    }
+  ]
+}

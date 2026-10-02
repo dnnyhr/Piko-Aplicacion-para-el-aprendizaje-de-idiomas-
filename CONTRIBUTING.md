@@ -12,8 +12,8 @@ Hay **dos formas muy distintas** de ayudar, y las dos importan igual.
 
 **Esta es la contribución que más falta hace, y no requiere saber programar.**
 
-Hoy Piko sólo tiene contenido en inglés. Las cuatro lenguas indígenas tienen el
-formato listo y están vacías **a propósito**: el vocabulario y la pronunciación
+Hoy Piko tiene contenido en inglés y en miskito. Mayangna, rama y garífuna
+esperan sus fuentes **a propósito**: el vocabulario y la pronunciación
 tienen que venir de hablantes nativos o de material lingüístico publicado.
 Inventarlos sería enseñarle una lengua falsa justo a los niños que están
 tratando de conservarla.
@@ -44,15 +44,23 @@ Lo último no es burocracia. Estas lenguas tienen variantes entre comunidades, y
 queremos poder decirle a un maestro de dónde viene lo que su alumno está
 aprendiendo.
 
+### Si querés traducir la interfaz
+
+La app también puede estar en miskito. Todos sus textos están en
+[`diccionario/miskito/interfaz.csv`](diccionario/miskito/interfaz.csv): se
+abre con cualquier planilla y se llena la columna `miq`. Lo que quede vacío se
+sigue mostrando en español, así que sirve traducir aunque sea una parte.
+
 ### Si preferís mandarlo como código
 
-El formato completo está documentado en
-[`app/content/README.md`](app/content/README.md). En resumen: se agrega un
-`.json` en `app/content/packs/<idioma>/`, se registra en `index.ts`, y se
-verifica con:
+Todo el contenido sale de [`diccionario/`](diccionario/README.md): las
+palabras van en `diccionario/<lengua>/lexico.json`, con su fuente, y los
+ejercicios en `diccionario/<lengua>/ejercicios.json`, como recetas que apuntan
+a esas palabras. Los paquetes de `app/content/packs/` se generan; no se editan
+a mano. Se genera y se verifica con:
 
 ```bash
-cd app && npm run validate:packs
+cd app && npm run contenido && npm run validate:diccionario
 ```
 
 El validador **rechaza a propósito** la síntesis de voz en mayangna, rama y
@@ -87,7 +95,7 @@ cd app && npm install
 En la app:
 
 ```bash
-npm test              # 140 pruebas sobre el núcleo puro y la persistencia
+npm test              # 151 pruebas sobre el núcleo puro y la persistencia
 npm run typecheck     # app + herramientas de Node
 npm run validate:packs
 ```

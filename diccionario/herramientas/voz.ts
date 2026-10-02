@@ -69,3 +69,11 @@ function acentoInicial(p: string): string {
   const tilde: Record<string, string> = { a: 'á', e: 'é', i: 'í', o: 'ó', u: 'ú' };
   return p.slice(0, i) + (tilde[p[i] as string] ?? p[i]) + p.slice(i + 1);
 }
+
+/**
+ * El texto que recibe la voz sintética, según la lengua: el inglés suena con
+ * su propia voz, tal cual; el miskito, con la voz en español y preparado.
+ */
+export function textoParaVoz(lengua: string, texto: string): string {
+  return lengua === 'miq' ? paraVozEspanola(texto) : texto;
+}

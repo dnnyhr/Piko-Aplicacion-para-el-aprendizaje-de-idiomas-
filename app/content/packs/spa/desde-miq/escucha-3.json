@@ -1,0 +1,94 @@
+{
+  "id": "miq.spa.escucha.3",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "escucha",
+  "difficulty": 3,
+  "title": "Escuchá: frases",
+  "items": [
+    {
+      "id": "miq.spa.escucha.3.a",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "Estoy bien",
+      "ttsLang": "es-US",
+      "answer": "Estoy bien",
+      "options": [
+        "Estoy bien",
+        "¿Cómo estás?",
+        "Quiero agua"
+      ],
+      "gloss": "Pain sna"
+    },
+    {
+      "id": "miq.spa.escucha.3.b",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "Quiero agua",
+      "ttsLang": "es-US",
+      "answer": "Quiero agua",
+      "options": [
+        "Quiero agua",
+        "Está lloviendo",
+        "Estoy bien"
+      ],
+      "gloss": "Li want"
+    },
+    {
+      "id": "miq.spa.escucha.3.c",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "Está lloviendo",
+      "ttsLang": "es-US",
+      "answer": "Está lloviendo",
+      "options": [
+        "Está lloviendo",
+        "Quiero agua",
+        "¿Dónde vivís?"
+      ],
+      "gloss": "Li auhwisa"
+    },
+    {
+      "id": "miq.spa.escucha.3.d",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "¿Dónde vivís?",
+      "ttsLang": "es-US",
+      "answer": "¿Dónde vivís?",
+      "options": [
+        "¿Dónde vivís?",
+        "¿Cómo estás?",
+        "Estoy bien"
+      ],
+      "gloss": "Anira iwisma"
+    },
+    {
+      "id": "miq.spa.escucha.3.e",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "Gracias, amigo",
+      "ttsLang": "es-US",
+      "answer": "Gracias, amigo",
+      "options": [
+        "Gracias, amigo",
+        "Estoy bien",
+        "Quiero agua"
+      ],
+      "gloss": "Tingki painika"
+    },
+    {
+      "id": "miq.spa.escucha.3.f",
+      "type": "listen",
+      "skill": "spa.escucha",
+      "tts": "Me llamo Ana",
+      "ttsLang": "es-US",
+      "answer": "Me llamo Ana",
+      "options": [
+        "Me llamo Ana",
+        "¿Dónde vivís?",
+        "Gracias, amigo"
+      ],
+      "gloss": "Yang nini Ana"
+    }
+  ]
+}

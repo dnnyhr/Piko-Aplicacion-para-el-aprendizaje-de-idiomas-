@@ -17,7 +17,8 @@ import { EjercicioBloques } from './EjercicioBloques';
 import { EjercicioOpciones } from './EjercicioOpciones';
 import { color, espacio, texto } from '../../ui/tokens';
 import { hashSeed, mulberry32, shuffle } from '../../core/ids';
-import { ACIERTO, INTENTO, RACHA, elegir } from '../../ui/piko/frases';
+import { elegir } from '../../ui/piko/frases';
+import { useTextos } from '../../ui/textos/useTextos';
 import {
   esCorrecta,
   estaCompleta,
@@ -48,6 +49,7 @@ export function Runner({ items, onResponder, onTerminar, onSalir }: RunnerProps)
   const [acerto, setAcerto] = useState(false);
   const [racha, setRacha] = useState(0);
   const [aciertos, setAciertos] = useState(0);
+  const { t, frases } = useTextos();
 
   const empezado = useRef(Date.now());
   const item = items[indice];
@@ -110,7 +112,9 @@ export function Runner({ items, onResponder, onTerminar, onSalir }: RunnerProps)
     siguiente();
   };
 
-  const titulo = acerto ? (racha >= 3 ? elegir(RACHA) : elegir(ACIERTO)) : elegir(INTENTO);
+  const titulo = acerto
+    ? elegir(frases(racha >= 3 ? 'piko.racha' : 'piko.acierto'))
+    : elegir(frases('piko.intento'));
 
   return (
     <View style={styles.raiz}>
@@ -147,7 +151,7 @@ export function Runner({ items, onResponder, onTerminar, onSalir }: RunnerProps)
       {!revelado && (
         <View style={styles.pie}>
           <Boton ancho disabled={!listo} onPress={comprobar}>
-            Comprobar
+            {t('ejercicio.comprobar')}
           </Boton>
         </View>
       )}
@@ -158,7 +162,7 @@ export function Runner({ items, onResponder, onTerminar, onSalir }: RunnerProps)
         titulo={titulo}
         respuesta={respuestaCorrecta(item)}
         gloss={acerto ? undefined : glosaDe(item)}
-        etiquetaBoton={ultimo ? 'Terminar' : 'Continuar'}
+        etiquetaBoton={t(ultimo ? 'ejercicio.terminar' : 'ejercicio.continuar')}
         onContinuar={continuar}
       />
     </View>

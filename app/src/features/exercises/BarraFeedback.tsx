@@ -21,7 +21,7 @@ export interface BarraFeedbackProps {
   respuesta?: string;
   /** Traducción al español, cuando la hay. */
   gloss?: string;
-  etiquetaBoton?: string;
+  etiquetaBoton: string;
   onContinuar: () => void;
 }
 
@@ -31,7 +31,7 @@ export function BarraFeedback({
   titulo,
   respuesta,
   gloss,
-  etiquetaBoton = 'Continuar',
+  etiquetaBoton,
   onContinuar,
 }: BarraFeedbackProps) {
   const entra = useRef(new Animated.Value(0)).current;

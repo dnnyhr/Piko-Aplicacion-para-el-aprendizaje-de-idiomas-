@@ -1,0 +1,116 @@
+clave,es,miq,notas
+portada.lema,"Aprendé jugando, sin internet.",,
+portada.practicar,Practicar sola,,"Botón: practicar sin maestro, en el propio teléfono."
+portada.unirme,Unirme a la clase,,
+portada.maestro,Soy el maestro,,
+portada.lengua_app,La app en,,Va antes de los botones «Español» y «Miskitu».
+comun.volver,Volver,,
+comun.xp_correctas,{xp} XP · {correctas}/{respondidas} correctas,,Dejar {xp} y {correctas} y {respondidas} tal cual: ahí la app pone un valor.
+comun.xp_total,XP total,,
+comun.como_va_la_clase,Cómo va la clase,,
+practicar.elegir_lengua,Elegí la lengua,,
+practicar.elegir_tema,Elegí un tema,,
+practicar.todo_mezclado,Todo mezclado,,
+practicar.sin_contenido,Todavía no hay ejercicios desde esta lengua.,,
+resultado.correctas,Correctas,,
+resultado.mejor_racha,Mejor racha,,
+resultado.otra_ronda,Otra ronda,,
+resultado.cambiar_tema,Cambiar de tema,,
+ejercicio.tocar_para_escuchar,Tocá para escuchar,,
+ejercicio.que_escuchaste,¿Qué escuchaste?,,
+ejercicio.elegir_traduccion,Elegí la traducción correcta,,
+ejercicio.arma_oracion,Armá esta oración,,
+ejercicio.toca_palabras,Tocá las palabras de abajo,,
+ejercicio.comprobar,Comprobar,,
+ejercicio.continuar,Continuar,,
+ejercicio.terminar,Terminar,,
+unirse.sin_red,El aula necesita un teléfono: los navegadores no pueden abrir sockets TCP. Desde la computadora podés jugar la práctica en solitario.,,
+unirse.buscando_maestro,Buscando al maestro…,,
+unirse.revisando_red,Revisando la red del aula…,,
+unirse.no_encontre,No encontré la clase. ¿Está encendido el hotspot del maestro?,,
+unirse.no_pude_entrar,Encontré la sala pero no pude entrar. Probá de nuevo.,,
+unirse.ip_invalida,Esa dirección no parece válida. Tiene que ser algo como 192.168.43.1,,
+unirse.sin_respuesta,No hubo respuesta en esa dirección.,,
+unirse.entraste,¡Entraste a la clase {codigo}! ¿Cuál sos vos?,,Dejar {codigo} tal cual: ahí la app pone un valor.
+unirse.ya_esta_jugando,ya está jugando,,
+unirse.buscando,Buscando…,,
+unirse.buscar_otra_vez,Buscar otra vez,,
+unirse.escribi_direccion,Escribí la dirección que ve el maestro,,
+unirse.entrar,Entrar,,
+jugar.sin_senal,"Sin señal — seguí jugando, se guarda todo",,
+jugar.reintento, · reintento en {segundos} s,,Dejar {segundos} tal cual: ahí la app pone un valor.
+jugar.esta_ronda,Esta ronda,,
+jugar.en_la_clase,En la clase,,
+jugar.esperar_ronda,Esperar la próxima ronda,,
+jugar.se_corto,Se cortó la señal. Ya vuelvo a intentar.,,
+jugar.salir,Salir de la clase,,
+maestro.titulo,Mi clase,,
+maestro.conectado,{n} conectado,,Una sola persona conectada. Dejar {n} tal cual: ahí la app pone un valor.
+maestro.conectados,{n} conectados,,Varias personas conectadas. Dejar {n} tal cual: ahí la app pone un valor.
+maestro.sala_cerrada,Sala cerrada,,
+maestro.antes_de_abrir,Antes de abrir la sala,,
+maestro.aviso_1,Encendé el ,,Las tres partes forman una sola oración: «Encendé el **punto de acceso** (hotspot)…». La del medio va en negrita.
+maestro.aviso_negrita,punto de acceso,,Ver maestro.aviso_1.
+maestro.aviso_2, (hotspot) desde los ajustes de tu teléfono. Los estudiantes se conectan a esa red y ahí te encuentran. No hace falta que tengas datos ni internet.,,Ver maestro.aviso_1.
+maestro.codigo,Código de la clase,,
+maestro.si_no_encuentra,"Si algún teléfono no encuentra la sala, que escriba {direccion}",,Dejar {direccion} tal cual: ahí la app pone un valor.
+maestro.sin_lista,Todavía no cargaste la lista de tu clase.,,
+maestro.usar_ejemplo,Usar una lista de ejemplo,,
+maestro.en_la_lista,{n} estudiantes en la lista,,Dejar {n} tal cual: ahí la app pone un valor.
+maestro.abriendo,Abriendo…,,
+maestro.abrir,Abrir la sala,,
+maestro.terminar_ronda,Terminar la ronda,,
+maestro.empezar_ronda,Empezar una ronda,,
+maestro.cerrar,Cerrar la sala,,
+lengua.eng,Inglés,,
+lengua.miq,Miskito,,
+lengua.sum,Mayangna,,
+lengua.rma,Rama,,
+lengua.cab,Garífuna,,
+lengua.spa,Español,,
+tema.saludos,Saludos,,
+tema.familia,La familia,,
+tema.numeros,Números,,
+tema.cuerpo,El cuerpo,,
+tema.animales,Animales,,
+tema.comida,La comida,,
+tema.naturaleza,La naturaleza,,
+tema.casa,La casa,,
+tema.escuela,La escuela,,
+tema.colores,Colores,,
+tema.acciones,Acciones,,
+tema.escucha,Escuchar,,
+tema.frases,Frases,,
+tema.posesion,Mío y tuyo,,
+piko.acierto#1,¡Esa es!,,Cuando acierta. Pueden ser más o menos frases que en español.
+piko.acierto#2,¡Bien ahí!,,Cuando acierta. Pueden ser más o menos frases que en español.
+piko.acierto#3,¡Correcto!,,Cuando acierta. Pueden ser más o menos frases que en español.
+piko.acierto#4,¡Muy bien!,,Cuando acierta. Pueden ser más o menos frases que en español.
+piko.acierto#5,¡Le atinaste!,,Cuando acierta. Pueden ser más o menos frases que en español.
+piko.acierto#6,¡Así se hace!,,Cuando acierta. Pueden ser más o menos frases que en español.
+piko.racha#1,¡Vas volando!,,
+piko.racha#2,¡Qué racha!,,
+piko.racha#3,¡No te para nadie!,,
+piko.racha#4,¡Seguidas!,,
+piko.intento#1,Casi. Mirá cómo es:,,"Piko nunca dice «mal», «incorrecto» ni «no»: reconoce el intento y muestra la respuesta."
+piko.intento#2,Buen intento. Es así:,,"Piko nunca dice «mal», «incorrecto» ni «no»: reconoce el intento y muestra la respuesta."
+piko.intento#3,Ya casi. Se dice:,,"Piko nunca dice «mal», «incorrecto» ni «no»: reconoce el intento y muestra la respuesta."
+piko.intento#4,"Tranquilo, mirá:",,"Piko nunca dice «mal», «incorrecto» ni «no»: reconoce el intento y muestra la respuesta."
+piko.intento#5,La próxima sale. Es:,,"Piko nunca dice «mal», «incorrecto» ni «no»: reconoce el intento y muestra la respuesta."
+piko.bienvenida#1,¡Hola! Soy Piko.,,
+piko.bienvenida#2,¿Jugamos un rato?,,
+piko.bienvenida#3,¡Qué bueno verte!,,
+piko.fin_bien#1,¡Terminaste! Estuviste muy bien.,,
+piko.fin_bien#2,¡Qué ronda! Seguí así.,,
+piko.fin_bien#3,¡Excelente trabajo!,,
+piko.fin_normal#1,¡Terminamos! Cada vez sale mejor.,,
+piko.fin_normal#2,Buen trabajo. Practicando se aprende.,,
+piko.fin_normal#3,¡Listo! Lo importante es seguir.,,
+piko.subir_nivel#1,¡Subimos una rama!,,
+piko.subir_nivel#2,¡Más arriba! Desde acá se ve todo.,,
+piko.subir_nivel#3,¡Tu árbol nos está llevando alto!,,
+piko.arbol_crece#1,¡Mirá cómo creció tu madroño!,,
+piko.arbol_crece#2,¡Tu árbol está creciendo!,,
+piko.esperando#1,Esperando a la clase…,,
+piko.esperando#2,Ya casi empezamos.,,
+piko.esperando#3,El maestro está preparando la ronda.,,

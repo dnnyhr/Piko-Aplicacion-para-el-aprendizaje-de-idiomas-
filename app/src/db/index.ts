@@ -39,6 +39,18 @@ export function ultimoHost(sql: SqlDriver): string | null {
   );
 }
 
+/** La lengua de la interfaz que eligió quien usa este teléfono. */
+export function recordarIdioma(sql: SqlDriver, idioma: string): void {
+  sql.run('UPDATE device SET idioma_app = ? WHERE id = 1', [idioma]);
+}
+
+export function ultimoIdioma(sql: SqlDriver): string | null {
+  return (
+    sql.get<{ idioma_app: string | null }>('SELECT idioma_app FROM device WHERE id = 1')
+      ?.idioma_app ?? null
+  );
+}
+
 // --------------------------------------------------------------------- roster
 
 export interface AlumnoGuardado {

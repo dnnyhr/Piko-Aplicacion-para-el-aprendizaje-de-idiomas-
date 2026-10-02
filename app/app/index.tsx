@@ -14,7 +14,11 @@ import { Globo } from '../src/ui/components/Globo';
 import { Pantalla } from '../src/ui/components/Pantalla';
 import { PikoMascota } from '../src/ui/piko/PikoMascota';
 import { MARCA_SVG } from '../src/ui/piko/vector.gen';
-import { BIENVENIDA, elegir } from '../src/ui/piko/frases';
+import { elegir } from '../src/ui/piko/frases';
+import { useTextos } from '../src/ui/textos/useTextos';
+import { AUTONIMO, IDIOMAS_APP } from '../src/ui/textos/traducir';
+import { useIdioma } from '../src/features/idioma/store';
+import { LANGS } from '../src/core/content/schema';
 import { MiniaturaArbol } from '../src/ui/arbol/MiniaturaArbol';
 import { ContadorSacuanjoches } from '../src/ui/arbol/ContadorSacuanjoches';
 import { useProgreso } from '../src/features/progreso/store';
@@ -23,7 +27,9 @@ import { color, espacio, radio, texto } from '../src/ui/tokens';
 
 export default function Portada() {
   const router = useRouter();
-  const saludo = useMemo(() => elegir(BIENVENIDA), []);
+  const { t, frases, idioma } = useTextos();
+  const cambiarIdioma = useIdioma((s) => s.cambiar);
+  const saludo = useMemo(() => elegir(frases('piko.bienvenida')), [frases]);
   const sacuanjoches = useProgreso((s) => s.estado.sacuanjoches);
 
   // Lo guardado de otras veces, para que el madroño aparezca como quedó.
@@ -43,17 +49,32 @@ export default function Portada() {
           <Globo style={styles.globo}>{saludo}</Globo>
         </View>
 
-        <Text style={styles.lema}>Aprendé jugando, sin internet.</Text>
+        <Text style={styles.lema}>{t('portada.lema')}</Text>
+
+        <View style={styles.idiomas}>
+          <Text style={styles.idiomaEtiqueta}>{t('portada.lengua_app')}</Text>
+          {IDIOMAS_APP.map((i) => (
+            <Pressable
+              key={i}
+              onPress={() => cambiarIdioma(i)}
+              accessibilityRole="button"
+              accessibilityState={{ selected: i === idioma }}
+              style={[styles.idioma, i === idioma && styles.idiomaElegido]}
+            >
+              <Text style={[styles.idiomaTexto, i === idioma && styles.idiomaTextoElegido]}>{AUTONIMO[i]}</Text>
+            </Pressable>
+          ))}
+        </View>
 
         <View style={styles.acciones}>
           <Boton ancho tono="verde" onPress={() => router.push('/practicar')}>
-            Practicar sola
+            {t('portada.practicar')}
           </Boton>
           <Boton ancho tono="cielo" onPress={() => router.push('/estudiante/unirse')}>
-            Unirme a la clase
+            {t('portada.unirme')}
           </Boton>
           <Pressable onPress={() => router.push('/maestro')} hitSlop={8}>
-            <Text style={styles.soyMaestro}>Soy el maestro</Text>
+            <Text style={styles.soyMaestro}>{t('portada.maestro')}</Text>
           </Pressable>
         </View>
 
@@ -76,9 +97,9 @@ export default function Portada() {
         </Pressable>
 
         <View style={styles.lenguas}>
-          {['Miskito', 'Mayangna', 'Rama', 'Garífuna', 'Inglés'].map((l) => (
+          {LANGS.map((l) => (
             <View key={l} style={styles.lengua}>
-              <Text style={styles.lenguaTexto}>{l}</Text>
+              <Text style={styles.lenguaTexto}>{t(`lengua.${l}`)}</Text>
             </View>
           ))}
         </View>
@@ -132,4 +153,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: espacio.md,
   },
   lenguaTexto: { ...texto.chico, color: color.verde, fontFamily: 'Fredoka_500Medium' },
+
+  idiomas: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: espacio.sm },
+  idiomaEtiqueta: { ...texto.chico, color: color.tintaSuave },
+  idioma: {
+    borderWidth: 2,
+    borderColor: color.borde,
+    borderRadius: radio.redondo,
+    paddingVertical: espacio.xs,
+    paddingHorizontal: espacio.md,
+    backgroundColor: color.blanco,
+  },
+  idiomaElegido: { borderColor: color.verde, backgroundColor: color.verde },
+  idiomaTexto: { ...texto.cuerpoFuerte, color: color.verde },
+  idiomaTextoElegido: { color: color.blanco },
 });

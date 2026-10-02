@@ -14,7 +14,10 @@
     "sim": "tsx tools/sim.ts",
     "validate:packs": "tsx tools/validate-packs.ts",
     "validate:diccionario": "tsx ../diccionario/herramientas/verificar.ts",
-    "gen:svg": "tsx tools/gen-svg.ts"
+    "contenido": "tsx ../diccionario/herramientas/contenido.ts",
+    "contenido:comprobar": "tsx ../diccionario/herramientas/contenido.ts --comprobar",
+    "gen:svg": "tsx tools/gen-svg.ts",
+    "web:sitio": "expo export --platform web --output-dir ../web/probar/app --clear"
   },
   "dependencies": {
     "@expo-google-fonts/fredoka": "^0.4.1",

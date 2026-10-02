@@ -11,7 +11,11 @@
       "skill": "eng.animales",
       "prompt": "pájaro",
       "answer": "bird",
-      "options": ["bird", "fish", "dog"]
+      "options": [
+        "bird",
+        "fish",
+        "dog"
+      ]
     },
     {
       "id": "eng.animales.1.b",
@@ -19,7 +23,11 @@
       "skill": "eng.animales",
       "prompt": "perro",
       "answer": "dog",
-      "options": ["dog", "cat", "cow"]
+      "options": [
+        "dog",
+        "cat",
+        "cow"
+      ]
     },
     {
       "id": "eng.animales.1.c",
@@ -27,7 +35,11 @@
       "skill": "eng.animales",
       "prompt": "pez",
       "answer": "fish",
-      "options": ["fish", "bird", "horse"]
+      "options": [
+        "fish",
+        "bird",
+        "horse"
+      ]
     },
     {
       "id": "eng.animales.1.d",
@@ -35,7 +47,11 @@
       "skill": "eng.animales",
       "prompt": "vaca",
       "answer": "cow",
-      "options": ["cow", "horse", "pig"]
+      "options": [
+        "cow",
+        "horse",
+        "pig"
+      ]
     },
     {
       "id": "eng.animales.1.e",
@@ -44,7 +60,11 @@
       "tts": "a small bird",
       "ttsLang": "en-US",
       "answer": "a small bird",
-      "options": ["a small bird", "a small fish", "a tall bird"],
+      "options": [
+        "a small bird",
+        "a small fish",
+        "a tall bird"
+      ],
       "gloss": "un pájaro pequeño"
     },
     {
@@ -52,7 +72,14 @@
       "type": "build",
       "skill": "eng.animales",
       "target": "The bird can fly",
-      "blocks": ["The", "bird", "can", "fly", "swim", "fish"],
+      "blocks": [
+        "The",
+        "bird",
+        "can",
+        "fly",
+        "swim",
+        "fish"
+      ],
       "gloss": "El pájaro puede volar"
     }
   ]

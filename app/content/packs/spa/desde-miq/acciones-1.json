@@ -1,0 +1,118 @@
+{
+  "id": "miq.spa.acciones.1",
+  "lang": "spa",
+  "desde": "miq",
+  "theme": "acciones",
+  "difficulty": 1,
+  "title": "Acciones",
+  "items": [
+    {
+      "id": "miq.spa.acciones.1.a",
+      "type": "choice",
+      "skill": "spa.acciones",
+      "prompt": "piyaya",
+      "answer": "comer",
+      "options": [
+        "comer",
+        "beber",
+        "dormir"
+      ]
+    },
+    {
+      "id": "miq.spa.acciones.1.b",
+      "type": "choice",
+      "skill": "spa.acciones",
+      "prompt": "diyaya",
+      "answer": "beber",
+      "options": [
+        "beber",
+        "comer",
+        "escuchar"
+      ]
+    },
+    {
+      "id": "miq.spa.acciones.1.c",
+      "type": "choice",
+      "skill": "spa.acciones",
+      "prompt": "yapaya",
+      "answer": "dormir",
+      "options": [
+        "dormir",
+        "caminar",
+        "comer"
+      ]
+    },
+    {
+      "id": "miq.spa.acciones.1.d",
+      "type": "choice",
+      "skill": "spa.acciones",
+      "prompt": "wapaya",
+      "answer": "caminar",
+      "options": [
+        "caminar",
+        "dormir",
+        "escuchar"
+      ]
+    },
+    {
+      "id": "miq.spa.acciones.1.e",
+      "type": "choice",
+      "skill": "spa.acciones",
+      "prompt": "aisaya",
+      "answer": "hablar",
+      "options": [
+        "hablar",
+        "cantar",
+        "ver"
+      ]
+    },
+    {
+      "id": "miq.spa.acciones.1.f",
+      "type": "choice",
+      "skill": "spa.acciones",
+      "prompt": "walaya",
+      "answer": "escuchar",
+      "options": [
+        "escuchar",
+        "caminar",
+        "hablar"
+      ]
+    },
+    {
+      "id": "miq.spa.acciones.1.g",
+      "type": "choice",
+      "skill": "spa.acciones",
+      "prompt": "kaikaya",
+      "answer": "ver",
+      "options": [
+        "ver",
+        "escuchar",
+        "jugar"
+      ]
+    },
+    {
+      "id": "miq.spa.acciones.1.h",
+      "type": "choice",
+      "skill": "spa.acciones",
+      "prompt": "aiwanaya",
+      "answer": "cantar",
+      "options": [
+        "cantar",
+        "hablar",
+        "jugar"
+      ]
+    },
+    {
+      "id": "miq.spa.acciones.1.i",
+      "type": "choice",
+      "skill": "spa.acciones",
+      "prompt": "pulaya",
+      "answer": "jugar",
+      "options": [
+        "jugar",
+        "escribir",
+        "beber"
+      ]
+    }
+  ]
+}
