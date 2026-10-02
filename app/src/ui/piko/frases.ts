@@ -62,11 +62,17 @@ export function elegir(frases: readonly string[], rng: Rng = Math.random): strin
   return frases[Math.floor(rng() * frases.length)] ?? frases[0] ?? '';
 }
 
-/** Al subir de nivel: Piko trepa una rama más del madroño. */
+/** Al superar un nivel por primera vez: Piko sube a la rama siguiente. */
 export const SUBIR_NIVEL: readonly string[] = [
-  '¡Subimos una rama!',
-  '¡Más arriba! Desde acá se ve todo.',
-  '¡Tu árbol nos está llevando alto!',
+  '¡Nivel superado! Subamos a la otra rama.',
+  '¡Lo lograste! Vamos más arriba.',
+  '¡Abriste el siguiente nivel!',
+];
+
+/** Cuando toca un nivel que todavía tiene candado. */
+export const NIVEL_CERRADO: readonly string[] = [
+  'Ese todavía tiene candado. ¡Primero este!',
+  'Subamos de a una rama. Empecemos por acá.',
 ];
 
 /** Cuando el madroño pasa a la etapa siguiente. */

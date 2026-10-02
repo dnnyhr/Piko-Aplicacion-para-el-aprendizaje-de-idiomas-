@@ -14,11 +14,11 @@ import { Boton } from '../../src/ui/components/Boton';
 import { Globo } from '../../src/ui/components/Globo';
 import { Pantalla } from '../../src/ui/components/Pantalla';
 import { PikoMascota } from '../../src/ui/piko/PikoMascota';
-import { ARBOL_CRECE, ESPERANDO, FIN_BIEN, FIN_NORMAL, SUBIR_NIVEL, elegir } from '../../src/ui/piko/frases';
+import { ARBOL_CRECE, ESPERANDO, FIN_BIEN, FIN_NORMAL, elegir } from '../../src/ui/piko/frases';
 import { Runner, type ResultadoRonda } from '../../src/features/exercises/Runner';
 import { useAulaCliente } from '../../src/features/aula/cliente';
 import { useProgreso } from '../../src/features/progreso/store';
-import { RecompensaLeccion } from '../../src/features/arbol/RecompensaLeccion';
+import { GanaSacuanjoches } from '../../src/features/arbol/GanaSacuanjoches';
 import { ContadorSacuanjoches } from '../../src/ui/arbol/ContadorSacuanjoches';
 import { recompensaEntre, type Recompensa } from '../../src/core/progress/arbol';
 import { color, espacio, radio, texto } from '../../src/ui/tokens';
@@ -81,25 +81,12 @@ export default function Jugar() {
     return (
       <Pantalla>
         <ScrollView contentContainerStyle={styles.fin} showsVerticalScrollIndicator={false}>
-          {recompensa ? (
-            <>
-              <Globo hacia="abajo">
-                {recompensa.crecioArbol
-                  ? elegir(ARBOL_CRECE)
-                  : recompensa.subioNivel
-                    ? elegir(SUBIR_NIVEL)
-                    : bien
-                      ? elegir(FIN_BIEN)
-                      : elegir(FIN_NORMAL)}
-              </Globo>
-              <RecompensaLeccion recompensa={recompensa} />
-            </>
-          ) : (
-            <>
-              <PikoMascota estado={bien ? 'celebrando' : 'alegre'} tam={170} />
-              <Globo hacia="abajo">{bien ? elegir(FIN_BIEN) : elegir(FIN_NORMAL)}</Globo>
-            </>
-          )}
+          <PikoMascota estado={bien ? 'celebrando' : 'alegre'} tam={170} />
+          <Globo hacia="abajo">
+            {recompensa?.crecioArbol ? elegir(ARBOL_CRECE) : bien ? elegir(FIN_BIEN) : elegir(FIN_NORMAL)}
+          </Globo>
+
+          {recompensa && <GanaSacuanjoches recompensa={recompensa} />}
 
           <View style={styles.marcador}>
             <Dato valor={`${resultado.aciertos}/${resultado.respondidas}`} etiqueta="Esta ronda" />

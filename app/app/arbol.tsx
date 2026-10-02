@@ -1,9 +1,9 @@
 /**
- * Mi madroño: el árbol en grande y el camino de semilla a árbol florecido.
+ * Mi madroño: el árbol que crece con las sacuanjoches.
  *
- * Está pensado para leerse sin instrucciones: arriba el árbol de hoy con
- * Piko encima, abajo las seis etapas con cuántas sacuanjoches pide cada una,
- * y las que ya pasaron marcadas.
+ * Es aparte del camino de niveles: acá no se sube, se mira crecer. Está
+ * pensado para leerse sin instrucciones: arriba el árbol de hoy, cuánto falta
+ * para la próxima etapa, y abajo las seis etapas con lo que pide cada una.
  */
 
 import { useEffect } from 'react';
@@ -17,13 +17,13 @@ import { ContadorSacuanjoches } from '../src/ui/arbol/ContadorSacuanjoches';
 import { Sacuanjoche } from '../src/ui/arbol/Sacuanjoche';
 import { MiniaturaArbol } from '../src/ui/arbol/MiniaturaArbol';
 import { useProgreso } from '../src/features/progreso/store';
+import { BarraProgreso } from '../src/ui/components/BarraProgreso';
 import {
   ETAPAS,
   SACUANJOCHES_BASE,
   SACUANJOCHES_MAX,
   etapaDe,
-  lugarDePiko,
-  nivelDe,
+  progresoEtapa,
 } from '../src/core/progress/arbol';
 import { color, espacio, fuente, radio, texto } from '../src/ui/tokens';
 
@@ -36,7 +36,7 @@ export default function Arbol() {
   }, []);
 
   const actual = etapaDe(total);
-  const nivel = nivelDe(total);
+  const avance = progresoEtapa(total);
 
   return (
     <Pantalla>
@@ -47,18 +47,33 @@ export default function Arbol() {
         </View>
 
         <Globo hacia="abajo" style={styles.globo}>
-          {lugarDePiko(nivel)}
+          {actual.descripcion}
         </Globo>
 
         <View style={styles.cielo}>
           <ArbolMadrono sacuanjoches={total} ancho={240} />
         </View>
 
+        <View style={styles.avance}>
+          <View style={styles.avanceFila}>
+            <Sacuanjoche tam={30} />
+            <Text style={styles.avanceTotal}>{total}</Text>
+            <Text style={styles.avanceTexto}>
+              {total === 1 ? 'sacuanjoche recolectada' : 'sacuanjoches recolectadas'}
+            </Text>
+          </View>
+          <BarraProgreso valor={avance.fraccion} tono={color.verdeHoja} />
+          <Text style={styles.avanceAyuda}>
+            {avance.siguiente
+              ? `Faltan ${avance.faltan} para que tu madroño sea: ${avance.siguiente.nombre}`
+              : '¡Tu madroño está todo florecido!'}
+          </Text>
+        </View>
+
         <View style={styles.ciclo}>
-          <Paso n="1" texto="Aprendé" />
+          <Paso n="1" texto="Superá niveles" />
           <Paso n="2" texto="Ganá sacuanjoches" />
-          <Paso n="3" texto="Tu árbol crece" />
-          <Paso n="4" texto="Piko sube" />
+          <Paso n="3" texto="Tu madroño crece" />
         </View>
 
         <Text style={styles.instruccion}>
@@ -119,6 +134,19 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   globo: { alignSelf: 'center' },
+
+  avance: {
+    gap: espacio.sm,
+    backgroundColor: color.blanco,
+    borderWidth: 2,
+    borderColor: color.borde,
+    borderRadius: radio.lg,
+    padding: espacio.lg,
+  },
+  avanceFila: { flexDirection: 'row', alignItems: 'center', gap: espacio.sm },
+  avanceTotal: { ...texto.display, color: color.verde },
+  avanceTexto: { ...texto.cuerpoFuerte, color: color.tinta, flex: 1 },
+  avanceAyuda: { ...texto.chico, color: color.tintaSuave },
 
   ciclo: { flexDirection: 'row', gap: espacio.xs },
   paso: { flex: 1, alignItems: 'center', gap: espacio.xs },

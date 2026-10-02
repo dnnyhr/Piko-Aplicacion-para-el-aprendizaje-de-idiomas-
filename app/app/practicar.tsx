@@ -13,10 +13,10 @@ import { Globo } from '../src/ui/components/Globo';
 import { Pantalla } from '../src/ui/components/Pantalla';
 import { Opcion } from '../src/ui/components/Opcion';
 import { PikoMascota } from '../src/ui/piko/PikoMascota';
-import { ARBOL_CRECE, FIN_BIEN, FIN_NORMAL, SUBIR_NIVEL, elegir } from '../src/ui/piko/frases';
+import { ARBOL_CRECE, FIN_BIEN, FIN_NORMAL, elegir } from '../src/ui/piko/frases';
 import { Runner, type ResultadoRonda } from '../src/features/exercises/Runner';
 import { useProgreso } from '../src/features/progreso/store';
-import { RecompensaLeccion } from '../src/features/arbol/RecompensaLeccion';
+import { GanaSacuanjoches } from '../src/features/arbol/GanaSacuanjoches';
 import { ContadorSacuanjoches } from '../src/ui/arbol/ContadorSacuanjoches';
 import type { Recompensa } from '../src/core/progress/arbol';
 import { color, espacio, radio, texto } from '../src/ui/tokens';
@@ -88,28 +88,14 @@ export default function Practicar() {
 
   if (fase === 'resultado' && resultado) {
     const bien = resultado.aciertos / Math.max(1, resultado.respondidas) >= 0.7;
-    const frase = recompensa?.crecioArbol
-      ? elegir(ARBOL_CRECE)
-      : recompensa?.subioNivel
-        ? elegir(SUBIR_NIVEL)
-        : bien
-          ? elegir(FIN_BIEN)
-          : elegir(FIN_NORMAL);
+    const frase = recompensa?.crecioArbol ? elegir(ARBOL_CRECE) : bien ? elegir(FIN_BIEN) : elegir(FIN_NORMAL);
     return (
       <Pantalla>
         <ScrollView contentContainerStyle={styles.fin} showsVerticalScrollIndicator={false}>
-          {recompensa ? (
-            <>
-              <Globo hacia="abajo">{frase}</Globo>
-              {/* Piko está en su madroño: el árbol y la subida son el festejo. */}
-              <RecompensaLeccion recompensa={recompensa} onVerArbol={() => router.push('/arbol')} />
-            </>
-          ) : (
-            <>
-              <PikoMascota estado={bien ? 'celebrando' : 'alegre'} tam={190} />
-              <Globo hacia="abajo">{frase}</Globo>
-            </>
-          )}
+          <PikoMascota estado={bien ? 'celebrando' : 'alegre'} tam={160} />
+          <Globo hacia="abajo">{frase}</Globo>
+
+          {recompensa && <GanaSacuanjoches recompensa={recompensa} onVerArbol={() => router.push('/arbol')} />}
 
           <View style={styles.marcador}>
             <Dato valor={`${resultado.aciertos}/${resultado.respondidas}`} etiqueta="Correctas" />
@@ -144,7 +130,11 @@ export default function Practicar() {
           <ContadorSacuanjoches total={estado.sacuanjoches} onPress={() => router.push('/perfil')} />
         </View>
 
-        <Text style={styles.instruccion}>Elegí un tema</Text>
+        <Boton ancho tono="pico" onPress={() => router.push('/niveles')}>
+          Subir con Piko por niveles
+        </Boton>
+
+        <Text style={styles.instruccion}>O elegí un tema</Text>
 
         <View style={styles.temas}>
           <Opcion onPress={() => empezar(null)}>Todo mezclado</Opcion>

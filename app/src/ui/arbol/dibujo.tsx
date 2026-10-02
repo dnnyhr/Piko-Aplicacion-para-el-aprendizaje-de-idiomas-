@@ -7,8 +7,8 @@
  * Piko: formas planas, redondas, sin degradados ni sombras.
  *
  * Coordenadas en un lienzo de 200×308 cuyo origen está 48 unidades por debajo
- * del borde de arriba (viewBox `0 -48 200 308`): ese margen es el aire que
- * necesita Piko cuando se para en la copa.
+ * del borde de arriba (viewBox `0 -48 200 308`): ese margen es el cielo que
+ * llena el árbol florecido.
  */
 
 import { Circle, Ellipse, G, Path } from 'react-native-svg';
@@ -30,30 +30,8 @@ export const ARBOL_COLOR = {
   florCentro: '#F4C542',
 } as const;
 
-/**
- * Dónde pone las patas Piko en cada nivel (1 a 10). Abajo, al lado de la
- * semilla; después el tallo, las ramas, y al final la copa.
- */
-export const PERCHAS: readonly { x: number; y: number }[] = [
-  { x: 52, y: 246 },
-  { x: 60, y: 246 },
-  { x: 86, y: 214 },
-  { x: 86, y: 188 },
-  { x: 60, y: 172 },
-  { x: 148, y: 152 },
-  { x: 60, y: 80 },
-  { x: 140, y: 72 },
-  { x: 124, y: 28 },
-  { x: 100, y: 16 },
-];
-
-export function perchaDe(nivel: number): { x: number; y: number } {
-  const i = Math.max(1, Math.min(PERCHAS.length, nivel)) - 1;
-  return PERCHAS[i] as { x: number; y: number };
-}
-
 /** Racimo de flores del madroño: tres florcitas juntas. */
-function Racimo({ x, y, r = 4 }: { x: number; y: number; r?: number }) {
+export function Racimo({ x, y, r = 4 }: { x: number; y: number; r?: number }) {
   return (
     <G>
       <Circle cx={x - r} cy={y + r * 0.4} r={r} fill={ARBOL_COLOR.flor} />

@@ -5,7 +5,7 @@
  * haya nadie más cerca, y es lo que un niño puede abrir en su casa.
  */
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SvgXml } from 'react-native-svg';
@@ -16,15 +16,22 @@ import { PikoMascota } from '../src/ui/piko/PikoMascota';
 import { MARCA_SVG } from '../src/ui/piko/vector.gen';
 import { BIENVENIDA, elegir } from '../src/ui/piko/frases';
 import { MiniaturaArbol } from '../src/ui/arbol/MiniaturaArbol';
-import { ContadorSacuanjoches } from '../src/ui/arbol/ContadorSacuanjoches';
+import { Sacuanjoche } from '../src/ui/arbol/Sacuanjoche';
 import { useProgreso } from '../src/features/progreso/store';
-import { etapaDe, nivelDe } from '../src/core/progress/arbol';
+import { etapaDe } from '../src/core/progress/arbol';
+import { caminoDe, estadoDelCamino, nivelActual } from '../src/core/progress/niveles';
+import { PACKS } from '../content';
 import { color, espacio, radio, texto } from '../src/ui/tokens';
 
 export default function Portada() {
   const router = useRouter();
   const saludo = useMemo(() => elegir(BIENVENIDA), []);
   const sacuanjoches = useProgreso((s) => s.estado.sacuanjoches);
+  const estrellas = useProgreso((s) => s.estado.stars);
+  const nivel = useMemo(
+    () => nivelActual(estadoDelCamino(caminoDe(PACKS, 'eng'), estrellas))?.numero ?? 1,
+    [estrellas],
+  );
 
   // Lo guardado de otras veces, para que el madroño aparezca como quedó.
   useEffect(() => {
@@ -57,23 +64,17 @@ export default function Portada() {
           </Pressable>
         </View>
 
-        <Pressable
-          onPress={() => router.push('/perfil')}
-          accessibilityRole="button"
-          accessibilityLabel="Ver mi madroño y mi perfil"
-          style={styles.madrono}
-        >
-          <View style={styles.madronoCielo}>
-            <MiniaturaArbol etapa={etapaDe(sacuanjoches).id} tam={56} />
-          </View>
-          <View style={styles.madronoTexto}>
-            <Text style={styles.madronoTitulo}>Mi madroño</Text>
-            <Text style={styles.madronoSub}>
-              Nivel {nivelDe(sacuanjoches)} · {etapaDe(sacuanjoches).nombre}
-            </Text>
-          </View>
-          <ContadorSacuanjoches total={sacuanjoches} />
-        </Pressable>
+        <View style={styles.atajos}>
+          <Atajo titulo="Niveles" detalle={`Nivel ${nivel}`} onPress={() => router.push('/niveles')}>
+            <PikoMascota estado="idle" tam={52} animado={false} />
+          </Atajo>
+          <Atajo titulo="Mi árbol" detalle={etapaDe(sacuanjoches).nombre} onPress={() => router.push('/arbol')}>
+            <MiniaturaArbol etapa={etapaDe(sacuanjoches).id} tam={52} />
+          </Atajo>
+          <Atajo titulo="Mi perfil" detalle={`${sacuanjoches} sacuanjoches`} onPress={() => router.push('/perfil')}>
+            <Sacuanjoche tam={44} />
+          </Atajo>
+        </View>
 
         <View style={styles.lenguas}>
           {['Miskito', 'Mayangna', 'Rama', 'Garífuna', 'Inglés'].map((l) => (
@@ -84,6 +85,33 @@ export default function Portada() {
         </View>
       </ScrollView>
     </Pantalla>
+  );
+}
+
+function Atajo({
+  titulo,
+  detalle,
+  onPress,
+  children,
+}: {
+  titulo: string;
+  detalle: string;
+  onPress: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${titulo}: ${detalle}`}
+      style={styles.atajo}
+    >
+      <View style={styles.atajoDibujo}>{children}</View>
+      <Text style={styles.atajoTitulo}>{titulo}</Text>
+      <Text style={styles.atajoDetalle} numberOfLines={1}>
+        {detalle}
+      </Text>
+    </Pressable>
   );
 }
 
@@ -101,21 +129,29 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     paddingVertical: espacio.sm,
   },
-  madrono: {
-    flexDirection: 'row',
+  atajos: { flexDirection: 'row', gap: espacio.sm },
+  atajo: {
+    flex: 1,
     alignItems: 'center',
-    gap: espacio.md,
     backgroundColor: color.blanco,
     borderWidth: 2,
     borderColor: color.borde,
     borderRadius: radio.lg,
     paddingVertical: espacio.sm,
-    paddingHorizontal: espacio.md,
+    paddingHorizontal: espacio.xs,
   },
-  madronoCielo: { backgroundColor: color.nube, borderRadius: radio.md, padding: espacio.xs },
-  madronoTexto: { flex: 1 },
-  madronoTitulo: { ...texto.subtitulo, color: color.verde },
-  madronoSub: { ...texto.chico, color: color.tintaSuave },
+  atajoDibujo: {
+    width: 64,
+    height: 64,
+    borderRadius: radio.md,
+    backgroundColor: color.nube,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    marginBottom: espacio.xs,
+  },
+  atajoTitulo: { ...texto.cuerpoFuerte, color: color.verde },
+  atajoDetalle: { ...texto.chico, color: color.tintaSuave },
   lenguas: {
     flexDirection: 'row',
     flexWrap: 'wrap',
