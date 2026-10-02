@@ -27,31 +27,42 @@ import { color, fuente } from '../../ui/tokens';
 /**
  * El madroño del camino: tronco grueso con las raíces abiertas que sube por
  * el medio, y de él salen ramas separadas, alternando de lado, cada una con
- * su propio copo de hojas y un nido. El último nivel va arriba, en el copo de
- * la punta.
+ * su propio copo de hojas y un nido. Arriba del último nivel el árbol sigue:
+ * más ramas y mucho follaje que se pierden entre las nubes, para que se note
+ * que el camino continúa cuando lleguen más niveles.
  */
 const PASO = 140;
 const SUELO = 130;
-const ARRIBA = 150;
+/** Ramas sin nido arriba del último nivel, que asoman de las nubes. */
+const RAMAS_EN_NUBES = 2;
+const NUBES = RAMAS_EN_NUBES * PASO + 200;
 const NODO = { ancho: 110, alto: 80 } as const;
 const ALTO_PIKO = 74;
+
+type Lado = 'izq' | 'der';
 
 export interface Geometria {
   ancho: number;
   alto: number;
   /** Centro del nido de cada nivel, por número (índice 0 = nivel 1). */
-  nodos: { x: number; y: number; lado: 'izq' | 'der'; punta: boolean }[];
+  nodos: { x: number; y: number; lado: Lado }[];
+  /** Ramas de más arriba, sin nido: los niveles que todavía no llegaron. */
+  enNubes: { x: number; y: number; lado: Lado }[];
+  /** Hasta dónde bajan las nubes. */
+  nubes: number;
 }
 
 export function geometriaCamino(cantidad: number, ancho: number): Geometria {
-  const alto = SUELO + Math.max(0, cantidad - 1) * PASO + ARRIBA;
-  const nodos = Array.from({ length: cantidad }, (_, i) => {
-    const lado = i % 2 === 0 ? ('izq' as const) : ('der' as const);
-    const punta = i === cantidad - 1 && cantidad > 1;
-    const x = punta ? ancho * 0.5 : ancho * (lado === 'izq' ? 0.24 : 0.76);
-    return { x, y: alto - SUELO - i * PASO, lado, punta };
-  });
-  return { ancho, alto, nodos };
+  const alto = SUELO + Math.max(0, cantidad - 1) * PASO + NUBES;
+  const punto = (i: number) => {
+    const lado: Lado = i % 2 === 0 ? 'izq' : 'der';
+    return { x: ancho * (lado === 'izq' ? 0.24 : 0.76), y: alto - SUELO - i * PASO, lado };
+  };
+  const nodos = Array.from({ length: cantidad }, (_, i) => punto(i));
+  const enNubes = Array.from({ length: RAMAS_EN_NUBES }, (_, k) => punto(cantidad + k));
+  const ultimo = nodos[nodos.length - 1];
+  const nubes = (ultimo ? ultimo.y : alto - SUELO) - PASO * 1.55;
+  return { ancho, alto, nodos, enNubes, nubes };
 }
 
 /** Dónde se para Piko en un nivel: en el borde del nido, del lado del tronco. */
@@ -101,12 +112,61 @@ function enTronco(cx: number, base: number, tope: number, t: number) {
   return { x: b(p0.x, p1.x, p2.x, p3.x), y: b(p0.y, p1.y, p2.y, p3.y) };
 }
 
+/**
+ * Las nubes que tapan la copa: un banco blanco arriba, con el borde de abajo
+ * en lóbulos y una segunda capa más transparente que lo deshace, y algún
+ * jirón suelto. Lo de arriba del camino queda escondido, como por descubrir.
+ */
+function Nubes({ ancho, hasta }: { ancho: number; hasta: number }) {
+  // Filas de bollos de nube, de arriba hacia abajo. Arriba tapan todo; las
+  // de abajo son más transparentes y dejan asomar las hojas.
+  const filas = Math.max(1, Math.ceil(hasta / 46));
+  const bollos: { x: number; y: number; r: number; o: number }[] = [];
+  for (let f = 0; f < filas; f++) {
+    const y = f * 46 + 10;
+    const abajo = f / Math.max(1, filas - 1);
+    const cuantos = 5;
+    for (let k = 0; k < cuantos; k++) {
+      const x = 38 + ((ancho - 76) * (k + (f % 2) * 0.5)) / (cuantos - 0.5);
+      const r = 40 + ((k * 7 + f * 11) % 14);
+      bollos.push({ x: Math.min(ancho - 34, x), y, r, o: abajo < 0.5 ? 1 : abajo < 0.8 ? 0.85 : 0.68 });
+    }
+  }
+  const ultima = (filas - 1) * 46 + 10;
+  return (
+    <G>
+      {/* Sombra celeste debajo de cada bollo: les da volumen */}
+      {bollos.map((c, k) => (
+        <Circle key={`s${k}`} cx={c.x + 4} cy={c.y + 8} r={c.r} fill="#C9E7F7" opacity={c.o} />
+      ))}
+      {bollos.map((c, k) => (
+        <Circle key={`n${k}`} cx={c.x} cy={c.y} r={c.r} fill={color.blanco} opacity={c.o} />
+      ))}
+      {/* El borde de abajo, deshilachado: nubecitas cada vez más transparentes */}
+      {Array.from({ length: 6 }, (_, k) => (
+        <Ellipse
+          key={`b${k}`}
+          cx={30 + k * ((ancho - 60) / 5)}
+          cy={ultima + 44 + (k % 2) * 12}
+          rx={34}
+          ry={16}
+          fill={color.blanco}
+          opacity={0.55}
+        />
+      ))}
+      {/* Jirones sueltos */}
+      <Ellipse cx={ancho * 0.12} cy={hasta + 40} rx={30} ry={10} fill={color.blanco} opacity={0.6} />
+      <Ellipse cx={ancho * 0.9} cy={hasta + 54} rx={32} ry={10} fill={color.blanco} opacity={0.55} />
+    </G>
+  );
+}
+
 function ArbolDelCamino({ g }: { g: Geometria }) {
   const cx = g.ancho / 2;
   const base = g.alto - 30;
-  const ultimo = g.nodos[g.nodos.length - 1];
-  const tope = (ultimo?.y ?? base - 200) + 40;
-  const ramas = g.nodos.filter((n) => !n.punta);
+  // El tronco sigue hasta perderse entre las nubes.
+  const tope = 24;
+  const ramas = [...g.nodos, ...g.enNubes];
 
   return (
     <Svg width={g.ancho} height={g.alto} style={StyleSheet.absoluteFill}>
@@ -209,8 +269,20 @@ function ArbolDelCamino({ g }: { g: Geometria }) {
 
       {/* Un copo de hojas por rama, con el nido metido arriba */}
       {g.nodos.map((n, i) => (
-        <Copo key={`c${i}`} x={n.x} y={n.y + (n.punta ? 6 : 16)} s={n.punta ? 1.2 : 1} flores={n.punta ? 8 : 6} />
+        <Copo key={`c${i}`} x={n.x} y={n.y + 16} s={1} flores={6} />
       ))}
+
+      {/* Arriba, follaje tupido: las ramas de los niveles que vienen, y más
+          copos alrededor del tronco, todo metiéndose en las nubes. */}
+      {g.enNubes.map((n, i) => (
+        <G key={`a${i}`}>
+          <Copo x={n.x} y={n.y + 16} s={1.05} flores={4} />
+          <Copo x={cx + (n.lado === 'izq' ? 46 : -46)} y={n.y - 30} s={0.8} flores={3} />
+          <Copo x={cx} y={n.y - 70} s={0.9} flores={3} />
+        </G>
+      ))}
+      <Copo x={cx - 40} y={g.nubes + 30} s={0.75} flores={2} />
+      <Copo x={cx + 44} y={g.nubes + 18} s={0.7} flores={2} />
 
       {/* Las dos ramitas que sostienen cada nido */}
       {g.nodos.map((n, i) => (
@@ -223,6 +295,8 @@ function ArbolDelCamino({ g }: { g: Geometria }) {
           fill="none"
         />
       ))}
+
+      <Nubes ancho={g.ancho} hasta={g.nubes} />
     </Svg>
   );
 }
