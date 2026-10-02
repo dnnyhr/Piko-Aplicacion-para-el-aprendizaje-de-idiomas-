@@ -23,6 +23,11 @@ export const ARBOL_COLOR = {
   tierraHonda: '#6E4520',
   corteza: '#B5562E',
   cortezaLuz: '#D98452',
+  /** El lado en sombra del tronco, las vetas y los nudos. */
+  cortezaSombra: '#8F3F1F',
+  /** Donde la corteza se pela: la capa de adentro, más clara. */
+  cortezaPelada: '#EDB57E',
+  cortezaAdentro: '#F6DDB4',
   hoja: color.verdeHoja,
   hojaHonda: color.verdeMonte,
   hojaLuz: color.verdePasto,
@@ -119,6 +124,60 @@ export function Copo({ x, y, s = 1, flores = 0 }: { x: number; y: number; s?: nu
   );
 }
 
+/**
+ * Un parche donde la corteza del madroño se pela: la lámina de afuera se
+ * levanta, con el borde enrollado, y deja ver la capa clara de adentro. Es
+ * lo que más distingue a su tronco, liso y color cobre.
+ */
+export function Parche({ x, y, s = 1 }: { x: number; y: number; s?: number }) {
+  const p = (dx: number, dy: number) => `${x + dx * s} ${y + dy * s}`;
+  return (
+    <G>
+      {/* La lámina que se levanta: alargada e irregular, como la del madroño */}
+      <Path
+        d={`M${p(-3, -16)} C ${p(2, -15)}, ${p(5, -10)}, ${p(4, -3)} C ${p(5, 3)}, ${p(4, 10)}, ${p(1, 15)} C ${p(-2, 17)}, ${p(-5, 11)}, ${p(-4, 4)} C ${p(-6, -3)}, ${p(-6, -11)}, ${p(-3, -16)} Z`}
+        fill={ARBOL_COLOR.cortezaPelada}
+      />
+      <Path
+        d={`M${p(-1, -10)} C ${p(2, -8)}, ${p(2, -2)}, ${p(2, 3)} C ${p(2, 8)}, ${p(0, 11)}, ${p(-1, 10)} C ${p(-3, 6)}, ${p(-3, -4)}, ${p(-1, -10)} Z`}
+        fill={ARBOL_COLOR.cortezaAdentro}
+      />
+      {/* El borde enrollado */}
+      <Path
+        d={`M${p(-3, -16)} C ${p(-7, -9)}, ${p(-6, 2)}, ${p(-4, 6)}`}
+        stroke={ARBOL_COLOR.cortezaSombra}
+        strokeWidth={1.5 * s}
+        strokeLinecap="round"
+        fill="none"
+      />
+    </G>
+  );
+}
+
+/** Una escama: la marquita de una lámina de corteza que empieza a soltarse. */
+export function Escama({ x, y, s = 1 }: { x: number; y: number; s?: number }) {
+  return (
+    <Path
+      d={`M${x - 3 * s} ${y - 4 * s} Q ${x + 2 * s} ${y - 2 * s} ${x + 1 * s} ${y + 4 * s}`}
+      stroke={ARBOL_COLOR.cortezaPelada}
+      strokeWidth={1.6 * s}
+      strokeLinecap="round"
+      fill="none"
+      opacity={0.85}
+    />
+  );
+}
+
+/** Un nudo de la corteza. */
+export function Nudo({ x, y, s = 1 }: { x: number; y: number; s?: number }) {
+  return (
+    <G>
+      <Ellipse cx={x} cy={y} rx={4 * s} ry={6 * s} fill={ARBOL_COLOR.cortezaSombra} opacity={0.85} />
+      <Ellipse cx={x + 0.6 * s} cy={y + 0.6 * s} rx={2 * s} ry={3.2 * s} fill={ARBOL_COLOR.corteza} />
+    </G>
+  );
+}
+
 /** Ramas del árbol grande: hasta dónde llega cada una y dónde va su copo. */
 const RAMAS = [
   { d: 'M92 204 C 76 196, 58 184, 46 170', ancho: 9, copo: { x: 42, y: 156, s: 0.52 } },
@@ -140,13 +199,32 @@ function ArbolGrande({ ramas, arriba, flores }: { ramas: number; arriba: number;
       {lista.map((r, i) => (
         <Path key={i} d={r.d} stroke={ARBOL_COLOR.corteza} strokeWidth={r.ancho} fill="none" strokeLinecap="round" />
       ))}
+      {/* Brillo a lo largo de cada rama: se ven redondas, no planas */}
+      {lista.map((r, i) => (
+        <Path key={`b${i}`} d={r.d} stroke={ARBOL_COLOR.cortezaLuz} strokeWidth={Math.max(2, r.ancho * 0.3)} fill="none" strokeLinecap="round" opacity={0.6} />
+      ))}
       <Path
         d="M60 253 Q 80 251 84 236 C 88 210, 91 160, 95 92 L 105 92 C 109 160, 112 210, 116 236 Q 120 251 140 253 Z"
         fill={ARBOL_COLOR.corteza}
       />
       <Path d="M90 249 Q 100 260 110 249 Z" fill={ARBOL_COLOR.corteza} />
+      {/* Lado en sombra */}
+      <Path d="M116 236 C 112 210, 109 160, 105 92 L 102 92 C 105 160, 107 210, 109 236 Q 112 248 124 252 L 140 253 Q 120 251 116 236 Z" fill={ARBOL_COLOR.cortezaSombra} opacity={0.5} />
+      {/* Vetas */}
+      <Path d="M90 240 C 92 200, 94 150, 97 100" stroke={ARBOL_COLOR.cortezaSombra} strokeWidth={1.2} fill="none" strokeDasharray="22 8 30 10" opacity={0.6} />
+      <Path d="M104 242 C 104 204, 103 150, 102 104" stroke={ARBOL_COLOR.cortezaSombra} strokeWidth={1.2} fill="none" strokeDasharray="16 10 26 8" opacity={0.6} />
       <Path d="M96 244 C 97 214, 97 170, 98 112" stroke={ARBOL_COLOR.cortezaLuz} strokeWidth={3} fill="none" strokeLinecap="round" />
-      <Ellipse cx={107} cy={210} rx={3} ry={8} fill={ARBOL_COLOR.cortezaLuz} opacity={0.7} />
+      {/* Raíces marcadas */}
+      <Path d="M88 244 Q 76 250 64 252 M112 244 Q 124 250 136 252" stroke={ARBOL_COLOR.cortezaSombra} strokeWidth={1.2} fill="none" strokeLinecap="round" opacity={0.6} />
+      <Parche x={91} y={226} s={0.7} />
+      <Parche x={106} y={196} s={0.55} />
+      <Parche x={95} y={166} s={0.5} />
+      <Parche x={103} y={132} s={0.42} />
+      <Nudo x={107} y={222} s={0.6} />
+      <Escama x={101} y={238} s={0.7} />
+      <Escama x={92} y={196} s={0.6} />
+      <Escama x={104} y={156} s={0.55} />
+      <Escama x={97} y={116} s={0.5} />
       {lista.map((r, i) => (
         <Copo key={i} x={r.copo.x} y={r.copo.y} s={r.copo.s} flores={flores} />
       ))}

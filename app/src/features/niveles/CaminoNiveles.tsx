@@ -18,7 +18,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, Ellipse, G, Path, Rect, Text as SvgText } from 'react-native-svg';
 import type { NivelConEstado } from '../../core/progress/niveles';
-import { ARBOL_COLOR, Copo, Racimo } from '../../ui/arbol/dibujo';
+import { ARBOL_COLOR, Copo, Escama, Nudo, Parche, Racimo } from '../../ui/arbol/dibujo';
 import { PikoMascota } from '../../ui/piko/PikoMascota';
 import { color, fuente } from '../../ui/tokens';
 
@@ -65,6 +65,42 @@ function lugarDePiko(g: Geometria, numero: number) {
 
 // ------------------------------------------------------------------- dibujos
 
+/** Cortes de las vetas: segmentos de largo distinto, como la corteza real. */
+const VETAS = ['40 14 70 18', '26 20 50 12', '60 16 30 22', '34 12 48 26', '50 22 28 14'];
+/** Dónde se pela la corteza, de abajo (t = 0) hacia arriba (t = 1). */
+const PARCHES = [
+  { t: 0.05, o: -16, s: 1.1 },
+  { t: 0.14, o: 14, s: 0.9 },
+  { t: 0.25, o: -6, s: 0.8 },
+  { t: 0.37, o: 10, s: 0.9 },
+  { t: 0.48, o: -12, s: 0.8 },
+  { t: 0.6, o: 6, s: 0.8 },
+  { t: 0.71, o: -6, s: 0.8 },
+  { t: 0.83, o: 6, s: 0.7 },
+  { t: 0.93, o: -3, s: 0.6 },
+];
+/** Escamas sueltas entre los parches. */
+const ESCAMAS = Array.from({ length: 16 }, (_, k) => ({
+  t: 0.03 + k * 0.06,
+  o: [8, -14, 16, -4, 12, -18, 2, -10][k % 8] as number,
+}));
+const NUDOS = [
+  { t: 0.31, o: 12, s: 1 },
+  { t: 0.66, o: -10, s: 0.8 },
+];
+
+/** Punto sobre el eje del tronco, que tiene una curva suave. */
+function enTronco(cx: number, base: number, tope: number, t: number) {
+  const p0 = { x: cx, y: base - 26 };
+  const p1 = { x: cx - 11, y: base - 140 };
+  const p2 = { x: cx + 10, y: tope + 140 };
+  const p3 = { x: cx, y: tope };
+  const u = 1 - t;
+  const b = (a: number, b1: number, c: number, d: number) =>
+    u * u * u * a + 3 * u * u * t * b1 + 3 * u * t * t * c + t * t * t * d;
+  return { x: b(p0.x, p1.x, p2.x, p3.x), y: b(p0.y, p1.y, p2.y, p3.y) };
+}
+
 function ArbolDelCamino({ g }: { g: Geometria }) {
   const cx = g.ancho / 2;
   const base = g.alto - 30;
@@ -78,19 +114,22 @@ function ArbolDelCamino({ g }: { g: Geometria }) {
       <Ellipse cx={cx} cy={g.alto - 22} rx={g.ancho * 0.62} ry={30} fill={color.verdePasto} />
       <Ellipse cx={cx} cy={g.alto - 26} rx={g.ancho * 0.4} ry={16} fill={color.verdeHoja} opacity={0.45} />
 
-      {/* Ramas: una por nivel, saliendo del tronco hacia su copo */}
+      {/* Ramas: una por nivel, saliendo del tronco hacia su copo. Cada una con
+          su sombra abajo y un brillo arriba, para que se vean redondas. */}
       {ramas.map((n, i) => {
         const afuera = n.lado === 'izq' ? -1 : 1;
         const finX = n.x - afuera * 8;
+        const d = `M${cx} ${n.y + 100} C ${cx + afuera * 40} ${n.y + 94}, ${finX} ${n.y + 84}, ${finX} ${n.y + 40}`;
         return (
-          <Path
-            key={`r${i}`}
-            d={`M${cx} ${n.y + 100} C ${cx + afuera * 40} ${n.y + 94}, ${finX} ${n.y + 84}, ${finX} ${n.y + 40}`}
-            stroke={ARBOL_COLOR.corteza}
-            strokeWidth={16}
-            strokeLinecap="round"
-            fill="none"
-          />
+          <G key={`r${i}`}>
+            <G y={3}>
+              <Path d={d} stroke={ARBOL_COLOR.cortezaSombra} strokeWidth={16} strokeLinecap="round" fill="none" />
+            </G>
+            <Path d={d} stroke={ARBOL_COLOR.corteza} strokeWidth={15} strokeLinecap="round" fill="none" />
+            <G y={-3}>
+              <Path d={d} stroke={ARBOL_COLOR.cortezaLuz} strokeWidth={4} strokeLinecap="round" fill="none" opacity={0.7} />
+            </G>
+          </G>
         );
       })}
 
@@ -118,7 +157,26 @@ function ArbolDelCamino({ g }: { g: Geometria }) {
         fill={ARBOL_COLOR.corteza}
       />
       <Path d={`M${cx - 18} ${base - 6} Q ${cx} ${base + 14} ${cx + 18} ${base - 6} Z`} fill={ARBOL_COLOR.corteza} />
-      {/* Corteza lisa que se pela: las manchas claras del madroño */}
+      {/* Lado en sombra: el tronco se ve redondo */}
+      <Path
+        d={`M${cx + 34} ${base - 26} C ${cx + 18} ${base - 140}, ${cx + 26} ${tope + 140}, ${cx + 16} ${tope} L ${cx + 7} ${tope} C ${cx + 16} ${tope + 140}, ${cx + 6} ${base - 140}, ${cx + 18} ${base - 26} Q ${cx + 30} ${base - 4} ${cx + 44} ${base + 4} L ${cx + 66} ${base + 4} Q ${cx + 38} ${base - 2} ${cx + 34} ${base - 26} Z`}
+        fill={ARBOL_COLOR.cortezaSombra}
+        opacity={0.5}
+      />
+      {/* Vetas finas que siguen la curva del tronco */}
+      {[-22, -12, 0, 12, 22].map((o, k) => (
+        <Path
+          key={`v${k}`}
+          d={`M${cx + o} ${base - 24} C ${cx - 11 + o * 0.9} ${base - 140}, ${cx + 10 + o * 0.6} ${tope + 140}, ${cx + o * 0.45} ${tope + 6}`}
+          stroke={ARBOL_COLOR.cortezaSombra}
+          strokeWidth={1.6}
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={VETAS[k % VETAS.length]}
+          opacity={0.55}
+        />
+      ))}
+      {/* Brillo del lado de la luz */}
       <Path
         d={`M${cx - 8} ${base - 20} C ${cx - 14} ${base - 160}, ${cx + 6} ${tope + 120}, ${cx - 2} ${tope + 20}`}
         stroke={ARBOL_COLOR.cortezaLuz}
@@ -126,8 +184,28 @@ function ArbolDelCamino({ g }: { g: Geometria }) {
         strokeLinecap="round"
         fill="none"
       />
-      <Ellipse cx={cx + 12} cy={base - 60} rx={5} ry={14} fill={ARBOL_COLOR.cortezaLuz} opacity={0.7} />
-      <Ellipse cx={cx + 7} cy={(base + tope) / 2} rx={3} ry={10} fill={ARBOL_COLOR.cortezaLuz} opacity={0.6} />
+      {/* Raíces marcadas */}
+      <Path
+        d={`M${cx - 22} ${base - 10} Q ${cx - 40} ${base - 2} ${cx - 58} ${base + 2} M${cx + 22} ${base - 10} Q ${cx + 40} ${base - 2} ${cx + 58} ${base + 2} M${cx + 2} ${base - 30} L ${cx} ${base + 6}`}
+        stroke={ARBOL_COLOR.cortezaSombra}
+        strokeWidth={1.8}
+        strokeLinecap="round"
+        fill="none"
+        opacity={0.6}
+      />
+      {/* La corteza que se pela, y algún nudo */}
+      {PARCHES.map((p, k) => {
+        const punto = enTronco(cx, base, tope, p.t);
+        return <Parche key={`p${k}`} x={punto.x + p.o * (1 - p.t * 0.5)} y={punto.y} s={p.s * (1 - p.t * 0.45)} />;
+      })}
+      {ESCAMAS.map((p, k) => {
+        const punto = enTronco(cx, base, tope, p.t);
+        return <Escama key={`e${k}`} x={punto.x + p.o * (1 - p.t * 0.5)} y={punto.y} s={1 - p.t * 0.4} />;
+      })}
+      {NUDOS.map((p, k) => {
+        const punto = enTronco(cx, base, tope, p.t);
+        return <Nudo key={`n${k}`} x={punto.x + p.o} y={punto.y} s={p.s} />;
+      })}
 
       {/* Un copo de hojas por rama, con el nido metido arriba */}
       {g.nodos.map((n, i) => (
