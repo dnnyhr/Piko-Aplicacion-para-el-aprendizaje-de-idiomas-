@@ -1,5 +1,5 @@
 /*
- * Las páginas interiores (diccionario, probar, docentes, aportá). La barra y
+ * Las páginas interiores (diccionario, reglas, probar, docentes, aportá). La barra y
  * el pie están en `nav.css`; la portada conserva sus propios estilos.
  *
  * Mismo lenguaje que la portada: el paisaje de Nicaragua en el encabezado,
@@ -31,6 +31,7 @@
   --acento-suave:#EEF6DC;
 }
 .pagina[data-pagina="diccionario"]{--acento:var(--verde-pasto); --acento-suave:#EEF6DC}
+.pagina[data-pagina="reglas"]{--acento:var(--lila); --acento-suave:#EEE9F7}
 .pagina[data-pagina="probar"]{--acento:var(--cielo); --acento-suave:#E2F4FE}
 .pagina[data-pagina="docentes"]{--acento:var(--pico); --acento-suave:#FDF1D9}
 .pagina[data-pagina="aporta"]{--acento:var(--copete); --acento-suave:#FDE9DA}

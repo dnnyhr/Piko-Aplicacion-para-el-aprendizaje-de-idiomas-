@@ -22,6 +22,7 @@ const SALIDA = path.join(WEB, 'assets', 'og');
 const PAGINAS = [
   { id: 'inicio', etiqueta: 'Hackathon Nicaragua 2026', titulo: 'Salvemos nuestras lenguas haciéndolas divertidas de aprender', bajada: 'Miskito, mayangna, rama, garífuna e inglés en escuelas rurales. Sin internet.', ruta: '', color: '#97C137' },
   { id: 'diccionario', etiqueta: 'Diccionario', titulo: 'Miskitu ↔ español', bajada: '{entradas} palabras y frases, cada una con su fuente: hablantes de Raiti y diccionarios publicados.', ruta: 'diccionario/', color: '#60C5FA' },
+  { id: 'reglas', etiqueta: 'Reglas', titulo: 'Cómo funciona el miskito', bajada: 'Regla por regla, con ejemplos de hablantes de Raiti y de diccionarios publicados.', ruta: 'reglas/', color: '#9C88C9' },
   { id: 'probar', etiqueta: 'Probar Piko', titulo: 'Practicá ahora, sin instalar nada', bajada: 'La misma app del aula, abierta en el navegador.', ruta: 'probar/', color: '#E8A429' },
   { id: 'docentes', etiqueta: 'Para docentes', titulo: 'Una clase con Piko, sin internet', bajada: 'Paso a paso, y el miskito en 10 ideas para acompañarla.', ruta: 'docentes/', color: '#E97927' },
   { id: 'aporta', etiqueta: 'Aportá tu lengua', titulo: 'Piko aprende de quienes hablan', bajada: '¿Hablás miskito, mayangna, rama o garífuna? Con un teléfono alcanza.', ruta: 'aporta/', color: '#61A66B' },

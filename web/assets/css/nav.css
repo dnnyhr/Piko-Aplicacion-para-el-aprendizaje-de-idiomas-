@@ -40,6 +40,7 @@
 .nav__enlace:focus-visible{outline:3px solid var(--pico); outline-offset:2px}
 /* Cada sección con su color, como las plumas de Piko. */
 .nav__enlace--diccionario svg{color:var(--verde-pasto)}
+.nav__enlace--reglas svg{color:#9C88C9}
 .nav__enlace--probar svg{color:var(--cielo)}
 .nav__enlace--docentes svg{color:var(--pico)}
 .nav__enlace--aporta svg{color:var(--copete)}

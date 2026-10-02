@@ -14,6 +14,8 @@
       '<path d="M12 3 2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/>',
     diccionario:
       '<path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3zm0 16a1 1 0 0 0 0 2h12v-2H6zm2-12v2h8V6H8zm0 4v2h6v-2H8z"/>',
+    reglas:
+      '<path d="M5 3h11l4 4v14H5V3zm2 2v14h11V8h-3V5H7zm2 5h7v2H9v-2zm0 4h7v2H9v-2zM9 6h4v2H9V6z"/>',
     probar:
       '<path d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 3v13h10V5H7zm3 3.5 5 3-5 3v-6z"/>',
     docentes:
@@ -25,6 +27,7 @@
   var PAGINAS = [
     { id: "inicio", texto: "Inicio", ruta: "" },
     { id: "diccionario", texto: "Diccionario", ruta: "diccionario/" },
+    { id: "reglas", texto: "Reglas", ruta: "reglas/" },
     { id: "probar", texto: "Probar Piko", ruta: "probar/" },
     { id: "docentes", texto: "Para docentes", ruta: "docentes/" },
     { id: "aporta", texto: "Aportá tu lengua", ruta: "aporta/" }

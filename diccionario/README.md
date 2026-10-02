@@ -23,6 +23,7 @@ diccionario/
 │   ├── voz.ts                prepara cada palabra para la voz sintética
 │   ├── interfaz.ts           la planilla de traducción de la interfaz
 │   ├── web.ts                los datos del sitio: web/datos/ (con las variantes), la lista del diccionario y el sitemap
+│   ├── reglas.ts             la página de reglas del sitio: las reglas sólidas de gramatica.md, en HTML
 │   └── verificar.ts          npm run validate:diccionario: de la fuente al ejercicio
 ├── ingles/
 │   ├── fuentes.json · corpus.csv · lexico.json    escrito y revisado por el equipo
@@ -41,12 +42,12 @@ diccionario/
 | Lengua | Versión | Fuentes | Léxico | Reglas | Ejercicios |
 |---|---|---|---|---|---|
 | Inglés (`eng`) | 1.0 | El equipo | 91 entradas | — | 6 paquetes, 43 ítems |
-| Miskito (`miq`) | 0.4 | 2 hablantes (Raiti, Río Coco) y dos diccionarios publicados (Bilwi) | 269 entradas, 18 por revisar, 60 dichas por las dos personas | 48 (24 A · 17 B · 6 C · 1 mixta) | 19 paquetes, 167 ítems (28 de escucha) |
+| Miskito (`miq`) | 0.6 | 2 hablantes (Raiti, Río Coco) y dos diccionarios publicados (Bilwi) | 408 entradas, 18 por revisar, 60 dichas por las dos personas | 57 (40 A · 15 B · 2 C) | 19 paquetes, 167 ítems (28 de escucha) |
 | Mayangna (`sum`) | — | — | — | — | — |
 | Rama (`rma`) | — | — | — | — | — |
 | Garífuna (`cab`) | — | — | — | — | — |
 
-Lo principal del miskito, en [`miskito/gramatica.md`](miskito/gramatica.md#lo-principal-en-diez-líneas).
+Lo principal del miskito, en [`miskito/gramatica.md`](miskito/gramatica.md#lo-principal-en-once-líneas).
 
 ## Cuatro capas, y por qué no se mezclan
 
@@ -204,3 +205,4 @@ Una obra publicada respalda reglas y formas, pero no cuenta como un hablante: no
 | miskito 0.3 | 2026-10-02 | Diccionario de Scott Lackwood (2006) como respaldo publicado: pasado, futuro, negación, plural, pregunta con *ki*; *bara* es «ahí», *kaya* es «vamos», la vocal larga distingue palabras (*kati* / *kâti*) | 8 comprobables: 6,5 acertadas · acumulado 9 de 11 |
 | miskito 0.4 | 2026-10-02 | Diccionario de Matamoros (1996): *nina* (nombre) y *kikaia* (reír) confirmados; *sangni* también es verde; la familia y el cuerpo se citan con dueño; variantes entre Raiti y Bilwi; *iris* y *yapta* a revisión | 2 comprobables: 1,5 acertadas · acumulado 10,5 de 13 |
 | miskito 0.5 | 2026-10-02 | Ejercicios de escucha con la voz en español, para mientras se consiguen grabaciones (decisión 16); `voz.ts` prepara cada palabra; regla S9 (acento inicial); *mamiki* y *papiki* en «Mío y tuyo» | — |
+| miskito 0.6 | 2026-10-02 | La parte Miskitu–Miskitu de Matamoros: 98 páginas escaneadas, leídas con OCR (1.174 entradas, 1.149 ejemplos con traducción) y cotejadas a ojo. Reglas nuevas M16–M20 y O13–O16 (verbos en pareja, *ai-*/*mai-*, poder, verbos de dos piezas, -ka, si/porque/para, comparar, «lo que…», «estar haciendo»); M13 (futuro) y O9 (número) corregidas; 139 palabras nuevas en estado `publicada` | 3 comprobables: 2 acertadas · acumulado 12,5 de 16 |

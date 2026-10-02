@@ -1,7 +1,7 @@
 {
   "$comentario": "Diccionario miskito de Piko. Ver diccionario/README.md. «registrado» es lo que escribió la persona, tal cual; «forma» es la forma de trabajo. Las entradas con «revisar» no se usan en ejercicios.",
   "lengua": "miq",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "actualizado": "2026-10-02",
   "entradas": [
     {
@@ -2869,13 +2869,15 @@
       "registrado": [
         "ai"
       ],
-      "es": "(pronombre; ver M11)",
+      "es": "me, se; su (ver M17 y M4)",
       "categoria": "particula",
       "tema": "gramatica",
       "de": "frase.aporte_abuela_coco",
-      "revisar": "Aparece en «ai kuku ka» (su coco) y dentro de «aidauksa» (tengo hambre). ¿Es «me», «su» o las dos cosas?",
+      "revisar": "Según Matamoros, delante del verbo es «me» o «se» (aiwiram, me dijiste; aimakupaia, inclinarse) y con -ka es «su» (ai papika). Falta confirmarlo con hablantes de Raiti: ¿«Plun aidauksa» es «la comida me hace»?",
       "reglas": [
-        "M11"
+        "M4",
+        "M11",
+        "M17"
       ],
       "fuentes": [
         "raiti-2026-09-28"
@@ -4702,7 +4704,7 @@
         "origen": "gold",
         "confianza": "B"
       },
-      "notas": "La predicción de la v0.2 era «lalah»: falló para «oro». «lalah» puede seguir siendo «dinero».",
+      "notas": "La predicción de la v0.2 era «lalah»: falló para «oro». «lalah» es «dinero» (Matamoros, M9).",
       "reglas": [
         "L1",
         "M9"
@@ -5422,6 +5424,2339 @@
       },
       "reglas": [
         "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "daiwan",
+      "forma": "daiwan",
+      "registrado": [
+        "daiwan"
+      ],
+      "es": "animal",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kakaras",
+      "forma": "kakaras",
+      "registrado": [
+        "kakaras"
+      ],
+      "es": "cucaracha",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "klukum",
+      "forma": "klukum",
+      "registrado": [
+        "klukum"
+      ],
+      "es": "pato",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "matis",
+      "forma": "matis",
+      "registrado": [
+        "matis"
+      ],
+      "es": "rata, ratón",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "papu",
+      "forma": "papu",
+      "registrado": [
+        "papu"
+      ],
+      "es": "hormiga",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "pikpik",
+      "forma": "pikpik",
+      "registrado": [
+        "pikpik"
+      ],
+      "es": "rana",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "pulhpul",
+      "forma": "pulhpul",
+      "registrado": [
+        "pulhpul"
+      ],
+      "es": "mariposa",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "sula",
+      "forma": "sula",
+      "registrado": [
+        "sula"
+      ],
+      "es": "venado",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "bangbang",
+      "forma": "bangbang",
+      "registrado": [
+        "bangbang"
+      ],
+      "es": "conejo",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tilba",
+      "forma": "tilba",
+      "registrado": [
+        "tilba"
+      ],
+      "es": "danto",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "waihru",
+      "forma": "waihru",
+      "registrado": [
+        "waihru"
+      ],
+      "es": "cangrejo",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "usus",
+      "forma": "usus",
+      "registrado": [
+        "usus"
+      ],
+      "es": "zopilote",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "wasi",
+      "forma": "wasi",
+      "registrado": [
+        "wasi"
+      ],
+      "es": "camarón",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "yakal",
+      "forma": "yakal",
+      "registrado": [
+        "yakal"
+      ],
+      "es": "águila",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "ulu",
+      "forma": "ulu",
+      "registrado": [
+        "ulu"
+      ],
+      "es": "avispa",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kukas",
+      "forma": "kukas",
+      "registrado": [
+        "kukas"
+      ],
+      "es": "mosca",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "ruskika",
+      "forma": "ruskika",
+      "registrado": [
+        "ruskika"
+      ],
+      "es": "mono araña",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tairi",
+      "forma": "tairi",
+      "registrado": [
+        "tairi"
+      ],
+      "es": "mosquito",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kisu",
+      "forma": "kisu",
+      "registrado": [
+        "kisu"
+      ],
+      "es": "queso",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "prestamo": {
+        "de": "español",
+        "origen": "queso",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "nasma",
+      "forma": "nasma",
+      "registrado": [
+        "nasma"
+      ],
+      "es": "miel",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "mangu",
+      "forma": "mangu",
+      "registrado": [
+        "mangu"
+      ],
+      "es": "mango",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "prestamo": {
+        "de": "español",
+        "origen": "mango",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "pihtu",
+      "forma": "pihtu",
+      "registrado": [
+        "pihtu"
+      ],
+      "es": "piña",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "sikia",
+      "forma": "sikia",
+      "registrado": [
+        "sikia"
+      ],
+      "es": "aguacate",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "rayapisa",
+      "forma": "rayapisa",
+      "registrado": [
+        "rayapisa"
+      ],
+      "es": "sandía",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kayu",
+      "forma": "kayu",
+      "registrado": [
+        "kayu"
+      ],
+      "es": "caña de azúcar",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kuma",
+      "forma": "kuma",
+      "registrado": [
+        "kuma"
+      ],
+      "es": "chile",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "iwa",
+      "forma": "iwa",
+      "registrado": [
+        "iwa"
+      ],
+      "es": "ayote, calabaza",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "inian",
+      "forma": "inian",
+      "registrado": [
+        "inian"
+      ],
+      "es": "cebolla",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "onion",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "ma",
+      "forma": "ma",
+      "registrado": [
+        "ma"
+      ],
+      "es": "fruta (de una planta)",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "notas": "La fruta de un árbol o planta: «dus ma», fruta de árbol.",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kakau",
+      "forma": "kakau",
+      "registrado": [
+        "kakau"
+      ],
+      "es": "cacao",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "prestamo": {
+        "de": "español",
+        "origen": "cacao",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "windar",
+      "forma": "windar",
+      "registrado": [
+        "windar"
+      ],
+      "es": "ventana",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "window",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tibil",
+      "forma": "tibil",
+      "registrado": [
+        "tibil"
+      ],
+      "es": "mesa",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "table",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "sir",
+      "forma": "sir",
+      "registrado": [
+        "sir"
+      ],
+      "es": "silla",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "chair",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "plit",
+      "forma": "plît",
+      "registrado": [
+        "plît"
+      ],
+      "es": "plato",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "plate",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kap",
+      "forma": "kap",
+      "registrado": [
+        "kap"
+      ],
+      "es": "taza",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "cup",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "ispun",
+      "forma": "ispun",
+      "registrado": [
+        "ispun"
+      ],
+      "es": "cuchara",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "spoon",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "brum",
+      "forma": "brum",
+      "registrado": [
+        "brum"
+      ],
+      "es": "escoba",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "broom",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tilar",
+      "forma": "tilar",
+      "registrado": [
+        "tilar"
+      ],
+      "es": "almohada",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "notas": "Matamoros también la escribe «pilar».",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "bukit",
+      "forma": "bukit",
+      "registrado": [
+        "bukit"
+      ],
+      "es": "balde",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "bucket",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "lamp",
+      "forma": "lamp",
+      "registrado": [
+        "lamp"
+      ],
+      "es": "lámpara",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "lamp",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "banhta",
+      "forma": "banhta",
+      "registrado": [
+        "banhta"
+      ],
+      "es": "techo",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "notas": "Matamoros también la escribe «bahna».",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "rum",
+      "forma": "rum",
+      "registrado": [
+        "rum"
+      ],
+      "es": "cuarto",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "room",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "plur",
+      "forma": "plur",
+      "registrado": [
+        "plur"
+      ],
+      "es": "piso",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "floor",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "prak",
+      "forma": "prak",
+      "registrado": [
+        "prak"
+      ],
+      "es": "camisa",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "traus",
+      "forma": "traus",
+      "registrado": [
+        "traus"
+      ],
+      "es": "pantalón",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "trousers",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "sup",
+      "forma": "sup",
+      "registrado": [
+        "sup"
+      ],
+      "es": "jabón",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "soap",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tawil",
+      "forma": "tawil",
+      "registrado": [
+        "tawil"
+      ],
+      "es": "toalla",
+      "categoria": "sustantivo",
+      "tema": "casa",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "towel",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "awala",
+      "forma": "awala",
+      "registrado": [
+        "awala"
+      ],
+      "es": "río",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "notas": "Las encuestas de Raiti dicen «tikni». Matamoros también trae «tingni», riachuelo.",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kasbrika",
+      "forma": "kasbrika",
+      "registrado": [
+        "kasbrika"
+      ],
+      "es": "nube",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tangni",
+      "forma": "tangni",
+      "registrado": [
+        "tangni"
+      ],
+      "es": "flor",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "wahya",
+      "forma": "wahya",
+      "registrado": [
+        "wahya"
+      ],
+      "es": "hoja",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "auhya",
+      "forma": "auhya",
+      "registrado": [
+        "auhya"
+      ],
+      "es": "arena",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kipla",
+      "forma": "kipla",
+      "registrado": [
+        "kipla"
+      ],
+      "es": "peña, roca",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "alwani",
+      "forma": "alwani",
+      "registrado": [
+        "alwani"
+      ],
+      "es": "trueno",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "imyula",
+      "forma": "imyula",
+      "registrado": [
+        "imyula"
+      ],
+      "es": "relámpago",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "twi",
+      "forma": "twi",
+      "registrado": [
+        "twi"
+      ],
+      "es": "zacate",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "yabal",
+      "forma": "yabal",
+      "registrado": [
+        "yabal"
+      ],
+      "es": "camino",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "ais",
+      "forma": "ais",
+      "registrado": [
+        "ais"
+      ],
+      "es": "hielo",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "ice",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "karma",
+      "forma": "karma",
+      "registrado": [
+        "karma"
+      ],
+      "es": "garganta",
+      "categoria": "sustantivo",
+      "tema": "cuerpo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "lula",
+      "forma": "lula",
+      "registrado": [
+        "lula"
+      ],
+      "es": "rodilla",
+      "categoria": "sustantivo",
+      "tema": "cuerpo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "nana",
+      "forma": "nana",
+      "registrado": [
+        "nana"
+      ],
+      "es": "cuello",
+      "categoria": "sustantivo",
+      "tema": "cuerpo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "asmala",
+      "forma": "asmala",
+      "registrado": [
+        "asmala"
+      ],
+      "es": "uña",
+      "categoria": "sustantivo",
+      "tema": "cuerpo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "klahkla",
+      "forma": "klahkla",
+      "registrado": [
+        "klahkla"
+      ],
+      "es": "brazo",
+      "categoria": "sustantivo",
+      "tema": "cuerpo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "taya",
+      "forma": "taya",
+      "registrado": [
+        "taya"
+      ],
+      "es": "piel",
+      "categoria": "sustantivo",
+      "tema": "cuerpo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tala",
+      "forma": "tala",
+      "registrado": [
+        "tala"
+      ],
+      "es": "sangre",
+      "categoria": "sustantivo",
+      "tema": "cuerpo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "un",
+      "forma": "un",
+      "registrado": [
+        "un"
+      ],
+      "es": "labio",
+      "categoria": "sustantivo",
+      "tema": "cuerpo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "pahpaya",
+      "forma": "pahpaya",
+      "registrado": [
+        "pahpaya"
+      ],
+      "es": "hombro",
+      "categoria": "sustantivo",
+      "tema": "cuerpo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "biara",
+      "forma": "biara",
+      "registrado": [
+        "biara"
+      ],
+      "es": "vientre",
+      "categoria": "sustantivo",
+      "tema": "cuerpo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "klunghka",
+      "forma": "klunghka",
+      "registrado": [
+        "klunghka"
+      ],
+      "es": "estómago",
+      "categoria": "sustantivo",
+      "tema": "cuerpo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tara",
+      "forma": "tara",
+      "registrado": [
+        "tara"
+      ],
+      "es": "grande",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "sirpi",
+      "forma": "sirpi",
+      "registrado": [
+        "sirpi"
+      ],
+      "es": "pequeño",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kauhla",
+      "forma": "kauhla",
+      "registrado": [
+        "kauhla"
+      ],
+      "es": "frío",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "lapta",
+      "forma": "lapta",
+      "registrado": [
+        "lapta"
+      ],
+      "es": "caliente",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "yari",
+      "forma": "yari",
+      "registrado": [
+        "yari"
+      ],
+      "es": "largo",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "prahni",
+      "forma": "prahni",
+      "registrado": [
+        "prahni"
+      ],
+      "es": "corto",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "sari",
+      "forma": "sari",
+      "registrado": [
+        "sari"
+      ],
+      "es": "triste",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "taski",
+      "forma": "taski",
+      "registrado": [
+        "taski"
+      ],
+      "es": "sucio",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "klin",
+      "forma": "klîn",
+      "registrado": [
+        "klîn"
+      ],
+      "es": "limpio",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "clean",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "auhni",
+      "forma": "auhni",
+      "registrado": [
+        "auhni"
+      ],
+      "es": "sabroso",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "umpira",
+      "forma": "umpira",
+      "registrado": [
+        "umpira"
+      ],
+      "es": "pobre",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "ailal",
+      "forma": "ailal",
+      "registrado": [
+        "ailal"
+      ],
+      "es": "mucho, muchos",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "reglas": [
+        "M10"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "lilia",
+      "forma": "lilia",
+      "registrado": [
+        "lilia"
+      ],
+      "es": "alegría",
+      "categoria": "sustantivo",
+      "tema": "cualidades",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "balianta",
+      "forma": "balianta",
+      "registrado": [
+        "balianta"
+      ],
+      "es": "morado",
+      "categoria": "adjetivo",
+      "tema": "colores",
+      "notas": "Matamoros también la escribe «bahlianta».",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "blu",
+      "forma": "blû",
+      "registrado": [
+        "blû"
+      ],
+      "es": "azul",
+      "categoria": "adjetivo",
+      "tema": "colores",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "blue",
+        "confianza": "B"
+      },
+      "notas": "Préstamo del inglés; la palabra miskita para el azul es «sangni» (L6).",
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "inaia",
+      "forma": "inaia",
+      "registrado": [
+        "inaia"
+      ],
+      "es": "llorar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "plapaia",
+      "forma": "plapaia",
+      "registrado": [
+        "plapaia"
+      ],
+      "es": "correr",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "yawaia",
+      "forma": "yawaia",
+      "registrado": [
+        "yawaia"
+      ],
+      "es": "nadar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "iwaia",
+      "forma": "iwaia",
+      "registrado": [
+        "iwaia"
+      ],
+      "es": "sentarse; vivir",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "notas": "Matamoros la da como «sentarse»; las encuestas usan «iwisma» para «vivís».",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "dimaia",
+      "forma": "dimaia",
+      "registrado": [
+        "dimaia"
+      ],
+      "es": "entrar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "sakaia",
+      "forma": "sakaia",
+      "registrado": [
+        "sakaia"
+      ],
+      "es": "sacar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "plikaia",
+      "forma": "plikaia",
+      "registrado": [
+        "plikaia"
+      ],
+      "es": "buscar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "wiaia",
+      "forma": "wiaia",
+      "registrado": [
+        "wiaia"
+      ],
+      "es": "decir",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "yabaia",
+      "forma": "yabaia",
+      "registrado": [
+        "yabaia"
+      ],
+      "es": "dar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kalkaia",
+      "forma": "kalkaia",
+      "registrado": [
+        "kalkaia"
+      ],
+      "es": "romper",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M16",
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kalwaia",
+      "forma": "kalwaia",
+      "registrado": [
+        "kalwaia"
+      ],
+      "es": "romperse",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "notas": "Pareja de «kalkaia» (romper): -kaia, se lo hacés a algo; -waia, le pasa solo (M16).",
+      "reglas": [
+        "M16",
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "ilingkaia",
+      "forma": "ilingkaia",
+      "registrado": [
+        "ilingkaia"
+      ],
+      "es": "abrir",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M16",
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "ilingwaia",
+      "forma": "ilingwaia",
+      "registrado": [
+        "ilingwaia"
+      ],
+      "es": "abrirse",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "notas": "Pareja de «ilingkaia» (abrir): la puerta se abre sola (M16).",
+      "reglas": [
+        "M16",
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "prakaia",
+      "forma": "prakaia",
+      "registrado": [
+        "prakaia"
+      ],
+      "es": "cerrar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "sikbaia",
+      "forma": "sikbaia",
+      "registrado": [
+        "sikbaia"
+      ],
+      "es": "lavar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "pahbaia",
+      "forma": "pahbaia",
+      "registrado": [
+        "pahbaia"
+      ],
+      "es": "barrer",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "makaia",
+      "forma": "makaia",
+      "registrado": [
+        "makaia"
+      ],
+      "es": "construir",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "taukaia",
+      "forma": "taukaia",
+      "registrado": [
+        "taukaia"
+      ],
+      "es": "andar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "lukaia",
+      "forma": "lukaia",
+      "registrado": [
+        "lukaia"
+      ],
+      "es": "pensar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "bukaia",
+      "forma": "bukaia",
+      "registrado": [
+        "bukaia"
+      ],
+      "es": "levantar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M16",
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "buwaia",
+      "forma": "buwaia",
+      "registrado": [
+        "buwaia"
+      ],
+      "es": "levantarse",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "notas": "Pareja de «bukaia» (levantar algo) (M16).",
+      "reglas": [
+        "M16",
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tahbaia",
+      "forma": "tahbaia",
+      "registrado": [
+        "tahbaia"
+      ],
+      "es": "bañar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M17",
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "aihtabaia",
+      "forma": "aihtabaia",
+      "registrado": [
+        "aihtabaia"
+      ],
+      "es": "bañarse",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "notas": "«tahbaia» (bañar) con ai- delante: bañarse a uno mismo. La h cambia de lugar (M17, S3).",
+      "reglas": [
+        "M17",
+        "S3",
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "makupaia",
+      "forma": "makupaia",
+      "registrado": [
+        "makupaia"
+      ],
+      "es": "voltear",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M17",
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "aimakupaia",
+      "forma": "aimakupaia",
+      "registrado": [
+        "aimakupaia"
+      ],
+      "es": "inclinarse",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "notas": "«makupaia» (voltear) con ai- delante: voltearse uno, inclinarse (M17).",
+      "reglas": [
+        "M17",
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "atkaia",
+      "forma": "atkaia",
+      "registrado": [
+        "atkaia"
+      ],
+      "es": "comprar; vender",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "notas": "Matamoros da los dos sentidos: comprar y vender.",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "makabaia",
+      "forma": "makabaia",
+      "registrado": [
+        "makabaia"
+      ],
+      "es": "pedir",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "lawana",
+      "forma": "lawana",
+      "registrado": [
+        "lawana"
+      ],
+      "es": "canción",
+      "categoria": "sustantivo",
+      "tema": "escuela",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kisi",
+      "forma": "kisi",
+      "registrado": [
+        "kisi"
+      ],
+      "es": "cuento",
+      "categoria": "sustantivo",
+      "tema": "escuela",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "aiulbra",
+      "forma": "aiulbra",
+      "registrado": [
+        "aiulbra"
+      ],
+      "es": "escritor",
+      "categoria": "sustantivo",
+      "tema": "escuela",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "lan_daukaia",
+      "forma": "lan daukaia",
+      "registrado": [
+        "lan daukaia"
+      ],
+      "es": "enseñar",
+      "categoria": "verbo",
+      "tema": "escuela",
+      "notas": "«Hacer aprender»: lan (inglés learn) + daukaia. Aprender es «lan takaia» (M19).",
+      "reglas": [
+        "M19",
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "taim",
+      "forma": "taim",
+      "registrado": [
+        "taim"
+      ],
+      "es": "tiempo",
+      "categoria": "sustantivo",
+      "tema": "tiempo",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "time",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tihmia",
+      "forma": "tihmia",
+      "registrado": [
+        "tihmia"
+      ],
+      "es": "noche",
+      "categoria": "sustantivo",
+      "tema": "tiempo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "mundi",
+      "forma": "mundi",
+      "registrado": [
+        "mundi"
+      ],
+      "es": "lunes",
+      "categoria": "sustantivo",
+      "tema": "tiempo",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "Monday",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tiusdi",
+      "forma": "tiusdi",
+      "registrado": [
+        "tiusdi"
+      ],
+      "es": "martes",
+      "categoria": "sustantivo",
+      "tema": "tiempo",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "Tuesday",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "sandi",
+      "forma": "sandi",
+      "registrado": [
+        "sandi"
+      ],
+      "es": "domingo",
+      "categoria": "sustantivo",
+      "tema": "tiempo",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "Sunday",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "satadi",
+      "forma": "satadi",
+      "registrado": [
+        "satadi"
+      ],
+      "es": "sábado",
+      "categoria": "sustantivo",
+      "tema": "tiempo",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "Saturday",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "awar",
+      "forma": "awar",
+      "registrado": [
+        "awar"
+      ],
+      "es": "hora",
+      "categoria": "sustantivo",
+      "tema": "tiempo",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "hour",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "mula",
+      "forma": "mula",
+      "registrado": [
+        "mula"
+      ],
+      "es": "nieto, nieta",
+      "categoria": "sustantivo",
+      "tema": "familia",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "yamsi",
+      "forma": "yamsi",
+      "registrado": [
+        "yamsi"
+      ],
+      "es": "sobrino",
+      "categoria": "sustantivo",
+      "tema": "familia",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "rapia",
+      "forma": "rapia",
+      "registrado": [
+        "rapia"
+      ],
+      "es": "tío (hermano del papá)",
+      "categoria": "sustantivo",
+      "tema": "familia",
+      "notas": "El tío por parte del papá. El de la mamá es «tahti» (L7).",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "taihka",
+      "forma": "taihka",
+      "registrado": [
+        "taihka"
+      ],
+      "es": "tía (hermana del papá)",
+      "categoria": "sustantivo",
+      "tema": "familia",
+      "notas": "La tía por parte del papá.",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tapukra",
+      "forma": "tapukra",
+      "registrado": [
+        "tapukra"
+      ],
+      "es": "hijastro, hijastra",
+      "categoria": "sustantivo",
+      "tema": "familia",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "sip",
+      "forma": "sip",
+      "registrado": [
+        "sip"
+      ],
+      "es": "poder, posible (en «sip sa», se puede)",
+      "categoria": "particula",
+      "tema": "gramatica",
+      "notas": "«Ahi ba wal supka auhni daukaia sip sa.» — Con la almeja se puede preparar una sopa deliciosa. (Matamoros, p. 1).",
+      "reglas": [
+        "M18"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "sakuna",
+      "forma": "sakuna",
+      "registrado": [
+        "sakuna"
+      ],
+      "es": "pero",
+      "categoria": "particula",
+      "tema": "gramatica",
+      "notas": "«Aiwiram ba daukamna, sakuna taim brimna piuara.» — Haré lo que me dijiste, pero cuando tenga tiempo. (Matamoros, p. 75).",
+      "reglas": [
+        "O13",
+        "M13",
+        "M17"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kaka",
+      "forma": "kaka",
+      "registrado": [
+        "kaka"
+      ],
+      "es": "si (al final de la condición)",
+      "categoria": "particula",
+      "tema": "gramatica",
+      "notas": "«Asla wark takbia kaka, yawan purman lâka ba pura lubia.» — Si trabajamos juntos venceremos la miseria. (Matamoros, p. 70).",
+      "reglas": [
+        "O13"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "dukiara",
+      "forma": "dukiara",
+      "registrado": [
+        "dukiara"
+      ],
+      "es": "para (al final)",
+      "categoria": "posposicion",
+      "tema": "gramatica",
+      "notas": "«Kyambdara 500 córdobas kum atbans yabri waitla makaia dukiara.» — Le entregué un adelanto de 500 córdobas al carpintero para la construcción de mi casa. (Matamoros, p. 9).",
+      "reglas": [
+        "O13",
+        "M12"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "taka",
+      "forma": "taka",
+      "registrado": [
+        "taka"
+      ],
+      "es": "por (la causa, al final)",
+      "categoria": "posposicion",
+      "tema": "gramatica",
+      "notas": "«Karma latwan taka sip aiwanras.» — Por un dolor en la garganta, él no puede cantar. (Matamoros, p. 35).",
+      "reglas": [
+        "O13",
+        "M18"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "ninkara",
+      "forma": "ninkara",
+      "registrado": [
+        "ninkara"
+      ],
+      "es": "después de",
+      "categoria": "posposicion",
+      "tema": "gramatica",
+      "notas": "«King ba prubia ninkara luhpia ba kraun alkbia.» — Después de que el rey muera, el hijo tomará la corona. (Matamoros, p. 60).",
+      "reglas": [
+        "O13",
+        "M13"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kainara",
+      "forma": "kainara",
+      "registrado": [
+        "kainara"
+      ],
+      "es": "antes de (con el verbo en -ras)",
+      "categoria": "posposicion",
+      "tema": "gramatica",
+      "notas": "«Plun piras kainara bani wan mihta sikbaia.» — Lavar las manos antes de cada comida. (Matamoros, p. 77).",
+      "reglas": [
+        "O13",
+        "M14"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kau",
+      "forma": "kau",
+      "registrado": [
+        "kau"
+      ],
+      "es": "más (delante de la cualidad)",
+      "categoria": "adverbio",
+      "tema": "gramatica",
+      "notas": "«Naiwa kau bitar sna nahwala wal.» — Hoy estoy mucho mejor que ayer. (Matamoros, p. 17).",
+      "reglas": [
+        "O14"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "wina_gram",
+      "forma": "wina",
+      "registrado": [
+        "wina"
+      ],
+      "es": "de, desde",
+      "categoria": "posposicion",
+      "tema": "gramatica",
+      "notas": "«Liwanhta wina bukit aubaia.» — Jalar el balde en el pozo. (Matamoros, p. 10).",
+      "reglas": [
+        "O2"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "bilara",
+      "forma": "bilara",
+      "registrado": [
+        "bilara"
+      ],
+      "es": "dentro de",
+      "categoria": "posposicion",
+      "tema": "gramatica",
+      "notas": "«Tuktan ba utla bilara kwasi taukisa.» — El niño anda gateando en la sala de la casa. (Matamoros, p. 89).",
+      "reglas": [
+        "O2",
+        "O16"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "baku",
+      "forma": "baku",
+      "registrado": [
+        "baku"
+      ],
+      "es": "como",
+      "categoria": "posposicion",
+      "tema": "gramatica",
+      "notas": "«Papikam luki ba baku man sim lukisma.» — Tú piensas como piensa tu padre. (Matamoros, p. 13).",
+      "reglas": [
+        "O13",
+        "M20"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "apu",
+      "forma": "apu",
+      "registrado": [
+        "apu"
+      ],
+      "es": "no hay, no tiene",
+      "categoria": "particula",
+      "tema": "gramatica",
+      "notas": "«Upla tatumra ba pana apu.» — La persona envidiosa no tiene amigos. (Matamoros, p. 85).",
+      "reglas": [
+        "M14"
       ],
       "fuentes": [
         "matamoros-1996"
