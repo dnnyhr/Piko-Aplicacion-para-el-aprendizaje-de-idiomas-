@@ -2,20 +2,21 @@
  * El camino de niveles, dibujado sobre un madroño.
  *
  * El tronco sube por el medio y cada nivel es una rama, alternando de un lado
- * al otro, con un tronquito cortado en la punta para pararse: el 1 abajo,
- * cerca del suelo, y el último arriba, en la copa. Los superados llevan sus
- * estrellas, los que faltan tienen candado, y Piko espera en el que toca.
+ * al otro, con un nidito entre las hojas: el 1 abajo, cerca del suelo, y el
+ * último arriba, en la copa. En cada nido hay libros de idiomas: es lo que
+ * Piko va a aprender ahí. Los superados llevan sus estrellas, los que faltan
+ * tienen candado, y Piko espera en el que toca.
  *
  * Al volver de superar un nivel, Piko salta de su rama a la siguiente: esa
  * subida es la recompensa que se ve en el camino.
  *
  * El árbol es un único SVG estático; lo único que se anima es Piko y el
- * tronquito nuevo, con `transform` por el hilo nativo.
+ * nido nuevo, con `transform` por el hilo nativo.
  */
 
 import { useEffect, useMemo, useRef } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, Text, View } from 'react-native';
-import Svg, { Circle, Ellipse, G, Path, Rect } from 'react-native-svg';
+import Svg, { Circle, Ellipse, G, Path, Rect, Text as SvgText } from 'react-native-svg';
 import type { NivelConEstado } from '../../core/progress/niveles';
 import { ARBOL_COLOR, Racimo } from '../../ui/arbol/dibujo';
 import { PikoMascota } from '../../ui/piko/PikoMascota';
@@ -26,13 +27,13 @@ import { color, fuente } from '../../ui/tokens';
 const PASO = 150;
 const SUELO = 130;
 const COPA = 230;
-const NODO = { ancho: 92, alto: 76 } as const;
+const NODO = { ancho: 110, alto: 80 } as const;
 const ALTO_PIKO = 74;
 
 export interface Geometria {
   ancho: number;
   alto: number;
-  /** Centro del tronquito de cada nivel, por número (índice 0 = nivel 1). */
+  /** Centro del nido de cada nivel, por número (índice 0 = nivel 1). */
   nodos: { x: number; y: number; lado: 'izq' | 'der' }[];
 }
 
@@ -45,12 +46,12 @@ export function geometriaCamino(cantidad: number, ancho: number): Geometria {
   return { ancho, alto, nodos };
 }
 
-/** Dónde se para Piko en un nivel: al costado del número, del lado del tronco. */
+/** Dónde se para Piko en un nivel: en el borde del nido, del lado del tronco. */
 function lugarDePiko(g: Geometria, numero: number) {
   const n = g.nodos[Math.max(0, Math.min(g.nodos.length - 1, numero - 1))];
   if (!n) return { x: 0, y: 0 };
   const anchoPiko = ALTO_PIKO * (178 / 292);
-  const x = n.x + (n.lado === 'izq' ? 40 : -40) - anchoPiko / 2;
+  const x = n.x + (n.lado === 'izq' ? 46 : -46) - anchoPiko / 2;
   return { x, y: n.y - 2 - ALTO_PIKO };
 }
 
@@ -82,24 +83,34 @@ function ArbolDelCamino({ g }: { g: Geometria }) {
         );
       })}
 
-      {/* Ramas, detrás del tronco */}
+      {/* Ramas, detrás del tronco. Cada una llega por debajo de su nido y se
+          abre en dos ramitas que lo sostienen. */}
       {g.nodos.map((n, i) => {
         const desdeX = cx + (n.lado === 'izq' ? -10 : 10);
-        const hastaX = n.x + (n.lado === 'izq' ? 18 : -18);
         const afuera = n.lado === 'izq' ? -1 : 1;
+        const puntaX = n.x - afuera * 6;
+        const puntaY = n.y + 30;
         return (
           <G key={i}>
+            <Circle cx={n.x + afuera * 50} cy={n.y - 4} r={26} fill={ARBOL_COLOR.hojaHonda} />
+            <Circle cx={n.x - afuera * 30} cy={n.y - 22} r={18} fill={ARBOL_COLOR.hoja} />
+            <Circle cx={n.x + afuera * 26} cy={n.y - 30} r={16} fill={ARBOL_COLOR.hojaLuz} opacity={0.85} />
+            <Racimo x={n.x + afuera * 56} y={n.y - 10} r={5} />
             <Path
-              d={`M${desdeX} ${n.y + 46} C ${(desdeX + hastaX) / 2} ${n.y + 40}, ${hastaX} ${n.y + 34}, ${hastaX} ${n.y + 22}`}
+              d={`M${desdeX} ${n.y + 54} C ${(desdeX + puntaX) / 2} ${n.y + 50}, ${puntaX} ${n.y + 44}, ${puntaX} ${puntaY}`}
               stroke={ARBOL_COLOR.corteza}
               strokeWidth={14}
               strokeLinecap="round"
               fill="none"
             />
-            <Circle cx={n.x + afuera * 46} cy={n.y + 8} r={24} fill={ARBOL_COLOR.hojaHonda} />
-            <Circle cx={n.x + afuera * 34} cy={n.y - 20} r={17} fill={ARBOL_COLOR.hoja} />
-            <Circle cx={(cx + n.x) / 2} cy={n.y + 58} r={13} fill={ARBOL_COLOR.hoja} />
-            <Racimo x={n.x + afuera * 50} y={n.y + 2} r={5} />
+            <Path
+              d={`M${puntaX} ${puntaY} Q ${n.x - 26} ${n.y + 26}, ${n.x - 40} ${n.y + 12} M${puntaX} ${puntaY} Q ${n.x + 26} ${n.y + 26}, ${n.x + 40} ${n.y + 12}`}
+              stroke={ARBOL_COLOR.corteza}
+              strokeWidth={5}
+              strokeLinecap="round"
+              fill="none"
+            />
+            <Circle cx={(cx + n.x) / 2} cy={n.y + 64} r={13} fill={ARBOL_COLOR.hoja} />
           </G>
         );
       })}
@@ -149,17 +160,70 @@ function ArbolDelCamino({ g }: { g: Geometria }) {
   );
 }
 
-/** El tronquito cortado donde se para cada nivel, con sus anillos. */
-function Tronquito({ resaltado }: { resaltado: boolean }) {
+const LIBROS = {
+  vivos: ['#3AA8E0', '#D9452B', '#61A66B'],
+  apagados: ['#A9BCC8', '#C8A8A0', '#AFC2AA'],
+} as const;
+
+/**
+ * El nidito de cada nivel, tejido con ramitas, con tres libros de idiomas
+ * adentro. El de un nivel con candado tiene los libros apagados.
+ */
+function Nido({ resaltado, apagado }: { resaltado: boolean; apagado: boolean }) {
+  const [a, b, c] = apagado ? LIBROS.apagados : LIBROS.vivos;
   return (
-    <Svg width={NODO.ancho} height={NODO.alto} viewBox="0 0 92 76">
-      <Ellipse cx={46} cy={62} rx={40} ry={12} fill="#6E4520" />
-      <Rect x={6} y={30} width={80} height={32} fill={ARBOL_COLOR.tierra} />
-      <Path d="M20 36 L20 60 M40 38 L40 66 M64 36 L64 62" stroke="#6E4520" strokeWidth={2} strokeLinecap="round" />
-      <Ellipse cx={46} cy={30} rx={40} ry={15} fill="#D9A066" />
-      <Ellipse cx={46} cy={30} rx={28} ry={10} fill="none" stroke="#B07A44" strokeWidth={2} />
-      <Ellipse cx={46} cy={30} rx={14} ry={5} fill="none" stroke="#B07A44" strokeWidth={2} />
-      {resaltado && <Ellipse cx={46} cy={30} rx={43} ry={17.5} fill="none" stroke={color.verdePasto} strokeWidth={4} />}
+    <Svg width={NODO.ancho} height={NODO.alto} viewBox="0 0 110 80">
+      {resaltado && <Ellipse cx={55} cy={54} rx={55} ry={26} fill={color.verdePasto} opacity={0.45} />}
+
+      {/* El hueco del nido, por detrás de los libros */}
+      <Ellipse cx={55} cy={40} rx={50} ry={13} fill="#5A3818" />
+
+      {/* Libros de idiomas, parados y un poco inclinados */}
+      <G rotation={-14} origin="34, 52">
+        <Rect x={25} y={14} width={17} height={38} rx={2} fill={a} />
+        <Rect x={25} y={20} width={17} height={3} fill={color.blanco} opacity={0.7} />
+        <Rect x={25} y={42} width={17} height={3} fill={color.blanco} opacity={0.7} />
+      </G>
+      <Rect x={44} y={6} width={21} height={46} rx={2} fill={b} />
+      <Rect x={47} y={13} width={15} height={11} rx={1.5} fill="#FFFDF4" />
+      <SvgText x={54.5} y={21.5} fontSize={7} fontWeight="bold" fill={b} textAnchor="middle">
+        ABC
+      </SvgText>
+      <Rect x={44} y={44} width={21} height={3} fill={color.blanco} opacity={0.6} />
+      <G rotation={12} origin="74, 52">
+        <Rect x={67} y={16} width={16} height={36} rx={2} fill={c} />
+        <Rect x={67} y={22} width={16} height={3} fill={color.blanco} opacity={0.7} />
+        <Circle cx={75} cy={36} r={3.5} fill={color.blanco} opacity={0.7} />
+      </G>
+
+      {/* El frente del nido, tejido */}
+      <Path d="M4 38 C 20 52, 90 52, 106 38 C 104 62, 84 76, 55 76 C 26 76, 6 62, 4 38 Z" fill="#8A5A2B" />
+      <Path d="M9 46 C 34 60, 76 60, 101 46" stroke="#C48A52" strokeWidth={2.5} fill="none" strokeLinecap="round" />
+      <Path d="M12 54 C 36 68, 74 68, 98 54" stroke="#6E4520" strokeWidth={2.5} fill="none" strokeLinecap="round" />
+      <Path d="M20 64 C 40 74, 70 74, 90 64" stroke="#B07A44" strokeWidth={2} fill="none" strokeLinecap="round" />
+      <Path d="M22 50 L30 70 M46 54 L50 75 M66 54 L62 75 M88 50 L80 70" stroke="#6E4520" strokeWidth={1.6} strokeLinecap="round" opacity={0.6} />
+      <Path d="M4 38 C 20 52, 90 52, 106 38" stroke="#C48A52" strokeWidth={5} fill="none" strokeLinecap="round" />
+      {/* Ramitas sueltas */}
+      <Path d="M5 40 L-2 33 M104 39 L111 31 M18 68 L10 74 M92 68 L100 74" stroke="#8A5A2B" strokeWidth={2} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+/** Hojas delante del nido, para que quede metido entre las ramas. */
+function HojasDelante({ g }: { g: Geometria }) {
+  return (
+    <Svg width={g.ancho} height={g.alto} style={StyleSheet.absoluteFill} pointerEvents="none">
+      {g.nodos.map((n, i) => {
+        const afuera = n.lado === 'izq' ? -1 : 1;
+        return (
+          <G key={i}>
+            <Circle cx={n.x + afuera * 50} cy={n.y + 30} r={13} fill={ARBOL_COLOR.hoja} />
+            <Circle cx={n.x + afuera * 38} cy={n.y + 40} r={9} fill={ARBOL_COLOR.hojaLuz} />
+            <Circle cx={n.x - afuera * 46} cy={n.y + 36} r={8} fill={ARBOL_COLOR.hojaHonda} />
+            <Racimo x={n.x + afuera * 50} y={n.y + 28} r={4} />
+          </G>
+        );
+      })}
     </Svg>
   );
 }
@@ -234,7 +298,7 @@ export function CaminoNiveles({
         Animated.timing(trepa, { toValue: 1, duration: 1000, easing: Easing.inOut(Easing.cubic), useNativeDriver: true }),
         Animated.sequence([saltito, saltito, saltito]),
       ]),
-      // El tronquito nuevo se infla una vez: "este es el que sigue".
+      // El nido nuevo se infla una vez: "este es el que sigue".
       Animated.timing(festejo, { toValue: 1, duration: 180, useNativeDriver: true }),
       Animated.timing(festejo, { toValue: 0, duration: 260, easing: Easing.out(Easing.back(3)), useNativeDriver: true }),
     ]);
@@ -286,8 +350,10 @@ export function CaminoNiveles({
                 {bloqueado && <Candado />}
               </View>
               <View>
-                <Tronquito resaltado={n.estado === 'actual'} />
-                <Text style={[styles.numero, bloqueado && styles.numeroApagado]}>{n.numero}</Text>
+                <Nido resaltado={n.estado === 'actual'} apagado={bloqueado} />
+                <View style={[styles.placa, bloqueado && styles.placaApagada]}>
+                  <Text style={[styles.numero, bloqueado && styles.numeroApagado]}>{n.numero}</Text>
+                </View>
               </View>
               <Text style={[styles.titulo, bloqueado && styles.tituloApagado]} numberOfLines={1}>
                 {n.titulo}
@@ -296,6 +362,8 @@ export function CaminoNiveles({
           </Animated.View>
         );
       })}
+
+      <HojasDelante g={g} />
 
       <Animated.View
         pointerEvents="none"
@@ -321,23 +389,29 @@ const styles = StyleSheet.create({
   toque: { alignItems: 'center' },
   arriba: { height: 34, justifyContent: 'flex-end', alignItems: 'center' },
   estrellas: { flexDirection: 'row', alignItems: 'flex-end', gap: 1 },
-  numero: {
+  placa: {
     position: 'absolute',
-    top: 10,
-    left: 0,
-    right: 0,
-    textAlign: 'center',
+    left: NODO.ancho / 2 - 17,
+    top: 44,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: '#FFF6E6',
+    borderWidth: 3,
+    borderColor: '#D9A066',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  placaApagada: { backgroundColor: '#EFE7DA', borderColor: '#BFAE96' },
+  numero: {
     fontFamily: fuente.tituloFuerte,
-    fontSize: 28,
-    lineHeight: 34,
+    fontSize: 19,
+    lineHeight: 23,
     color: '#D9452B',
-    textShadowColor: color.blanco,
-    textShadowRadius: 3,
-    textShadowOffset: { width: 0, height: 1 },
   },
   numeroApagado: { color: '#8C7A66' },
   titulo: {
-    marginTop: -2,
+    marginTop: 2,
     fontFamily: fuente.titulo,
     fontSize: 13,
     color: color.verdeHondo,

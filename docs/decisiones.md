@@ -295,8 +295,9 @@ sintiera propio.
 **Decisión.** Dos caras del progreso, conectadas pero separadas:
 
 1. **El camino de niveles** (`src/core/progress/niveles.ts`). Cada paquete de
-   contenido es un nivel, en orden de dificultad, dibujado como un tronquito en
-   la punta de una rama de un madroño: el 1 abajo, el último en la copa. Se
+   contenido es un nivel, en orden de dificultad, dibujado como un nidito con
+   libros de idiomas entre las ramas de un madroño: el 1 abajo, el último en
+   la copa. Se
    supera terminando una lección de ese paquete, eso abre el siguiente, y Piko
    salta a esa rama. Cada nivel guarda sus mejores estrellas: 1 por terminar,
    2 con el 70 % o más, 3 si fue perfecta. Se puede repetir para mejorarlas.
