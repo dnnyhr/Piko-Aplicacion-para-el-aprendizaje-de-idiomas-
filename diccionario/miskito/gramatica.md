@@ -1,6 +1,6 @@
 # Miskito: patrones y reglas
 
-> **Versión 0.2** · 2 de octubre de 2026 · dos tandas de datos
+> **Versión 0.3** · 2 de octubre de 2026 · dos tandas de datos y un diccionario publicado
 
 **De dónde sale.** De dos personas de la misma comunidad, Raiti (Río Coco), las
 dos hablantes maternas, de dos generaciones distintas:
@@ -9,8 +9,14 @@ dos hablantes maternas, de dos generaciones distintas:
 |---|---|---|
 | `raiti-2026-09-28` | Teacher Smith, docente | 80 palabras, 15 frases, una oración libre |
 | `raiti-2026-09-30` | Tangni, estudiante de 18 años | 84 palabras, 15 frases, una presentación |
+| `lackwood-2006` | *Diccionario Bilingüe: Términos de Medicina Tradicional en Lengua Miskita*, Ernesto Scott Lackwood (URACCAN – IMTRADEC, Bilwi, 2006) | 88 entradas citadas como evidencia |
 
-Todo está en [`corpus.csv`](corpus.csv) tal cual lo escribieron.
+Todo está en [`corpus.csv`](corpus.csv) tal cual lo escribieron. Del diccionario
+publicado sólo se copiaron las entradas que sirven de evidencia, no la obra
+completa. Es de otra zona (Bilwi), lo recogió su autor con personas mayores y
+usa la ortografía escrita: infinitivos en *-aia* y circunflejo para las vocales
+largas. Respalda reglas, pero **no cuenta como un hablante más**: las entradas
+que sólo están ahí quedan en estado `publicada`.
 
 **Cómo se hizo.** Con el método de [`../metodologia.md`](../metodologia.md). Un
 modelo de razonamiento busca regularidades en el corpus, cada una se contrasta
@@ -82,6 +88,36 @@ todo desde el cinco. **Hipótesis (C):** son diferencias entre generaciones o
 entre registros (cómo se habla en la casa y cómo en la escuela). No es una
 diferencia de región, porque las dos son de Raiti. Hay que preguntarlo, no
 suponerlo.
+
+## Qué trajo el diccionario publicado (v0.3)
+
+**Las predicciones de la versión 0.2, contra el diccionario.** Se pudieron
+comprobar ocho:
+
+| # | Predicción | El diccionario dice | Resultado |
+|---|---|---|---|
+| 7 | tener · hacer · entrar = *briaya* · *daukaya* · *dimaya* | *briaia*, *daukaia*, *dimri* (entré), *dimwan* (entró) | ✅ acertó (escrito en -aia) |
+| 8 | enseñar = *smalkaya* | *Smalkaia* | ✅ acertó |
+| 9 | ¡Mirá! = *kaiks* | *Aman kaiks* (¡cuidado!), *Bilam kuaks* (¡abrí tu boca!) | ✅ acertó |
+| 10 | hombre · mujer = *waitna* · *mairin* | *Waitna*, *Mairin* | ✅ acertó |
+| 13 | un perro = *yul kum* (kum después) | *siknis kum* (una enfermedad), *plis kum* (un lugar) | ✅ acertó la regla |
+| 24 | los niños = *tuktan nani* (nani después) | *Una nani* (labios), *Kabu inskika nani* (mariscos) | ✅ acertó la regla |
+| 14 | ¿Tenés hambre? = *Plun mai dauksa?* | *¿Anira mai klahwisa?* (¿dónde te duele?) | ½ *mai* es «te»; falta la frase |
+| 16 | oro = *lalah* | *Gul* (del inglés *gold*) | ❌ falló |
+
+**Tasa de acierto: 6,5 de 8.** Sumada a la de la segunda tanda, **9 de 11**.
+
+**Lo que resolvió.**
+- ***bara* es «ahí»** (*Bara sa*: ahí está), y también aparece como «y». La
+  «hola» de la primera tanda sigue en revisión.
+- ***kaya* es «vamos»** (*Kaisa, kaia maka*: vamos, vámonos). En *Kaya skul ra*
+  no hay un verbo fuera de lugar, sino una palabra para invitar (O12).
+- ***dimisna* es «entro»**: *skul dimisna*, «entro a la escuela», es «estudio».
+- **La vocal larga cambia la palabra:** *kati* es luna; *kâti*, mes (S8).
+
+**Lo que la encuesta no podía dar.** El pasado (M12), el futuro (M13), la
+negación (M14), la terminación de quien hace algo (M15), la pregunta de sí o
+no con *ki* (O10) y el plural con *nani* (O11).
 
 ---
 
@@ -186,14 +222,19 @@ Tangni quedan como l (*lal*, *plun*, *walaya*, *almuk*).
 **Hipótesis.** Antes de *ai*, la l se puede pronunciar como y. Puede ser
 personal, de una generación o de la zona.
 
-### S8 · La vocal doble: una vocal larga — Confianza B
+### S8 · La vocal doble: una vocal larga — Confianza A
 
 **Evidencia.** Tangni escribe *lii* (agua) cuatro veces, siempre con la i
 doble. Teacher Smith escribe *li*. Algunas ortografías del miskito marcan las
 vocales largas; Tangni lo hace duplicando.
 
-**Para Piko.** Es un dato de pronunciación que el texto casi nunca muestra. Las
-grabaciones dirán si *li* tiene la i larga.
+**Confirmado por el diccionario publicado.** Escribe *Lî* (agua) con
+circunflejo, la misma i larga que Tangni marca duplicando. Y tiene un par que
+sólo se distingue por eso: *kati* (luna) y *kâti* (mes).
+
+**Para Piko.** La duración de la vocal distingue palabras, así que el robot
+tiene que aprenderla de grabaciones. Un niño que dice *kati* por *kâti* dijo
+otra palabra.
 
 ---
 
@@ -206,6 +247,9 @@ nueve que Tangni escribe igual, y dos nuevos de Tangni: *balaya* (venir) y
 *waya* (ir). Si se quita el -aya queda la raíz: *pi-*, *yap-*, *kaik-*,
 *bal-*, *w-*. Cuando la raíz termina en i aparece una y de puente:
 *pi-y-aya*.
+
+El diccionario de Scott Lackwood escribe -aia (*Kaikaia*, *Yapaia*,
+*Smalkaia*): es la misma terminación con otra ortografía.
 
 **Predicción acertada.** Venir es *balaya*: lo dijo Tangni.
 
@@ -265,7 +309,11 @@ de todos los verbos a la vez.
   ya termina en i, sólo se suma *ki*: *yapti* → *yaptiki*.
 - **Tu** lleva una m, en las dos personas, aunque en distinto lugar: *ninam*
   y *niman*. La m de «vos» es la misma de los verbos (-sma).
-- **Su** va entre *ai* y *ka*. Hay un solo ejemplo.
+- **Su** va entre *ai* y *ka*. En el diccionario publicado, *ai* aparece
+  delante de muchas partes del cuerpo: *ai bila* (su boca), *ai mihta* (su
+  mano).
+- **Tu** también al final: *Bilam kuaks*, «abrí tu boca» (diccionario).
+- **Nuestro** es *wan*, delante: *Wan kiama*, «nuestra oreja» (diccionario).
 
 **Predicción acertada a medias.** «Mi papá» = *aisiki*. La regla funcionó, pero
 Tangni dice *papa*, no *aisa*: *papiki*.
@@ -273,14 +321,18 @@ Tangni dice *papa*, no *aisa*: *papiki*.
 **Predicciones.** Nombre, *nina*. Tu mamá, *yaptikam* o *mamikam*. Mi papá,
 para quien dice *aisa*: *aisiki*.
 
-### M5 · «utla» cambia cuando la casa tiene dueño: watla — Confianza B
+### M5 · «utla» cambia cuando la casa tiene dueño: watla — Confianza A
 
 **Evidencia.** *utla* es la casa sola, también en *utla ra sa* y *utlara sa*.
 En *skul watla* (escuela, «la casa de la escuela») la u inicial se vuelve *wa*.
 
+**Confirmado por el diccionario.** *watla* aparece siempre con un dueño
+delante: *Tuktan watla laîka* (líquido amniótico, «el líquido de la casa del
+niño») y *Luhpa watlara* (el útero, «en la casa del hijo»).
+
 **Predicción (C).** Mi casa, *uitla*; tu casa, *umtla*.
 
-### M6 · Un verbo terminado en -i acompaña a otro — Confianza B
+### M6 · Un verbo terminado en -i acompaña a otro — Confianza A
 
 **Evidencia.** *aisi kaikaya* (leer: «ver hablando») y *kaiki kikisa* («sonríe
 viendo»).
@@ -291,8 +343,9 @@ abuela-1POSS 1POSS   ai(?)  coco  3POSS   ver-CVB  reír-PRS.3
 'Mi abuela sonríe al ver su coco.'
 ```
 
-La literatura describe cadenas de verbos así en las lenguas misumalpas (Hale
-1991). Falta saber si la forma cambia cuando el que ve y el que sonríe son
+El diccionario publicado trae más: *Atki briaia*, «comprar para tenerlo»
+(*atk-i* comprando + *briaia* tener). La literatura describe cadenas de verbos
+así en las lenguas misumalpas (Hale 1991). Falta saber si la forma cambia cuando el que ve y el que sonríe son
 personas distintas.
 
 ### M7 · Verbos nuevos con «takaya» — Confianza B
@@ -302,25 +355,38 @@ personas distintas.
 maneras de adoptar un verbo inglés: pegarle la terminación (*laik-sna*) o
 dejarlo sin nada (*Li want*, *Lii want*).
 
-### M8 · Una orden es raíz + s — Confianza C
+**Qué es *takaya*: resuelto con el diccionario.** Con el mismo préstamo,
+*Klin takaia* es «limpiarse» y *Klin daukaia*, «limpiarlo». *takaya* es
+«volverse» (la acción le pasa a uno) y *daukaya*, «hacer» (se la hace a otra
+cosa). Otros ejemplos del diccionario: *laik takaia* (enamorar), *wâri
+takisma* (estás pensando).
 
-**Evidencia.** *Yamni yap-s* (buenas noches): «dormí bien». Un solo ejemplo.
+### M8 · Una orden es raíz + s — Confianza A
 
-**Predicción.** «¡Dormí!» es *yaps*; «¡Mirá!», *kaiks*.
+**Evidencia.** *Yamni yap-s* (buenas noches): «dormí bien». Y en el
+diccionario: *Aman kaiks* (¡cuidado!, «mirá»), *Bilam kuaks* (¡abrí tu boca!),
+*Bara suis* (¡dejalo ahí!).
 
-### M9 · Los colores y «bueno» terminan en -ni — Confianza B
+**Predicción acertada.** «¡Mirá!» es *kaiks*.
+
+### M9 · Las cualidades terminan en -ni — Confianza A
 
 **Evidencia.** *yamni* (bueno, bien), *pauni*, *pihni*, *lalahni*, *sangni*.
-La excepción es *siksa* (negro). Tangni no contestó los colores.
+La excepción es *siksa* (negro). Tangni no contestó los colores. El
+diccionario publicado muestra que no es cosa de colores: *damni* (dulce),
+*swahni* (ácido), *pakni* (profundo). -ni forma palabras de cualidad.
 
-**Hipótesis (C).** *lalahni* (amarillo) vendría de *lalah* (oro, dinero).
+**Hipótesis (C).** *lalahni* (amarillo) vendría de *lalah*. La predicción
+«oro = *lalah*» falló (el diccionario dice *gul*, del inglés); queda preguntar
+si *lalah* es «dinero».
 
 ### M10 · Repetir para formar palabras — Confianza C
 
 **Evidencia.** *krikri* (cama), *walhwal* (cuatro, «dos-dos»), *smasmalkra*
 (maestro).
 
-**Predicción.** Enseñar sería *smalkaya*.
+**Predicción acertada.** Enseñar es *smalkaia* (diccionario). *smasmalkra*
+es *sma-smalk-ra*: la raíz repetida y la terminación de quien hace algo (M15).
 
 ### M11 · «ai», una pieza que todavía no entendemos — Confianza C
 
@@ -330,6 +396,50 @@ dijo *Plun aidauki*: la misma pieza *ai* con otra terminación.
 **Dos hipótesis.** *ai* es un pronombre que no es de segunda persona («me» o
 «su», según la frase), o son dos palabras distintas que suenan igual. Para
 decidir, hay que preguntar «¿Tenés hambre?» y «mi coco, tu coco, su coco».
+
+**Lo que agregó el diccionario.** *mai* es «te»: *¿Anira mai klahwisa?*, «¿en
+qué parte te duele?». Y *ai* aparece como «su» delante de partes del cuerpo.
+Gana terreno la primera hipótesis.
+
+### M12 · El pasado: -ri, -ram, -an — Confianza B
+
+Todo sale del diccionario publicado; las encuestas no preguntan el pasado.
+
+| Persona | Terminación | Ejemplo |
+|---|---|---|
+| yo | -ri | *Bilara dim-ri*: entré adentro |
+| vos | -(a)ram | *Baku ais-aram*: así hablaste |
+| él, ella | -an, -wan | *Yap-an*: durmió · *Pru-an*: falleció · *Yukuw-an*: se escondió · *dim-wan*: entró |
+
+**Predicción.** «Comí» es *piri*; «dormiste», *yaparam*.
+
+### M13 · El futuro: -aisna, -aisma, -aisa — Confianza B
+
+| Persona | Terminación | Ejemplo |
+|---|---|---|
+| yo | -aisna | *Yukuw-aisna*: me voy a esconder |
+| vos | -aisma | *¿Atk-aisma ki?*: ¿lo vas a comprar? |
+| él, ella | -aisa | *Aikab-aisa*: va a vomitar |
+
+Es la terminación del presente (-sna, -sma, -sa) con *ai* delante.
+
+**Predicción.** «Voy a comer» es *piaisna*.
+
+### M14 · La negación: -ras, -kas, apu — Confianza B
+
+- **-ras**, en el verbo: *Bus-ras*, sin mojarse. En el diccionario hay muchas:
+  *wark takras* (no trabaja), *briras* (no tiene), *piras* (sin comer).
+- **-kas**, en el sustantivo, «sin»: *latwan-kas*, sin amor.
+- ***apu***, «no hay»: *Plun apu*, no hay comida.
+- ***apia*** es el «no» suelto.
+
+**Predicción.** «No como» es *piras* (con *sna* o *apia*). Hay que preguntarlo.
+
+### M15 · Quien hace algo: -ra, -kra; quien tiene algo: -kira — Confianza B
+
+**Evidencia.** *smasmalkra* (maestro: el que enseña, de *smalkaia*), *rarakra*
+(curandero). Y con -kira, «el que tiene»: *sibrin-kira* (miedoso, de *sibrin*,
+miedo).
 
 ---
 
@@ -353,7 +463,8 @@ sabemos qué es.
 **Evidencia.**
 - *ra* (a, en): *utla ra*, *utlara*, *skul ra* (las dos personas), *Jinotega ra*, *ani-ra*.
 - *kat* (hasta): *yauhka kat*.
-- *pura* (más, encima): *matlalkahbi pura kum*, *matsip pura kum*.
+- *pura* (encima, más): *matlalkahbi pura kum*, *matsip pura kum* y, en el
+  diccionario, *Nakra pura tamaya* (la ceja: «el pelo de encima del ojo»).
 
 ### O3 · Lo que describe al sustantivo va después — Confianza A
 
@@ -361,11 +472,13 @@ sabemos qué es.
 waitna*, *smasmalkra mairin*, *aisa almuk*, *mama almuk*, *papa almuk*. Lo que
 describe al verbo va antes: *yamni yaps* (un ejemplo).
 
-### O4 · Lo que dice «de qué» o «de quién» va antes — Confianza B
+### O4 · Lo que dice «de qué» o «de quién» va antes — Confianza A
 
 **Evidencia.** *skul watla* (la casa de la escuela), *skul tuktan* (niño de
 escuela: estudiante) y, de Tangni, *galila mabra* (gallina huevo: huevo de
-gallina). Es como en inglés *school house*.
+gallina). El diccionario hace igual con todos los huevos: *Kâlila mahbra*, *Kuswa
+mahbra* (de tortuga), *Kakamuk mahbra* (de iguana). Es como en inglés
+*school house*.
 
 ### O5 · «Yo» y «vos» se pueden omitir — Confianza A
 
@@ -401,6 +514,25 @@ cifras.
 
 **Predicción.** «Dos perros» será *wal yul* o *yul wal*: hay que preguntarlo.
 
+### O10 · La pregunta de sí o no termina en ki — Confianza C
+
+**Evidencia.** *¿Atkaisma ki?*, «¿lo vas a comprar?» (diccionario). Las
+preguntas con *dia*, *nahki* o *anira* no lo llevan.
+
+**Predicción.** «¿Tenés hambre?» terminará en *ki*.
+
+### O11 · El plural es nani; «un» es kum; los dos van después — Confianza B
+
+**Evidencia.** *Una nani* (labios), *Kabu inskika nani* (mariscos), *siknis
+kum* (una enfermedad). En las encuestas no aparece ninguno: las frases no los
+piden.
+
+### O12 · «Vamos» es kaisa o kaya, al principio — Confianza B
+
+**Evidencia.** *Kaisa, kaia maka* (vamos, vámonos) en el diccionario, y *Kaya
+skul ra* (vamos a la escuela) de Tangni. Teacher Smith dijo *Skul ra wapp*.
+Puede que las dos maneras convivan.
+
 ---
 
 ## Vocabulario
@@ -430,6 +562,10 @@ tiene palabra propia: *yaura* (yuca), *tama* (banano), *haya* (maíz), *inska*
 ningún préstamo. Que lo básico resista y lo nuevo se preste es un patrón
 conocido en muchas lenguas.
 
+El diccionario publicado suma más, sobre todo en salud: *klin* (limpio,
+*clean*), *andris* (naranja, *oranges*), *gul* (oro, *gold*), *siknis*
+(enfermedad, *sickness*), *puisin* (veneno, *poison*), *indiksan* (inyección).
+
 **Para Piko.** Es un puente entre las lecciones de inglés y las de miskito:
 *skul*, *buk*, *rais*, *bins*, *bret* ya están a medio camino de *school*,
 *book*, *rice*, *beans*, *bread*.
@@ -441,6 +577,10 @@ es *luhpi waitna*; hija, *luhpi mairin*. Y Tangni, a «niño o niña», contest�
 *tuktan mairin* y *tuktan waitna*: niña y niño.
 
 **Predicción acertada.** La niña = *tuktan mairin*.
+
+**Matiz del diccionario.** Para los animales la hembra también es *mairin*
+(*Aras mairin*, yegua), pero el macho no es *waitna*: es *wainhka* (*Aras
+wainhka*, caballo macho).
 
 ### L3 · Dos palabras para «niño»: luhpi y tuktan — Confianza B
 
@@ -545,8 +685,9 @@ de Teacher Smith; si se elige el de Tangni, los ejercicios se arman igual
 ## Lo que parece patrón y no lo es (todavía)
 
 - **-ti** en *yapti* y *tahti* (mamá, tío): dos palabras y nada más.
-- **-kra** en *nakra* (ojo), *laikra*, *yaikra*, *smasmalkra*: no tienen un
-  significado en común.
+- **-kra** en *nakra* (ojo), *laikra* y *yaikra*. En *smasmalkra* y *rarakra*
+  sí es la terminación de quien hace algo (M15), pero en ojo y hermana no
+  hay nada que lo indique.
 - **wal** (dos) y **walaya** (escuchar), **walpa** (piedra): suenan parecido;
   nada indica relación.
 - **lal** (cabeza) dentro de *matlalkahbi* y *lalahni*.
@@ -569,26 +710,25 @@ estas filas, para quienes ya contestaron y se ofrecieron a ayudar.
 | 4 | yo como · vos comés | *pisna* · *pisma* | M2 |
 | 5 | yo duermo · él duerme | *yapisna* · *yapisa* | M2 (la i) |
 | 6 | Estás en la casa | *utla ra sma* | M3 |
-| 7 | reír · vivir · hacer · tener · entrar | *kikaya* · *iwaya* · *daukaya* · *briaya* · *dimaya* | M1 |
-| 8 | enseñar | *smalkaya* | M10 |
-| 9 | ¡Dormí! · ¡Mirá! · ¡Vení! | *yaps* · *kaiks* · ¿*bal*? | M8, M1 |
-| 10 | el maestro (hombre) · hombre · mujer | *smasmalkra waitna* · *waitna* · *mairin* | L2 |
+| 7 | reír · vivir | *kikaya* · *iwaya* | M1 (tener, hacer y entrar ya los confirmó el diccionario) |
+| 9 | ¡Dormí! · ¡Vení! | *yaps* · ¿*bal*? | M8, M1 |
+| 10 | el maestro (hombre) | *smasmalkra waitna* | L2 |
 | 11 | Ana es maestra | *Ana smasmalkra* (sin verbo) | O6 |
 | 12 | once (en los dos sistemas) | *mata walsip pura kum* · *matsip pura matsip pura kum*? | N3 |
-| 13 | un perro · dos perros | *yul kum* · ? | N2, O9 |
-| 14 | ¿Tenés hambre? | *Plun mai dauksa?* | M11 |
+| 13 | un perro · dos perros | *yul kum* · ? | N2, O9, O11 |
+| 14 | ¿Tenés hambre? | *Plun mai dauksa ki?* | M11, O10 |
 | 15 | mi coco · tu coco · su coco | — | M4, M11 |
-| 16 | dinero u oro | *lalah* | M9 |
+| 16 | dinero | *lalah* (oro ya se sabe: *gul*) | M9 |
 | 17 | zacate · ¿verde y azul son el mismo color? | *twi* · — | L6 |
 | 18 | **Hermano y hermana, a una mujer y a un hombre** | — | L7 |
 | 19 | **¿Qué es *pruabia*? ¿*titan* es también «el día siguiente»?** | — | L4 |
 | 20 | **¿Qué sistema de números se enseña en la escuela?** | — | N3 |
 | 21 | ¿*yapti* o *mama*? ¿Cuándo se usa cada una? | — | L8 |
-| 22 | ¿Qué es *kaya* en «Kaya skul ra»? | — | O1 |
+| 22 | ¿*Kaya skul ra* o *Skul ra kaya*? | — | O1, O12 |
 | 23 | Mi abuela sonríe cuando yo veo su coco | — (¿cambia *kaiki*?) | M6 |
-| 24 | los niños | *tuktan nani* (según otras fuentes) | O8 |
-| 25 | No quiero agua · No como | — | la negación: no hay datos |
-| 26 | Ayer comí · Mañana voy a comer | — | el pasado y el futuro: no hay datos |
+| 24 | los niños | *tuktan nani* | O11 |
+| 25 | No quiero agua · No como | *piras* | M14 (sólo hay datos del diccionario) |
+| 26 | Ayer comí · Mañana voy a comer | *piri* · *piaisna* | M12, M13 (sólo hay datos del diccionario) |
 
 Además:
 - **Personas de otras zonas.** Las dos fuentes son de Raiti. Para que una

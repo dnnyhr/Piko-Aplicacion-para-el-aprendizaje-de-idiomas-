@@ -1,7 +1,7 @@
 {
   "$comentario": "Diccionario miskito de Piko. Ver diccionario/README.md. «registrado» es lo que escribió la persona, tal cual; «forma» es la forma de trabajo. Las entradas con «revisar» no se usan en ejercicios.",
   "lengua": "miq",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "actualizado": "2026-10-02",
   "entradas": [
     {
@@ -13,9 +13,10 @@
       "es": "hola",
       "categoria": "interjeccion",
       "tema": "saludos",
-      "revisar": "En otras fuentes el saludo más citado es «naksa». ¿«Bara» se usa para saludar en Raiti y el Río Coco, o quiere decir otra cosa?",
+      "revisar": "En el diccionario de Scott Lackwood (2006), «bara» es «ahí» («Bara sa»: ahí está) y también aparece como «y». ¿Teacher Smith la usa para saludar, o se coló al responder? Otras fuentes dan «naksa» para «hola».",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -151,13 +152,16 @@
       "id": "au",
       "forma": "au",
       "registrado": [
-        "au"
+        "au",
+        "Ao"
       ],
       "es": "sí",
       "categoria": "interjeccion",
       "tema": "saludos",
+      "notas": "El diccionario de Scott Lackwood escribe «Ao», con o (S1).",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -165,13 +169,15 @@
       "id": "apia",
       "forma": "apia",
       "registrado": [
-        "apia"
+        "apia",
+        "Apia"
       ],
       "es": "no",
       "categoria": "interjeccion",
       "tema": "saludos",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -697,14 +703,16 @@
       "id": "lal",
       "forma": "lal",
       "registrado": [
-        "lal"
+        "lal",
+        "Lal"
       ],
       "es": "cabeza",
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -712,14 +720,16 @@
       "id": "nakra",
       "forma": "nakra",
       "registrado": [
-        "nakra"
+        "nakra",
+        "Nakra"
       ],
       "es": "ojo",
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -727,14 +737,16 @@
       "id": "kakma",
       "forma": "kakma",
       "registrado": [
-        "kakma"
+        "kakma",
+        "Kakma"
       ],
       "es": "nariz",
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -742,14 +754,16 @@
       "id": "kiama",
       "forma": "kiama",
       "registrado": [
-        "kiama"
+        "kiama",
+        "Kiama"
       ],
       "es": "oreja",
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -769,7 +783,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -798,14 +813,16 @@
       "id": "mina",
       "forma": "mina",
       "registrado": [
-        "mina"
+        "mina",
+        "Mina"
       ],
       "es": "pie",
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -828,14 +845,17 @@
       "id": "tawa",
       "forma": "tawa",
       "registrado": [
-        "tawa"
+        "tawa",
+        "Táwa"
       ],
       "es": "pelo",
       "categoria": "sustantivo",
       "tema": "cuerpo",
+      "notas": "En el diccionario «tawa» también es «batata»; con acento («táwa»), pelo.",
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -843,14 +863,17 @@
       "id": "kupia",
       "forma": "kupia",
       "registrado": [
-        "kupia"
+        "kupia",
+        "Kupya"
       ],
       "es": "corazón",
       "categoria": "sustantivo",
       "tema": "cuerpo",
+      "notas": "El diccionario de Scott Lackwood escribe «Kupya»: y e i son la misma vocal antes de a.",
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -898,7 +921,8 @@
       "id": "krikri",
       "forma": "krikri",
       "registrado": [
-        "krikri"
+        "krikri",
+        "Krikri"
       ],
       "es": "cama",
       "categoria": "sustantivo",
@@ -907,7 +931,8 @@
         "M10"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -1018,7 +1043,8 @@
       "id": "sus",
       "forma": "sus",
       "registrado": [
-        "sus"
+        "sus",
+        "Sus"
       ],
       "es": "zapato",
       "categoria": "sustantivo",
@@ -1033,7 +1059,8 @@
         "S1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -1278,7 +1305,8 @@
         "M9"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -1296,7 +1324,8 @@
         "S3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -1310,7 +1339,8 @@
       "categoria": "adjetivo",
       "tema": "colores",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -1413,7 +1443,8 @@
       "id": "yapaya",
       "forma": "yapaya",
       "registrado": [
-        "yapaya"
+        "yapaya",
+        "Yapaia"
       ],
       "es": "dormir",
       "categoria": "verbo",
@@ -1425,7 +1456,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -1453,7 +1485,8 @@
       "id": "aisaya",
       "forma": "aisaya",
       "registrado": [
-        "aisaya"
+        "aisaya",
+        "Aisaya"
       ],
       "es": "hablar",
       "categoria": "verbo",
@@ -1465,7 +1498,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -1493,19 +1527,22 @@
       "id": "kaikaya",
       "forma": "kaikaya",
       "registrado": [
-        "kaikaya"
+        "kaikaya",
+        "Kaikaia"
       ],
       "es": "ver",
       "categoria": "verbo",
       "tema": "acciones",
       "analisis": "kaik-aya",
       "glosa": "ver-INF",
+      "notas": "El diccionario escribe el infinitivo en -aia (M1).",
       "reglas": [
         "M1"
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -1990,20 +2027,22 @@
       "registrado": [
         "Li",
         "lii",
-        "Lii"
+        "Lii",
+        "Lî"
       ],
       "es": "agua; lluvia",
       "categoria": "sustantivo",
       "tema": "comida",
       "de": "frase.quiero_agua",
-      "notas": "«Quiero agua» y «está lloviendo» («el agua cae») usan la misma palabra. Tangni escribe siempre «lii», con la vocal doble: probablemente una i larga (S8).",
+      "notas": "«Quiero agua» y «está lloviendo» («el agua cae») usan la misma palabra. Tangni escribe siempre «lii», con la vocal doble: probablemente una i larga (S8). El diccionario de Scott Lackwood escribe «Lî», con circunflejo: vocal larga. Confirma la «lii» de Tangni (S8).",
       "reglas": [
         "L5",
         "S8"
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -2021,7 +2060,8 @@
       "notas": "Confirmado por contexto: Tangni dice «plun piyaya» (comer) y «Yul plun pisa» (el perro come comida).",
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -2030,7 +2070,8 @@
       "forma": "kuku",
       "registrado": [
         "kuku",
-        "coco"
+        "coco",
+        "Kuku"
       ],
       "es": "coco",
       "categoria": "sustantivo",
@@ -2039,7 +2080,8 @@
       "notas": "Tangni escribió «coco», con la ortografía del español; Teacher Smith, «kuku» (S1).",
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -2161,7 +2203,8 @@
       "id": "waitna",
       "forma": "waitna",
       "registrado": [
-        "waitna"
+        "waitna",
+        "Waitna"
       ],
       "es": "hombre, varón",
       "categoria": "sustantivo",
@@ -2172,7 +2215,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -2180,7 +2224,8 @@
       "id": "mairin",
       "forma": "mairin",
       "registrado": [
-        "mairin"
+        "mairin",
+        "Mairin"
       ],
       "es": "mujer",
       "categoria": "sustantivo",
@@ -2191,7 +2236,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -2636,7 +2682,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "varios_hablantes"
     },
@@ -3135,7 +3182,8 @@
       "id": "galila",
       "forma": "galila",
       "registrado": [
-        "galila"
+        "galila",
+        "Kâlila"
       ],
       "es": "gallina",
       "categoria": "sustantivo",
@@ -3145,12 +3193,14 @@
         "origen": "gallina",
         "confianza": "B"
       },
+      "notas": "El diccionario de Scott Lackwood escribe «Kâlila»: k en lugar de g y la primera a larga.",
       "reglas": [
         "L1",
         "S1"
       ],
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -3158,7 +3208,8 @@
       "id": "bip",
       "forma": "bip",
       "registrado": [
-        "bip"
+        "bip",
+        "Bip"
       ],
       "es": "vaca",
       "categoria": "sustantivo",
@@ -3173,7 +3224,8 @@
         "L1"
       ],
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -3181,13 +3233,15 @@
       "id": "aras",
       "forma": "aras",
       "registrado": [
-        "aras"
+        "aras",
+        "Aras"
       ],
       "es": "caballo",
       "categoria": "sustantivo",
       "tema": "animales",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -3195,13 +3249,15 @@
       "id": "kuswa",
       "forma": "kuswa",
       "registrado": [
-        "kuswa"
+        "kuswa",
+        "Kuswa"
       ],
       "es": "tortuga",
       "categoria": "sustantivo",
       "tema": "animales",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -3209,13 +3265,15 @@
       "id": "kakamuk",
       "forma": "kakamuk",
       "registrado": [
-        "kakamuk"
+        "kakamuk",
+        "Kakamuk"
       ],
       "es": "iguana",
       "categoria": "sustantivo",
       "tema": "animales",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -3281,7 +3339,8 @@
       "id": "rais",
       "forma": "rais",
       "registrado": [
-        "rais"
+        "rais",
+        "Rais"
       ],
       "es": "arroz",
       "categoria": "sustantivo",
@@ -3295,7 +3354,8 @@
         "L1"
       ],
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -3471,20 +3531,22 @@
       "id": "galila_mabra",
       "forma": "galila mabra",
       "registrado": [
-        "galila mabra"
+        "galila mabra",
+        "Kâlila mahbra"
       ],
       "es": "huevo",
       "categoria": "expresion",
       "tema": "comida",
       "analisis": "galila mabra",
       "glosa": "gallina huevo",
-      "notas": "Literalmente «huevo de gallina»: el poseedor va antes (O4).",
+      "notas": "Literalmente «huevo de gallina»: el poseedor va antes (O4). El diccionario escribe «mahbra», con h (S3).",
       "reglas": [
         "O4",
         "L1"
       ],
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -3548,13 +3610,15 @@
       "id": "kati",
       "forma": "kati",
       "registrado": [
-        "kati"
+        "kati",
+        "Kati"
       ],
       "es": "luna",
       "categoria": "sustantivo",
       "tema": "naturaleza",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -3590,13 +3654,15 @@
       "id": "unta",
       "forma": "unta",
       "registrado": [
-        "unta"
+        "unta",
+        "Unta"
       ],
       "es": "monte",
       "categoria": "sustantivo",
       "tema": "naturaleza",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "lackwood-2006"
       ],
       "estado": "un_hablante"
     },
@@ -3757,10 +3823,11 @@
       "es": "Vamos a la escuela.",
       "categoria": "frase",
       "tema": "frases",
-      "revisar": "¿«kaya» quiere decir «vamos»? Es la única frase donde el verbo (si lo es) va primero.",
+      "revisar": "El diccionario de Scott Lackwood da «Kaisa, kaia maka: vamos, vámonos»: «kaya» sería «vamos» y la frase seguiría con el verbo adelante, como en español. Confirmar con Tangni.",
       "reglas": [
         "O1",
-        "O2"
+        "O2",
+        "O12"
       ],
       "fuentes": [
         "raiti-2026-09-30"
@@ -3924,9 +3991,9 @@
       "categoria": "forma_flexionada",
       "tema": "acciones",
       "analisis": "dim-isna",
-      "glosa": "entrar(?)-PRS.1",
+      "glosa": "entrar-PRS.1",
       "de": "frase.aporte_tangni",
-      "revisar": "«skul dimisna» se tradujo «estudio». ¿«dimaya» es «entrar»?",
+      "notas": "Confirmado: en el diccionario de Scott Lackwood, «dimri» es «entré» y «dimwan», «entró».",
       "reglas": [
         "M2"
       ],
@@ -3934,6 +4001,899 @@
         "raiti-2026-09-30"
       ],
       "estado": "un_hablante"
+    },
+    {
+      "id": "smalkaia",
+      "forma": "smalkaia",
+      "registrado": [
+        "Smalkaia"
+      ],
+      "es": "enseñar",
+      "categoria": "verbo",
+      "tema": "escuela",
+      "analisis": "smalk-aia",
+      "glosa": "enseñar-INF",
+      "notas": "Acertó la predicción de la v0.2: «enseñar» lleva smalk-, la raíz de «smasmalkra» (maestro).",
+      "reglas": [
+        "M1",
+        "M10",
+        "M15"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kati_mes",
+      "forma": "kâti",
+      "registrado": [
+        "Kâti"
+      ],
+      "es": "mes",
+      "categoria": "sustantivo",
+      "tema": "tiempo",
+      "notas": "Con la a larga es «mes»; con la a corta, «kati», luna. La duración de la vocal cambia la palabra.",
+      "reglas": [
+        "S8"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "aisisa",
+      "forma": "aisisa",
+      "registrado": [
+        "Aisisa"
+      ],
+      "es": "está hablando",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "ais-isa",
+      "glosa": "hablar-PRS.3",
+      "reglas": [
+        "M2"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "wari_takisma",
+      "forma": "wâri takisma",
+      "registrado": [
+        "Wâri takisma"
+      ],
+      "es": "estás pensando",
+      "categoria": "expresion",
+      "tema": "acciones",
+      "analisis": "wâri tak-isma",
+      "glosa": "pensar volverse-PRS.2",
+      "reglas": [
+        "M2",
+        "M7"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kisni_brisna",
+      "forma": "kisni brisna",
+      "registrado": [
+        "Kisni brisna"
+      ],
+      "es": "tengo ardor",
+      "categoria": "expresion",
+      "tema": "gramatica",
+      "analisis": "kisni bri-sna",
+      "glosa": "ardor tener-PRS.1",
+      "reglas": [
+        "M2"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kisni_brisma",
+      "forma": "kisni brisma",
+      "registrado": [
+        "Kisni brisma"
+      ],
+      "es": "tenés ardor",
+      "categoria": "expresion",
+      "tema": "gramatica",
+      "analisis": "kisni bri-sma",
+      "glosa": "ardor tener-PRS.2",
+      "reglas": [
+        "M2"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "atki_briaia",
+      "forma": "atki briaia",
+      "registrado": [
+        "Atki briaia"
+      ],
+      "es": "comprar para tenerlo",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "analisis": "atk-i bri-aia",
+      "glosa": "comprar-CVB tener-INF",
+      "reglas": [
+        "M1",
+        "M6"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "dimri",
+      "forma": "dimri",
+      "registrado": [
+        "dimri"
+      ],
+      "es": "entré",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "dim-ri",
+      "glosa": "entrar-PST.1",
+      "reglas": [
+        "M12"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "dimwan",
+      "forma": "dimwan",
+      "registrado": [
+        "dimwan"
+      ],
+      "es": "entró",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "dim-wan",
+      "glosa": "entrar-PST.3",
+      "reglas": [
+        "M12"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "aisaram",
+      "forma": "aisaram",
+      "registrado": [
+        "aisaram"
+      ],
+      "es": "hablaste",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "ais-aram",
+      "glosa": "hablar-PST.2",
+      "reglas": [
+        "M12"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "yapan",
+      "forma": "yapan",
+      "registrado": [
+        "Yapan"
+      ],
+      "es": "durmió",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "yap-an",
+      "glosa": "dormir-PST.3",
+      "reglas": [
+        "M12"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "pruan",
+      "forma": "pruan",
+      "registrado": [
+        "Pruan"
+      ],
+      "es": "falleció",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "pru-an",
+      "glosa": "morir-PST.3",
+      "reglas": [
+        "M12"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "yukuwan",
+      "forma": "yukuwan",
+      "registrado": [
+        "Yukuwan"
+      ],
+      "es": "se escondió",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "yukuw-an",
+      "glosa": "esconderse-PST.3",
+      "reglas": [
+        "M12"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "yukuwisa",
+      "forma": "yukuwisa",
+      "registrado": [
+        "Yukuwisa"
+      ],
+      "es": "se esconde",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "yukuw-isa",
+      "glosa": "esconderse-PRS.3",
+      "reglas": [
+        "M2"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "yukuwaisna",
+      "forma": "yukuwaisna",
+      "registrado": [
+        "Yukuwaisna"
+      ],
+      "es": "me voy a esconder",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "yukuw-aisna",
+      "glosa": "esconderse-FUT.1",
+      "notas": "El diccionario lo traduce «esconderme»; por la forma es un futuro, como «aikabaisa» (va a vomitar).",
+      "reglas": [
+        "M13"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "aikabaisa",
+      "forma": "aikabaisa",
+      "registrado": [
+        "Aikabaisa"
+      ],
+      "es": "va a vomitar",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "aikab-aisa",
+      "glosa": "vomitar-FUT.3",
+      "reglas": [
+        "M13"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "atkaisma_ki",
+      "forma": "atkaisma ki",
+      "registrado": [
+        "¿Atkaisma ki?"
+      ],
+      "es": "¿lo vas a comprar?",
+      "categoria": "expresion",
+      "tema": "gramatica",
+      "analisis": "atk-aisma ki",
+      "glosa": "comprar-FUT.2 Q",
+      "reglas": [
+        "M13",
+        "O10"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "busras",
+      "forma": "busras",
+      "registrado": [
+        "Busras"
+      ],
+      "es": "sin mojarse",
+      "categoria": "forma_flexionada",
+      "tema": "gramatica",
+      "analisis": "bus-ras",
+      "glosa": "mojarse-NEG",
+      "reglas": [
+        "M14"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "latwankas",
+      "forma": "latwankas",
+      "registrado": [
+        "latwankas"
+      ],
+      "es": "sin amor",
+      "categoria": "adjetivo",
+      "tema": "gramatica",
+      "analisis": "latwan-kas",
+      "glosa": "amor-sin",
+      "reglas": [
+        "M14"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "plun_apu",
+      "forma": "plun apu",
+      "registrado": [
+        "Plun apu"
+      ],
+      "es": "no hay comida",
+      "categoria": "expresion",
+      "tema": "gramatica",
+      "analisis": "plun apu",
+      "glosa": "comida no.hay",
+      "reglas": [
+        "M14"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "damni",
+      "forma": "damni",
+      "registrado": [
+        "Damni"
+      ],
+      "es": "dulce",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "reglas": [
+        "M9"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "swahni",
+      "forma": "swahni",
+      "registrado": [
+        "Swahni"
+      ],
+      "es": "ácido, agrio",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "reglas": [
+        "M9"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "pakni",
+      "forma": "pakni",
+      "registrado": [
+        "Pakni"
+      ],
+      "es": "profundo",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "reglas": [
+        "M9"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "saura",
+      "forma": "saura",
+      "registrado": [
+        "Saura"
+      ],
+      "es": "malo, feo",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "sibrinkira",
+      "forma": "sibrinkira",
+      "registrado": [
+        "Sibrinkira"
+      ],
+      "es": "miedoso",
+      "categoria": "adjetivo",
+      "tema": "cualidades",
+      "analisis": "sibrin-kira",
+      "glosa": "miedo-que.tiene",
+      "reglas": [
+        "M15"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "rarakra",
+      "forma": "rarakra",
+      "registrado": [
+        "rarakra"
+      ],
+      "es": "curandero",
+      "categoria": "sustantivo",
+      "tema": "gramatica",
+      "analisis": "raka-ra(?)",
+      "glosa": "curar-AG(?)",
+      "reglas": [
+        "M15"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "klin_takaia",
+      "forma": "klin takaia",
+      "registrado": [
+        "Klin takaia"
+      ],
+      "es": "limpiarse",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "analisis": "klin tak-aia",
+      "glosa": "«clean» volverse-INF",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "clean",
+        "confianza": "A"
+      },
+      "reglas": [
+        "M7",
+        "L1"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "klin_daukaia",
+      "forma": "klin daukaia",
+      "registrado": [
+        "Klin daukaia"
+      ],
+      "es": "limpiarlo",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "analisis": "klin dauk-aia",
+      "glosa": "«clean» hacer-INF",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "clean",
+        "confianza": "A"
+      },
+      "reglas": [
+        "M7",
+        "L1"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "laik_takaia",
+      "forma": "laik takaia",
+      "registrado": [
+        "laik takaia"
+      ],
+      "es": "enamorar",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "analisis": "laik tak-aia",
+      "glosa": "«like» volverse-INF",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "like",
+        "confianza": "A"
+      },
+      "reglas": [
+        "M7",
+        "L1"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "gul",
+      "forma": "gul",
+      "registrado": [
+        "Gul"
+      ],
+      "es": "oro",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "gold",
+        "confianza": "B"
+      },
+      "notas": "La predicción de la v0.2 era «lalah»: falló para «oro». «lalah» puede seguir siendo «dinero».",
+      "reglas": [
+        "L1",
+        "M9"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "andris",
+      "forma": "andris",
+      "registrado": [
+        "Andris"
+      ],
+      "es": "naranja",
+      "categoria": "sustantivo",
+      "tema": "comida",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "oranges",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "aras_mairin",
+      "forma": "aras mairin",
+      "registrado": [
+        "Aras mairin"
+      ],
+      "es": "yegua",
+      "categoria": "expresion",
+      "tema": "animales",
+      "glosa": "caballo mujer",
+      "reglas": [
+        "L2",
+        "O3"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "aras_wainhka",
+      "forma": "aras wainhka",
+      "registrado": [
+        "Aras wainhka"
+      ],
+      "es": "caballo macho",
+      "categoria": "expresion",
+      "tema": "animales",
+      "glosa": "caballo macho",
+      "notas": "Para el macho de un animal no se usa «waitna» (hombre) sino «wainhka».",
+      "reglas": [
+        "L2",
+        "O3"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kuswa_mahbra",
+      "forma": "kuswa mahbra",
+      "registrado": [
+        "Kuswa mahbra"
+      ],
+      "es": "huevo de tortuga",
+      "categoria": "expresion",
+      "tema": "comida",
+      "glosa": "tortuga huevo",
+      "reglas": [
+        "O4"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kakamuk_mahbra",
+      "forma": "kakamuk mahbra",
+      "registrado": [
+        "Kakamuk mahbra"
+      ],
+      "es": "huevo de iguana",
+      "categoria": "expresion",
+      "tema": "comida",
+      "glosa": "iguana huevo",
+      "reglas": [
+        "O4"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "nakra_pura_tamaya",
+      "forma": "nakra pura tamaya",
+      "registrado": [
+        "Nakra pura tamaya"
+      ],
+      "es": "ceja",
+      "categoria": "expresion",
+      "tema": "cuerpo",
+      "glosa": "ojo encima pelo(?)",
+      "notas": "«El pelo de encima del ojo»: confirma que «pura» es «encima».",
+      "reglas": [
+        "O2",
+        "O4"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tuktan_watla_laika",
+      "forma": "tuktan watla laîka",
+      "registrado": [
+        "Tuktan watla laîka"
+      ],
+      "es": "líquido amniótico",
+      "categoria": "expresion",
+      "tema": "cuerpo",
+      "glosa": "niño casa.CSTR líquido.3POSS",
+      "notas": "Literalmente «el líquido de la casa del niño»: el vientre es «la casa del niño».",
+      "reglas": [
+        "M5",
+        "O4"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "luhpa_watlara",
+      "forma": "luhpa watlara",
+      "registrado": [
+        "Luhpa watlara"
+      ],
+      "es": "útero (en «Luhpa watlara trabil briba»)",
+      "categoria": "expresion",
+      "tema": "cuerpo",
+      "analisis": "luhpa watla=ra",
+      "glosa": "hijo casa.CSTR=LOC",
+      "reglas": [
+        "M5",
+        "O4"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "nani",
+      "forma": "nani",
+      "registrado": [
+        "nani"
+      ],
+      "es": "(plural: va después del sustantivo)",
+      "categoria": "particula",
+      "tema": "gramatica",
+      "notas": "«Una nani»: labios; «Kabu inskika nani»: mariscos.",
+      "reglas": [
+        "O11"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "wan",
+      "forma": "wan",
+      "registrado": [
+        "Wan"
+      ],
+      "es": "nuestro (de todos, incluyéndote)",
+      "categoria": "pronombre",
+      "tema": "gramatica",
+      "notas": "«Wan kiama»: nuestra oreja.",
+      "reglas": [
+        "M4"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "mai",
+      "forma": "mai",
+      "registrado": [
+        "mai"
+      ],
+      "es": "te (a vos)",
+      "categoria": "pronombre",
+      "tema": "gramatica",
+      "notas": "«¿Anira mai klahwisa?»: ¿en qué parte te duele?",
+      "reglas": [
+        "M11"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "bilam",
+      "forma": "bilam",
+      "registrado": [
+        "Bilam"
+      ],
+      "es": "tu boca",
+      "categoria": "forma_flexionada",
+      "tema": "cuerpo",
+      "analisis": "bila-m",
+      "glosa": "boca-2POSS",
+      "notas": "«Bilam kuaks»: abrí tu boca. La m de «tu», al final, como en «ninam».",
+      "reglas": [
+        "M4"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kuaks",
+      "forma": "kuaks",
+      "registrado": [
+        "kuaks"
+      ],
+      "es": "¡abrí!",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "kuak-s",
+      "glosa": "abrir-IMP",
+      "reglas": [
+        "M8"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kaiks",
+      "forma": "kaiks",
+      "registrado": [
+        "kaiks"
+      ],
+      "es": "¡mirá! (en «Aman kaiks»: ¡cuidado!)",
+      "categoria": "forma_flexionada",
+      "tema": "acciones",
+      "analisis": "kaik-s",
+      "glosa": "ver-IMP",
+      "notas": "Acertó la predicción 9 de la v0.2.",
+      "reglas": [
+        "M8"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "ki_pregunta",
+      "forma": "ki",
+      "registrado": [
+        "ki"
+      ],
+      "es": "(marca de pregunta de sí o no, al final)",
+      "categoria": "particula",
+      "tema": "gramatica",
+      "reglas": [
+        "O10"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kaisa",
+      "forma": "kaisa",
+      "registrado": [
+        "Kaisa"
+      ],
+      "es": "vamos",
+      "categoria": "expresion",
+      "tema": "acciones",
+      "notas": "El diccionario da «Kaisa, kaia maka: vamos, vámonos».",
+      "reglas": [
+        "O12"
+      ],
+      "fuentes": [
+        "lackwood-2006"
+      ],
+      "estado": "publicada"
     }
   ]
 }
