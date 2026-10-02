@@ -76,7 +76,7 @@ npm install
 ### Antes de mandar cualquier cambio
 
 ```bash
-npm test              # 135 pruebas sobre el núcleo puro y la persistencia
+npm test              # 151 pruebas sobre el núcleo puro y la persistencia
 npm run typecheck     # app + herramientas de Node
 npm run validate:packs
 ```

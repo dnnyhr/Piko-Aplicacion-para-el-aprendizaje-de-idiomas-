@@ -88,7 +88,8 @@ function conPalabras(pagina: string, entradas: { id: string; forma: string; es: 
   return `${pagina.slice(0, abre)}\n<ul class="estatico">\n${lista.join('\n')}\n</ul>\n${pagina.slice(fin)}`;
 }
 
-export function archivosDeLaWeb(): Map<string, string> {
+/** `generados`: archivos que esta misma corrida está por escribir; se leen de ahí antes que del disco. */
+export function archivosDeLaWeb(generados: ReadonlyMap<string, string> = new Map()): Map<string, string> {
   const salida = new Map<string, string>();
   const lenguas = leerLenguas();
   const estado: unknown[] = [];
@@ -116,7 +117,11 @@ export function archivosDeLaWeb(): Map<string, string> {
       paquetes: enApp.length,
       ejercicios: enApp.reduce((n, a) => n + a.pack.items.length, 0),
       al_espanol: lengua.ensena?.includes('spa') ? armarAlEspanol(d, 'es-US').reduce((n, a) => n + a.pack.items.length, 0) : 0,
-      interfaz: fs.existsSync(interfaz) ? avanceDeInterfaz(fs.readFileSync(interfaz, 'utf8'), lengua.codigo) : null,
+      interfaz: generados.has(interfaz)
+        ? avanceDeInterfaz(generados.get(interfaz) ?? '', lengua.codigo)
+        : fs.existsSync(interfaz)
+          ? avanceDeInterfaz(fs.readFileSync(interfaz, 'utf8'), lengua.codigo)
+          : null,
       fuentes: fuentes.filter((f) => f.tipo !== 'equipo').map(fuentePublica),
       diccionario: lengua.codigo === 'eng' ? null : `datos/diccionario-${lengua.codigo}.json`,
     });

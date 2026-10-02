@@ -5,7 +5,7 @@
  * haya nadie más cerca, y es lo que un niño puede abrir en su casa.
  */
 
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SvgXml } from 'react-native-svg';
@@ -19,6 +19,10 @@ import { useTextos } from '../src/ui/textos/useTextos';
 import { AUTONIMO, IDIOMAS_APP } from '../src/ui/textos/traducir';
 import { useIdioma } from '../src/features/idioma/store';
 import { LANGS } from '../src/core/content/schema';
+import { MiniaturaArbol } from '../src/ui/arbol/MiniaturaArbol';
+import { ContadorSacuanjoches } from '../src/ui/arbol/ContadorSacuanjoches';
+import { useProgreso } from '../src/features/progreso/store';
+import { etapaDe, nivelDe } from '../src/core/progress/arbol';
 import { color, espacio, radio, texto } from '../src/ui/tokens';
 
 export default function Portada() {
@@ -26,6 +30,12 @@ export default function Portada() {
   const { t, frases, idioma } = useTextos();
   const cambiarIdioma = useIdioma((s) => s.cambiar);
   const saludo = useMemo(() => elegir(frases('piko.bienvenida')), [frases]);
+  const sacuanjoches = useProgreso((s) => s.estado.sacuanjoches);
+
+  // Lo guardado de otras veces, para que el madroño aparezca como quedó.
+  useEffect(() => {
+    useProgreso.getState().recomputar();
+  }, []);
 
   return (
     <Pantalla>
@@ -68,6 +78,24 @@ export default function Portada() {
           </Pressable>
         </View>
 
+        <Pressable
+          onPress={() => router.push('/perfil')}
+          accessibilityRole="button"
+          accessibilityLabel="Ver mi madroño y mi perfil"
+          style={styles.madrono}
+        >
+          <View style={styles.madronoCielo}>
+            <MiniaturaArbol etapa={etapaDe(sacuanjoches).id} tam={56} />
+          </View>
+          <View style={styles.madronoTexto}>
+            <Text style={styles.madronoTitulo}>Mi madroño</Text>
+            <Text style={styles.madronoSub}>
+              Nivel {nivelDe(sacuanjoches)} · {etapaDe(sacuanjoches).nombre}
+            </Text>
+          </View>
+          <ContadorSacuanjoches total={sacuanjoches} />
+        </Pressable>
+
         <View style={styles.lenguas}>
           {LANGS.map((l) => (
             <View key={l} style={styles.lengua}>
@@ -94,6 +122,21 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     paddingVertical: espacio.sm,
   },
+  madrono: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: espacio.md,
+    backgroundColor: color.blanco,
+    borderWidth: 2,
+    borderColor: color.borde,
+    borderRadius: radio.lg,
+    paddingVertical: espacio.sm,
+    paddingHorizontal: espacio.md,
+  },
+  madronoCielo: { backgroundColor: color.nube, borderRadius: radio.md, padding: espacio.xs },
+  madronoTexto: { flex: 1 },
+  madronoTitulo: { ...texto.subtitulo, color: color.verde },
+  madronoSub: { ...texto.chico, color: color.tintaSuave },
   lenguas: {
     flexDirection: 'row',
     flexWrap: 'wrap',

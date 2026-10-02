@@ -125,5 +125,9 @@ export const ES = {
   'piko.bienvenida': ['¡Hola! Soy Piko.', '¿Jugamos un rato?', '¡Qué bueno verte!'],
   'piko.fin_bien': ['¡Terminaste! Estuviste muy bien.', '¡Qué ronda! Seguí así.', '¡Excelente trabajo!'],
   'piko.fin_normal': ['¡Terminamos! Cada vez sale mejor.', 'Buen trabajo. Practicando se aprende.', '¡Listo! Lo importante es seguir.'],
+  /** Al subir de nivel: Piko trepa una rama más del madroño. */
+  'piko.subir_nivel': ['¡Subimos una rama!', '¡Más arriba! Desde acá se ve todo.', '¡Tu árbol nos está llevando alto!'],
+  /** Cuando el madroño pasa a la etapa siguiente. */
+  'piko.arbol_crece': ['¡Mirá cómo creció tu madroño!', '¡Tu árbol está creciendo!'],
   'piko.esperando': ['Esperando a la clase…', 'Ya casi empezamos.', 'El maestro está preparando la ronda.'],
 } as const;

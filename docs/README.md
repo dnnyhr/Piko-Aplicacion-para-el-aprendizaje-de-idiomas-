@@ -58,7 +58,7 @@ diga que la habla mal.
 - La interfaz en español o en miskito, a elección; la traducción al miskito la
   llenan hablantes en `diccionario/miskito/interfaz.csv`. Mayangna, rama y garífuna esperan
   material de hablantes nativos.
-- 135 pruebas automatizadas y un simulador que levanta un aula entera sin
+- 151 pruebas automatizadas y un simulador que levanta un aula entera sin
   necesidad de teléfonos.
 
 ## Qué falta

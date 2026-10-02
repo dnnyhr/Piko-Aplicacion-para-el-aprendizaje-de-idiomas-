@@ -30,7 +30,7 @@ que puede estar mal de una forma que rompa el proyecto.
 Como no depende del entorno móvil, ese código se ejecuta en Node. Eso permite
 dos cosas que serían imposibles de otro modo:
 
-1. **Probar la lógica difícil sin un dispositivo.** Las 135 pruebas corren en
+1. **Probar la lógica difícil sin un dispositivo.** Las 151 pruebas corren en
    segundos, sin emulador y sin Android SDK.
 2. **Simular un aula entera.** `tools/sim.ts` levanta un anfitrión real y ocho
    estudiantes reales hablando TCP en `localhost`, con el mismo código que

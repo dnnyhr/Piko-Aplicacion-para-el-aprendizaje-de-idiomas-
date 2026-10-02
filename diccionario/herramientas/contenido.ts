@@ -85,8 +85,9 @@ for (const lengua of lenguas) {
   }
 }
 
-// Los datos del sitio web.
-for (const [ruta, texto] of archivosDeLaWeb()) otros.set(ruta, texto);
+// Los datos del sitio web. Reciben lo recién generado (la planilla de la
+// interfaz) para no contar con la versión vieja que todavía está en disco.
+for (const [ruta, texto] of archivosDeLaWeb(otros)) otros.set(ruta, texto);
 resumen.push('  ✓ Sitio web       web/datos/');
 
 esperado.set(

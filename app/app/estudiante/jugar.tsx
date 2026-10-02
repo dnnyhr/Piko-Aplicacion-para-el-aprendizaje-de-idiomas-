@@ -19,6 +19,9 @@ import { useTextos } from '../../src/ui/textos/useTextos';
 import { Runner, type ResultadoRonda } from '../../src/features/exercises/Runner';
 import { useAulaCliente } from '../../src/features/aula/cliente';
 import { useProgreso } from '../../src/features/progreso/store';
+import { RecompensaLeccion } from '../../src/features/arbol/RecompensaLeccion';
+import { ContadorSacuanjoches } from '../../src/ui/arbol/ContadorSacuanjoches';
+import { recompensaEntre, type Recompensa } from '../../src/core/progress/arbol';
 import { color, espacio, radio, texto } from '../../src/ui/tokens';
 
 export default function Jugar() {
@@ -26,11 +29,13 @@ export default function Jugar() {
   const { items, roster, studentId, conexion, board, reintentaEnMs } = useAulaCliente();
   const responder = useAulaCliente((s) => s.responder);
   const limpiarRonda = useAulaCliente((s) => s.limpiarRonda);
+  const terminarLeccion = useAulaCliente((s) => s.terminarLeccion);
   const salir = useAulaCliente((s) => s.salir);
   const estado = useProgreso((s) => s.estado);
   const { t, frases } = useTextos();
 
   const [resultado, setResultado] = useState<ResultadoRonda | null>(null);
+  const [recompensa, setRecompensa] = useState<Recompensa | null>(null);
 
   const yo = roster.find((r) => r.id === studentId);
 
@@ -60,7 +65,12 @@ export default function Jugar() {
         <Runner
           items={items}
           onResponder={(item, acerto, ms) => responder(item, item.skill, acerto, ms)}
-          onTerminar={setResultado}
+          onTerminar={(r) => {
+            const antes = useProgreso.getState().estado.sacuanjoches;
+            terminarLeccion(items, r.aciertos);
+            setRecompensa(recompensaEntre(antes, useProgreso.getState().estado.sacuanjoches));
+            setResultado(r);
+          }}
         />
       </View>
     );
@@ -73,8 +83,25 @@ export default function Jugar() {
     return (
       <Pantalla>
         <ScrollView contentContainerStyle={styles.fin} showsVerticalScrollIndicator={false}>
-          <PikoMascota estado={bien ? 'celebrando' : 'alegre'} tam={170} />
-          <Globo hacia="abajo">{elegir(frases(bien ? 'piko.fin_bien' : 'piko.fin_normal'))}</Globo>
+          {recompensa ? (
+            <>
+              <Globo hacia="abajo">
+                {recompensa.crecioArbol
+                  ? elegir(frases('piko.arbol_crece'))
+                  : recompensa.subioNivel
+                    ? elegir(frases('piko.subir_nivel'))
+                    : bien
+                      ? elegir(frases('piko.fin_bien'))
+                      : elegir(frases('piko.fin_normal'))}
+              </Globo>
+              <RecompensaLeccion recompensa={recompensa} />
+            </>
+          ) : (
+            <>
+              <PikoMascota estado={bien ? 'celebrando' : 'alegre'} tam={170} />
+              <Globo hacia="abajo">{bien ? elegir(frases('piko.fin_bien')) : elegir(frases('piko.fin_normal'))}</Globo>
+            </>
+          )}
 
           <View style={styles.marcador}>
             <Dato valor={`${resultado.aciertos}/${resultado.respondidas}`} etiqueta={t('jugar.esta_ronda')} />
@@ -129,6 +156,7 @@ export default function Jugar() {
             <Text style={styles.credencialXp}>
               {t('comun.xp_correctas', { xp: estado.xp, correctas: estado.correct, respondidas: estado.answered })}
             </Text>
+            <ContadorSacuanjoches total={estado.sacuanjoches} onPress={() => router.push('/perfil')} />
           </View>
         )}
 
@@ -170,6 +198,7 @@ const styles = StyleSheet.create({
     paddingVertical: espacio.md,
     paddingHorizontal: espacio.xl,
     alignItems: 'center',
+    gap: espacio.xs,
   },
   credencialNombre: { ...texto.titulo, color: color.verde },
   credencialXp: { ...texto.chico, color: color.tintaSuave },
