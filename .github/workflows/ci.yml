@@ -41,6 +41,9 @@ jobs:
       - name: Contenido de la app al día con el diccionario
         run: npm run contenido:comprobar
 
+      - name: La app del sitio (web/probar/app) tiene todo lo que pide
+        run: npm run web:comprobar
+
   panel:
     name: Robot — panel y puente
     runs-on: ubuntu-latest

@@ -10,13 +10,16 @@
   background:rgba(247,240,228,.92);
   backdrop-filter:saturate(1.4) blur(10px); -webkit-backdrop-filter:saturate(1.4) blur(10px);
   border-bottom:1px solid rgba(15,93,61,.10);
+  transition:box-shadow .3s ease, background .3s ease;
 }
+.nav--bajando{background:rgba(247,240,228,.97); box-shadow:0 10px 30px rgba(10,69,48,.10)}
 .nav__fila{
   width:min(1180px,92vw); margin-inline:auto;
   display:flex; align-items:center; gap:1rem; padding:.55rem 0;
 }
-.nav__marca{display:flex; align-items:center; gap:.5rem; text-decoration:none; flex:none}
-.nav__marca img{height:34px; width:auto}
+.nav__marca{display:flex; align-items:center; gap:.5rem; text-decoration:none; flex:none; transition:transform .3s cubic-bezier(.2,.8,.3,1.4)}
+.nav__marca:hover{transform:rotate(-3deg) scale(1.04)}
+.nav__marca img{height:42px; width:auto; display:block}
 .nav__enlaces{
   display:flex; gap:.4rem; margin:0 0 0 auto; padding:0; list-style:none;
   overflow-x:auto; scrollbar-width:none;
@@ -31,7 +34,9 @@
 }
 .nav__enlace svg{width:19px; height:19px; flex:none; fill:currentColor}
 .nav__enlace:hover{background:#fff; border-color:rgba(15,93,61,.14); transform:translateY(-1px)}
-.nav__enlace[aria-current="page"]{background:var(--verde-piko); color:var(--papel); border-color:var(--verde-piko)}
+.nav__enlace:hover svg{animation:nav-salto .45s ease}
+@keyframes nav-salto{0%,100%{transform:translateY(0)} 40%{transform:translateY(-3px) rotate(-8deg)}}
+.nav__enlace[aria-current="page"]{background:var(--verde-piko); color:var(--papel); border-color:var(--verde-piko); box-shadow:0 8px 18px rgba(15,93,61,.25)}
 .nav__enlace:focus-visible{outline:3px solid var(--pico); outline-offset:2px}
 /* Cada sección con su color, como las plumas de Piko. */
 .nav__enlace--diccionario svg{color:var(--verde-pasto)}
@@ -42,16 +47,35 @@
 
 @media (max-width:760px){
   .nav__fila{flex-wrap:wrap; gap:.35rem; padding:.45rem 0 .5rem}
-  .nav__marca img{height:28px}
+  .nav__marca img{height:34px}
   .nav__enlaces{margin:0; width:100%}
   .nav__enlace{font-size:.88rem; padding:.42rem .8rem}
 }
 
 /* ---------- Pie ---------- */
-.sitio-pie{background:var(--verde-hondo); color:#DCEBE2; margin-top:clamp(2rem,6vw,4rem)}
-.sitio-pie__fila{width:min(1180px,92vw); margin-inline:auto; display:flex; flex-wrap:wrap; gap:1rem 2rem; align-items:center; justify-content:space-between; padding:1.6rem 0; font-size:.92rem}
-footer.sitio-pie a{color:#fff}
+.sitio-pie{
+  background:var(--verde-hondo); color:#CFE2D6; margin-top:clamp(3rem,7vw,5rem); position:relative;
+  font-family:"Nunito Sans",system-ui,sans-serif; font-size:.95rem; line-height:1.6;
+}
+.sitio-pie__ola{position:absolute; left:0; right:0; top:-34px; width:100%; height:35px; display:block}
+.sitio-pie__ola path{fill:var(--verde-hondo)}
+.sitio-pie__grid{
+  width:min(1180px,90vw); margin-inline:auto; padding:2.6rem 0 1.6rem;
+  display:grid; grid-template-columns:minmax(0,1.3fr) repeat(2,minmax(0,.7fr)); gap:2rem;
+}
+.sitio-pie__marca img{width:170px; height:auto; display:block; margin-bottom:.9rem}
+.sitio-pie__marca p{margin:0; max-width:36ch}
+.sitio-pie h2{font-family:Fredoka,sans-serif; font-weight:600; font-size:.82rem; letter-spacing:.14em; text-transform:uppercase; color:var(--verde-pasto); margin:0 0 .8rem}
+.sitio-pie ul{list-style:none; margin:0; padding:0; display:grid; gap:.45rem}
+footer.sitio-pie a{color:#fff; text-decoration:none; border-bottom:1px solid rgba(255,255,255,.25); transition:border-color .2s ease}
+footer.sitio-pie a:hover{border-bottom-color:var(--verde-pasto)}
+.sitio-pie__fila{
+  width:min(1180px,90vw); margin-inline:auto; border-top:1px solid rgba(255,255,255,.12);
+  display:flex; flex-wrap:wrap; gap:.6rem 2rem; justify-content:space-between; padding:1.2rem 0 1.6rem; font-size:.86rem; color:#A9C7B6;
+}
+@media (max-width:760px){ .sitio-pie__grid{grid-template-columns:1fr 1fr} .sitio-pie__marca{grid-column:1/-1} }
 
 @media (prefers-reduced-motion:reduce){
-  .nav__enlace{transition:none}
+  .nav,.nav__enlace,.nav__marca{transition:none}
+  .nav__enlace:hover svg{animation:none}
 }

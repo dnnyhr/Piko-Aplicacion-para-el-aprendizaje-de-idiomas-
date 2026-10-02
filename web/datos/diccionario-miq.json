@@ -391,6 +391,32 @@
     "confianza": "C"
    },
    "notas": "Tangni escribe «Tinki»: la ng se oye como n antes de k (S4).",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "tingki",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Tignki",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Tinki",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "tingki",
     "Tignki",
@@ -437,6 +463,26 @@
    "categoria": "interjeccion",
    "tema": "saludos",
    "notas": "El diccionario de Scott Lackwood escribe «Ao», con o (S1).",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "au",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Ao",
+      "quien": [
+       "Scott Lackwood (2006)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "au",
     "Ao"
@@ -476,6 +522,26 @@
    "analisis": "nahki-sma",
    "glosa": "cómo-PRS.2",
    "notas": "La misma persona la escribió igual en las palabras y en las frases. Tangni la escribe separada y sin h, «Naki sma»: corta la palabra justo donde la cortó el análisis (nahki + sma).",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "nahkisma",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Naki sma",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "nahkisma",
     "Nahkisma?",
@@ -537,6 +603,36 @@
    "categoria": "sustantivo",
    "tema": "familia",
    "revisar": "Teacher Smith: hermano = muih, hermana = laikra. Tangni: hermano = yaikra, hermana = muiki (muih + ki). Encaja si la palabra depende de si los hermanos son del mismo sexo. Hay que preguntarlo antes de enseñarla.",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "Muih",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Muihnika",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ],
+    "otras": [
+     {
+      "id": "yaikra",
+      "forma": "yaikra",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Muih",
     "Muihnika"
@@ -576,6 +672,22 @@
    "es": "abuela",
    "categoria": "sustantivo",
    "tema": "familia",
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "mama_almuk",
+      "forma": "mama almuk",
+      "quien": [
+       "Teacher Smith",
+       "Tangni"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
    "escrito": [
     "Kuka"
    ],
@@ -596,6 +708,21 @@
    "tema": "familia",
    "analisis": "mama almuk",
    "glosa": "mamá vieja",
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "kuka",
+      "forma": "kuka",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
    "escrito": [
     "Mama almuk",
     "mama almuk"
@@ -617,6 +744,30 @@
    "es": "abuelo",
    "categoria": "sustantivo",
    "tema": "familia",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "aisa_almuk",
+      "forma": "aisa almuk",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "sinonimo"
+     },
+     {
+      "id": "papa_almuk",
+      "forma": "papa almuk",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "dama",
     "Dama"
@@ -637,6 +788,31 @@
    "tema": "familia",
    "analisis": "aisa almuk",
    "glosa": "papá viejo",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "dama",
+      "forma": "dama",
+      "quien": [
+       "Teacher Smith",
+       "Matamoros (1996)"
+      ],
+      "tipo": "sinonimo"
+     },
+     {
+      "id": "papa_almuk",
+      "forma": "papa almuk",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Aisa almuk"
    ],
@@ -658,6 +834,33 @@
    "analisis": "luhpi waitna",
    "glosa": "hijo.o.hija hombre",
    "notas": "Tangni escribe «lupha»: ¿luhpi o lupha? La h cambia de lugar (S3) y la vocal final también. Matamoros escribe «Luhpa waitna», como Tangni.",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "Luhpi waitna",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "lupha waitna",
+      "quien": [
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Luhpa waitna",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "Luhpi waitna",
     "lupha waitna",
@@ -686,6 +889,26 @@
    "analisis": "luhpi mairin",
    "glosa": "hijo.o.hija mujer",
    "notas": "Tangni escribe «lupha».",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "Luhpi mairin",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "lupha mairin",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "Luhpi mairin",
     "lupha mairin"
@@ -837,6 +1060,26 @@
    "es": "tres",
    "categoria": "numeral",
    "tema": "numeros",
+   "variantes": {
+    "etiquetas": [
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "yumgpa",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "yumpha",
+      "quien": [
+       "Teacher Smith",
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "yumgpa",
     "yumpha"
@@ -861,6 +1104,26 @@
    "analisis": "wal-h-wal",
    "glosa": "dos-h-dos",
    "notas": "Tangni lo escribió exactamente así: la normalización de la primera tanda se confirmó.",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "walg walg",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "walhwal",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "walg walg",
     "walhwal"
@@ -886,6 +1149,26 @@
    "analisis": "mat-sip",
    "glosa": "mano-completa(?)",
    "notas": "Tangni lo escribió exactamente así: la normalización de la primera tanda se confirmó.",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "matchip",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "matsip",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "matchip",
     "matsip"
@@ -907,6 +1190,36 @@
    "es": "seis",
    "categoria": "numeral",
    "tema": "numeros",
+   "variantes": {
+    "etiquetas": [
+     "sistemas",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "matlalkahgbi",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Matlal kahbi",
+      "quien": [
+       "Teacher Smith"
+      ]
+     }
+    ],
+    "otras": [
+     {
+      "id": "matsip_pura_kum",
+      "forma": "matsip pura kum",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "sistemas"
+     }
+    ]
+   },
    "escrito": [
     "matlalkahgbi",
     "Matlal kahbi",
@@ -931,6 +1244,21 @@
    "tema": "numeros",
    "analisis": "matlalkahbi pura kum",
    "glosa": "seis encima uno",
+   "variantes": {
+    "etiquetas": [
+     "sistemas"
+    ],
+    "otras": [
+     {
+      "id": "matsip_pura_wal",
+      "forma": "matsip pura wal",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "sistemas"
+     }
+    ]
+   },
    "escrito": [
     "matlalkahgbi pura kum"
    ],
@@ -953,6 +1281,21 @@
    "tema": "numeros",
    "analisis": "matlalkahbi pura wal",
    "glosa": "seis encima dos",
+   "variantes": {
+    "etiquetas": [
+     "sistemas"
+    ],
+    "otras": [
+     {
+      "id": "matsip_pura_yumpha",
+      "forma": "matsip pura yumpha",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "sistemas"
+     }
+    ]
+   },
    "escrito": [
     "Matlal kahbi pura wal"
    ],
@@ -975,6 +1318,21 @@
    "tema": "numeros",
    "analisis": "matlalkahbi pura yumhpa",
    "glosa": "seis encima tres",
+   "variantes": {
+    "etiquetas": [
+     "sistemas"
+    ],
+    "otras": [
+     {
+      "id": "matsip_pura_walhwal",
+      "forma": "matsip pura walhwal",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "sistemas"
+     }
+    ]
+   },
    "escrito": [
     "matlal kahbi pura yumpha"
    ],
@@ -998,6 +1356,21 @@
    "tema": "numeros",
    "analisis": "mata wal-sip",
    "glosa": "mano dos-completa(?)",
+   "variantes": {
+    "etiquetas": [
+     "sistemas"
+    ],
+    "otras": [
+     {
+      "id": "matsip_pura_matsip",
+      "forma": "matsip pura matsip",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "sistemas"
+     }
+    ]
+   },
    "escrito": [
     "mata wal sip"
    ],
@@ -1130,6 +1503,27 @@
    "categoria": "sustantivo",
    "tema": "cuerpo",
    "notas": "En los números aparece como «mat-» y «mata» (cinco, diez). Tangni escribe «mitha»: la h va antes o después de la t según quien escribe (S3).",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "Mihta",
+      "quien": [
+       "Teacher Smith",
+       "Matamoros (1996)"
+      ]
+     },
+     {
+      "forma": "mitha",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "Mihta",
     "mitha",
@@ -1217,6 +1611,27 @@
    "categoria": "sustantivo",
    "tema": "cuerpo",
    "notas": "El diccionario de Scott Lackwood escribe «Kupya»: y e i son la misma vocal antes de a.",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "kupia",
+      "quien": [
+       "Teacher Smith",
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Kupya",
+      "quien": [
+       "Scott Lackwood (2006)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "kupia",
     "Kupya"
@@ -1299,6 +1714,26 @@
    "categoria": "sustantivo",
    "tema": "casa",
    "notas": "Matamoros escribe «Silmika».",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "slilmika",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Silmika",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "slilmika",
     "Silmika"
@@ -1381,6 +1816,26 @@
     "confianza": "B"
    },
    "notas": "La y final suena como i. Matamoros: «canoa = Duri sirpi» (canoa pequeña).",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "duary",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Duri",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "duary",
     "Duri"
@@ -1454,6 +1909,22 @@
     "confianza": "A"
    },
    "notas": "Literalmente «la casa de la escuela». «watla» es la forma de «utla» cuando tiene dueño.",
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "skul",
+      "forma": "skul",
+      "quien": [
+       "Teacher Smith",
+       "Tangni"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
    "escrito": [
     "skul watla"
    ],
@@ -1528,6 +1999,21 @@
     "confianza": "A"
    },
    "notas": "Matamoros da «libro = Paun».",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "paun",
+      "forma": "paun",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "escrito": [
     "buk"
    ],
@@ -1575,6 +2061,21 @@
     "confianza": "B"
    },
    "notas": "Matamoros da «lápiz = Pinsil», del inglés «pencil».",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "pinsil",
+      "forma": "pinsil",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "escrito": [
     "ingk"
    ],
@@ -1600,6 +2101,26 @@
     "confianza": "B"
    },
    "notas": "Matamoros: «palabra = Sturi aisanka».",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "stury",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Sturi",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "stury",
     "Sturi"
@@ -1645,6 +2166,26 @@
    "tema": "escuela",
    "analisis": "ulb-aya",
    "glosa": "escribir-INF",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "ulbaya",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Ulbaia",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "ulbaya",
     "Ulbaia"
@@ -1813,6 +2354,21 @@
    "tema": "acciones",
    "analisis": "pi-y-aya",
    "glosa": "comer-INF",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "plun_piyaya",
+      "forma": "plun piyaya",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "piyaya"
    ],
@@ -1854,6 +2410,27 @@
    "tema": "acciones",
    "analisis": "yap-aya",
    "glosa": "dormir-INF",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "yapaya",
+      "quien": [
+       "Teacher Smith",
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Yapaia",
+      "quien": [
+       "Scott Lackwood (2006)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "yapaya",
     "Yapaia"
@@ -1877,6 +2454,27 @@
    "tema": "acciones",
    "analisis": "wap-aya",
    "glosa": "caminar-INF",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "wapaya",
+      "quien": [
+       "Teacher Smith",
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Wapaia",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "wapaya",
     "Wapaia"
@@ -1900,6 +2498,27 @@
    "tema": "acciones",
    "analisis": "ais-aya",
    "glosa": "hablar-INF",
+   "variantes": {
+    "etiquetas": [
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "aisaya",
+      "quien": [
+       "Teacher Smith",
+       "Tangni",
+       "Scott Lackwood (2006)"
+      ]
+     },
+     {
+      "forma": "Aisaia",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "aisaya",
     "Aisaya",
@@ -1947,6 +2566,28 @@
    "analisis": "kaik-aya",
    "glosa": "ver-INF",
    "notas": "El diccionario escribe el infinitivo en -aia (M1).",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "kaikaya",
+      "quien": [
+       "Teacher Smith",
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Kaikaia",
+      "quien": [
+       "Scott Lackwood (2006)",
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "kaikaya",
     "Kaikaia"
@@ -1971,6 +2612,27 @@
    "tema": "acciones",
    "analisis": "aiwan-aya",
    "glosa": "cantar-INF",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "aiwanaya",
+      "quien": [
+       "Teacher Smith",
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Aiwanaia",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "aiwanaya",
     "Aiwanaia"
@@ -2021,6 +2683,27 @@
     "origen": "work",
     "confianza": "A"
    },
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "wark takaya",
+      "quien": [
+       "Teacher Smith",
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Wark takaia",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "wark takaya",
     "Wark takaia"
@@ -2045,6 +2728,22 @@
    "categoria": "verbo",
    "tema": "acciones",
    "revisar": "Tangni dio el infinitivo de «ir»: «waya». ¿«wap» es la orden («¡andá!») o la raíz de «caminar» (wapaya)?",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "waya",
+      "forma": "waya",
+      "quien": [
+       "Tangni",
+       "Matamoros (1996)"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "wap"
    ],
@@ -2064,6 +2763,22 @@
    "categoria": "verbo",
    "tema": "acciones",
    "revisar": "Tangni dio el infinitivo, «balaya». ¿«bal» es la orden («¡vení!»)?",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "balaya",
+      "forma": "balaya",
+      "quien": [
+       "Tangni",
+       "Matamoros (1996)"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "bal"
    ],
@@ -2084,6 +2799,21 @@
    "tema": "frases",
    "analisis": "titan yamni, smasmalkra mairin",
    "glosa": "mañana buena maestro.o.maestra mujer",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.buenos_dias_maestra.2",
+      "forma": "titan yamni maistro",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Titan Yamni, smasmalkra mairin."
    ],
@@ -2106,6 +2836,21 @@
    "analisis": "nin-am dia",
    "glosa": "nombre-2POSS qué",
    "notas": "Literalmente «¿tu nombre qué?».",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.como_te_llamas.2",
+      "forma": "niman naki",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Ninam dia?"
    ],
@@ -2129,6 +2874,26 @@
    "analisis": "yang nin-i Ana",
    "glosa": "yo nombre-1POSS Ana",
    "notas": "Literalmente «yo, mi nombre Ana».",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "Yang nini Ana.",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Yang nuni ana",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "Yang nini Ana.",
     "Yang nuni ana"
@@ -2178,6 +2943,21 @@
    "analisis": "plun ai-dauk-sa",
    "glosa": "comida ai(?)-hacer-PRS.3",
    "notas": "Parece decir «la comida me hace». Sobre «ai», ver M11.",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.tengo_hambre.2",
+      "forma": "plun aidauki",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Plun aidauksa"
    ],
@@ -2201,6 +2981,26 @@
    "analisis": "li want",
    "glosa": "agua «want»",
    "notas": "«want» va sin terminación de persona; comparar con «laiksna».",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "Li want",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Lii want",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "Li want",
     "Lii want"
@@ -2225,6 +3025,21 @@
    "analisis": "skul ra wapp",
    "glosa": "escuela a ir(?)",
    "revisar": "¿«wapp» (con doble p) es una forma distinta de «wap», por ejemplo «vamos»? ¿O es «wap»?",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.vamos_a_la_escuela.2",
+      "forma": "kaya skul ra",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Skul ra wapp"
    ],
@@ -2246,6 +3061,21 @@
    "tema": "frases",
    "analisis": "yapti-ki utla ra sa",
    "glosa": "mamá-1POSS casa LOC PRS.3",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.mi_mama_esta_en_la_casa.2",
+      "forma": "mamiki utlara sa",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Yaptiki utla ra sa."
    ],
@@ -2270,6 +3100,21 @@
    "tema": "frases",
    "analisis": "yul pi-sa",
    "glosa": "perro comer-PRS.3",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.el_perro_come.2",
+      "forma": "yul plun pisa",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Yul pisa"
    ],
@@ -2292,6 +3137,21 @@
    "tema": "frases",
    "analisis": "yauhka kat",
    "glosa": "mañana(el.día.siguiente) hasta",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.hasta_manana.2",
+      "forma": "titan pruabia",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Yauhka kat"
    ],
@@ -2313,6 +3173,26 @@
    "tema": "frases",
    "analisis": "tingki painika",
    "glosa": "gracias amigo",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "Tignki painika",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Tinki painika",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "Tignki painika",
     "Tinki painika"
@@ -2359,6 +3239,21 @@
    "tema": "frases",
    "analisis": "inska laik-sna",
    "glosa": "pescado «like»-PRS.1",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.me_gusta_el_pescado.2",
+      "forma": "yaiksna inska",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Inska laiksna"
    ],
@@ -2384,6 +3279,26 @@
    "analisis": "li auhw-isa",
    "glosa": "agua caer(?)-PRS.3",
    "notas": "Literalmente «el agua cae».",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "Li auhwisa",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Lii ahwisa",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "Li auhwisa",
     "Lii ahwisa"
@@ -2469,6 +3384,34 @@
    "categoria": "sustantivo",
    "tema": "comida",
    "notas": "«Quiero agua» y «está lloviendo» («el agua cae») usan la misma palabra. Tangni escribe siempre «lii», con la vocal doble: probablemente una i larga (S8). El diccionario de Scott Lackwood escribe «Lî», con circunflejo: vocal larga. Confirma la «lii» de Tangni (S8).",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "Li",
+      "quien": [
+       "Teacher Smith",
+       "Matamoros (1996)"
+      ]
+     },
+     {
+      "forma": "lii",
+      "quien": [
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Lî",
+      "quien": [
+       "Scott Lackwood (2006)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "Li",
     "lii",
@@ -2515,6 +3458,27 @@
    "categoria": "sustantivo",
    "tema": "comida",
    "notas": "Tangni escribió «coco», con la ortografía del español; Teacher Smith, «kuku» (S1).",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "kuku",
+      "quien": [
+       "Teacher Smith",
+       "Scott Lackwood (2006)"
+      ]
+     },
+     {
+      "forma": "coco",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "kuku",
     "coco",
@@ -2638,6 +3602,21 @@
    "categoria": "sustantivo",
    "tema": "saludos",
    "notas": "Las dos personas la usan igual para «amigo». Queda por saber si tiene que ver con «pain» (bien). Matamoros da «amigo = Pana».",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "pana",
+      "forma": "pana",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "escrito": [
     "painika"
    ],
@@ -2762,6 +3741,26 @@
    "es": "hijo o hija",
    "categoria": "sustantivo",
    "tema": "familia",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "Luhpi",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "lupha",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "Luhpi",
     "lupha"
@@ -2787,6 +3786,21 @@
     "de": "inglés",
     "origen": "school",
     "confianza": "A"
+   },
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "skul_watla",
+      "forma": "skul watla",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
    },
    "escrito": [
     "skul"
@@ -2829,6 +3843,21 @@
    "tema": "familia",
    "analisis": "yapti-ki",
    "glosa": "mamá-1POSS",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "mamiki",
+      "forma": "mamiki",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Yaptiki"
    ],
@@ -2871,6 +3900,26 @@
    "tema": "gramatica",
    "analisis": "nin-i",
    "glosa": "nombre-1POSS",
+   "variantes": {
+    "etiquetas": [
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "nini",
+      "quien": [
+       "Teacher Smith",
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "nuni",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "nini",
     "Nini",
@@ -2941,6 +3990,26 @@
     "confianza": "A"
    },
    "notas": "Tangni escribe «Yaiksna», con y (S7).",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "laiksna",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "Yaiksna",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "laiksna",
     "Yaiksna"
@@ -2987,6 +4056,26 @@
    "analisis": "auhw-isa",
    "glosa": "caer(?)-PRS.3",
    "notas": "Tangni: «ahwisa» en la frase y «ausisa» en la palabra «lluvia».",
+   "variantes": {
+    "etiquetas": [
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "auhwisa",
+      "quien": [
+       "Teacher Smith"
+      ]
+     },
+     {
+      "forma": "ahwisa",
+      "quien": [
+       "Tangni"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "auhwisa",
     "ahwisa"
@@ -3265,6 +4354,22 @@
    "categoria": "sustantivo",
    "tema": "familia",
    "revisar": "¿Es la misma palabra que «laikra» (l → y, S7)? Ver L7.",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "muih",
+      "forma": "muih",
+      "quien": [
+       "Teacher Smith",
+       "Matamoros (1996)"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "yaikra"
    ],
@@ -3310,6 +4415,21 @@
    "analisis": "mam-i-ki",
    "glosa": "mamá-1POSS",
    "notas": "Tangni la dio para «mamá»: en la familia se nombra con dueño (L9).",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "yaptiki",
+      "forma": "yaptiki",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "mamiki",
     "Mamiki"
@@ -3356,6 +4476,30 @@
    "tema": "familia",
    "analisis": "papa almuk",
    "glosa": "papá viejo",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "dama",
+      "forma": "dama",
+      "quien": [
+       "Teacher Smith",
+       "Matamoros (1996)"
+      ],
+      "tipo": "hablantes"
+     },
+     {
+      "id": "aisa_almuk",
+      "forma": "aisa almuk",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "papá almuk"
    ],
@@ -3419,6 +4563,21 @@
    "analisis": "matsip pura kum",
    "glosa": "cinco encima uno",
    "notas": "Sistema de Tangni: todo se cuenta desde el cinco. Teacher Smith cuenta desde el seis (N1, N3).",
+   "variantes": {
+    "etiquetas": [
+     "sistemas"
+    ],
+    "otras": [
+     {
+      "id": "matlalkahbi",
+      "forma": "matlalkahbi",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "sistemas"
+     }
+    ]
+   },
    "escrito": [
     "matsip pura kum"
    ],
@@ -3441,6 +4600,21 @@
    "analisis": "matsip pura wal",
    "glosa": "cinco encima dos",
    "notas": "Sistema de Tangni: todo se cuenta desde el cinco. Teacher Smith cuenta desde el seis (N1, N3).",
+   "variantes": {
+    "etiquetas": [
+     "sistemas"
+    ],
+    "otras": [
+     {
+      "id": "matlalkahbi_pura_kum",
+      "forma": "matlalkahbi pura kum",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "sistemas"
+     }
+    ]
+   },
    "escrito": [
     "matsip pura wal"
    ],
@@ -3463,6 +4637,21 @@
    "analisis": "matsip pura yumpha",
    "glosa": "cinco encima tres",
    "notas": "Sistema de Tangni: todo se cuenta desde el cinco. Teacher Smith cuenta desde el seis (N1, N3).",
+   "variantes": {
+    "etiquetas": [
+     "sistemas"
+    ],
+    "otras": [
+     {
+      "id": "matlalkahbi_pura_wal",
+      "forma": "matlalkahbi pura wal",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "sistemas"
+     }
+    ]
+   },
    "escrito": [
     "matsip pura yumpha"
    ],
@@ -3485,6 +4674,21 @@
    "analisis": "matsip pura walhwal",
    "glosa": "cinco encima cuatro",
    "notas": "Sistema de Tangni: todo se cuenta desde el cinco. Teacher Smith cuenta desde el seis (N1, N3).",
+   "variantes": {
+    "etiquetas": [
+     "sistemas"
+    ],
+    "otras": [
+     {
+      "id": "matlalkahbi_pura_yumpha",
+      "forma": "matlalkahbi pura yumpha",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "sistemas"
+     }
+    ]
+   },
    "escrito": [
     "Matsip pura walhwal"
    ],
@@ -3507,6 +4711,21 @@
    "analisis": "matsip pura matsip",
    "glosa": "cinco encima cinco",
    "notas": "Sistema de Tangni: todo se cuenta desde el cinco. Teacher Smith cuenta desde el seis (N1, N3).",
+   "variantes": {
+    "etiquetas": [
+     "sistemas"
+    ],
+    "otras": [
+     {
+      "id": "mata_walsip",
+      "forma": "mata walsip",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "sistemas"
+     }
+    ]
+   },
    "escrito": [
     "matsip pura matsip"
    ],
@@ -3529,6 +4748,37 @@
    "analisis": "bal-aya",
    "glosa": "venir-INF",
    "notas": "Acertó la predicción 9 de la versión 0.1.",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "balaya",
+      "quien": [
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Balaia",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ],
+    "otras": [
+     {
+      "id": "bal",
+      "forma": "bal",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "balaya",
     "Balaia"
@@ -3552,6 +4802,37 @@
    "analisis": "w-aya",
    "glosa": "ir-INF",
    "notas": "Otras fuentes escriben «waia».",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "hablantes",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "waya",
+      "quien": [
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Waia",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ],
+    "otras": [
+     {
+      "id": "wap",
+      "forma": "wap",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "waya",
     "Waia"
@@ -3575,6 +4856,21 @@
    "analisis": "plun pi-y-aya",
    "glosa": "comida comer-INF",
    "notas": "Literalmente «comer comida»: el objeto va antes del verbo (O1).",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "piyaya",
+      "forma": "piyaya",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "plun piyaya"
    ],
@@ -3650,6 +4946,21 @@
    "categoria": "sustantivo",
    "tema": "animales",
    "notas": "¿Del español «michi», como se le dice al gato? Matamoros da «gato = Pus», del inglés «puss».",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "pus",
+      "forma": "pus",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "escrito": [
     "micki"
    ],
@@ -3672,6 +4983,37 @@
     "confianza": "B"
    },
    "notas": "El diccionario de Scott Lackwood escribe «Kâlila»: k en lugar de g y la primera a larga. Matamoros da «gallina = Kalika mairin».",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras",
+     "sinonimo"
+    ],
+    "escrituras": [
+     {
+      "forma": "galila",
+      "quien": [
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Kâlila",
+      "quien": [
+       "Scott Lackwood (2006)"
+      ]
+     }
+    ],
+    "otras": [
+     {
+      "id": "kalika_mairin",
+      "forma": "kalika mairin",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
    "escrito": [
     "galila",
     "Kâlila"
@@ -3699,6 +5041,21 @@
     "confianza": "B"
    },
    "notas": "La palabra inglesa de la carne pasó a nombrar al animal.",
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "bip_mairin",
+      "forma": "bip mairin",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
    "escrito": [
     "bip",
     "Bip"
@@ -3759,6 +5116,21 @@
    "categoria": "sustantivo",
    "tema": "animales",
    "notas": "Matamoros da «iguana = Islu»; Scott Lackwood, «Kakamuk». ¿Dos clases de iguana?",
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "islu",
+      "forma": "islu",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
    "escrito": [
     "kakamuk",
     "Kakamuk"
@@ -3778,6 +5150,21 @@
    "categoria": "sustantivo",
    "tema": "animales",
    "revisar": "Matamoros da «loro = Rauha». ¿«iris» es otra clase de loro (por ejemplo, la lapa) o el mismo?",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "rauha",
+      "forma": "rauha",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "escrito": [
     "iris"
    ],
@@ -3828,6 +5215,26 @@
    "categoria": "expresion",
    "tema": "animales",
    "notas": "Matamoros: «pájaro = Daiwan tnawira»; «daiwan» es «animal» (Scott Lackwood).",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "daiwan nawira",
+      "quien": [
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Daiwan tnawira",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "daiwan nawira",
     "Daiwan tnawira"
@@ -3895,6 +5302,26 @@
    "categoria": "sustantivo",
    "tema": "comida",
    "notas": "Matamoros escribe «Yauhra», con h, igual que Scott Lackwood.",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "yaura",
+      "quien": [
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Yauhra",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "yaura",
     "Yauhra"
@@ -4044,6 +5471,26 @@
    "categoria": "sustantivo",
    "tema": "comida",
    "notas": "Matamoros y Scott Lackwood escriben «aya», sin h.",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "haya",
+      "quien": [
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Aya",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "haya",
     "Aya"
@@ -4065,6 +5512,32 @@
    "analisis": "galila mabra",
    "glosa": "gallina huevo",
    "notas": "Literalmente «huevo de gallina»: el poseedor va antes (O4). El diccionario escribe «mahbra», con h (S3). Matamoros: «huevo = Mahbra».",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "galila mabra",
+      "quien": [
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Kâlila mahbra",
+      "quien": [
+       "Scott Lackwood (2006)"
+      ]
+     },
+     {
+      "forma": "Mahbra",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "galila mabra",
     "Kâlila mahbra",
@@ -4141,6 +5614,21 @@
    "categoria": "sustantivo",
    "tema": "naturaleza",
    "revisar": "Matamoros da «sol = Yu». ¿«yapta» es otra palabra para el sol, o quiere decir otra cosa?",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "yu",
+      "forma": "yu",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "escrito": [
     "yapta"
    ],
@@ -4290,6 +5778,26 @@
    "categoria": "expresion",
    "tema": "naturaleza",
    "notas": "Matamoros: «fuego = Pauta klauhan». «klawi» / «klauhan» sería «ardiendo».",
+   "variantes": {
+    "etiquetas": [
+     "region",
+     "escrituras"
+    ],
+    "escrituras": [
+     {
+      "forma": "pauta klawi",
+      "quien": [
+       "Tangni"
+      ]
+     },
+     {
+      "forma": "Pauta klauhan",
+      "quien": [
+       "Matamoros (1996)"
+      ]
+     }
+    ]
+   },
    "escrito": [
     "pauta klawi",
     "Pauta klauhan"
@@ -4336,6 +5844,21 @@
    "analisis": "nim-an naki",
    "glosa": "nombre-2POSS cómo",
    "notas": "Teacher Smith pregunta «¿tu nombre qué?» (Ninam dia); Tangni, «¿tu nombre cómo?». En las dos está la m de «tu» (M4).",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.como_te_llamas",
+      "forma": "ninam dia",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Niman naki"
    ],
@@ -4356,6 +5879,21 @@
    "categoria": "frase",
    "tema": "frases",
    "glosa": "mañana buena maestro",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.buenos_dias_maestra",
+      "forma": "titan yamni smasmalkra mairin",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Titan yamni Maistro"
    ],
@@ -4376,6 +5914,21 @@
    "categoria": "frase",
    "tema": "frases",
    "revisar": "Teacher Smith dijo «aidauksa». ¿Qué diferencia hay con «aidauki»?",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.tengo_hambre",
+      "forma": "plun aidauksa",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Plun aidauki"
    ],
@@ -4395,6 +5948,21 @@
    "categoria": "frase",
    "tema": "frases",
    "revisar": "El diccionario de Scott Lackwood da «Kaisa, kaia maka: vamos, vámonos»: «kaya» sería «vamos» y la frase seguiría con el verbo adelante, como en español. Confirmar con Tangni.",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.vamos_a_la_escuela",
+      "forma": "skul ra wapp",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Kaya skul ra"
    ],
@@ -4418,6 +5986,21 @@
    "analisis": "mam-i-ki utla=ra sa",
    "glosa": "mamá-1POSS casa=LOC PRS.3",
    "notas": "La misma estructura que la de Teacher Smith, con «ra» pegada (S6).",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.mi_mama_esta_en_la_casa",
+      "forma": "yaptiki utla ra sa",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Mamiki utlara sa"
    ],
@@ -4443,6 +6026,21 @@
    "analisis": "yul plun pi-sa",
    "glosa": "perro comida comer-PRS.3",
    "notas": "Sujeto, objeto y verbo, en ese orden (O1).",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.el_perro_come",
+      "forma": "yul pisa",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Yul plun pisa"
    ],
@@ -4463,6 +6061,21 @@
    "categoria": "frase",
    "tema": "frases",
    "revisar": "Teacher Smith dijo «Yauhka kat». ¿Qué es «pruabia»? ¿«titan» también es «mañana, el día siguiente»? (L4)",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.hasta_manana",
+      "forma": "yauhka kat",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Titan pruabia"
    ],
@@ -4484,6 +6097,21 @@
    "analisis": "yaik-sna inska",
    "glosa": "«like»-PRS.1 pescado",
    "notas": "La única frase del corpus con el verbo antes del objeto; Teacher Smith dijo «Inska laiksna». Puede ser el orden del español (O1).",
+   "variantes": {
+    "etiquetas": [
+     "hablantes"
+    ],
+    "otras": [
+     {
+      "id": "frase.me_gusta_el_pescado",
+      "forma": "inska laiksna",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "hablantes"
+     }
+    ]
+   },
    "escrito": [
     "Yaiksna inska"
    ],
@@ -5744,6 +7372,21 @@
     "origen": "puss",
     "confianza": "B"
    },
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "micki",
+      "forma": "micki",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "escrito": [
     "Pus"
    ],
@@ -5762,6 +7405,21 @@
    "es": "loro",
    "categoria": "sustantivo",
    "tema": "animales",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "iris",
+      "forma": "iris",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "escrito": [
     "Rauha"
    ],
@@ -5778,6 +7436,22 @@
    "es": "iguana",
    "categoria": "sustantivo",
    "tema": "animales",
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "kakamuk",
+      "forma": "kakamuk",
+      "quien": [
+       "Tangni",
+       "Scott Lackwood (2006)"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
    "escrito": [
     "Islu"
    ],
@@ -5794,6 +7468,21 @@
    "es": "sol",
    "categoria": "sustantivo",
    "tema": "naturaleza",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "yapta",
+      "forma": "yapta",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "escrito": [
     "Yu"
    ],
@@ -5810,6 +7499,22 @@
    "es": "amigo",
    "categoria": "sustantivo",
    "tema": "saludos",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "painika",
+      "forma": "painika",
+      "quien": [
+       "Teacher Smith",
+       "Tangni"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "escrito": [
     "Pana"
    ],
@@ -5826,6 +7531,21 @@
    "es": "libro",
    "categoria": "sustantivo",
    "tema": "escuela",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "buk",
+      "forma": "buk",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "escrito": [
     "Paun"
    ],
@@ -5847,6 +7567,21 @@
     "origen": "pencil",
     "confianza": "A"
    },
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "ingk",
+      "forma": "ingk",
+      "quien": [
+       "Teacher Smith"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "escrito": [
     "Pinsil"
    ],
@@ -5866,6 +7601,22 @@
    "categoria": "expresion",
    "tema": "animales",
    "glosa": "gallo(?) mujer",
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "galila",
+      "forma": "galila",
+      "quien": [
+       "Tangni",
+       "Scott Lackwood (2006)"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
    "escrito": [
     "Kalika mairin"
    ],
@@ -5886,6 +7637,23 @@
    "tema": "animales",
    "glosa": "«beef» mujer",
    "notas": "«bip» sola es el ganado; la vaca es la hembra.",
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "bip",
+      "forma": "bip",
+      "quien": [
+       "Tangni",
+       "Scott Lackwood (2006)",
+       "Matamoros (1996)"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
    "escrito": [
     "Bip mairin"
    ],
