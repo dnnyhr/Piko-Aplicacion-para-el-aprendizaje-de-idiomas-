@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -23,7 +23,21 @@
         flex: 1;
       }
     </style>
-  <link rel="icon" href="/probar/app/favicon.ico"/></head>
+  <link rel="icon" href="/probar/app/favicon.ico"/>    <link rel="preload" href="/probar/app/_expo/static/js/web/_layout-13fbe04c270c188b121a7c90f798c5fd.js" as="script" data-piko-precarga>
+    <link rel="preload" href="/probar/app/_expo/static/js/web/index-b78124bf20121bba1fb1dd7fbb867c5e.js" as="script" data-piko-precarga>
+    <link rel="preload" href="/probar/app/assets/paquetes/@expo-google-fonts/fredoka/500Medium/Fredoka_500Medium.3e8c574c93c92c04130508b454b61529.ttf" as="font" type="font/ttf" crossorigin data-piko-precarga>
+    <link rel="preload" href="/probar/app/assets/paquetes/@expo-google-fonts/fredoka/600SemiBold/Fredoka_600SemiBold.89a2d8224922009e6f9b96181093b634.ttf" as="font" type="font/ttf" crossorigin data-piko-precarga>
+    <link rel="preload" href="/probar/app/assets/paquetes/@expo-google-fonts/fredoka/700Bold/Fredoka_700Bold.eaa34632fd156f78e16a584d1648ffcc.ttf" as="font" type="font/ttf" crossorigin data-piko-precarga>
+    <link rel="preload" href="/probar/app/assets/paquetes/@expo-google-fonts/nunito-sans/400Regular/NunitoSans_400Regular.9a446df4acd337a0803b98608aab1e66.ttf" as="font" type="font/ttf" crossorigin data-piko-precarga>
+    <link rel="preload" href="/probar/app/assets/paquetes/@expo-google-fonts/nunito-sans/600SemiBold/NunitoSans_600SemiBold.58a08cfbaf11a92ef3aaf80e768a16ad.ttf" as="font" type="font/ttf" crossorigin data-piko-precarga>
+    <link rel="preload" href="/probar/app/assets/paquetes/@expo-google-fonts/nunito-sans/700Bold/NunitoSans_700Bold.d16d2c478d30947f35321066f798de6c.ttf" as="font" type="font/ttf" crossorigin data-piko-precarga>
+    <style>
+      .piko-espera{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#F7F0E4;font:600 17px system-ui,sans-serif;color:#0F5D3D}
+      .piko-espera img{animation:piko-espera 1.6s ease-in-out infinite}
+      @keyframes piko-espera{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+      @media (prefers-reduced-motion:reduce){.piko-espera img{animation:none}}
+    </style>
+  </head>
 
   <body>
     <!-- Use static rendering with Expo Router to support running without JavaScript. -->
@@ -31,7 +45,12 @@
       You need to enable JavaScript to run this app.
     </noscript>
     <!-- The root element for your Expo app. -->
-    <div id="root"></div>
+    <div id="root">
+    <div class="piko-espera" aria-label="Cargando Piko">
+      <img src="/assets/img/piko.svg" alt="" width="96" height="158">
+      <p>Cargando Piko…</p>
+    </div>
+    </div>
   <script src="/probar/app/_expo/static/js/web/__expo-metro-runtime-1f8f5d3ca6b7f58204d51e14506d73fb.js" defer></script><script src="/probar/app/_expo/static/js/web/__common-2cd84bab08716d660ea5d3310914aad3.js" defer></script><script src="/probar/app/_expo/static/js/web/entry-107ea828ba2b52b2f35ee6286209d338.js" defer></script>
 </body>
 </html>
