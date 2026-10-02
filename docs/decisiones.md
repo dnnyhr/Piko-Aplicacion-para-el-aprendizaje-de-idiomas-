@@ -16,7 +16,7 @@ probar.
 **Decisión.** Todo eso vive en `src/core/` como TypeScript puro, sin una sola
 importación de React Native.
 
-**Por qué.** Porque así corre en Node. Las 124 pruebas se ejecutan en cuatro
+**Por qué.** Porque así corre en Node. Las 140 pruebas se ejecutan en cuatro
 segundos sin emulador, y `tools/sim.ts` puede levantar un aula entera —
 anfitrión y ocho estudiantes reales sobre TCP — en la computadora.
 
@@ -283,6 +283,56 @@ usan pares que sólo se distinguen por la duración de la vocal.
 `tts`. Teacher Smith y Tangni se ofrecieron a grabar. La reproducción de
 `audio` todavía no está hecha en `EjercicioOpciones`: es lo primero que hace
 falta para dejar la voz sintética.
+
+---
+
+## 17. El progreso se ve como un madroño que crece
+
+**Contexto.** El XP es un número que a un niño de primaria le dice poco, y la
+app no tenía niveles ni perfil. Hacía falta que avanzar se *viera*, y que se
+sintiera propio.
+
+**Decisión.** Cada lección terminada da **sacuanjoches**: 3 por terminarla,
+una más si acertó el 70 % o más, y otra si fue perfecta. Se acumulan y hacen
+crecer un **madroño** en seis etapas (semilla, brote, arbolito, árbol con
+hojas, primeras flores, árbol florecido), y Piko sube una rama por **nivel**
+(diez en total). Los umbrales están en `src/core/progress/arbol.ts`:
+
+| Nivel | Sacuanjoches | Etapa del árbol |
+|---|---|---|
+| 1 | 0 | Semilla |
+| 2 | 4 | Brote |
+| 3 | 12 | Arbolito |
+| 4 | 22 | |
+| 5 | 35 | Árbol con hojas |
+| 6 | 50 | |
+| 7 | 68 | Primeras flores |
+| 8 | 88 | |
+| 9 | 110 | Árbol florecido |
+| 10 | 135 | (Piko en la cima) |
+
+La lección terminada es un evento `lessonDone` más del log, con sus aciertos
+y su total; las sacuanjoches las calcula la proyección, como el XP.
+
+**Por qué.**
+
+- *No se gastan.* El árbol no consume flores: su etapa sale del total, que
+  nunca baja. Así el total es historial y motor a la vez, y nadie pierde lo
+  que ganó.
+- *Terminar siempre rinde.* Igual que con el XP: equivocarse rinde menos,
+  nunca deja sin nada.
+- *Crece de a poco.* Con 5 como máximo por lección, el árbol avanza a lo sumo
+  una etapa por vez; las pruebas lo verifican. Cada cambio de etapa coincide
+  con una subida de nivel, así el árbol y Piko se mueven juntos.
+- *Viaja con el estudiante.* Al ser eventos del log, las sacuanjoches ganadas
+  en la clase se sincronizan con el maestro y sobreviven a cerrar la app,
+  sin una tabla nueva ni una migración. Un snapshot de una versión anterior
+  arranca el árbol en cero y los eventos siguientes lo hacen crecer.
+- *Gama baja.* El árbol es un SVG plano por etapa y lo único que se anima es
+  `transform` y `opacity`, por el hilo nativo.
+
+**Costo.** Las lecciones terminadas antes de esta versión no tienen evento
+`lessonDone` y no dan sacuanjoches: el árbol de todos empieza como semilla.
 
 ---
 

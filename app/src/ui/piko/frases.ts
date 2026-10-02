@@ -61,3 +61,16 @@ export const ESPERANDO: readonly string[] = [
 export function elegir(frases: readonly string[], rng: Rng = Math.random): string {
   return frases[Math.floor(rng() * frases.length)] ?? frases[0] ?? '';
 }
+
+/** Al subir de nivel: Piko trepa una rama más del madroño. */
+export const SUBIR_NIVEL: readonly string[] = [
+  '¡Subimos una rama!',
+  '¡Más arriba! Desde acá se ve todo.',
+  '¡Tu árbol nos está llevando alto!',
+];
+
+/** Cuando el madroño pasa a la etapa siguiente. */
+export const ARBOL_CRECE: readonly string[] = [
+  '¡Mirá cómo creció tu madroño!',
+  '¡Tu árbol está creciendo!',
+];

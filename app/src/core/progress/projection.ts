@@ -9,6 +9,7 @@
  */
 
 import { compareEvents, type AnswerPayload, type ProgressEvent } from './events';
+import { sacuanjochesPorLeccion } from './arbol';
 
 export const XP_ACIERTO = 10;
 export const XP_INTENTO = 2;
@@ -35,6 +36,13 @@ export interface StudentState {
   skills: Record<string, SkillState>;
   /** Ids de paquetes terminados, ordenados para que el estado sea comparable. */
   packsDone: string[];
+  /** Lecciones (rondas) terminadas. */
+  lessons: number;
+  /**
+   * Sacuanjoches acumuladas. Como el XP, nunca baja: hacer crecer el árbol no
+   * las gasta. Ver `arbol.ts`.
+   */
+  sacuanjoches: number;
   lastActiveAt: number;
   /** Mayor `seq` aplicado. Los eventos locales sin sincronizar no lo mueven. */
   throughSeq: number;
@@ -50,6 +58,8 @@ export function emptyState(studentId: string): StudentState {
     bestStreak: 0,
     skills: {},
     packsDone: [],
+    lessons: 0,
+    sacuanjoches: 0,
     lastActiveAt: 0,
     throughSeq: 0,
   };
@@ -58,7 +68,15 @@ export function emptyState(studentId: string): StudentState {
 export function cloneState(s: StudentState): StudentState {
   const skills: Record<string, SkillState> = {};
   for (const k of Object.keys(s.skills)) skills[k] = { ...(s.skills[k] as SkillState) };
-  return { ...s, skills, packsDone: s.packsDone.slice() };
+  // Un snapshot guardado por una versión anterior de la app no trae los campos
+  // del árbol: arrancan en cero y los eventos posteriores los van sumando.
+  return {
+    ...s,
+    skills,
+    packsDone: s.packsDone.slice(),
+    lessons: s.lessons ?? 0,
+    sacuanjoches: s.sacuanjoches ?? 0,
+  };
 }
 
 const round6 = (n: number): number => Math.round(n * 1e6) / 1e6;
@@ -115,6 +133,11 @@ function step(state: StudentState, ev: ProgressEvent): void {
       if (!state.packsDone.includes(packId)) {
         state.packsDone.push(packId);
         state.packsDone.sort();
+      }
+      const { correct, total } = ev.payload;
+      if (typeof correct === 'number' && typeof total === 'number') {
+        state.lessons += 1;
+        state.sacuanjoches += sacuanjochesPorLeccion(correct, total);
       }
       return;
     }
