@@ -14,8 +14,9 @@
  * nido nuevo, con `transform` por el hilo nativo.
  */
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, Text, View } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import Svg, { Circle, Ellipse, G, Path, Rect, Text as SvgText } from 'react-native-svg';
 import type { NivelConEstado } from '../../core/progress/niveles';
 import { ARBOL_COLOR, Copo, Escama, Nudo, Parche, Racimo } from '../../ui/arbol/dibujo';
@@ -386,11 +387,127 @@ export function Estrella({ llena, tam = 22 }: { llena: boolean; tam?: number }) 
 export function Candado({ tam = 30 }: { tam?: number }) {
   return (
     <Svg width={tam} height={tam * 1.2} viewBox="0 0 30 36">
-      <Path d="M8 16 V11 a7 7 0 0 1 14 0 V16" stroke={color.cieloHondo} strokeWidth={4} fill="none" />
+      <ArcoSvg />
+      <CuerpoSvg />
+    </Svg>
+  );
+}
+
+function ArcoSvg() {
+  return <Path d="M8 16 V11 a7 7 0 0 1 14 0 V16" stroke={color.cieloHondo} strokeWidth={4} fill="none" />;
+}
+
+function CuerpoSvg() {
+  return (
+    <G>
       <Rect x={3} y={15} width={24} height={19} rx={5} fill={color.cielo} stroke={color.cieloHondo} strokeWidth={2} />
       <Circle cx={15} cy={23} r={3} fill="#0B3D57" />
       <Rect x={13.8} y={24} width={2.4} height={5} rx={1} fill="#0B3D57" />
-    </Svg>
+      {/* Brillito: se lee como metal */}
+      <Rect x={6} y={18} width={3} height={8} rx={1.5} fill={color.blanco} opacity={0.5} />
+    </G>
+  );
+}
+
+const TAM_CANDADO = 30;
+/** Hacia dónde salen las chispitas al abrirse un candado. */
+const CHISPAS = [0, 60, 120, 180, 240, 300].map((g) => ({
+  x: Math.cos((g * Math.PI) / 180),
+  y: Math.sin((g * Math.PI) / 180),
+  estrella: g % 120 === 0,
+}));
+
+interface Abriendo {
+  sacude: Animated.Value;
+  abre: Animated.Value;
+  vuela: Animated.Value;
+  chispa: Animated.Value;
+}
+
+/**
+ * El candado de un nivel. Quieto flota: sube y baja despacito, cada uno a su
+ * ritmo. Al abrirse se sacude, se le levanta el arco, sale volando hacia
+ * arriba entre chispitas y desaparece.
+ */
+function CandadoAnimado({
+  flota,
+  par,
+  abriendo,
+}: {
+  flota: Animated.Value;
+  par: boolean;
+  abriendo?: Abriendo;
+}) {
+  const t = TAM_CANDADO;
+  const flotaY = flota.interpolate({ inputRange: [0, 0.5, 1], outputRange: par ? [0, -6, 0] : [-6, 0, -6] });
+  const flotaGiro = flota.interpolate({ inputRange: [0, 0.5, 1], outputRange: par ? ['-4deg', '4deg', '-4deg'] : ['4deg', '-4deg', '4deg'] });
+
+  const transform = abriendo
+    ? [
+        {
+          rotate: abriendo.sacude.interpolate({
+            inputRange: [0, 0.2, 0.4, 0.6, 0.8, 1],
+            outputRange: ['0deg', '-14deg', '12deg', '-10deg', '8deg', '0deg'],
+          }),
+        },
+        { translateY: abriendo.vuela.interpolate({ inputRange: [0, 1], outputRange: [0, -46] }) },
+        { scale: abriendo.vuela.interpolate({ inputRange: [0, 1], outputRange: [1, 1.35] }) },
+      ]
+    : [{ translateY: flotaY }, { rotate: flotaGiro }];
+
+  return (
+    <View style={styles.candado} pointerEvents="none">
+      {abriendo &&
+        CHISPAS.map((c, k) => (
+          <Animated.View
+            key={k}
+            style={[
+              styles.chispa,
+              {
+                opacity: abriendo.chispa.interpolate({ inputRange: [0, 0.15, 1], outputRange: [0, 1, 0] }),
+                transform: [
+                  { translateX: abriendo.chispa.interpolate({ inputRange: [0, 1], outputRange: [0, c.x * 34] }) },
+                  { translateY: abriendo.chispa.interpolate({ inputRange: [0, 1], outputRange: [0, c.y * 30 - 12] }) },
+                ],
+              },
+            ]}
+          >
+            {c.estrella ? (
+              <Estrella llena tam={14} />
+            ) : (
+              <View style={styles.chispaPunto} />
+            )}
+          </Animated.View>
+        ))}
+      <Animated.View
+        style={{
+          width: t,
+          height: t * 1.2,
+          transform,
+          opacity: abriendo ? abriendo.vuela.interpolate({ inputRange: [0, 0.6, 1], outputRange: [1, 1, 0] }) : 1,
+        }}
+      >
+        <Animated.View
+          style={[
+            StyleSheet.absoluteFill,
+            abriendo && {
+              transform: [
+                { translateY: abriendo.abre.interpolate({ inputRange: [0, 1], outputRange: [0, -7] }) },
+                { translateX: abriendo.abre.interpolate({ inputRange: [0, 1], outputRange: [0, 3] }) },
+                { rotate: abriendo.abre.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '-24deg'] }) },
+              ],
+            },
+          ]}
+        >
+          <Svg width={t} height={t * 1.2} viewBox="0 0 30 36">
+            <ArcoSvg />
+          </Svg>
+        </Animated.View>
+        <Svg width={t} height={t * 1.2} viewBox="0 0 30 36" style={StyleSheet.absoluteFill}>
+          <CuerpoSvg />
+        </Svg>
+      </Animated.View>
+    </View>
   );
 }
 
@@ -425,16 +542,48 @@ export function CaminoNiveles({
   const trepa = useRef(new Animated.Value(sube ? 0 : 1)).current;
   const brinco = useRef(new Animated.Value(0)).current;
   const festejo = useRef(new Animated.Value(0)).current;
+  const flota = useRef(new Animated.Value(0)).current;
+  const abriendo = useRef<Abriendo>({
+    sacude: new Animated.Value(0),
+    abre: new Animated.Value(0),
+    vuela: new Animated.Value(0),
+    chispa: new Animated.Value(0),
+  }).current;
+  const [abierto, setAbierto] = useState(!sube);
+
+  // Los candados flotan: un solo bucle para todos, por el hilo nativo.
+  const hayCandados = niveles.some((n) => n.estado === 'bloqueado') || sube;
+  useEffect(() => {
+    if (!hayCandados) return;
+    const bucle = Animated.loop(
+      Animated.timing(flota, { toValue: 1, duration: 2400, easing: Easing.inOut(Easing.sin), useNativeDriver: true }),
+    );
+    bucle.start();
+    return () => bucle.stop();
+  }, [hayCandados, flota]);
 
   useEffect(() => {
     if (!sube) return;
     trepa.setValue(0);
+    abriendo.sacude.setValue(0);
+    abriendo.abre.setValue(0);
+    abriendo.vuela.setValue(0);
+    abriendo.chispa.setValue(0);
+    setAbierto(false);
     const saltito = Animated.sequence([
       Animated.timing(brinco, { toValue: 1, duration: 170, easing: Easing.out(Easing.quad), useNativeDriver: true }),
       Animated.timing(brinco, { toValue: 0, duration: 170, easing: Easing.in(Easing.quad), useNativeDriver: true }),
     ]);
     const anim = Animated.sequence([
-      Animated.delay(500),
+      Animated.delay(400),
+      // Primero se abre el candado del nivel nuevo…
+      Animated.timing(abriendo.sacude, { toValue: 1, duration: 520, easing: Easing.linear, useNativeDriver: true }),
+      Animated.timing(abriendo.abre, { toValue: 1, duration: 220, easing: Easing.out(Easing.back(3)), useNativeDriver: true }),
+      Animated.parallel([
+        Animated.timing(abriendo.vuela, { toValue: 1, duration: 620, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+        Animated.timing(abriendo.chispa, { toValue: 1, duration: 700, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+      ]),
+      // …y después Piko salta a ese nido.
       Animated.parallel([
         Animated.timing(trepa, { toValue: 1, duration: 1000, easing: Easing.inOut(Easing.cubic), useNativeDriver: true }),
         Animated.sequence([saltito, saltito, saltito]),
@@ -443,10 +592,20 @@ export function CaminoNiveles({
       Animated.timing(festejo, { toValue: 1, duration: 180, useNativeDriver: true }),
       Animated.timing(festejo, { toValue: 0, duration: 260, easing: Easing.out(Easing.back(3)), useNativeDriver: true }),
     ]);
-    anim.start(({ finished }) => finished && onLlego?.());
-    return () => anim.stop();
+    // Un toquecito en la mano justo cuando el arco se abre.
+    const toque = setTimeout(() => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+    }, 400 + 520);
+    anim.start(({ finished }) => {
+      setAbierto(true);
+      if (finished) onLlego?.();
+    });
+    return () => {
+      clearTimeout(toque);
+      anim.stop();
+    };
     // `onLlego` puede cambiar en cada render y no debe reiniciar la subida.
-  }, [sube, subiendoDesde, pikoEn, trepa, brinco, festejo]);
+  }, [sube, subiendoDesde, pikoEn, trepa, brinco, festejo, abriendo]);
 
   return (
     <View style={{ width: g.ancho, height: g.alto }}>
@@ -488,7 +647,8 @@ export function CaminoNiveles({
                     ))}
                   </View>
                 )}
-                {bloqueado && <Candado />}
+                {bloqueado && <CandadoAnimado flota={flota} par={i % 2 === 0} />}
+                {sube && esActual && !abierto && <CandadoAnimado flota={flota} par={i % 2 === 0} abriendo={abriendo} />}
               </View>
               <View>
                 <Nido resaltado={n.estado === 'actual'} apagado={bloqueado} />
@@ -530,6 +690,9 @@ const styles = StyleSheet.create({
   toque: { alignItems: 'center' },
   arriba: { height: 34, justifyContent: 'flex-end', alignItems: 'center' },
   estrellas: { flexDirection: 'row', alignItems: 'flex-end', gap: 1 },
+  candado: { width: TAM_CANDADO, height: TAM_CANDADO * 1.2, alignItems: 'center', justifyContent: 'center' },
+  chispa: { position: 'absolute', left: TAM_CANDADO / 2 - 7, top: TAM_CANDADO * 0.6 - 7, width: 14, height: 14, alignItems: 'center', justifyContent: 'center' },
+  chispaPunto: { width: 7, height: 7, borderRadius: 4, backgroundColor: color.cielo },
   placa: {
     position: 'absolute',
     left: NODO.ancho / 2 - 17,
