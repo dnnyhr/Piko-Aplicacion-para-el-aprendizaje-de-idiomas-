@@ -26,7 +26,7 @@ diccionario/
 
 | Lengua | Versión | Fuentes | Léxico | Reglas | Ejercicios |
 |---|---|---|---|---|---|
-| Miskito (`miq`) | 0.2 | 2 hablantes (Raiti, Río Coco) | 201 entradas, 20 por revisar, 60 dichas por las dos | 40 (17 A · 15 B · 7 C · 1 mixta) | 16 paquetes, 139 ítems |
+| Miskito (`miq`) | 0.3 | 2 hablantes (Raiti, Río Coco) y un diccionario publicado (Bilwi) | 247 entradas, 19 por revisar, 60 dichas por las dos personas, 80 con respaldo publicado | 47 (23 A · 16 B · 7 C · 1 mixta) | 16 paquetes, 139 ítems |
 | Mayangna (`sum`) | — | — | — | — | — |
 | Rama (`rma`) | — | — | — | — | — |
 | Garífuna (`cab`) | — | — | — | — | — |
@@ -75,7 +75,7 @@ cd app && npm run validate:diccionario
 | `reglas` | Las reglas de `gramatica.md` en las que participa |
 | `de` | Si salió de una frase, de cuál |
 | `revisar` | Qué hay que preguntarle a un hablante. **Si existe, la entrada no se usa en ejercicios** |
-| `estado` | `un_hablante` → `varios_hablantes` (la dieron 2 personas o más) → `probable` (3 personas, 2 zonas) → `confirmada` (la validó un hablante) |
+| `estado` | `publicada` (sólo en una obra publicada) · `un_hablante` → `varios_hablantes` (la dieron 2 personas o más) → `probable` (3 personas, 2 zonas) → `confirmada` (la validó un hablante) |
 
 ## Los ejercicios todavía no están en la app
 
@@ -118,9 +118,17 @@ aportaron y a sus comunidades. Más detalle en
 - **Teacher Smith**, docente, Raiti, Río Coco. Miskito.
 - **Tangni**, estudiante, Raiti, Río Coco. Miskito.
 
+## Obras publicadas consultadas
+
+- Ernesto Scott Lackwood (2006). *Diccionario Bilingüe: Términos de Medicina Tradicional en Lengua Miskita (Miskito – Español)*. URACCAN – IMTRADEC, Bilwi.
+  En `corpus.csv` están sólo las 88 entradas citadas como evidencia, tal cual; la obra completa no se redistribuye.
+
+Una obra publicada respalda reglas y formas, pero no cuenta como un hablante: no sube una palabra a `probable`.
+
 ## Historial
 
 | Versión | Fecha | Qué cambió | Predicciones |
 |---|---|---|---|
 | miskito 0.1 | 2026-09-29 | Primera tanda: 1 hablante, 80 palabras, 15 frases y una oración libre | 26 abiertas · sin tanda anterior para medir aciertos |
 | miskito 0.2 | 2026-10-02 | Segunda tanda: otra hablante de Raiti, de otra generación. Animales, comida y naturaleza; dos sistemas de números; hermanos según quién habla; «hermano» y «hermana» salen de los ejercicios | 3 comprobables: 2 acertadas y 1 a medias (2,5 / 3) · 23 siguen abiertas |
+| miskito 0.3 | 2026-10-02 | Diccionario de Scott Lackwood (2006) como respaldo publicado: pasado, futuro, negación, plural, pregunta con *ki*; *bara* es «ahí», *kaya* es «vamos», la vocal larga distingue palabras (*kati* / *kâti*) | 8 comprobables: 6,5 acertadas · acumulado 9 de 11 |

@@ -37,6 +37,16 @@
       "puede_revisar_y_grabar": true,
       "contenido": "84 palabras, 15 frases y una oración libre",
       "notas": "Segunda tanda. Misma comunidad que la primera fuente, otra generación: estudiante de 18 años que estudia en Jinotega."
+    },
+    {
+      "id": "lackwood-2006",
+      "tipo": "publicacion",
+      "titulo": "Diccionario Bilingüe: Términos de Medicina Tradicional en Lengua Miskita (Miskito – Español)",
+      "autor": "Ernesto Scott Lackwood",
+      "editorial": "URACCAN – IMTRADEC (Instituto de Medicina Tradicional y Desarrollo Comunitario), Bilwi, RAAN",
+      "fecha": "2006",
+      "zona": "bilwi",
+      "notas": "Recogido entre 2004 y 2005 con personas mayores. Revisado por Serafina Espinoza, Marcos Padilla, Avelino Cox y Miguel Urbina. Escribe los infinitivos en -aia y marca las vocales largas con acento circunflejo. En corpus.csv están sólo las entradas citadas como evidencia, copiadas tal cual; la columna «item» es la letra del diccionario donde aparecen. El diccionario completo no se redistribuye."
     }
   ]
 }
