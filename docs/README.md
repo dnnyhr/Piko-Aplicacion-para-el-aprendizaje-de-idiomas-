@@ -54,7 +54,7 @@ diga que la habla mal.
 - Identidad y progreso que siguen al estudiante entre dispositivos.
 - Contenido en inglés (6 paquetes, 43 ítems). Las cuatro lenguas indígenas
   tienen el formato listo y esperan material de hablantes nativos.
-- 124 pruebas automatizadas y un simulador que levanta un aula entera sin
+- 140 pruebas automatizadas y un simulador que levanta un aula entera sin
   necesidad de teléfonos.
 
 ## Qué falta
