@@ -4,6 +4,15 @@
   "main": "src/index.js",
   "compatibility_date": "2026-06-01",
 
+  // Se publica solo en el dominio propio. La dirección *.workers.dev y las
+  // URLs de vista previa quedan apagadas a propósito: dejarlas explícitas evita
+  // que Cloudflare decida por defecto en cada deploy.
+  "routes": [
+    { "pattern": "encuestas.piko.mugiware.com", "custom_domain": true }
+  ],
+  "workers_dev": false,
+  "preview_urls": false,
+
   // La página (public/) se sirve como assets estáticos. Pasan primero por el
   // Worker /api/* y las páginas que se comparten (/ y /e/<slug>): ahí completa
   // la vista previa (Open Graph) con el dominio real y el título de la encuesta.
@@ -12,21 +21,41 @@
     "directory": "./public",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*", "/", "/e/*"]
+    "run_worker_first": ["/api/*", "/", "/e", "/e/*"]
   },
 
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "piko-encuestas",
-      // Reemplazar por el id que imprime `npx wrangler d1 create piko-encuestas`.
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      // El id de la base en Cloudflare. No es secreto: sin acceso a la cuenta
+      // no sirve para nada. Si se crea otra base, va el id que imprime
+      // `npx wrangler d1 create piko-encuestas`.
+      "database_id": "9a74726e-b2c0-40a4-b5fe-bdb0d7a272a7",
       "migrations_dir": "migrations"
     }
   ],
 
-  // ADMIN_TOKEN es un secreto: `npx wrangler secret put ADMIN_TOKEN`.
-  // En local va en .dev.vars (ver .dev.vars.example).
+  // ENCUESTA_PRINCIPAL  la que se abre en la raíz del dominio (/). La lista
+  //                     de todas las abiertas está en /e/.
+  //
+  // Correo automático con el enlace de descarga (ver src/correo.js).
+  // Vacío = no se manda y queda anotado como "omitido" en la tabla correos.
+  //   CORREO_REMITENTE  una dirección de un dominio verificado en Resend
+  //   APP_DESCARGA_URL  el enlace para descargar la app
+  //   CORREO_RESPUESTA  opcional: a dónde llegan las respuestas al correo
+  //   CORREOS_POR_DIA   opcional: tope de correos automáticos por día (sin ponerlo, 100)
+  "vars": {
+    "CORREO_REMITENTE": "Piko <piko@mugiware.com>",
+    "APP_DESCARGA_URL": "https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/releases/latest/download/piko.apk",
+    "CORREO_RESPUESTA": "",
+    "ENCUESTA_PRINCIPAL": "que-le-falta-a-piko"
+  },
+
+  // Secretos (no van en este archivo):
+  //   ADMIN_TOKEN     `npx wrangler secret put ADMIN_TOKEN` (mínimo 16 caracteres)
+  //   RESEND_API_KEY  `npx wrangler secret put RESEND_API_KEY`
+  // En local van en .dev.vars (ver .dev.vars.example).
 
   "observability": { "enabled": true }
 }

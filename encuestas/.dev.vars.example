@@ -1,1 +1,5 @@
 ADMIN_TOKEN=cambiame-en-local
+# Opcional en local: sin esto, los correos quedan como "omitido".
+RESEND_API_KEY=
+CORREO_REMITENTE=Piko <piko@mugiware.com>
+APP_DESCARGA_URL=https://piko.mugiware.com

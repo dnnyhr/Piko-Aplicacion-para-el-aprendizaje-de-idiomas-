@@ -11,7 +11,7 @@
  *   - al terminar, "otra persona va a responder" deja el teléfono listo para la siguiente.
  */
 
-import { esVisible, revisar } from './reglas.js';
+import { esVisible, muestraDelBanco, preguntasDe, revisar } from './reglas.js';
 
 const app = document.getElementById('app');
 const barra = document.getElementById('barra');
@@ -19,6 +19,8 @@ const progreso = document.getElementById('progreso');
 const pasoTexto = document.getElementById('paso');
 
 const CLAVE_PENDIENTES = 'piko-encuestas:pendientes';
+// Las que ya se respondieron en este teléfono, para marcarlas en la lista.
+const CLAVE_HECHAS = 'piko-encuestas:hechas';
 
 /* ------------------------------------------------------------ utilidades */
 
@@ -196,40 +198,91 @@ async function iniciar() {
   const ruta = location.pathname.replace(/\/+$/, '');
   const m = ruta.match(/^\/e\/([a-z0-9-]+)$/);
   if (m) return abrirEncuesta(m[1]);
-  return listar();
+  if (ruta === '/e') return listar();
+  // En la raíz, el Worker dice cuál es la encuesta principal. Si no hay (o
+  // ya no existe), la raíz se comporta como siempre: la lista, o directo a
+  // la única abierta.
+  const principal = document.querySelector('meta[name="piko:principal"]')?.content;
+  if (principal) return abrirEncuesta(principal, () => listar({ directo: true }));
+  return listar({ directo: true });
 }
 
-async function listar() {
+async function listar({ directo = false } = {}) {
   mostrarBarra(false);
   let encuestas = [];
   try {
     const res = await fetch('/api/encuestas');
     encuestas = (await res.json()).encuestas ?? [];
   } catch {
-    return sinSenal(listar);
+    return sinSenal(() => listar({ directo }));
   }
-  if (encuestas.length === 1) {
+  if (directo && encuestas.length === 1) {
     history.replaceState(null, '', `/e/${encuestas[0].slug}${location.search}`);
     return abrirEncuesta(encuestas[0].slug);
   }
+  document.title = 'Encuestas de Piko';
+  const hechas = new Set(leer(CLAVE_HECHAS, []));
+
   pantalla(
     h(
       'section',
-      { class: 'contenedor centro' },
-      piko(encuestas.length ? 'saludo' : 'pensando'),
-      h('h1', {}, encuestas.length ? 'Encuestas de Piko' : 'Por ahora no hay encuestas abiertas'),
-      h('p', {}, encuestas.length ? 'Elegí una. Cada respuesta nos ayuda a decidir qué construir.' : 'Volvé pronto: Piko siempre tiene algo que preguntar.'),
+      { class: 'lista' },
       h(
-        'div',
-        { class: 'tarjetas' },
-        encuestas.map((e) =>
+        'header',
+        { class: 'lista__cabeza cielo' },
+        fondo('portada'),
+        h(
+          'div',
+          { class: 'lista__cabeza-grid' },
+          sello(),
           h(
-            'a',
-            { class: 'tarjeta', href: `/e/${e.slug}${location.search}` },
-            h('h2', {}, e.titulo),
-            h('p', {}, e.descripcion, e.minutos ? ` · ${e.minutos} min` : ''),
+            'div',
+            { class: 'lista__saludo' },
+            piko(encuestas.length ? 'saludo' : 'pensando'),
+            h(
+              'div',
+              { class: 'papel lista__papel' },
+              h('span', { class: 'pastilla' }, encuestas.length === 1 ? '1 encuesta abierta' : `${encuestas.length} encuestas abiertas`),
+              h('h1', {}, encuestas.length ? ['Encuestas de ', h('em', {}, 'Piko')] : 'Por ahora no hay encuestas abiertas'),
+              h(
+                'p',
+                {},
+                encuestas.length
+                  ? 'Elegí una. Cada respuesta nos ayuda a construir Piko con la gente que lo va a usar.'
+                  : 'Volvé pronto: Piko siempre tiene algo que preguntar.',
+              ),
+            ),
           ),
         ),
+      ),
+      h('div', { class: 'lista__tarjetas' }, encuestas.map((e) => tarjetaEncuesta(e, hechas.has(e.slug)))),
+    ),
+  );
+}
+
+/** Una encuesta en la lista: su imagen para compartir, título, de qué trata y cuánto tarda. */
+function tarjetaEncuesta(e, hecha) {
+  const enCurso = !hecha && Object.keys(leer(`piko-encuesta:${e.slug}`, {})?.respuestas ?? {}).length > 0;
+  const marca = hecha ? h('span', { class: 'encuesta-card__marca encuesta-card__marca--hecha' }, icono('check'), 'Ya la respondiste') : enCurso ? h('span', { class: 'encuesta-card__marca' }, 'A medias') : null;
+  return h(
+    'a',
+    { class: `encuesta-card${hecha ? ' encuesta-card--hecha' : ''}`, href: `/e/${e.slug}${location.search}` },
+    h(
+      'div',
+      { class: 'encuesta-card__imagen' },
+      h('img', { src: e.imagen, alt: '', width: 1200, height: 630, loading: 'lazy', decoding: 'async' }),
+      marca,
+    ),
+    h(
+      'div',
+      { class: 'encuesta-card__cuerpo' },
+      h('h2', {}, e.titulo),
+      e.descripcion ? h('p', {}, e.descripcion) : null,
+      h(
+        'div',
+        { class: 'encuesta-card__pie' },
+        e.minutos ? h('span', { class: 'encuesta-card__minutos' }, `${e.minutos} min`) : h('span'),
+        h('span', { class: 'encuesta-card__ir' }, hecha ? 'Ver de nuevo' : enCurso ? 'Seguir' : 'Responder', icono('flecha')),
       ),
     ),
   );
@@ -258,18 +311,18 @@ function noExiste(mensaje) {
       piko('pensando'),
       h('h1', {}, mensaje),
       h('p', {}, 'Puede que el enlace esté incompleto o que la encuesta ya haya cerrado.'),
-      h('a', { class: 'btn btn--papel', href: '/' }, 'Ver encuestas abiertas'),
+      h('a', { class: 'btn btn--papel', href: '/e/' }, 'Ver encuestas abiertas'),
     ),
   );
 }
 
 /* --------------------------------------------------------------- encuesta */
 
-async function abrirEncuesta(slug) {
+async function abrirEncuesta(slug, siNoExiste = null) {
   let datos;
   try {
     const res = await fetch(`/api/encuestas/${slug}`);
-    if (res.status === 404) return noExiste('No encontramos esa encuesta');
+    if (res.status === 404) return siNoExiste ? siNoExiste() : noExiste('No encontramos esa encuesta');
     datos = await res.json();
   } catch {
     return sinSenal(() => abrirEncuesta(slug));
@@ -291,8 +344,73 @@ async function abrirEncuesta(slug) {
     estado.paso = paso;
     guardar();
     if (paso < 0) return portada();
-    if (paso >= total) return enviarYTerminar();
+    if (paso >= total) return porCompletar().length && !estado.decidioFinal ? ofrecerCompletar() : enviarYTerminar();
     return seccion(paso);
+  }
+
+  /** Las preguntas traducir en las que la persona hizo solo una parte y quedan cosas sin escribir. */
+  function porCompletar() {
+    return preguntasDe(def).filter((p) => {
+      if (p.tipo !== 'traducir' || estado.modos?.[p.id] !== 'parte' || !esVisible(def, p, estado.respuestas)) return false;
+      const escritas = Object.values(estado.respuestas[p.id] ?? {}).filter((v) => v.trim()).length;
+      return escritas < p.banco.length;
+    });
+  }
+
+  /**
+   * Antes de enviar, si hizo una parte: terminar así, o volver y completar
+   * todo. Sale una sola vez; si elige completar, al volver al final se envía.
+   */
+  function ofrecerCompletar() {
+    mostrarBarra(true, 1, 'Último paso');
+    const pendientes = porCompletar();
+    const resumen = pendientes.map((p) => {
+      const n = Object.values(estado.respuestas[p.id] ?? {}).filter((v) => v.trim()).length;
+      const cosa = (p.max ?? 120) > 100 ? 'frases' : 'palabras';
+      return h('li', {}, h('b', {}, `${n} de ${p.banco.length}`), ` ${cosa}`);
+    });
+    const completar = () => {
+      estado.decidioFinal = true;
+      for (const p of pendientes) estado.modos[p.id] = 'todo';
+      const primera = def.secciones.findIndex((s) => s.preguntas.some((q) => q.id === pendientes[0].id));
+      ir(primera);
+    };
+    const terminar = () => {
+      estado.decidioFinal = true;
+      guardar();
+      enviarYTerminar();
+    };
+    pantalla(
+      h(
+        'section',
+        { class: 'final cielo completar' },
+        fondo('final'),
+        h(
+          'div',
+          { class: 'final__grid' },
+          h('div', { class: 'final__duo' }, piko('feliz')),
+          h(
+            'div',
+            { class: 'papel completar__papel' },
+            h('span', { class: 'pastilla' }, 'Antes de terminar'),
+            h('h1', {}, '¿Te animás a completarla toda?'),
+            h('p', {}, 'Hiciste una parte:'),
+            h('ul', { class: 'completar__cuenta' }, resumen),
+            h(
+              'p',
+              {},
+              'Cada palabra que agregás guarda cómo se habla tu lengua en tu comunidad, con sus variantes, para que no se pierda. Lo que ya escribiste se queda.',
+            ),
+            h(
+              'div',
+              { class: 'completar__botones' },
+              h('button', { class: 'btn btn--siguiente', type: 'button', onclick: completar }, 'Completar todo', icono('flecha')),
+              h('button', { class: 'btn btn--papel', type: 'button', onclick: terminar }, 'Terminar la encuesta'),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   /* ---- portada ---- */
@@ -372,7 +490,7 @@ async function abrirEncuesta(slug) {
     };
 
     const preguntas = s.preguntas.map((p) => {
-      const b = dibujarPregunta(p, estado, () => cambio(p));
+      const b = dibujarPregunta(p, estado, () => cambio(p), def);
       bloques.set(p.id, b);
       return b.el;
     });
@@ -468,6 +586,11 @@ async function abrirEncuesta(slug) {
       }
       if (status === 410) return noExiste('Esta encuesta ya cerró');
       if (status >= 500 || status === 429) throw new Error(String(status));
+      // Cualquier otro rechazo: no se guardó. Se dice, y lo contestado sigue en el teléfono.
+      if (status >= 400) {
+        console.error('La respuesta no se guardó', status, r);
+        return noSeGuardo(r.error ?? `Error ${status}`);
+      }
     } catch {
       const cola = leer(CLAVE_PENDIENTES, []);
       if (!cola.some((c) => c.cuerpo.id === pendiente.cuerpo.id)) cola.push(pendiente);
@@ -476,13 +599,30 @@ async function abrirEncuesta(slug) {
     }
 
     escribir(clave, undefined);
+    escribir(CLAVE_HECHAS, [...new Set([...leer(CLAVE_HECHAS, []), slug])]);
     final(enCola);
+  }
+
+  function noSeGuardo(motivo) {
+    mostrarBarra(true, 1, '');
+    pantalla(
+      h(
+        'section',
+        { class: 'contenedor centro' },
+        piko('pensando'),
+        h('h1', {}, 'No pudimos guardar tus respuestas'),
+        h('p', {}, 'Lo que contestaste sigue guardado en este teléfono: no se perdió nada.'),
+        h('p', { class: 'pendiente', style: 'margin:12px auto' }, motivo),
+        h('button', { class: 'btn', type: 'button', onclick: enviarYTerminar }, 'Probar de nuevo'),
+        h('p', { style: 'margin-top:14px' }, h('button', { class: 'btn btn--fantasma', type: 'button', onclick: () => ir(total - 1) }, 'Volver a mis respuestas')),
+      ),
+    );
   }
 
   function final(enCola) {
     mostrarBarra(true, 1, '¡Listo!');
     const enlace = `${location.origin}/e/${slug}`;
-    const textoCompartir = `${def.titulo} Ayudá a Piko a decidir qué construir: ${enlace}`;
+    const textoCompartir = `${def.final?.textoCompartir ?? `${def.titulo} Ayudá a Piko a decidir qué construir:`} ${enlace}`;
 
     const compartir = async () => {
       if (navigator.share) {
@@ -530,6 +670,7 @@ async function abrirEncuesta(slug) {
               botonCompartir,
             ),
           ),
+          h('a', { class: 'btn btn--papel final__mas', href: '/e/' }, 'Ver más encuestas', icono('flecha')),
           h(
             'button',
             {
@@ -554,6 +695,184 @@ async function abrirEncuesta(slug) {
 }
 
 /* ------------------------------------------------------ piezas de pregunta */
+
+/** Cómo se llama la lengua que eligió la persona, para decir "¿cómo se dice en miskito?". */
+function nombreLengua(def, p, estado) {
+  const origen = preguntasDe(def).find((q) => q.id === p.lengua);
+  const elegida = origen?.opciones.find((o) => o.id === estado.respuestas[p.lengua]);
+  if (!elegida) return 'tu lengua';
+  if (elegida.otro) return estado.otros[p.lengua]?.trim() || 'tu lengua';
+  return elegida.texto.replace(/\s*\(.*\)$/, '').toLocaleLowerCase('es');
+}
+
+/**
+ * Traducir. La persona elige cuánto hacer:
+ *   - "Una parte": `cuantas` del banco. Son distintas para cada persona (así
+ *     entre todos se cubre el banco) y se guardan en el teléfono, así al
+ *     volver a abrir la encuesta le tocan las mismas. Al final de la
+ *     encuesta se le ofrece completar el resto (ver `ofrecerCompletar`).
+ *   - "Todas": el banco entero, agrupado por tema.
+ */
+function dibujarTraducir(p, estado, set, lengua) {
+  estado.muestras ??= {};
+  estado.modos ??= {};
+  const ids = new Set(p.banco.map((b) => b.id));
+  let muestra = estado.muestras[p.id];
+  if (!Array.isArray(muestra) || muestra.length !== p.cuantas || muestra.some((id) => !ids.has(id))) {
+    muestra = estado.muestras[p.id] = muestraDelBanco(p);
+  }
+  const valor = () => estado.respuestas[p.id] ?? {};
+  const frases = (p.max ?? 120) > 100;
+  const cosa = frases ? ['frase', 'frases'] : ['palabra', 'palabras'];
+  const total = p.banco.length;
+  const caja = h('div', { class: 'traducir-caja' });
+  const escritas = (lista) => lista.filter((id) => (valor()[id] ?? '').trim()).length;
+
+  const campo = (b, siguiente) => {
+    const campoId = `t-${p.id}-${b.id}`;
+    const item = h('div', { class: `traducir__item${(valor()[b.id] ?? '').trim() ? ' traducir__item--hecho' : ''}` });
+    const input = h('input', {
+      class: 'campo traducir__campo',
+      id: campoId,
+      type: 'text',
+      maxlength: p.max ?? 120,
+      placeholder: `En ${lengua}…`,
+      // Sin autocorrector ni corrector: "arreglarían" la palabra al español.
+      autocomplete: 'off',
+      autocorrect: 'off',
+      autocapitalize: frases ? 'sentences' : 'none',
+      spellcheck: 'false',
+      enterkeyhint: 'next',
+      value: valor()[b.id] ?? '',
+      oninput: (e) => {
+        const nuevo = { ...valor() };
+        if (e.target.value.trim()) nuevo[b.id] = e.target.value;
+        else delete nuevo[b.id];
+        set(Object.keys(nuevo).length ? nuevo : undefined);
+        item.classList.toggle('traducir__item--hecho', Boolean(e.target.value.trim()));
+        contar();
+      },
+      onkeydown: (e) => {
+        // Enter pasa a la siguiente en vez de mandar el formulario.
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        const otro = siguiente();
+        if (otro) otro.focus();
+        else e.target.blur();
+      },
+    });
+    item.append(
+      h(
+        'label',
+        { class: 'traducir__es', for: campoId },
+        p.temas && b.tema && estado.modos[p.id] !== 'todo' ? h('span', { class: 'traducir__tema' }, p.temas[b.tema]) : null,
+        h('span', { class: `traducir__palabra${frases ? ' traducir__palabra--frase' : ''}` }, frases ? b.texto : `“${b.texto}”`),
+      ),
+      input,
+    );
+    return item;
+  };
+
+  // Una lista de campos donde Enter salta al siguiente.
+  const lista = (banco) => {
+    const items = [];
+    banco.forEach((b, i) => items.push(campo(b, () => items[i + 1]?.querySelector('input'))));
+    return items;
+  };
+
+  let contar = () => {};
+  const elegir = (modo) => {
+    estado.modos[p.id] = modo;
+    set(estado.respuestas[p.id]); // guarda el modo aunque todavía no haya escrito nada
+    pintar();
+  };
+
+  function pintar() {
+    const modo = estado.modos[p.id];
+
+    if (!modo) {
+      contar = () => {};
+      caja.replaceChildren(
+        h('p', { class: 'traducir__pregunta' }, `¿Cuántas ${cosa[1]} querés hacer?`),
+        h(
+          'div',
+          { class: 'traducir__modos' },
+          h(
+            'button',
+            { class: 'modo', type: 'button', onclick: () => elegir('parte') },
+            h('b', {}, 'Una parte'),
+            h('span', {}, `${p.cuantas} ${cosa[1]}${frases ? '' : ' de distintos temas'}`),
+          ),
+          h(
+            'button',
+            { class: 'modo', type: 'button', onclick: () => elegir('todo') },
+            h('b', {}, 'Todas'),
+            h('span', {}, `Las ${total} ${cosa[1]}${p.temas ? ', por tema' : ''}`),
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (modo === 'parte') {
+      const banco = muestra.map((id) => p.banco.find((b) => b.id === id));
+      const cuenta = h('p', { class: 'traducir__cuenta', 'aria-live': 'polite' });
+      contar = () => {
+        const n = escritas(muestra);
+        cuenta.textContent = `${n} de ${muestra.length} escritas`;
+        cuenta.classList.toggle('traducir__cuenta--lista', n === muestra.length);
+      };
+      contar();
+      caja.replaceChildren(
+        h('div', { class: 'traducir__barra' }, cuenta, h('button', { class: 'traducir__cambiar', type: 'button', onclick: () => elegir('todo') }, `Hacer las ${total}`)),
+        h('div', { class: 'traducir' }, lista(banco)),
+      );
+      return;
+    }
+
+    // Todas: primero las de la parte que ya empezó, después el resto por tema.
+    const cuenta = h('p', { class: 'traducir__cuenta', 'aria-live': 'polite' });
+    const grupos = [];
+    if (p.temas) {
+      for (const [tema, titulo] of Object.entries(p.temas)) {
+        const del = p.banco.filter((b) => b.tema === tema);
+        if (del.length) grupos.push({ titulo, banco: del });
+      }
+      const sueltas = p.banco.filter((b) => !b.tema || !(b.tema in p.temas));
+      if (sueltas.length) grupos.push({ titulo: 'Otras', banco: sueltas });
+    } else grupos.push({ titulo: null, banco: p.banco });
+
+    const marcadores = [];
+    const bloques = grupos.map((g, i) => {
+      const marcador = h('span', { class: 'traducir__grupo-cuenta' });
+      marcadores.push([marcador, g.banco.map((b) => b.id)]);
+      const cuerpo = h('div', { class: 'traducir' }, lista(g.banco));
+      if (!g.titulo) return cuerpo;
+      // Los temas se abren y se cierran: 120 campos de una vez abruman.
+      return h(
+        'details',
+        { class: 'traducir__grupo', open: i === 0 || escritas(g.banco.map((b) => b.id)) > 0 },
+        h('summary', {}, h('span', {}, g.titulo), marcador),
+        cuerpo,
+      );
+    });
+    contar = () => {
+      const n = escritas(p.banco.map((b) => b.id));
+      cuenta.textContent = `${n} de ${total} escritas`;
+      cuenta.classList.toggle('traducir__cuenta--lista', n === total);
+      for (const [m, lista] of marcadores) m.textContent = `${escritas(lista)}/${lista.length}`;
+    };
+    contar();
+    caja.replaceChildren(
+      h('div', { class: 'traducir__barra' }, cuenta, h('button', { class: 'traducir__cambiar', type: 'button', onclick: () => elegir('parte') }, `Solo ${p.cuantas}`)),
+      ...bloques,
+    );
+  }
+
+  pintar();
+
+  return caja;
+}
 
 function dibujarConcepto(c) {
   const pilares = c.pilares ?? [];
@@ -592,10 +911,10 @@ let contadorIds = 0;
  * Dibuja una pregunta y la conecta al estado. Devuelve el bloque, el lugar
  * donde va el mensaje de error y, para la matriz, cómo marcar filas vacías.
  */
-function dibujarPregunta(p, estado, alCambiar) {
+function dibujarPregunta(p, estado, alCambiar, def) {
   const uid = `p${++contadorIds}`;
   const error = h('p', { class: 'pregunta__error', id: `${uid}-error`, role: 'alert' });
-  const titulo = [p.texto, p.requerida ? h('span', { class: 'pregunta__requerida', 'aria-hidden': 'true' }, ' *') : null];
+  const titulo = [p.lengua ? p.texto.replaceAll('{lengua}', nombreLengua(def, p, estado)) : p.texto, p.requerida ? h('span', { class: 'pregunta__requerida', 'aria-hidden': 'true' }, ' *') : null];
   const ayuda = p.ayuda ? h('span', { class: 'pregunta__ayuda' }, p.ayuda) : null;
 
   const set = (valor) => {
@@ -662,6 +981,8 @@ function dibujarPregunta(p, estado, alCambiar) {
     );
     sincronizar();
     cuerpo = [lista, campoOtro];
+  } else if (p.tipo === 'traducir') {
+    cuerpo = dibujarTraducir(p, estado, set, nombreLengua(def, p, estado));
   } else if (p.tipo === 'escala') {
     cuerpo = dibujarEscala(uid, p.min, p.max, p.etiquetaMin, p.etiquetaMax, estado.respuestas[p.id], set, p.texto);
   } else if (p.tipo === 'matriz') {
@@ -701,7 +1022,16 @@ function dibujarPregunta(p, estado, alCambiar) {
         pintar(e.target.value);
         set(e.target.value);
       },
-      ...(p.multilinea ? { rows: 4 } : { type: 'text' }),
+      // El teclado correcto en el teléfono y el autocompletado del navegador.
+      ...(p.multilinea
+        ? { rows: 4 }
+        : {
+            type: p.formato === 'correo' ? 'email' : p.formato === 'telefono' ? 'tel' : 'text',
+            inputmode: p.formato === 'correo' ? 'email' : p.formato === 'telefono' ? 'tel' : null,
+            autocomplete: p.autocompletar ?? (p.formato === 'correo' ? 'email' : p.formato === 'telefono' ? 'tel' : null),
+            autocapitalize: p.formato ? 'off' : null,
+            spellcheck: p.formato ? 'false' : null,
+          }),
     });
     campo.value = estado.respuestas[p.id] ?? '';
     pintar(campo.value);

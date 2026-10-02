@@ -16,7 +16,7 @@ probar.
 **Decisión.** Todo eso vive en `src/core/` como TypeScript puro, sin una sola
 importación de React Native.
 
-**Por qué.** Porque así corre en Node. Las 121 pruebas se ejecutan en cuatro
+**Por qué.** Porque así corre en Node. Las 140 pruebas se ejecutan en cuatro
 segundos sin emulador, y `tools/sim.ts` puede levantar un aula entera —
 anfitrión y ocho estudiantes reales sobre TCP — en la computadora.
 
@@ -167,6 +167,9 @@ costo de rendimiento.
 
 ## 10. Contenido sólo en inglés, y síntesis de voz prohibida en las demás
 
+> Modificada por la decisión 16: el miskito puede sonar con la voz en
+> español, para mientras se consiguen grabaciones.
+
 **Contexto.** Piko enseña cinco lenguas, pero conseguir vocabulario y
 pronunciación correctos en cuatro lenguas indígenas es un trabajo de campo.
 
@@ -250,6 +253,86 @@ físico que evalúa pronunciación.
 
 **Por qué.** La ruta con teléfonos ya es un proyecto completo, y la fecha es la
 que es.
+
+---
+
+## 16. El miskito suena con la voz en español, para mientras
+
+**Contexto.** Los ejercicios de escucha necesitan sonido, y todavía no hay
+grabaciones de hablantes. Sin sonido, el miskito se queda sin uno de los tres
+ejercicios, el que más ayuda con la pronunciación.
+
+**Decisión.** **Mientras se consiguen voces reales**, el miskito puede usar la
+voz en español del teléfono (`ttsLang` es-…). Mayangna, rama y garífuna
+siguen sin síntesis. La palabra no se le da a la voz tal como se escribe: la
+prepara `diccionario/herramientas/voz.ts` con reglas que salen del análisis de
+la lengua (la h aspirada se lee como j, la w como u, el acento en la primera
+sílaba). Y `npm run validate:diccionario` exige que cada ejercicio de escucha
+use exactamente esa preparación.
+
+**Por qué.** El miskito se escribe casi como se lee en español: tres vocales,
+consonantes con el mismo valor. Una voz española se acerca bastante, y un
+ejercicio de escucha con una voz aproximada enseña más que ninguno.
+
+**Costo.** No es la voz de un hablante. No distingue las vocales largas (*kati*,
+luna / *kâti*, mes) y el acento en la primera sílaba es una hipótesis. Por eso
+los ejercicios de escucha usan palabras que dieron igual dos personas y no
+usan pares que sólo se distinguen por la duración de la vocal.
+
+**Cuándo se deshace.** Cuando haya una grabación, el ítem pasa a `audio` y deja
+`tts`. Teacher Smith y Tangni se ofrecieron a grabar. La reproducción de
+`audio` todavía no está hecha en `EjercicioOpciones`: es lo primero que hace
+falta para dejar la voz sintética.
+
+---
+
+## 17. El progreso se ve como un madroño que crece
+
+**Contexto.** El XP es un número que a un niño de primaria le dice poco, y la
+app no tenía niveles ni perfil. Hacía falta que avanzar se *viera*, y que se
+sintiera propio.
+
+**Decisión.** Cada lección terminada da **sacuanjoches**: 3 por terminarla,
+una más si acertó el 70 % o más, y otra si fue perfecta. Se acumulan y hacen
+crecer un **madroño** en seis etapas (semilla, brote, arbolito, árbol con
+hojas, primeras flores, árbol florecido), y Piko sube una rama por **nivel**
+(diez en total). Los umbrales están en `src/core/progress/arbol.ts`:
+
+| Nivel | Sacuanjoches | Etapa del árbol |
+|---|---|---|
+| 1 | 0 | Semilla |
+| 2 | 4 | Brote |
+| 3 | 12 | Arbolito |
+| 4 | 22 | |
+| 5 | 35 | Árbol con hojas |
+| 6 | 50 | |
+| 7 | 68 | Primeras flores |
+| 8 | 88 | |
+| 9 | 110 | Árbol florecido |
+| 10 | 135 | (Piko en la cima) |
+
+La lección terminada es un evento `lessonDone` más del log, con sus aciertos
+y su total; las sacuanjoches las calcula la proyección, como el XP.
+
+**Por qué.**
+
+- *No se gastan.* El árbol no consume flores: su etapa sale del total, que
+  nunca baja. Así el total es historial y motor a la vez, y nadie pierde lo
+  que ganó.
+- *Terminar siempre rinde.* Igual que con el XP: equivocarse rinde menos,
+  nunca deja sin nada.
+- *Crece de a poco.* Con 5 como máximo por lección, el árbol avanza a lo sumo
+  una etapa por vez; las pruebas lo verifican. Cada cambio de etapa coincide
+  con una subida de nivel, así el árbol y Piko se mueven juntos.
+- *Viaja con el estudiante.* Al ser eventos del log, las sacuanjoches ganadas
+  en la clase se sincronizan con el maestro y sobreviven a cerrar la app,
+  sin una tabla nueva ni una migración. Un snapshot de una versión anterior
+  arranca el árbol en cero y los eventos siguientes lo hacen crecer.
+- *Gama baja.* El árbol es un SVG plano por etapa y lo único que se anima es
+  `transform` y `opacity`, por el hilo nativo.
+
+**Costo.** Las lecciones terminadas antes de esta versión no tienen evento
+`lessonDone` y no dan sacuanjoches: el árbol de todos empieza como semilla.
 
 ---
 

@@ -1,0 +1,178 @@
+{
+  "id": "miq.comida.1",
+  "lang": "miq",
+  "theme": "comida",
+  "difficulty": 1,
+  "title": "La comida",
+  "items": [
+    {
+      "id": "miq.comida.1.a",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "agua",
+      "answer": "li",
+      "options": [
+        "li",
+        "wina",
+        "haya"
+      ]
+    },
+    {
+      "id": "miq.comida.1.b",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "comida",
+      "answer": "plun",
+      "options": [
+        "plun",
+        "li",
+        "rais"
+      ]
+    },
+    {
+      "id": "miq.comida.1.c",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "arroz",
+      "answer": "rais",
+      "options": [
+        "rais",
+        "bins",
+        "haya"
+      ]
+    },
+    {
+      "id": "miq.comida.1.d",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "frijoles",
+      "answer": "bins",
+      "options": [
+        "bins",
+        "rais",
+        "bret"
+      ]
+    },
+    {
+      "id": "miq.comida.1.e",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "yuca",
+      "answer": "yaura",
+      "options": [
+        "yaura",
+        "tama",
+        "platu"
+      ]
+    },
+    {
+      "id": "miq.comida.1.f",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "plátano",
+      "answer": "platu",
+      "options": [
+        "platu",
+        "tama",
+        "yaura"
+      ]
+    },
+    {
+      "id": "miq.comida.1.g",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "banano",
+      "answer": "tama",
+      "options": [
+        "tama",
+        "platu",
+        "kuku"
+      ]
+    },
+    {
+      "id": "miq.comida.1.h",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "coco",
+      "answer": "kuku",
+      "options": [
+        "kuku",
+        "tama",
+        "cafi"
+      ]
+    },
+    {
+      "id": "miq.comida.1.i",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "pescado",
+      "answer": "inska",
+      "options": [
+        "inska",
+        "wina",
+        "bins"
+      ]
+    },
+    {
+      "id": "miq.comida.1.j",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "carne",
+      "answer": "wina",
+      "options": [
+        "wina",
+        "inska",
+        "bret"
+      ]
+    },
+    {
+      "id": "miq.comida.1.k",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "pan",
+      "answer": "bret",
+      "options": [
+        "bret",
+        "bins",
+        "cafi"
+      ]
+    },
+    {
+      "id": "miq.comida.1.l",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "café",
+      "answer": "cafi",
+      "options": [
+        "cafi",
+        "bret",
+        "li"
+      ]
+    },
+    {
+      "id": "miq.comida.1.m",
+      "type": "choice",
+      "skill": "miq.comida",
+      "prompt": "maíz",
+      "answer": "haya",
+      "options": [
+        "haya",
+        "rais",
+        "yaura"
+      ]
+    },
+    {
+      "id": "miq.comida.1.n",
+      "type": "build",
+      "skill": "miq.comida",
+      "target": "galila mabra",
+      "blocks": [
+        "galila",
+        "mabra",
+        "wina",
+        "inska"
+      ],
+      "gloss": "huevo (de gallina)"
+    }
+  ]
+}

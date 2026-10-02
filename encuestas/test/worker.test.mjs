@@ -185,3 +185,66 @@ test('rutas desconocidas y JSON inválido', async () => {
   );
   assert.equal(res.status, 400);
 });
+
+test('las respuestas a preguntas que se sacaron siguen en el resumen y el CSV', async () => {
+  // v1 tenía una pregunta "contacto" que después se reemplazó
+  const v1 = structuredClone(real);
+  v1.secciones[4].preguntas = v1.secciones[4].preguntas.filter((p) => !['nombre', 'correo', 'whatsapp'].includes(p.id));
+  v1.secciones[4].preguntas.push({ id: 'contacto', tipo: 'texto', texto: '¿Cómo te avisamos?', max: 120 });
+  delete v1.correo;
+  await publicar(v1);
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: respuestaValida({ contacto: '+505 8888 1234' }) });
+
+  const r2 = await (await publicar(real)).json();
+  assert.equal(r2.version, 2);
+
+  const r = await (await llamar(`/api/admin/encuestas/${real.slug}/resumen`, { token: TOKEN })).json();
+  const contacto = r.preguntas.find((p) => p.id === 'contacto');
+  assert.ok(contacto, 'la pregunta vieja sigue en el resumen');
+  assert.equal(contacto.anterior, 1);
+  assert.deepEqual(contacto.textos.map((t) => t.texto), ['+505 8888 1234']);
+  assert.equal(r.preguntas.find((p) => p.id === 'correo').anterior, null);
+
+  const csv = await (await llamar(`/api/admin/encuestas/${real.slug}/csv`, { token: TOKEN })).text();
+  const [cabecera, fila] = csv.replace(/^\uFEFF/, '').trim().split('\r\n');
+  assert.ok(cabecera.split(',').includes('contacto'));
+  assert.ok(fila.includes('+505 8888 1234'));
+});
+
+test('la lista pone primero la encuesta principal y trae la imagen de cada una', async () => {
+  env.ENCUESTA_PRINCIPAL = real.slug;
+  await publicar({ ...real, estado: 'abierta' });
+  const otra = { ...real, slug: 'tu-lengua', titulo: 'Tu lengua en Piko', imagen: '/img/og-tu-lengua.jpg', estado: 'abierta' };
+  await publicar(otra);
+  const { encuestas } = await (await llamar('/api/encuestas')).json();
+  assert.deepEqual(
+    encuestas.map((e) => [e.slug, e.principal, e.imagen]),
+    [
+      [real.slug, true, '/img/og.jpg'],
+      ['tu-lengua', false, '/img/og-tu-lengua.jpg'],
+    ],
+  );
+});
+
+test('el panel abre, cierra y pasa a borrador una encuesta sin tocar sus respuestas', async () => {
+  env.ENCUESTA_PRINCIPAL = real.slug;
+  await publicar({ ...real, estado: 'abierta' });
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: respuestaValida() });
+  const cambiar = (estado, token = TOKEN) => llamar(`/api/admin/encuestas/${real.slug}/estado`, { method: 'POST', body: { estado }, token });
+
+  assert.equal((await cambiar('cerrada', 'malo')).status, 401);
+  assert.equal((await cambiar('rara')).status, 400);
+  assert.equal((await llamar('/api/admin/encuestas/no-existe/estado', { method: 'POST', body: { estado: 'cerrada' }, token: TOKEN })).status, 404);
+
+  assert.equal((await cambiar('cerrada')).status, 200);
+  assert.deepEqual((await (await llamar('/api/encuestas')).json()).encuestas, []);
+  assert.equal((await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: respuestaValida() })).status, 410);
+
+  const [e] = (await (await llamar('/api/admin/encuestas', { token: TOKEN })).json()).encuestas;
+  assert.deepEqual([e.estado, e.respuestas, e.principal, e.imagen], ['cerrada', 1, true, '/img/og.jpg']);
+
+  assert.equal((await cambiar('borrador')).status, 200);
+  assert.equal((await llamar(`/api/encuestas/${real.slug}`)).status, 404);
+  assert.equal((await cambiar('abierta')).status, 200);
+  assert.equal((await (await llamar('/api/encuestas')).json()).encuestas.length, 1);
+});

@@ -6,67 +6,135 @@
  * definición guardada en `versiones_encuesta`, así una encuesta nueva es un
  * JSON nuevo y no código nuevo.
  *
- *   GET  /  y  /e/:slug                        la página, con la vista previa
- *                                              para compartir ya completa
+ *   GET  /                                     la encuesta principal (ENCUESTA_PRINCIPAL)
+ *   GET  /e/                                   la lista de encuestas abiertas
+ *   GET  /e/:slug                              una encuesta
+ *                                              (las tres con la vista previa para compartir ya completa)
  *   GET  /api/encuestas                        las abiertas
  *   GET  /api/encuestas/:slug                  definición vigente
  *   POST /api/encuestas/:slug/respuestas       guardar una respuesta
  *
  *   PUT  /api/admin/encuestas/:slug            publicar / actualizar (token)
  *   GET  /api/admin/encuestas                  todas, con conteo (token)
+ *   POST /api/admin/encuestas/:slug/estado     abrirla, cerrarla o pasarla a borrador (token)
  *   GET  /api/admin/encuestas/:slug/resumen    agregados por pregunta (token)
  *   GET  /api/admin/encuestas/:slug/csv        exportar (token)
+ *   GET  /api/admin/encuestas/:slug/correos    correos enviados y su estado (token)
+ *   POST /api/admin/encuestas/:slug/correos/reenviar   reenviar los que fallaron (token)
+ *   POST /api/admin/correos/:respuesta/reenviar         reenviar uno (token)
+ *   GET  /api/admin/encuestas/:slug/contactos  contactos agregados a mano (token)
+ *   POST /api/admin/encuestas/:slug/contactos  agregar contactos, uno por línea (token)
+ *   GET  /api/admin/encuestas/:slug/contactos/viejos  contactos escritos en preguntas que ya no están (token)
+ *   POST /api/admin/contactos/:id/enviar       mandar el enlace a uno (token)
+ *   DELETE /api/admin/contactos/:id            borrar uno (token)
+ *   GET  /api/admin/encuestas/:slug/palabras   traducciones agrupadas por palabra, lengua y zona (token)
+ *   POST /api/admin/encuestas/:slug/palabras/confirmar  confirmar o quitar una traducción (token)
+ *   GET  /api/admin/encuestas/:slug/palabras/exportar?grupo=  lo confirmado, y los paquetes de la app (token)
  */
 
 import { aFilas, preguntasDe, revisar, validarDefinicion } from '../public/js/reglas.js';
+import { detalleAmigable, enviarBienvenida, limpiarNombre, mandarDescarga, nombreDesdeCorreo } from './correo.js';
+import { leerContactos, MAX_LINEAS } from './contactos.js';
+import { agrupar, armarPaquetes, clavePalabra, REGLA } from './palabras.js';
+
+/** Intentos fallidos de token por IP antes de bloquearla, y por cuánto tiempo. */
+const INTENTOS_ADMIN = 10;
+const BLOQUEO_MIN = 15;
+/** Largo mínimo de ADMIN_TOKEN: uno corto se adivina probando. */
+const TOKEN_MIN = 16;
+
+/**
+ * Cabeceras de seguridad para todo lo que sale del Worker (las páginas que
+ * pasan por acá y la API). Los archivos estáticos llevan las mismas desde
+ * public/_headers.
+ */
+const SEGURIDAD = {
+  'content-security-policy': [
+    "default-src 'self'",
+    "script-src 'self'",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    'font-src https://fonts.gstatic.com',
+    "img-src 'self' data:",
+    "connect-src 'self'",
+    "object-src 'none'",
+    "base-uri 'none'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+  ].join('; '),
+  'strict-transport-security': 'max-age=31536000; includeSubDomains',
+  'x-content-type-options': 'nosniff',
+  'x-frame-options': 'DENY',
+  'referrer-policy': 'strict-origin-when-cross-origin',
+  'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+  'cross-origin-opener-policy': 'same-origin',
+};
+
+function conSeguridad(res) {
+  const r = new Response(res.body, res);
+  for (const [k, v] of Object.entries(SEGURIDAD)) r.headers.set(k, v);
+  return r;
+}
 
 /** Respuestas por huella y por día antes de responder 429. Un aula comparte IP. */
 const LIMITE_DIARIO = 60;
 const CUERPO_MAX = 64 * 1024;
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     try {
-      return await enrutar(request, env);
+      return conSeguridad(await enrutar(request, env, ctx));
     } catch (err) {
-      if (err instanceof ErrorHttp) return json({ error: err.message, ...err.extra }, err.status);
+      if (err instanceof ErrorHttp) return conSeguridad(json({ error: err.message, ...err.extra }, err.status, err.cabeceras));
       console.error(err);
-      return json({ error: 'Algo se rompió de nuestro lado.' }, 500);
+      return conSeguridad(json({ error: 'Algo se rompió de nuestro lado.' }, 500));
     }
   },
 };
 
 class ErrorHttp extends Error {
-  constructor(status, message, extra = {}) {
+  constructor(status, message, extra = {}, cabeceras = {}) {
     super(message);
     this.status = status;
     this.extra = extra;
+    this.cabeceras = cabeceras;
   }
 }
 
-async function enrutar(request, env) {
+async function enrutar(request, env, ctx) {
   const url = new URL(request.url);
   const partes = url.pathname.split('/').filter(Boolean).map(decodeURIComponent);
   const m = request.method;
 
   if (partes[0] !== 'api') return servirPagina(request, env, url, partes);
 
-  const [, a, b, c, d] = partes;
+  const [, a, b, c, d, e] = partes;
 
   if (a === 'salud' && m === 'GET') return json({ ok: true });
 
   if (a === 'encuestas') {
     if (!b && m === 'GET') return listarAbiertas(env);
-    if (b && !c && m === 'GET') return obtenerEncuesta(env, b, esAdmin(request, env));
-    if (b && c === 'respuestas' && !d && m === 'POST') return guardarRespuesta(request, env, b, url);
+    if (b && !c && m === 'GET') return obtenerEncuesta(env, b, await tokenValido(request, env));
+    if (b && c === 'respuestas' && !d && m === 'POST') return guardarRespuesta(request, env, b, url, ctx);
   }
 
   if (a === 'admin') {
     await exigirAdmin(request, env);
     if (b === 'encuestas' && !c && m === 'GET') return listarTodas(env);
+    if (b === 'encuestas' && c && d === 'estado' && !e && m === 'POST') return cambiarEstado(request, env, c);
     if (b === 'encuestas' && c && !d && m === 'PUT') return publicar(request, env, c);
     if (b === 'encuestas' && c && d === 'resumen' && m === 'GET') return resumen(env, c);
     if (b === 'encuestas' && c && d === 'csv' && m === 'GET') return exportarCsv(env, c);
+    if (b === 'encuestas' && c && d === 'correos' && !e && m === 'GET') return listarCorreos(env, c);
+    if (b === 'encuestas' && c && d === 'correos' && e === 'reenviar' && m === 'POST') return reenviarFallidos(request, env, c, url);
+    if (b === 'correos' && c && d === 'reenviar' && m === 'POST') return reenviarUno(env, c, url);
+    if (b === 'encuestas' && c && d === 'contactos' && !e && m === 'GET') return listarContactos(env, c);
+    if (b === 'encuestas' && c && d === 'contactos' && !e && m === 'POST') return agregarContactos(request, env, c, url);
+    if (b === 'encuestas' && c && d === 'contactos' && e === 'viejos' && m === 'GET') return contactosViejos(env, c);
+    if (b === 'contactos' && c && d === 'enviar' && m === 'POST') return enviarAContacto(env, c, url);
+    if (b === 'contactos' && c && !d && m === 'DELETE') return borrarContacto(env, c);
+    if (b === 'encuestas' && c && d === 'palabras' && !e && m === 'GET') return verPalabras(env, c);
+    if (b === 'encuestas' && c && d === 'palabras' && e === 'confirmar' && m === 'POST') return confirmarPalabra(request, env, c);
+    if (b === 'encuestas' && c && d === 'palabras' && e === 'exportar' && m === 'GET') return exportarPalabras(env, c, url);
   }
 
   throw new ErrorHttp(404, 'Ruta no encontrada.');
@@ -83,30 +151,40 @@ async function enrutar(request, env) {
 async function servirPagina(request, env, url, partes) {
   if (!env.ASSETS) return new Response('No encontrado', { status: 404 });
 
-  // /e/<slug> no existe como archivo: se sirve index.html. Se pide explícito
-  // porque los robots que arman la vista previa no navegan como un navegador.
+  // /e/ y /e/<slug> no existen como archivo: se sirve index.html. Se pide
+  // explícito porque los robots que arman la vista previa no navegan como un navegador.
   const esEncuesta = partes[0] === 'e' && partes.length === 2;
-  const res = await env.ASSETS.fetch(esEncuesta ? new Request(new URL('/', url), request) : request);
+  const esLista = partes[0] === 'e' && partes.length === 1;
+  const res = await env.ASSETS.fetch(esEncuesta || esLista ? new Request(new URL('/', url), request) : request);
   if (!(res.headers.get('content-type') ?? '').includes('text/html') || typeof HTMLRewriter === 'undefined') return res;
 
-  let titulo = null;
-  let descripcion = null;
-  if (esEncuesta) {
+  // En / se abre la encuesta principal: el enlace corto siempre lleva a la
+  // misma, aunque haya varias abiertas. La lista completa está en /e/.
+  const principal = partes.length === 0 && /^[a-z0-9-]+$/.test(env.ENCUESTA_PRINCIPAL ?? '') ? env.ENCUESTA_PRINCIPAL : null;
+  const slug = esEncuesta ? partes[1] : principal;
+
+  let titulo = esLista ? 'Encuestas de Piko' : null;
+  let descripcion = esLista ? 'Elegí una encuesta y ayudanos a construir Piko, la app para aprender las lenguas de Nicaragua.' : null;
+  let imagen = esLista ? '/img/og-encuestas.jpg' : null;
+  if (slug) {
     try {
-      const e = await cargar(env, partes[1]);
+      const e = await cargar(env, slug);
       if (e && e.estado !== 'borrador') {
         titulo = e.definicion.titulo;
         descripcion = e.definicion.descripcion || null;
+        imagen = e.definicion.imagen ?? null;
       }
     } catch {
       /* sin D1 la página se sirve igual, con los textos genéricos */
     }
   }
 
-  const absoluta = (el) => el.setAttribute('content', new URL(el.getAttribute('content') ?? '/', url.origin).href);
+  // og:image tiene que ser una dirección completa; si la encuesta tiene su propia imagen, va esa.
+  const absoluta = (el) => el.setAttribute('content', new URL(imagen ?? el.getAttribute('content') ?? '/', url.origin).href);
   const poner = (valor) => ({ element: (el) => valor && el.setAttribute('content', valor) });
 
   return new HTMLRewriter()
+    .on('head', { element: (el) => principal && el.append(`<meta name="piko:principal" content="${principal}">`, { html: true }) })
     .on('meta[property="og:image"]', { element: absoluta })
     .on('meta[name="twitter:image"]', { element: absoluta })
     .on('meta[property="og:url"]', { element: (el) => el.setAttribute('content', url.origin + url.pathname) })
@@ -115,13 +193,14 @@ async function servirPagina(request, env, url, partes) {
     .on('meta[property="og:description"]', poner(descripcion))
     .on('meta[name="twitter:description"]', poner(descripcion))
     .on('meta[name="description"]', poner(descripcion))
-    .on('title', { element: (el) => titulo && el.setInnerContent(`${titulo} · Piko`) })
+    .on('title', { element: (el) => titulo && el.setInnerContent(esLista ? titulo : `${titulo} · Piko`) })
     .transform(res);
 }
 
 /* ---------------------------------------------------------------- lectura */
 
 async function listarAbiertas(env) {
+  const principal = env.ENCUESTA_PRINCIPAL ?? null;
   const { results } = await env.DB.prepare(
     `SELECT e.slug, e.titulo, v.definicion
        FROM encuestas e
@@ -131,8 +210,17 @@ async function listarAbiertas(env) {
   ).all();
   const encuestas = results.map((r) => {
     const def = JSON.parse(r.definicion);
-    return { slug: r.slug, titulo: r.titulo, descripcion: def.descripcion ?? '', minutos: def.minutos ?? null };
+    return {
+      slug: r.slug,
+      titulo: r.titulo,
+      descripcion: def.descripcion ?? '',
+      minutos: def.minutos ?? null,
+      imagen: def.imagen ?? '/img/og.jpg',
+      principal: r.slug === principal,
+    };
   });
+  // La principal primero; las demás, de la más nueva a la más vieja.
+  encuestas.sort((a, b) => Number(b.principal) - Number(a.principal));
   return json({ encuestas }, 200, { 'cache-control': 'public, max-age=60' });
 }
 
@@ -149,6 +237,30 @@ async function cargar(env, slug) {
   return { ...fila, definicion: JSON.parse(fila.definicion) };
 }
 
+/**
+ * Todas las preguntas que tuvo la encuesta en cualquier versión: primero las
+ * de la versión actual, en su orden, y después las que se sacaron (marcadas
+ * con `anterior`: la última versión que las tuvo). Así, cambiar la encuesta
+ * nunca esconde respuestas viejas del resumen ni del CSV.
+ */
+async function preguntasHistoricas(env, e) {
+  const { results } = await env.DB.prepare(
+    'SELECT version, definicion FROM versiones_encuesta WHERE encuesta_id = ? ORDER BY version DESC',
+  )
+    .bind(e.id)
+    .all();
+  const vistas = new Set();
+  const lista = [];
+  for (const v of results) {
+    for (const p of preguntasDe(JSON.parse(v.definicion))) {
+      if (vistas.has(p.id)) continue;
+      vistas.add(p.id);
+      lista.push(v.version === e.version ? p : { ...p, anterior: v.version });
+    }
+  }
+  return lista;
+}
+
 async function obtenerEncuesta(env, slug, admin) {
   const e = await cargar(env, slug);
   // Un borrador solo lo ve quien tiene el token: sirve para revisarla antes de abrirla.
@@ -162,7 +274,7 @@ async function obtenerEncuesta(env, slug, admin) {
 
 /* ------------------------------------------------------------- respuestas */
 
-async function guardarRespuesta(request, env, slug, url) {
+async function guardarRespuesta(request, env, slug, url, ctx) {
   const cuerpo = await leerJson(request);
   const e = await cargar(env, slug);
   if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
@@ -220,6 +332,14 @@ async function guardarRespuesta(request, env, slug, url) {
     );
     const filas = aFilas(def, r.limpias, r.otros);
     if (filas.length) await env.DB.batch(filas.map((f) => insertar.bind(id, f.pregunta, f.fila, f.opcion, f.numero, f.texto)));
+
+    // Si dejó su correo, le llega el enlace de descarga. Va después de
+    // responder (waitUntil): la persona no espera a Resend.
+    if (def.correo && r.limpias[def.correo.pregunta]) {
+      const tarea = enviarBienvenida(env, { respuestaId: id, def, respuestas: r.limpias, base: url.origin });
+      if (ctx?.waitUntil) ctx.waitUntil(tarea);
+      else await tarea;
+    }
   }
 
   return json({ ok: true, id }, 201);
@@ -235,15 +355,53 @@ async function huellaDe(request, slug) {
 
 /* ------------------------------------------------------------------ admin */
 
-function esAdmin(request, env) {
-  const token = env.ADMIN_TOKEN;
+/**
+ * ¿Trae el token correcto? Si trae uno equivocado, cuenta como intento
+ * fallido de esa IP; con INTENTOS_ADMIN fallidos en BLOQUEO_MIN minutos, la
+ * IP queda bloqueada (429) aunque después acierte, así probar tokens al azar
+ * no sirve. Sin token no cuenta: es una persona contestando la encuesta.
+ */
+async function tokenValido(request, env) {
   const dado = (request.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
-  return Boolean(token) && dado.length > 0 && igualSeguro(dado, token);
+  if (!dado) return false;
+  const token = env.ADMIN_TOKEN;
+  if (!token || token.length < TOKEN_MIN) return false;
+
+  const huella = await sha256(`admin|${request.headers.get('cf-connecting-ip') ?? ''}`);
+  const desde = `strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-${BLOQUEO_MIN} minutes')`;
+  let fallidos = 0;
+  try {
+    ({ n: fallidos } = await env.DB.prepare(`SELECT COUNT(*) AS n FROM intentos_admin WHERE huella = ? AND creado_en > ${desde}`)
+      .bind(huella)
+      .first());
+  } catch (err) {
+    // Sin la migración 0005 el panel sigue andando, pero sin este freno.
+    console.error('Falta la tabla intentos_admin: corré npm run db:remoto', err);
+  }
+  if (fallidos >= INTENTOS_ADMIN) {
+    throw new ErrorHttp(429, `Demasiados intentos con una contraseña equivocada. Esperá ${BLOQUEO_MIN} minutos.`, {}, { 'retry-after': String(BLOQUEO_MIN * 60) });
+  }
+
+  if (igualSeguro(dado, token)) return true;
+  try {
+    await env.DB.batch([
+      env.DB.prepare('INSERT INTO intentos_admin (huella) VALUES (?)').bind(huella),
+      // Limpieza de paso: lo viejo ya no sirve para nada.
+      env.DB.prepare(`DELETE FROM intentos_admin WHERE creado_en < strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-1 day')`),
+    ]);
+  } catch {
+    /* sin la migración 0005: ya quedó avisado arriba */
+  }
+  return false;
 }
 
 async function exigirAdmin(request, env) {
-  if (!env.ADMIN_TOKEN) throw new ErrorHttp(503, 'Falta configurar ADMIN_TOKEN en el Worker.');
-  if (!esAdmin(request, env)) throw new ErrorHttp(401, 'Token inválido.');
+  // El detalle técnico va al registro del Worker (wrangler tail), no a la pantalla.
+  if (!env.ADMIN_TOKEN || env.ADMIN_TOKEN.length < TOKEN_MIN) {
+    console.error(`ADMIN_TOKEN falta o tiene menos de ${TOKEN_MIN} caracteres: npx wrangler secret put ADMIN_TOKEN`);
+    throw new ErrorHttp(503, 'El panel todavía no está listo para usarse.');
+  }
+  if (!(await tokenValido(request, env))) throw new ErrorHttp(401, 'Contraseña incorrecta.');
 }
 
 function igualSeguro(a, b) {
@@ -256,12 +414,34 @@ function igualSeguro(a, b) {
 
 async function listarTodas(env) {
   const { results } = await env.DB.prepare(
-    `SELECT e.slug, e.titulo, e.estado, e.version_actual AS version, e.actualizada_en,
-            (SELECT COUNT(*) FROM respuestas r WHERE r.encuesta_id = e.id) AS respuestas
+    `SELECT e.slug, e.titulo, e.estado, e.version_actual AS version, e.actualizada_en, v.definicion,
+            (SELECT COUNT(*) FROM respuestas r WHERE r.encuesta_id = e.id) AS respuestas,
+            (SELECT MAX(r.creada_en) FROM respuestas r WHERE r.encuesta_id = e.id) AS ultima
        FROM encuestas e
+       LEFT JOIN versiones_encuesta v ON v.encuesta_id = e.id AND v.version = e.version_actual
       ORDER BY e.actualizada_en DESC`,
   ).all();
-  return json({ encuestas: results });
+  const orden = { abierta: 0, borrador: 1, cerrada: 2 };
+  const encuestas = results
+    .map(({ definicion, ...e }) => {
+      const def = definicion ? JSON.parse(definicion) : {};
+      return { ...e, descripcion: def.descripcion ?? '', imagen: def.imagen ?? '/img/og.jpg', principal: e.slug === env.ENCUESTA_PRINCIPAL };
+    })
+    // La principal primero, después las abiertas, los borradores y las cerradas.
+    .sort((a, b) => Number(b.principal) - Number(a.principal) || orden[a.estado] - orden[b.estado]);
+  return json({ encuestas });
+}
+
+/**
+ * Abrir, cerrar o pasar a borrador desde el panel. Solo cambia el estado: las
+ * preguntas, las versiones y las respuestas quedan como están.
+ */
+async function cambiarEstado(request, env, slug) {
+  const { estado } = await leerJson(request);
+  if (!['abierta', 'cerrada', 'borrador'].includes(estado)) throw new ErrorHttp(400, 'El estado tiene que ser abierta, cerrada o borrador.');
+  const r = await env.DB.prepare('UPDATE encuestas SET estado = ? WHERE slug = ?').bind(estado, slug).run();
+  if (!r.meta.changes) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  return json({ ok: true, slug, estado });
 }
 
 async function publicar(request, env, slug) {
@@ -330,18 +510,33 @@ async function resumen(env, slug) {
     .all();
 
   const { results: textos } = await env.DB.prepare(
-    `SELECT i.pregunta, i.opcion, i.texto, r.creada_en
-       FROM respuestas_items i JOIN respuestas r ON r.id = i.respuesta_id
-      WHERE r.encuesta_id = ? AND i.texto IS NOT NULL
-      ORDER BY r.creada_en DESC
-      LIMIT 500`,
+    // Hasta 200 textos por pregunta (los más nuevos): un límite global dejaba
+    // afuera a las preguntas con respuestas viejas, como el "contacto" de v1.
+    `SELECT pregunta, opcion, texto, creada_en FROM (
+       SELECT i.pregunta, i.opcion, i.texto, r.creada_en,
+              ROW_NUMBER() OVER (PARTITION BY i.pregunta ORDER BY r.creada_en DESC) AS n
+         FROM respuestas_items i JOIN respuestas r ON r.id = i.respuesta_id
+        WHERE r.encuesta_id = ? AND i.texto IS NOT NULL
+     ) WHERE n <= 200
+     ORDER BY creada_en DESC`,
   )
     .bind(e.id)
     .all();
 
-  const preguntas = preguntasDe(e.definicion).map((p) => {
+  // A qué parte de la encuesta pertenece cada pregunta (las viejas van aparte).
+  const seccionDe = new Map();
+  for (const sec of e.definicion.secciones) for (const p of sec.preguntas) seccionDe.set(p.id, sec.titulo);
+
+  const { results: porDia } = await env.DB.prepare(
+    `SELECT substr(creada_en, 1, 10) AS dia, COUNT(*) AS n FROM respuestas
+      WHERE encuesta_id = ? GROUP BY dia ORDER BY dia`,
+  )
+    .bind(e.id)
+    .all();
+
+  const preguntas = (await preguntasHistoricas(env, e)).map((p) => {
     const mias = conteos.filter((c) => c.pregunta === p.id);
-    const base = { id: p.id, tipo: p.tipo, texto: p.texto, respondieron: 0 };
+    const base = { id: p.id, tipo: p.tipo, texto: p.texto, respondieron: 0, anterior: p.anterior ?? null, seccion: seccionDe.get(p.id) ?? 'Versiones anteriores' };
     if (p.tipo === 'unica' || p.tipo === 'multiple') {
       const opciones = p.opciones.map((o) => ({ id: o.id, texto: o.texto, n: mias.find((c) => c.opcion === o.id)?.n ?? 0 }));
       const otros = textos.filter((t) => t.pregunta === p.id && t.opcion).map((t) => t.texto);
@@ -356,7 +551,7 @@ async function resumen(env, slug) {
         suma += c.numero * c.n;
         n += c.n;
       }
-      return { ...base, respondieron: n, min: p.min, max: p.max, promedio: n ? suma / n : null, distribucion: dist };
+      return { ...base, respondieron: n, min: p.min, max: p.max, etiquetaMin: p.etiquetaMin ?? null, etiquetaMax: p.etiquetaMax ?? null, promedio: n ? suma / n : null, distribucion: dist };
     }
     if (p.tipo === 'matriz') {
       const filas = p.filas.map((f) => {
@@ -371,7 +566,17 @@ async function resumen(env, slug) {
         return { id: f.id, texto: f.texto, n, promedio: n ? suma / n : null, distribucion: dist };
       });
       filas.sort((x, y) => (y.promedio ?? -1) - (x.promedio ?? -1));
-      return { ...base, min: p.escala.min, max: p.escala.max, filas };
+      return { ...base, min: p.escala.min, max: p.escala.max, etiquetaMin: p.escala.etiquetaMin ?? null, etiquetaMax: p.escala.etiquetaMax ?? null, filas };
+    }
+    if (p.tipo === 'traducir') {
+      // Cuántas personas escribieron cada cosa del banco (el detalle, en la pestaña Palabras).
+      const items = p.banco.map((b) => ({
+        id: b.id,
+        texto: b.texto,
+        tema: p.temas?.[b.tema] ?? null,
+        n: mias.filter((c) => c.fila === b.id).reduce((a, c) => a + c.n, 0),
+      }));
+      return { ...base, cuantas: p.cuantas, items };
     }
     const lista = textos.filter((t) => t.pregunta === p.id && !t.opcion).map((t) => ({ texto: t.texto, en: t.creada_en }));
     return { ...base, respondieron: lista.length, textos: lista };
@@ -391,13 +596,30 @@ async function resumen(env, slug) {
     if (fila && p.tipo !== 'texto') p.respondieron = fila.n;
   }
 
+  let correos = null;
+  try {
+    const { results } = await env.DB.prepare(
+      `SELECT c.estado, COUNT(*) AS n FROM correos c JOIN respuestas r ON r.id = c.respuesta_id
+        WHERE r.encuesta_id = ? GROUP BY c.estado`,
+    )
+      .bind(e.id)
+      .all();
+    correos = Object.fromEntries(results.map((x) => [x.estado, x.n]));
+  } catch {
+    /* sin la migración 0002 todavía: no hay tabla de correos */
+  }
+
   return json({
     slug: e.slug,
     titulo: e.definicion.titulo,
+    correos,
+    usaCorreo: Boolean(e.definicion.correo),
     estado: e.estado,
     version: e.version,
     respuestas: total.n,
     duracionPromedioSeg: total.duracion,
+    porDia,
+    secciones: e.definicion.secciones.map((sec) => sec.titulo),
     preguntas,
   });
 }
@@ -412,8 +634,15 @@ async function exportarCsv(env, slug) {
     .all();
 
   const columnas = [];
-  for (const p of preguntasDe(e.definicion)) {
+  for (const p of await preguntasHistoricas(env, e)) {
     if (p.tipo === 'matriz') for (const f of p.filas) columnas.push({ titulo: `${p.id}.${f.id}`, leer: (d) => d.respuestas[p.id]?.[f.id] });
+    else if (p.tipo === 'traducir') {
+      const es = new Map(p.banco.map((b) => [b.id, b.texto]));
+      columnas.push({
+        titulo: p.id,
+        leer: (d) => Object.entries(d.respuestas[p.id] ?? {}).map(([item, t]) => `${es.get(item) ?? item}: ${t}`).join(' | '),
+      });
+    }
     else columnas.push({ titulo: p.id, leer: (d) => d.respuestas[p.id] });
     if ((p.opciones ?? []).some((o) => o.otro)) columnas.push({ titulo: `${p.id}.otro`, leer: (d) => d.otros?.[p.id] });
   }
@@ -431,6 +660,393 @@ async function exportarCsv(env, slug) {
       'cache-control': 'no-store',
     },
   });
+}
+
+/* --------------------------------------------------------------- palabras */
+
+/**
+ * Las filas de una pregunta traducir, con la lengua y la zona que eligió cada
+ * persona. Solo las de quien dio permiso, si la encuesta lo pide.
+ */
+async function filasTraducir(env, e, p) {
+  const permiso = e.definicion.permiso;
+  const { results } = await env.DB.prepare(
+    `SELECT i.fila AS item, i.texto, i.respuesta_id AS respuesta,
+            (SELECT g.opcion FROM respuestas_items g WHERE g.respuesta_id = i.respuesta_id AND g.pregunta = ?) AS grupo,
+            (SELECT g.texto  FROM respuestas_items g WHERE g.respuesta_id = i.respuesta_id AND g.pregunta = ?) AS grupoTexto,
+            (SELECT z.opcion FROM respuestas_items z WHERE z.respuesta_id = i.respuesta_id AND z.pregunta = ?) AS zona
+       FROM respuestas_items i JOIN respuestas r ON r.id = i.respuesta_id
+      WHERE r.encuesta_id = ? AND i.pregunta = ? AND i.texto IS NOT NULL
+        ${permiso ? 'AND EXISTS (SELECT 1 FROM respuestas_items pm WHERE pm.respuesta_id = i.respuesta_id AND pm.pregunta = ? AND pm.opcion = ?)' : ''}`,
+  )
+    .bind(p.lengua ?? '', p.lengua ?? '', p.zona ?? '', e.id, p.id, ...(permiso ? [permiso.pregunta, permiso.valor] : []))
+    .all();
+  return results;
+}
+
+async function leerConfirmadas(env, e) {
+  try {
+    const { results } = await env.DB.prepare('SELECT pregunta, item, grupo, clave, texto FROM confirmaciones WHERE encuesta_id = ? ORDER BY creada_en')
+      .bind(e.id)
+      .all();
+    return results;
+  } catch (err) {
+    console.error('confirmaciones (¿falta npm run db:remoto?)', err);
+    return [];
+  }
+}
+
+/** Las lenguas de la pregunta a la que apunta `lengua`, con su código de la app (si lo tiene). */
+function lenguasDe(e, p) {
+  const origen = preguntasDe(e.definicion).find((q) => q.id === p.lengua);
+  return new Map((origen?.opciones ?? []).map((o) => [o.id, { texto: o.texto, codigo: o.codigo ?? null }]));
+}
+
+async function verPalabras(env, slug) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  const traducir = (await preguntasHistoricas(env, e)).filter((p) => p.tipo === 'traducir');
+  const confirmadas = await leerConfirmadas(env, e);
+
+  let sinPermiso = 0;
+  if (e.definicion.permiso) {
+    ({ n: sinPermiso } = await env.DB.prepare(
+      `SELECT COUNT(DISTINCT i.respuesta_id) AS n FROM respuestas_items i JOIN respuestas r ON r.id = i.respuesta_id
+        WHERE r.encuesta_id = ? AND i.pregunta = ? AND i.opcion != ?`,
+    )
+      .bind(e.id, e.definicion.permiso.pregunta, e.definicion.permiso.valor)
+      .first());
+  }
+
+  const preguntas = [];
+  for (const p of traducir) {
+    const marcadas = new Set(confirmadas.filter((c) => c.pregunta === p.id).map((c) => `${c.item}|${c.grupo}|${c.clave}`));
+    const { grupos, items } = agrupar(await filasTraducir(env, e, p), marcadas);
+    const lenguas = lenguasDe(e, p);
+    preguntas.push({
+      id: p.id,
+      texto: p.texto,
+      anterior: p.anterior ?? null,
+      temas: p.temas ?? null,
+      grupos: [...grupos].map(([id, g]) => ({
+        id,
+        texto: lenguas.get(id)?.texto ?? g.texto ?? id,
+        codigo: lenguas.get(id)?.codigo ?? null,
+        personas: g.personas,
+      })).sort((a, b) => b.personas - a.personas),
+      items: p.banco.map((b) => ({
+        id: b.id,
+        texto: b.texto,
+        tema: b.tema ?? null,
+        porGrupo: Object.fromEntries(items.get(b.id) ?? []),
+      })),
+    });
+  }
+  return json({ preguntas, regla: REGLA, sinPermiso });
+}
+
+async function confirmarPalabra(request, env, slug) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  const b = await leerJson(request);
+  const p = (await preguntasHistoricas(env, e)).find((q) => q.id === b.pregunta && q.tipo === 'traducir');
+  if (!p || !p.banco.some((x) => x.id === b.item)) throw new ErrorHttp(400, 'Esa palabra no existe en la encuesta.');
+  const texto = String(b.texto ?? '').trim().slice(0, 300);
+  const clave = clavePalabra(texto);
+  const grupo = String(b.grupo ?? '').slice(0, 100);
+  if (!clave || !grupo) throw new ErrorHttp(400, 'Falta la traducción o la lengua.');
+  try {
+    if (b.confirmada === false) {
+      await env.DB.prepare('DELETE FROM confirmaciones WHERE encuesta_id = ? AND pregunta = ? AND item = ? AND grupo = ? AND clave = ?')
+        .bind(e.id, p.id, b.item, grupo, clave)
+        .run();
+    } else {
+      await env.DB.prepare(
+        `INSERT INTO confirmaciones (encuesta_id, pregunta, item, grupo, clave, texto) VALUES (?, ?, ?, ?, ?, ?)
+         ON CONFLICT (encuesta_id, pregunta, item, grupo, clave) DO UPDATE SET texto = excluded.texto`,
+      )
+        .bind(e.id, p.id, b.item, grupo, clave, texto)
+        .run();
+    }
+  } catch (err) {
+    console.error('confirmarPalabra (¿falta npm run db:remoto?)', err);
+    throw new ErrorHttp(503, 'No se pudo guardar. Probá de nuevo en un rato.');
+  }
+  return json({ ok: true, confirmada: b.confirmada !== false });
+}
+
+async function exportarPalabras(env, slug, url) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  const grupo = url.searchParams.get('grupo') ?? '';
+  const traducir = (await preguntasHistoricas(env, e)).filter((p) => p.tipo === 'traducir');
+  const lengua = traducir.map((p) => lenguasDe(e, p).get(grupo)).find(Boolean) ?? { texto: grupo.replace(/^otra:/, ''), codigo: null };
+
+  const confirmadas = (await leerConfirmadas(env, e)).filter((c) => c.grupo === grupo);
+  const es = new Map(traducir.flatMap((p) => p.banco.map((b) => [`${p.id}|${b.id}`, b])));
+  const palabras = confirmadas.map((c) => ({
+    pregunta: c.pregunta,
+    item: c.item,
+    es: es.get(`${c.pregunta}|${c.item}`)?.texto ?? c.item,
+    tema: es.get(`${c.pregunta}|${c.item}`)?.tema ?? null,
+    texto: c.texto,
+  }));
+  const nombre = lengua.texto.replace(/\s*\(.*\)$/, '').toLocaleLowerCase('es');
+  const paquetes = lengua.codigo ? armarPaquetes({ codigo: lengua.codigo, lengua: nombre, preguntas: traducir, confirmadas }) : [];
+
+  const archivo = `${slug}-${(lengua.codigo ?? grupo).replace(/[^a-z0-9-]+/gi, '-')}.json`;
+  return new Response(JSON.stringify({ encuesta: slug, lengua: { id: grupo, ...lengua }, generado: new Date().toISOString(), palabras, paquetes }, null, 2), {
+    headers: {
+      'content-type': 'application/json; charset=utf-8',
+      'content-disposition': `attachment; filename="${archivo}"`,
+      'cache-control': 'no-store',
+    },
+  });
+}
+
+/* ---------------------------------------------------------------- correos */
+
+async function listarCorreos(env, slug) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  let results = [];
+  try {
+    ({ results } = await env.DB.prepare(
+      `SELECT c.respuesta_id, c.para, c.estado, c.detalle, c.intentos, c.creado_en,
+              COALESCE(c.actualizado_en, c.creado_en) AS actualizado_en
+         FROM correos c JOIN respuestas r ON r.id = c.respuesta_id
+        WHERE r.encuesta_id = ?
+        ORDER BY COALESCE(c.actualizado_en, c.creado_en) DESC
+        LIMIT 500`,
+    )
+      .bind(e.id)
+      .all());
+  } catch (err) {
+    console.error('listarCorreos (¿falta npm run db:remoto?)', err);
+    throw new ErrorHttp(503, 'No se pudo cargar la lista de correos. Probá de nuevo en un rato.');
+  }
+  return json({ correos: results.map((c) => ({ ...c, detalle: detalleAmigable(c.detalle) })) });
+}
+
+/** Vuelve a mandar el correo de una respuesta con la definición con que se contestó. */
+async function reenviar(env, respuestaId, base) {
+  const r = await env.DB.prepare(
+    `SELECT r.id, r.datos, v.definicion
+       FROM respuestas r
+       JOIN versiones_encuesta v ON v.encuesta_id = r.encuesta_id AND v.version = r.version
+      WHERE r.id = ?`,
+  )
+    .bind(respuestaId)
+    .first();
+  if (!r) throw new ErrorHttp(404, 'Esa respuesta no existe.');
+  const def = JSON.parse(r.definicion);
+  const { respuestas } = JSON.parse(r.datos);
+  if (!def.correo || !respuestas[def.correo.pregunta]) throw new ErrorHttp(422, 'Esta respuesta no dejó correo.');
+  return enviarBienvenida(env, { respuestaId, def, respuestas, base });
+}
+
+async function reenviarUno(env, respuestaId, url) {
+  const resultado = await reenviar(env, respuestaId, url.origin);
+  return json({ ok: resultado.estado === 'enviado', ...resultado });
+}
+
+// Resend acepta pocos envíos por segundo en el plan gratis: se mandan de a
+// uno, con una pausa, y de a tandas. El panel vuelve a pedir la siguiente.
+const TANDA = 20;
+const PAUSA_MS = 600;
+
+async function reenviarFallidos(request, env, slug, url) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  const cuerpo = await request.json().catch(() => ({}));
+  const estados = (Array.isArray(cuerpo.estados) ? cuerpo.estados : ['error', 'omitido']).filter((x) =>
+    ['error', 'omitido', 'enviado'].includes(x),
+  );
+  if (!estados.length) throw new ErrorHttp(400, 'Indicá qué estados reenviar.');
+
+  const { results } = await env.DB.prepare(
+    `SELECT c.respuesta_id FROM correos c JOIN respuestas r ON r.id = c.respuesta_id
+      WHERE r.encuesta_id = ? AND c.estado IN (${estados.map(() => '?').join(', ')})
+      ORDER BY c.creado_en
+      LIMIT ${TANDA + 1}`,
+  )
+    .bind(e.id, ...estados)
+    .all();
+
+  const cuenta = { enviado: 0, error: 0, omitido: 0 };
+  for (const [i, { respuesta_id }] of results.slice(0, TANDA).entries()) {
+    if (i) await new Promise((r) => setTimeout(r, PAUSA_MS));
+    const r = await reenviar(env, respuesta_id, url.origin).catch(() => ({ estado: 'error' }));
+    cuenta[r.estado] = (cuenta[r.estado] ?? 0) + 1;
+    // Si falta configurar Resend, los demás van a dar lo mismo: no tiene sentido seguir.
+    if (r.estado === 'omitido') break;
+  }
+  return json({ ...cuenta, quedan: results.length > TANDA });
+}
+
+/* -------------------------------------------------- contactos a mano */
+
+
+async function listarContactos(env, slug) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  try {
+    const { results } = await env.DB.prepare(
+      `SELECT id, nombre, correo, telefono, correo_estado, correo_detalle, correo_intentos,
+              creado_en, correo_actualizado_en
+         FROM contactos WHERE encuesta_id = ? ORDER BY creado_en DESC LIMIT 1000`,
+    )
+      .bind(e.id)
+      .all();
+    return json({ contactos: results.map((c) => ({ ...c, correo_detalle: detalleAmigable(c.correo_detalle) })) });
+  } catch (err) {
+    // El error real (por ejemplo, falta correr npm run db:remoto) queda en el registro.
+    console.error('listarContactos', err);
+    throw new ErrorHttp(503, 'No se pudo cargar la lista de contactos. Probá de nuevo en un rato.');
+  }
+}
+
+/** Manda el enlace de descarga a un contacto y guarda el resultado en su fila. */
+async function mandarAContacto(env, e, contacto, base) {
+  const intento = (contacto.correo_intentos ?? 0) + 1;
+  const r = await mandarDescarga(env, {
+    para: contacto.correo,
+    nombre: limpiarNombre(contacto.nombre) ?? nombreDesdeCorreo(contacto.correo),
+    base,
+    encuesta: e.definicion.titulo,
+    asunto: e.definicion.correo?.asunto,
+    clave: `contacto-${contacto.id}-${intento}`,
+    tipo: 'contacto',
+  });
+  await env.DB.prepare(
+    `UPDATE contactos SET correo_estado = ?, correo_detalle = ?, correo_resend_id = ?, correo_intentos = ?,
+            correo_actualizado_en = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+      WHERE id = ?`,
+  )
+    .bind(r.estado, r.detalle ? String(r.detalle).slice(0, 500) : null, r.resendId, intento, contacto.id)
+    .run();
+  return { ...r, intentos: intento };
+}
+
+async function agregarContactos(request, env, slug, url) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  const cuerpo = await leerJson(request);
+  const { contactos, invalidas, recortado } = leerContactos(cuerpo.texto);
+  if (!contactos.length && !invalidas.length) throw new ErrorHttp(400, 'Pegá al menos un correo o un número.');
+
+  const nuevos = [];
+  let repetidos = 0;
+  try {
+    for (const c of contactos) {
+      const id = crypto.randomUUID();
+      // INSERT OR IGNORE + índices únicos: el mismo correo o número no entra dos veces.
+      const r = await env.DB.prepare(
+        'INSERT OR IGNORE INTO contactos (id, encuesta_id, nombre, correo, telefono) VALUES (?, ?, ?, ?, ?)',
+      )
+        .bind(id, e.id, c.nombre, c.correo, c.telefono)
+        .run();
+      if (r.meta.changes > 0) nuevos.push({ id, ...c, correo_intentos: 0 });
+      else repetidos++;
+    }
+  } catch (err) {
+    console.error('agregarContactos', err);
+    throw new ErrorHttp(503, 'No se pudieron guardar los contactos. Probá de nuevo en un rato.');
+  }
+
+  const cuenta = { enviado: 0, error: 0, omitido: 0 };
+  let sinEnviar = 0;
+  if (cuerpo.enviar) {
+    const conCorreo = nuevos.filter((c) => c.correo);
+    for (const [i, c] of conCorreo.entries()) {
+      // Mismo cuidado que en los reenvíos: de a tandas y con pausa, por el límite de Resend.
+      if (i >= TANDA) {
+        sinEnviar = conCorreo.length - TANDA;
+        break;
+      }
+      if (i) await new Promise((r) => setTimeout(r, PAUSA_MS));
+      const r = await mandarAContacto(env, e, c, url.origin);
+      cuenta[r.estado]++;
+      if (r.estado === 'omitido') {
+        sinEnviar = conCorreo.length - i - 1;
+        break;
+      }
+    }
+  }
+
+  return json({ agregados: nuevos.length, repetidos, invalidas, recortado, maxLineas: MAX_LINEAS, ...cuenta, sinEnviar }, 201);
+}
+
+/**
+ * Los contactos que la gente escribió en preguntas de texto que ya no están
+ * en la encuesta (como "contacto" antes de separarla en correo y teléfono).
+ * Busca en todas las respuestas, sin límite, y devuelve solo las líneas que
+ * tienen un correo o un número válido y que todavía no se agregaron.
+ */
+async function contactosViejos(env, slug) {
+  const e = await cargar(env, slug);
+  if (!e) throw new ErrorHttp(404, 'Esa encuesta no existe.');
+  const viejas = (await preguntasHistoricas(env, e)).filter((p) => p.anterior && p.tipo === 'texto');
+  if (!viejas.length) return json({ lineas: [], yaAgregados: 0, preguntas: [] });
+
+  const { results } = await env.DB.prepare(
+    `SELECT DISTINCT i.texto
+       FROM respuestas_items i JOIN respuestas r ON r.id = i.respuesta_id
+      WHERE r.encuesta_id = ? AND i.texto IS NOT NULL
+        AND i.pregunta IN (${viejas.map(() => '?').join(', ')})`,
+  )
+    .bind(e.id, ...viejas.map((p) => p.id))
+    .all();
+
+  let existentes = { correos: new Set(), telefonos: new Set() };
+  try {
+    const { results: ya } = await env.DB.prepare('SELECT correo, telefono FROM contactos WHERE encuesta_id = ?').bind(e.id).all();
+    existentes = {
+      correos: new Set(ya.map((x) => x.correo).filter(Boolean)),
+      telefonos: new Set(ya.map((x) => x.telefono).filter(Boolean)),
+    };
+  } catch {
+    /* sin la tabla de contactos todavía: no hay nada agregado */
+  }
+
+  const lineas = [];
+  let yaAgregados = 0;
+  for (const { texto } of results) {
+    const linea = texto.replace(/\s+/g, ' ').trim();
+    const [c] = leerContactos(linea).contactos;
+    if (!c) continue;
+    if ((c.correo && existentes.correos.has(c.correo)) || (c.telefono && existentes.telefonos.has(c.telefono))) {
+      yaAgregados++;
+      continue;
+    }
+    lineas.push(linea);
+  }
+  return json({ lineas, yaAgregados, preguntas: viejas.map((p) => ({ id: p.id, texto: p.texto, version: p.anterior })) });
+}
+
+async function enviarAContacto(env, id, url) {
+  let c;
+  try {
+    c = await env.DB.prepare(
+      `SELECT c.*, e.slug FROM contactos c JOIN encuestas e ON e.id = c.encuesta_id WHERE c.id = ?`,
+    )
+      .bind(id)
+      .first();
+  } catch (err) {
+    console.error('enviarAContacto', err);
+    throw new ErrorHttp(503, 'No se pudo leer ese contacto. Probá de nuevo en un rato.');
+  }
+  if (!c) throw new ErrorHttp(404, 'Ese contacto no existe.');
+  if (!c.correo) throw new ErrorHttp(422, 'Este contacto no tiene correo, solo número.');
+  const e = await cargar(env, c.slug);
+  const r = await mandarAContacto(env, e, c, url.origin);
+  return json({ ok: r.estado === 'enviado', ...r });
+}
+
+async function borrarContacto(env, id) {
+  const r = await env.DB.prepare('DELETE FROM contactos WHERE id = ?').bind(id).run();
+  if (!r.meta.changes) throw new ErrorHttp(404, 'Ese contacto no existe.');
+  return json({ ok: true });
 }
 
 export function celda(v) {

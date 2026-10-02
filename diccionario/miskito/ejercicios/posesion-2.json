@@ -1,0 +1,117 @@
+{
+  "id": "miq.posesion.2",
+  "lang": "miq",
+  "theme": "posesion",
+  "difficulty": 2,
+  "title": "Mío y tuyo",
+  "items": [
+    {
+      "id": "miq.posesion.2.a",
+      "type": "choice",
+      "skill": "miq.posesion",
+      "prompt": "mi mamá",
+      "answer": "yaptiki",
+      "options": [
+        "yaptiki",
+        "yapti",
+        "kuka"
+      ]
+    },
+    {
+      "id": "miq.posesion.2.b",
+      "type": "choice",
+      "skill": "miq.posesion",
+      "prompt": "mamá",
+      "answer": "yapti",
+      "options": [
+        "yapti",
+        "yaptiki",
+        "aisa"
+      ]
+    },
+    {
+      "id": "miq.posesion.2.c",
+      "type": "choice",
+      "skill": "miq.posesion",
+      "prompt": "mi abuela",
+      "answer": "kuki ki",
+      "options": [
+        "kuki ki",
+        "kuka",
+        "yaptiki"
+      ]
+    },
+    {
+      "id": "miq.posesion.2.d",
+      "type": "choice",
+      "skill": "miq.posesion",
+      "prompt": "mi nombre",
+      "answer": "nini",
+      "options": [
+        "nini",
+        "ninam",
+        "yaptiki"
+      ]
+    },
+    {
+      "id": "miq.posesion.2.e",
+      "type": "choice",
+      "skill": "miq.posesion",
+      "prompt": "tu nombre",
+      "answer": "ninam",
+      "options": [
+        "ninam",
+        "nini",
+        "nahkisma"
+      ]
+    },
+    {
+      "id": "miq.posesion.2.f",
+      "type": "choice",
+      "skill": "miq.posesion",
+      "prompt": "¿Cómo te llamás?",
+      "answer": "Ninam dia",
+      "options": [
+        "Ninam dia",
+        "Yang nini Ana",
+        "Nahkisma"
+      ]
+    },
+    {
+      "id": "miq.posesion.2.g",
+      "type": "choice",
+      "skill": "miq.posesion",
+      "prompt": "Me llamo Ana",
+      "answer": "Yang nini Ana",
+      "options": [
+        "Yang nini Ana",
+        "Ninam dia",
+        "Pain sna"
+      ]
+    },
+    {
+      "id": "miq.posesion.2.h",
+      "type": "choice",
+      "skill": "miq.posesion",
+      "prompt": "mi mamá (como lo dice Tangni)",
+      "answer": "mamiki",
+      "options": [
+        "mamiki",
+        "mama",
+        "papiki"
+      ]
+    },
+    {
+      "id": "miq.posesion.2.i",
+      "type": "choice",
+      "skill": "miq.posesion",
+      "prompt": "mi papá (como lo dice Tangni)",
+      "answer": "papiki",
+      "options": [
+        "papiki",
+        "mamiki",
+        "aisa"
+      ]
+    }
+  ]
+}

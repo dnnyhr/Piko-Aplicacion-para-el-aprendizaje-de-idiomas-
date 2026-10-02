@@ -1,0 +1,155 @@
+{
+  "id": "miq.frases.2",
+  "lang": "miq",
+  "theme": "frases",
+  "difficulty": 2,
+  "title": "Frases de todos los días",
+  "items": [
+    {
+      "id": "miq.frases.2.a",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Yang nini Ana",
+      "blocks": [
+        "Yang",
+        "nini",
+        "Ana",
+        "ninam",
+        "dia"
+      ],
+      "gloss": "Me llamo Ana"
+    },
+    {
+      "id": "miq.frases.2.b",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Ninam dia",
+      "blocks": [
+        "Ninam",
+        "dia",
+        "nini",
+        "anira"
+      ],
+      "gloss": "¿Cómo te llamás?"
+    },
+    {
+      "id": "miq.frases.2.c",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Pain sna",
+      "blocks": [
+        "Pain",
+        "sna",
+        "sa",
+        "yamni"
+      ],
+      "gloss": "Estoy bien"
+    },
+    {
+      "id": "miq.frases.2.d",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Yaptiki utla ra sa",
+      "blocks": [
+        "Yaptiki",
+        "utla",
+        "ra",
+        "sa",
+        "yapti",
+        "sna"
+      ],
+      "gloss": "Mi mamá está en la casa"
+    },
+    {
+      "id": "miq.frases.2.e",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Yul pisa",
+      "blocks": [
+        "Yul",
+        "pisa",
+        "piyaya",
+        "li"
+      ],
+      "gloss": "El perro come"
+    },
+    {
+      "id": "miq.frases.2.f",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Anira iwisma",
+      "blocks": [
+        "Anira",
+        "iwisma",
+        "nahkisma",
+        "ra"
+      ],
+      "gloss": "¿Dónde vivís?"
+    },
+    {
+      "id": "miq.frases.2.g",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Inska laiksna",
+      "blocks": [
+        "Inska",
+        "laiksna",
+        "want",
+        "li"
+      ],
+      "gloss": "Me gusta el pescado"
+    },
+    {
+      "id": "miq.frases.2.h",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Li want",
+      "blocks": [
+        "Li",
+        "want",
+        "laiksna",
+        "inska"
+      ],
+      "gloss": "Quiero agua"
+    },
+    {
+      "id": "miq.frases.2.i",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Li auhwisa",
+      "blocks": [
+        "Li",
+        "auhwisa",
+        "pisa",
+        "want"
+      ],
+      "gloss": "Está lloviendo"
+    },
+    {
+      "id": "miq.frases.2.j",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Plun aidauksa",
+      "blocks": [
+        "Plun",
+        "aidauksa",
+        "want",
+        "li"
+      ],
+      "gloss": "Tengo hambre"
+    },
+    {
+      "id": "miq.frases.2.k",
+      "type": "build",
+      "skill": "miq.frases",
+      "target": "Tingki painika",
+      "blocks": [
+        "Tingki",
+        "painika",
+        "pain",
+        "au"
+      ],
+      "gloss": "Gracias, amigo"
+    }
+  ]
+}

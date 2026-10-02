@@ -1,0 +1,129 @@
+{
+  "id": "miq.cuerpo.1",
+  "lang": "miq",
+  "theme": "cuerpo",
+  "difficulty": 1,
+  "title": "El cuerpo",
+  "items": [
+    {
+      "id": "miq.cuerpo.1.a",
+      "type": "choice",
+      "skill": "miq.cuerpo",
+      "prompt": "cabeza",
+      "answer": "lal",
+      "options": [
+        "lal",
+        "nakra",
+        "mina"
+      ]
+    },
+    {
+      "id": "miq.cuerpo.1.b",
+      "type": "choice",
+      "skill": "miq.cuerpo",
+      "prompt": "ojo",
+      "answer": "nakra",
+      "options": [
+        "nakra",
+        "kakma",
+        "kiama"
+      ]
+    },
+    {
+      "id": "miq.cuerpo.1.c",
+      "type": "choice",
+      "skill": "miq.cuerpo",
+      "prompt": "nariz",
+      "answer": "kakma",
+      "options": [
+        "kakma",
+        "kiama",
+        "napa"
+      ]
+    },
+    {
+      "id": "miq.cuerpo.1.d",
+      "type": "choice",
+      "skill": "miq.cuerpo",
+      "prompt": "oreja",
+      "answer": "kiama",
+      "options": [
+        "kiama",
+        "kakma",
+        "tawa"
+      ]
+    },
+    {
+      "id": "miq.cuerpo.1.e",
+      "type": "choice",
+      "skill": "miq.cuerpo",
+      "prompt": "boca",
+      "answer": "bila",
+      "options": [
+        "bila",
+        "napa",
+        "mina"
+      ]
+    },
+    {
+      "id": "miq.cuerpo.1.f",
+      "type": "choice",
+      "skill": "miq.cuerpo",
+      "prompt": "mano",
+      "answer": "mihta",
+      "options": [
+        "mihta",
+        "mina",
+        "lal"
+      ]
+    },
+    {
+      "id": "miq.cuerpo.1.g",
+      "type": "choice",
+      "skill": "miq.cuerpo",
+      "prompt": "pie",
+      "answer": "mina",
+      "options": [
+        "mina",
+        "mihta",
+        "napa"
+      ]
+    },
+    {
+      "id": "miq.cuerpo.1.h",
+      "type": "choice",
+      "skill": "miq.cuerpo",
+      "prompt": "diente",
+      "answer": "napa",
+      "options": [
+        "napa",
+        "bila",
+        "tawa"
+      ]
+    },
+    {
+      "id": "miq.cuerpo.1.i",
+      "type": "choice",
+      "skill": "miq.cuerpo",
+      "prompt": "pelo",
+      "answer": "tawa",
+      "options": [
+        "tawa",
+        "lal",
+        "kupia"
+      ]
+    },
+    {
+      "id": "miq.cuerpo.1.j",
+      "type": "choice",
+      "skill": "miq.cuerpo",
+      "prompt": "corazón",
+      "answer": "kupia",
+      "options": [
+        "kupia",
+        "kiama",
+        "nakra"
+      ]
+    }
+  ]
+}

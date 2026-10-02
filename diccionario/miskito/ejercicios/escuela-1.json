@@ -1,0 +1,121 @@
+{
+  "id": "miq.escuela.1",
+  "lang": "miq",
+  "theme": "escuela",
+  "difficulty": 1,
+  "title": "La escuela",
+  "items": [
+    {
+      "id": "miq.escuela.1.a",
+      "type": "choice",
+      "skill": "miq.escuela",
+      "prompt": "maestro o maestra",
+      "answer": "smasmalkra",
+      "options": [
+        "smasmalkra",
+        "skul tuktan",
+        "buk"
+      ]
+    },
+    {
+      "id": "miq.escuela.1.b",
+      "type": "choice",
+      "skill": "miq.escuela",
+      "prompt": "libro",
+      "answer": "buk",
+      "options": [
+        "buk",
+        "ingk",
+        "wauhtaya"
+      ]
+    },
+    {
+      "id": "miq.escuela.1.c",
+      "type": "choice",
+      "skill": "miq.escuela",
+      "prompt": "cuaderno",
+      "answer": "wauhtaya",
+      "options": [
+        "wauhtaya",
+        "buk",
+        "ingk"
+      ]
+    },
+    {
+      "id": "miq.escuela.1.d",
+      "type": "choice",
+      "skill": "miq.escuela",
+      "prompt": "lápiz",
+      "answer": "ingk",
+      "options": [
+        "ingk",
+        "buk",
+        "wauhtaya"
+      ]
+    },
+    {
+      "id": "miq.escuela.1.e",
+      "type": "choice",
+      "skill": "miq.escuela",
+      "prompt": "escribir",
+      "answer": "ulbaya",
+      "options": [
+        "ulbaya",
+        "aisi kaikaya",
+        "lan takaya"
+      ]
+    },
+    {
+      "id": "miq.escuela.1.f",
+      "type": "build",
+      "skill": "miq.escuela",
+      "target": "skul watla",
+      "blocks": [
+        "skul",
+        "watla",
+        "utla",
+        "tuktan"
+      ],
+      "gloss": "escuela"
+    },
+    {
+      "id": "miq.escuela.1.g",
+      "type": "build",
+      "skill": "miq.escuela",
+      "target": "skul tuktan",
+      "blocks": [
+        "skul",
+        "tuktan",
+        "watla",
+        "luhpi"
+      ],
+      "gloss": "estudiante"
+    },
+    {
+      "id": "miq.escuela.1.h",
+      "type": "build",
+      "skill": "miq.escuela",
+      "target": "aisi kaikaya",
+      "blocks": [
+        "aisi",
+        "kaikaya",
+        "takaya",
+        "ulbaya"
+      ],
+      "gloss": "leer"
+    },
+    {
+      "id": "miq.escuela.1.i",
+      "type": "build",
+      "skill": "miq.escuela",
+      "target": "lan takaya",
+      "blocks": [
+        "lan",
+        "takaya",
+        "wark",
+        "kaikaya"
+      ],
+      "gloss": "aprender"
+    }
+  ]
+}

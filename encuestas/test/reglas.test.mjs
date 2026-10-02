@@ -106,3 +106,11 @@ test('la encuesta real: preguntas para docentes solo aparecen a docentes', () =>
   assert.equal(esVisible(real, docente, { rol: 'estudiante' }), false);
   assert.equal(esVisible(real, docente, { rol: 'docente' }), true);
 });
+
+test('imagen: solo una ruta dentro de public/img', () => {
+  const base = { slug: 'x', titulo: 'X', secciones: [{ titulo: 'S', preguntas: [{ id: 'a', tipo: 'texto', texto: 'A' }] }] };
+  assert.deepEqual(validarDefinicion({ ...base, imagen: '/img/og-x.jpg' }), []);
+  for (const mala of ['https://otro.com/x.jpg', '/img/../secreto.jpg', 'og.jpg', '/img/x.svg']) {
+    assert.equal(validarDefinicion({ ...base, imagen: mala }).length, 1, mala);
+  }
+});
