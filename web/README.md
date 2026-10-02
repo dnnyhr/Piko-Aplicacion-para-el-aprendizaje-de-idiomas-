@@ -50,7 +50,11 @@ web/
 `node_modules`: esos archivos nunca llegaban al sitio y la app quedaba en
 blanco esperando las tipografías. Por eso `npm run web:sitio` termina con
 `app/tools/sitio-web.ts`, que los mueve a `assets/paquetes/` y corrige las
-referencias. `npm run web:comprobar` (también en CI) revisa que cada archivo
+referencias. El mismo script prepara el `index.html` de la app para que
+arranque rápido: pide en paralelo, desde el principio, el esqueleto, la
+portada y las tipografías (sin eso iban en fila: la app, después `_layout`,
+que esperaba las tipografías, y recién después la portada), y muestra a Piko
+con un «Cargando…» mientras tanto. `npm run web:comprobar` (también en CI) revisa que cada archivo
 que pide la app esté en el repositorio.
 
 ## Publicación
@@ -72,8 +76,7 @@ Para que no cueste de más: lo que se repite sin fin (nubes, vapor, Piko
 flotando) se pausa cuando sale de la pantalla; las apariciones usan un solo
 IntersectionObserver en vez de un ScrollTrigger por elemento; y las tarjetas
 del diccionario que están lejos no se dibujan hasta acercarse
-(`content-visibility`). La app de «Probar» se pide recién cuando la página
-terminó de cargar.
+(`content-visibility`).
 
 ## Cada página interior
 
