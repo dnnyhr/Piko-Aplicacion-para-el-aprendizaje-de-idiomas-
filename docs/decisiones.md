@@ -11,10 +11,11 @@ de cada vuelta.
 | # | Decisión | Parte |
 |---|---|---|
 | 1–14 | Núcleo puro, red, progreso, ejercicios, contenido y compilación | App |
-| 15 | ~~El robot queda fuera de alcance~~ — reemplazada por la 20 | Robot |
+| 15 | ~~El robot queda fuera de alcance~~ — reemplazada por la 21 | Robot |
 | 16 | El miskito suena con la voz en español, para mientras | Contenido |
-| 20–22 | El robot: proyecto aparte, la cara es un teléfono, el maestro escucha | Robot |
-| 23 | Las encuestas corren en un servidor, fuera del aula | Encuestas |
+| 17 | El progreso se ve como un madroño que crece | App |
+| 21–23 | El robot: proyecto aparte, la cara es un teléfono, el maestro escucha | Robot |
+| 24 | Las encuestas corren en un servidor, fuera del aula | Encuestas |
 
 ---
 
@@ -28,7 +29,7 @@ probar.
 **Decisión.** Todo eso vive en `src/core/` como TypeScript puro, sin una sola
 importación de React Native.
 
-**Por qué.** Porque así corre en Node. Las 124 pruebas se ejecutan en cuatro
+**Por qué.** Porque así corre en Node. Las 140 pruebas se ejecutan en cuatro
 segundos sin emulador, y `tools/sim.ts` puede levantar un aula entera —
 anfitrión y ocho estudiantes reales sobre TCP — en la computadora.
 
@@ -256,7 +257,7 @@ solitario; el aula se prueba con el simulador o con teléfonos.
 
 ---
 
-## 15. ~~El robot queda fuera de alcance~~ — reemplazada por la 20
+## 15. ~~El robot queda fuera de alcance~~ — reemplazada por la 21
 
 **Contexto.** El documento del proyecto describe una segunda ruta con un robot
 físico que evalúa pronunciación.
@@ -267,7 +268,7 @@ físico que evalúa pronunciación.
 que es.
 
 **Qué cambió.** La parte que valía se mantiene: la app no tiene código del
-robot. Pero el robot sí se construyó, como proyecto aparte — ver la 20.
+robot. Pero el robot sí se construyó, como proyecto aparte — ver la 21.
 
 ---
 
@@ -301,7 +302,57 @@ falta para dejar la voz sintética.
 
 ---
 
-## 20. El robot es un proyecto aparte, en `robot/`
+## 17. El progreso se ve como un madroño que crece
+
+**Contexto.** El XP es un número que a un niño de primaria le dice poco, y la
+app no tenía niveles ni perfil. Hacía falta que avanzar se *viera*, y que se
+sintiera propio.
+
+**Decisión.** Cada lección terminada da **sacuanjoches**: 3 por terminarla,
+una más si acertó el 70 % o más, y otra si fue perfecta. Se acumulan y hacen
+crecer un **madroño** en seis etapas (semilla, brote, arbolito, árbol con
+hojas, primeras flores, árbol florecido), y Piko sube una rama por **nivel**
+(diez en total). Los umbrales están en `src/core/progress/arbol.ts`:
+
+| Nivel | Sacuanjoches | Etapa del árbol |
+|---|---|---|
+| 1 | 0 | Semilla |
+| 2 | 4 | Brote |
+| 3 | 12 | Arbolito |
+| 4 | 22 | |
+| 5 | 35 | Árbol con hojas |
+| 6 | 50 | |
+| 7 | 68 | Primeras flores |
+| 8 | 88 | |
+| 9 | 110 | Árbol florecido |
+| 10 | 135 | (Piko en la cima) |
+
+La lección terminada es un evento `lessonDone` más del log, con sus aciertos
+y su total; las sacuanjoches las calcula la proyección, como el XP.
+
+**Por qué.**
+
+- *No se gastan.* El árbol no consume flores: su etapa sale del total, que
+  nunca baja. Así el total es historial y motor a la vez, y nadie pierde lo
+  que ganó.
+- *Terminar siempre rinde.* Igual que con el XP: equivocarse rinde menos,
+  nunca deja sin nada.
+- *Crece de a poco.* Con 5 como máximo por lección, el árbol avanza a lo sumo
+  una etapa por vez; las pruebas lo verifican. Cada cambio de etapa coincide
+  con una subida de nivel, así el árbol y Piko se mueven juntos.
+- *Viaja con el estudiante.* Al ser eventos del log, las sacuanjoches ganadas
+  en la clase se sincronizan con el maestro y sobreviven a cerrar la app,
+  sin una tabla nueva ni una migración. Un snapshot de una versión anterior
+  arranca el árbol en cero y los eventos siguientes lo hacen crecer.
+- *Gama baja.* El árbol es un SVG plano por etapa y lo único que se anima es
+  `transform` y `opacity`, por el hilo nativo.
+
+**Costo.** Las lecciones terminadas antes de esta versión no tienen evento
+`lessonDone` y no dan sacuanjoches: el árbol de todos empieza como semilla.
+
+---
+
+## 21. El robot es un proyecto aparte, en `robot/`
 
 **Contexto.** Una vez que la app estuvo andando, hubo tiempo para la Ruta 2.
 
@@ -319,7 +370,7 @@ pruebas. CI corre los dos.
 
 ---
 
-## 21. La cara del robot es un teléfono
+## 22. La cara del robot es un teléfono
 
 **Contexto.** El robot necesita expresiones que se lean desde el fondo del
 aula, y hablar.
@@ -340,7 +391,7 @@ salga de pantalla completa — ver «Que la pantalla no se apague» en
 
 ---
 
-## 22. En el ejercicio del robot, por ahora escucha el maestro
+## 23. En el ejercicio del robot, por ahora escucha el maestro
 
 **Contexto.** El robot tiene que decidir si el chico pronunció bien.
 
@@ -355,7 +406,7 @@ sale ese sí o ese no.
 
 ---
 
-## 23. Las encuestas corren en un servidor, fuera del aula
+## 24. Las encuestas corren en un servidor, fuera del aula
 
 **Contexto.** Hace falta escuchar a maestros y familias, y sobre todo juntar
 palabras de hablantes nativos para las cuatro lenguas vacías (la 10).

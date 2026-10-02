@@ -190,7 +190,7 @@ flowchart TD
     APP --> CORE["🧠 src/core/<br/><sub>protocolo · sync · progreso</sub>"]
     APP --> RESTO["src/net · src/db · src/ui<br/><sub>red, datos e interfaz</sub>"]
     APP --> CONTENT["🗣️ content/<br/><sub>las lenguas, en JSON</sub>"]
-    APP --> TESTS["✅ tests/ · tools/<br/><sub>124 pruebas · simulador de aula</sub>"]
+    APP --> TESTS["✅ tests/ · tools/<br/><sub>140 pruebas · simulador de aula</sub>"]
 
     ROBOT --> FIRM["⚙️ firmware/<br/><sub>Arduino: motores y luces</sub>"]
     ROBOT --> PANEL["🌉 panel/<br/><sub>puente Node ↔ navegador</sub>"]
@@ -260,7 +260,7 @@ se instala y se prueba por separado:
 ```bash
 # La app
 cd app && npm install
-npm test                 # 121 pruebas del núcleo y la persistencia
+npm test                 # 140 pruebas del núcleo y la persistencia
 npm run typecheck
 npm run validate:packs
 npm run web              # la interfaz y la práctica en solitario, en el navegador
@@ -352,7 +352,7 @@ mientras** se consiguen grabaciones de hablantes ([decisión 16](docs/decisiones
 
 | | |
 |---|---|
-| <img src="https://api.iconify.design/mdi/translate.svg?color=%232F6B4F" width="18"/> **¿Hablás una de estas lenguas?** | Contestá [Tu lengua en Piko](https://encuestas.piko.mugiware.com/e/tu-lengua) desde el teléfono, o abrí un [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml). No hace falta saber programar ni usar Git — escribí las palabras en texto plano y nosotros las convertimos. |
+| <img src="https://api.iconify.design/mdi/translate.svg?color=%232F6B4F" width="18"/> **¿Hablás una de estas lenguas?** | Contestá [**Tu lengua en Piko**](https://encuestas.piko.mugiware.com/e/tu-lengua): escribís cómo se dicen palabras y frases en tu lengua, desde el teléfono. O abrí un [aporte de contenido lingüístico](../../issues/new?template=aporte-linguistico.yml). No hace falta saber programar ni usar Git. |
 | <img src="https://api.iconify.design/mdi/code-braces.svg?color=%231F4E5F" width="18"/> **¿Querés aportar código?** | Todo está en [CONTRIBUTING.md](CONTRIBUTING.md): cómo correr el proyecto, las pruebas de cada parte, el simulador de aula y las restricciones que no son negociables. |
 
 </div>

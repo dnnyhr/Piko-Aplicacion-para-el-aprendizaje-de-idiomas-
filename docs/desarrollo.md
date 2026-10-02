@@ -67,7 +67,7 @@ respecto del teléfono, ambas deliberadas:
 npm test
 ```
 
-124 pruebas sobre el núcleo puro y la persistencia. Corren en unos cuatro
+140 pruebas sobre el núcleo puro y la persistencia. Corren en unos cuatro
 segundos, sin emulador. Cubren el troceado de mensajes partidos a mitad de
 paquete, la convergencia de la sincronización, el determinismo de la
 proyección, los umbrales del semáforo, la corrección de respuestas y el
