@@ -61,7 +61,7 @@
       "answer": "galila",
       "options": [
         "galila",
-        "iris",
+        "urus",
         "bip"
       ]
     },
@@ -110,23 +110,11 @@
       "options": [
         "kakamuk",
         "kuswa",
-        "iris"
+        "piuta"
       ]
     },
     {
       "id": "miq.animales.1.j",
-      "type": "choice",
-      "skill": "miq.animales",
-      "prompt": "loro",
-      "answer": "iris",
-      "options": [
-        "iris",
-        "galila",
-        "kakamuk"
-      ]
-    },
-    {
-      "id": "miq.animales.1.k",
       "type": "choice",
       "skill": "miq.animales",
       "prompt": "culebra",

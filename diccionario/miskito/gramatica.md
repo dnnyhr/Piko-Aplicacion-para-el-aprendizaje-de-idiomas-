@@ -1,6 +1,6 @@
 # Miskito: patrones y reglas
 
-> **Versión 0.3** · 2 de octubre de 2026 · dos tandas de datos y un diccionario publicado
+> **Versión 0.4** · 2 de octubre de 2026 · dos tandas de datos y dos diccionarios publicados
 
 **De dónde sale.** De dos personas de la misma comunidad, Raiti (Río Coco), las
 dos hablantes maternas, de dos generaciones distintas:
@@ -10,10 +10,11 @@ dos hablantes maternas, de dos generaciones distintas:
 | `raiti-2026-09-28` | Teacher Smith, docente | 80 palabras, 15 frases, una oración libre |
 | `raiti-2026-09-30` | Tangni, estudiante de 18 años | 84 palabras, 15 frases, una presentación |
 | `lackwood-2006` | *Diccionario Bilingüe: Términos de Medicina Tradicional en Lengua Miskita*, Ernesto Scott Lackwood (URACCAN – IMTRADEC, Bilwi, 2006) | 88 entradas citadas como evidencia |
+| `matamoros-1996` | *Diccionario Miskito–Miskitu, Español–Miskito*, Jorge Matamoros R. (CIDCA, 1996), en pueblosoriginarios.com | 80 entradas citadas como evidencia |
 
-Todo está en [`corpus.csv`](corpus.csv) tal cual lo escribieron. Del diccionario
-publicado sólo se copiaron las entradas que sirven de evidencia, no la obra
-completa. Es de otra zona (Bilwi), lo recogió su autor con personas mayores y
+Todo está en [`corpus.csv`](corpus.csv) tal cual lo escribieron. De los diccionarios
+publicados sólo se copiaron las entradas que sirven de evidencia, no las obras
+completas. Los dos son de otra zona (Bilwi). El de Scott Lackwood lo recogió su autor con personas mayores y
 usa la ortografía escrita: infinitivos en *-aia* y circunflejo para las vocales
 largas. Respalda reglas, pero **no cuenta como un hablante más**: las entradas
 que sólo están ahí quedan en estado `publicada`.
@@ -89,7 +90,52 @@ entre registros (cómo se habla en la casa y cómo en la escuela). No es una
 diferencia de región, porque las dos son de Raiti. Hay que preguntarlo, no
 suponerlo.
 
-## Qué trajo el diccionario publicado (v0.3)
+## Qué trajo el diccionario de Matamoros (v0.4)
+
+Jorge Matamoros es miskito, de Krukira, y vive en Bilwi. La página publica la
+parte Español–Miskito de su diccionario: 1.311 entradas en una tabla de texto.
+La imagen de la página es sólo la portada. Se cruzaron las 1.311 con el
+léxico.
+
+**Predicciones.** Se pudieron comprobar dos:
+
+| # | Predicción | Matamoros dice | Resultado |
+|---|---|---|---|
+| 1 | nombre = *nina* | *Nina* | ✅ acertó (abierta desde la v0.1) |
+| 7 | reír · vivir = *kikaya* · *iwaya* | *Kikaia* · *Raya kaia* («estar vivo») | ½ reír acertó; para vivir da otra palabra |
+
+**Tasa de acierto: 1,5 de 2. Acumulada: 10,5 de 13.**
+
+**Lo que cambia.**
+- **Verde y azul (L6, sube a B).** Matamoros traduce «verde» como *sangni*,
+  la palabra que Teacher Smith dio para «azul».
+- **Las partes del cuerpo se citan con dueño (L9, sube a A).** *Wan nakra*
+  (nuestro ojo), *wan mihta*, *wan napa*. Y la familia, en tercera persona:
+  *Aisika* (su padre), *Muihnika* (su hermano), *papika*.
+- ***titan* también es «mañana, el día siguiente» (L4).** Da «mañana = *Titan
+  mani ar yauhka*», «titan o yauhka». Tangni tenía razón al usarla.
+- ***stury* sale de revisión.** «Palabra» es *Sturi aisanka*.
+- **Se resuelven *daiwan nawira* (pájaro: *Daiwan tnawira*) y *pauta klawi*
+  (fuego: *Pauta klauhan*).**
+
+**Palabras que cambian según la fuente.** Ninguna es un error seguro. Pueden
+ser variantes de zona, de época o de especie:
+
+| | Raiti (encuestas) | Bilwi (Matamoros) | Bilwi (Scott Lackwood) |
+|---|---|---|---|
+| gato | *micki* | *pus* (inglés *puss*) | — |
+| loro | *iris* | *rauha* | — |
+| sol | *yapta* | *yu* | — |
+| iguana | *kakamuk* | *islu* | *kakamuk* |
+| gallina | *galila* | *kalika mairin* | *kâlila* |
+| amigo | *painika* | *pana* | — |
+| libro · lápiz | *buk* · *ingk* | *paun* · *pinsil* (inglés *pencil*) | — |
+
+*iris* y *yapta* pasan a revisión y salen de los ejercicios hasta preguntarlas.
+
+---
+
+## Qué trajo el diccionario de Scott Lackwood (v0.3)
 
 **Las predicciones de la versión 0.2, contra el diccionario.** Se pudieron
 comprobar ocho:
@@ -105,7 +151,7 @@ comprobar ocho:
 | 14 | ¿Tenés hambre? = *Plun mai dauksa?* | *¿Anira mai klahwisa?* (¿dónde te duele?) | ½ *mai* es «te»; falta la frase |
 | 16 | oro = *lalah* | *Gul* (del inglés *gold*) | ❌ falló |
 
-**Tasa de acierto: 6,5 de 8.** Sumada a la de la segunda tanda, **9 de 11**.
+**Tasa de acierto: 6,5 de 8.** Sumada a la de la segunda tanda, 9 de 11.
 
 **Lo que resolvió.**
 - ***bara* es «ahí»** (*Bara sa*: ahí está), y también aparece como «y». La
@@ -587,12 +633,14 @@ wainhka*, caballo macho).
 *luhpi* es hijo o hija (la relación); *tuktan*, niño o niña (la edad). Tangni
 usa *tuktan* también para «bebé».
 
-### L4 · «Mañana»: titan y yauhka — Confianza C (bajó desde B)
+### L4 · «Mañana»: titan y yauhka — Confianza B
 
 Teacher Smith: *titan yamni* (buenos días) y *yauhka kat* (hasta mañana, el día
 siguiente). Tangni: *titan yamni* también, pero «hasta mañana» es *titan
 pruabia*. Si *titan* sirve para las dos cosas, la distinción de la versión 0.1
-no se sostiene. Hay que preguntar qué es *pruabia*.
+no se sostiene. Matamoros da «mañana = *Titan mani ar yauhka*»: las dos
+sirven para el día siguiente, y *titan* además es la mañana del día. Falta
+saber qué es *pruabia*.
 
 ### L5 · Una palabra, dos sentidos: li — Confianza A
 
@@ -600,10 +648,11 @@ no se sostiene. Hay que preguntar qué es *pruabia*.
 *Lii ahwisa* (está lloviendo) y, para la palabra «lluvia», *li ausisa*: «el
 agua cae». Es la manera de decirlo en las dos personas.
 
-### L6 · ¿Verde y azul son un mismo color? — Confianza C
+### L6 · ¿Verde y azul son un mismo color? — Confianza B
 
 Para azul se dio *sangni* y para verde, una descripción (*twi maplalka*).
-Tangni no contestó los colores: sigue abierta.
+Tangni no contestó los colores. Matamoros traduce «verde» como *sangni*: la
+misma palabra sirve para los dos colores en dos fuentes distintas.
 
 ### L7 · Hermano y hermana dependen de quién habla — Confianza B (subió desde C)
 
@@ -628,12 +677,16 @@ Teacher Smith: *yapti* y *aisa* (y *mama almuk*, abuela). Tangni: *mama* y
 *papa* son la manera de hablar en la casa y *yapti* y *aisa* la de la escuela?
 ¿O de distintas generaciones?
 
-### L9 · En la familia se nombra con dueño — Confianza B
+### L9 · La familia y el cuerpo se nombran con dueño — Confianza A
 
 **Evidencia.** A «mamá», «papá» y «hermana», Tangni contestó *mamiki* (mi
 mamá), *papiki* (mi papá) y *muiki* (mi hermana). Teacher Smith, en las
 frases, dice *yaptiki* y *kuki ki*. En muchas lenguas las palabras de
 parentesco se dicen casi siempre con su dueño.
+
+Matamoros, en su diccionario, cita así las partes del cuerpo (*Wan nakra*,
+nuestro ojo; *wan mihta*; *wan napa*) y la familia (*Aisika*, su padre;
+*Muihnika*, su hermano).
 
 **Para Piko.** Un ejercicio de familia puede enseñar *mamiki* antes que
 *mama*: es como lo dicen.
@@ -704,13 +757,12 @@ estas filas, para quienes ya contestaron y se ofrecieron a ayudar.
 
 | # | Preguntar | Esperamos | Pone a prueba |
 |---|---|---|---|
-| 1 | nombre | *nina* | M4 |
 | 2 | tu mamá · su mamá | *yaptikam* o *mamikam* · *yaptika* | M4 |
 | 3 | mi casa · tu casa | *uitla* · *umtla* | M5 |
 | 4 | yo como · vos comés | *pisna* · *pisma* | M2 |
 | 5 | yo duermo · él duerme | *yapisna* · *yapisa* | M2 (la i) |
 | 6 | Estás en la casa | *utla ra sma* | M3 |
-| 7 | reír · vivir | *kikaya* · *iwaya* | M1 (tener, hacer y entrar ya los confirmó el diccionario) |
+| 7 | vivir (en un lugar) | *iwaia* | M1 (reír, tener, hacer y entrar ya están confirmados) |
 | 9 | ¡Dormí! · ¡Vení! | *yaps* · ¿*bal*? | M8, M1 |
 | 10 | el maestro (hombre) | *smasmalkra waitna* | L2 |
 | 11 | Ana es maestra | *Ana smasmalkra* (sin verbo) | O6 |
@@ -719,7 +771,7 @@ estas filas, para quienes ya contestaron y se ofrecieron a ayudar.
 | 14 | ¿Tenés hambre? | *Plun mai dauksa ki?* | M11, O10 |
 | 15 | mi coco · tu coco · su coco | — | M4, M11 |
 | 16 | dinero | *lalah* (oro ya se sabe: *gul*) | M9 |
-| 17 | zacate · ¿verde y azul son el mismo color? | *twi* · — | L6 |
+| 17 | zacate · ¿*sangni* es verde, azul o los dos? | *twi* · los dos | L6 |
 | 18 | **Hermano y hermana, a una mujer y a un hombre** | — | L7 |
 | 19 | **¿Qué es *pruabia*? ¿*titan* es también «el día siguiente»?** | — | L4 |
 | 20 | **¿Qué sistema de números se enseña en la escuela?** | — | N3 |

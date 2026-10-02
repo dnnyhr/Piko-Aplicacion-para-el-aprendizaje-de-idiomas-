@@ -26,7 +26,7 @@ diccionario/
 
 | Lengua | Versión | Fuentes | Léxico | Reglas | Ejercicios |
 |---|---|---|---|---|---|
-| Miskito (`miq`) | 0.3 | 2 hablantes (Raiti, Río Coco) y un diccionario publicado (Bilwi) | 247 entradas, 19 por revisar, 60 dichas por las dos personas, 80 con respaldo publicado | 47 (23 A · 16 B · 7 C · 1 mixta) | 16 paquetes, 139 ítems |
+| Miskito (`miq`) | 0.4 | 2 hablantes (Raiti, Río Coco) y dos diccionarios publicados (Bilwi) | 269 entradas, 18 por revisar, 60 dichas por las dos personas | 47 (24 A · 17 B · 5 C · 1 mixta) | 16 paquetes, 137 ítems |
 | Mayangna (`sum`) | — | — | — | — | — |
 | Rama (`rma`) | — | — | — | — | — |
 | Garífuna (`cab`) | — | — | — | — | — |
@@ -122,6 +122,8 @@ aportaron y a sus comunidades. Más detalle en
 
 - Ernesto Scott Lackwood (2006). *Diccionario Bilingüe: Términos de Medicina Tradicional en Lengua Miskita (Miskito – Español)*. URACCAN – IMTRADEC, Bilwi.
   En `corpus.csv` están sólo las 88 entradas citadas como evidencia, tal cual; la obra completa no se redistribuye.
+- Jorge Matamoros R. (1996). *Diccionario Miskito–Miskitu, Español–Miskito*. CIDCA. Consultado en pueblosoriginarios.com.
+  En `corpus.csv` están sólo las 80 entradas citadas como evidencia, tal cual.
 
 Una obra publicada respalda reglas y formas, pero no cuenta como un hablante: no sube una palabra a `probable`.
 
@@ -132,3 +134,4 @@ Una obra publicada respalda reglas y formas, pero no cuenta como un hablante: no
 | miskito 0.1 | 2026-09-29 | Primera tanda: 1 hablante, 80 palabras, 15 frases y una oración libre | 26 abiertas · sin tanda anterior para medir aciertos |
 | miskito 0.2 | 2026-10-02 | Segunda tanda: otra hablante de Raiti, de otra generación. Animales, comida y naturaleza; dos sistemas de números; hermanos según quién habla; «hermano» y «hermana» salen de los ejercicios | 3 comprobables: 2 acertadas y 1 a medias (2,5 / 3) · 23 siguen abiertas |
 | miskito 0.3 | 2026-10-02 | Diccionario de Scott Lackwood (2006) como respaldo publicado: pasado, futuro, negación, plural, pregunta con *ki*; *bara* es «ahí», *kaya* es «vamos», la vocal larga distingue palabras (*kati* / *kâti*) | 8 comprobables: 6,5 acertadas · acumulado 9 de 11 |
+| miskito 0.4 | 2026-10-02 | Diccionario de Matamoros (1996): *nina* (nombre) y *kikaia* (reír) confirmados; *sangni* también es verde; la familia y el cuerpo se citan con dueño; variantes entre Raiti y Bilwi; *iris* y *yapta* a revisión | 2 comprobables: 1,5 acertadas · acumulado 10,5 de 13 |

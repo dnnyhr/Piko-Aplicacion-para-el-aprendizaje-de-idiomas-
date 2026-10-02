@@ -47,6 +47,17 @@
       "fecha": "2006",
       "zona": "bilwi",
       "notas": "Recogido entre 2004 y 2005 con personas mayores. Revisado por Serafina Espinoza, Marcos Padilla, Avelino Cox y Miguel Urbina. Escribe los infinitivos en -aia y marca las vocales largas con acento circunflejo. En corpus.csv están sólo las entradas citadas como evidencia, copiadas tal cual; la columna «item» es la letra del diccionario donde aparecen. El diccionario completo no se redistribuye."
+    },
+    {
+      "id": "matamoros-1996",
+      "tipo": "publicacion",
+      "titulo": "Diccionario Miskito–Miskitu, Español–Miskito",
+      "autor": "Jorge Matamoros R.",
+      "editorial": "CIDCA (Centro de Investigaciones y Documentación de la Costa Atlántica)",
+      "fecha": "1996",
+      "zona": "bilwi",
+      "consultado_en": "https://pueblosoriginarios.com/lenguas/miskito.php (2026-10-02)",
+      "notas": "El autor es miskito, de Krukira, y vive en Bilwi. La página publica la parte Español–Miskito como tabla de texto (1.311 entradas, de la A a la Z); la única imagen es la portada. En corpus.csv están sólo las entradas citadas como evidencia, copiadas tal cual; «item» es la letra. La obra completa no se redistribuye."
     }
   ]
 }

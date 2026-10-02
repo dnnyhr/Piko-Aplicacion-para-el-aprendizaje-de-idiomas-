@@ -1,7 +1,7 @@
 {
   "$comentario": "Diccionario miskito de Piko. Ver diccionario/README.md. «registrado» es lo que escribió la persona, tal cual; «forma» es la forma de trabajo. Las entradas con «revisar» no se usan en ejercicios.",
   "lengua": "miq",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "actualizado": "2026-10-02",
   "entradas": [
     {
@@ -221,7 +221,8 @@
         "L8"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -243,7 +244,8 @@
       "id": "muih",
       "forma": "muih",
       "registrado": [
-        "Muih"
+        "Muih",
+        "Muihnika"
       ],
       "es": "hermano",
       "categoria": "sustantivo",
@@ -253,7 +255,8 @@
         "L7"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -318,13 +321,15 @@
       "id": "dama",
       "forma": "dama",
       "registrado": [
-        "dama"
+        "dama",
+        "Dama"
       ],
       "es": "abuelo",
       "categoria": "sustantivo",
       "tema": "familia",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -352,14 +357,15 @@
       "forma": "luhpi waitna",
       "registrado": [
         "Luhpi waitna",
-        "lupha waitna"
+        "lupha waitna",
+        "Luhpa waitna"
       ],
       "es": "hijo",
       "categoria": "expresion",
       "tema": "familia",
       "analisis": "luhpi waitna",
       "glosa": "hijo.o.hija hombre",
-      "notas": "Tangni escribe «lupha»: ¿luhpi o lupha? La h cambia de lugar (S3) y la vocal final también.",
+      "notas": "Tangni escribe «lupha»: ¿luhpi o lupha? La h cambia de lugar (S3) y la vocal final también. Matamoros escribe «Luhpa waitna», como Tangni.",
       "reglas": [
         "O3",
         "L2",
@@ -368,7 +374,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -709,10 +716,14 @@
       "es": "cabeza",
       "categoria": "sustantivo",
       "tema": "cuerpo",
+      "reglas": [
+        "L9"
+      ],
       "fuentes": [
         "raiti-2026-09-28",
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -726,10 +737,15 @@
       "es": "ojo",
       "categoria": "sustantivo",
       "tema": "cuerpo",
+      "notas": "Matamoros cita las partes del cuerpo con dueño: «Wan nakra», nuestro ojo (L9).",
+      "reglas": [
+        "L9"
+      ],
       "fuentes": [
         "raiti-2026-09-28",
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -743,10 +759,14 @@
       "es": "nariz",
       "categoria": "sustantivo",
       "tema": "cuerpo",
+      "reglas": [
+        "L9"
+      ],
       "fuentes": [
         "raiti-2026-09-28",
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -760,10 +780,14 @@
       "es": "oreja",
       "categoria": "sustantivo",
       "tema": "cuerpo",
+      "reglas": [
+        "L9"
+      ],
       "fuentes": [
         "raiti-2026-09-28",
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -777,14 +801,15 @@
       "es": "boca",
       "categoria": "sustantivo",
       "tema": "cuerpo",
-      "notas": "En otras fuentes «bila» también es «idioma» («Miskitu bila», la lengua miskita). Confirmar.",
+      "notas": "En otras fuentes «bila» también es «idioma» («Miskitu bila», la lengua miskita). Confirmar. Matamoros: «Upla ar daiwan bila», la boca de personas o animales; e «idioma» = «Bila aisanka».",
       "reglas": [
         "L5"
       ],
       "fuentes": [
         "raiti-2026-09-28",
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -793,7 +818,8 @@
       "forma": "mihta",
       "registrado": [
         "Mihta",
-        "mitha"
+        "mitha",
+        "mihta"
       ],
       "es": "mano",
       "categoria": "sustantivo",
@@ -801,11 +827,13 @@
       "notas": "En los números aparece como «mat-» y «mata» (cinco, diez). Tangni escribe «mitha»: la h va antes o después de la t según quien escribe (S3).",
       "reglas": [
         "S3",
-        "N1"
+        "N1",
+        "L9"
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -835,9 +863,13 @@
       "es": "diente",
       "categoria": "sustantivo",
       "tema": "cuerpo",
+      "reglas": [
+        "L9"
+      ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -852,10 +884,14 @@
       "categoria": "sustantivo",
       "tema": "cuerpo",
       "notas": "En el diccionario «tawa» también es «batata»; con acento («táwa»), pelo.",
+      "reglas": [
+        "L9"
+      ],
       "fuentes": [
         "raiti-2026-09-28",
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -940,13 +976,16 @@
       "id": "slilmika",
       "forma": "slilmika",
       "registrado": [
-        "slilmika"
+        "slilmika",
+        "Silmika"
       ],
       "es": "hamaca",
       "categoria": "sustantivo",
       "tema": "casa",
+      "notas": "Matamoros escribe «Silmika».",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -982,7 +1021,8 @@
       "id": "ispara",
       "forma": "ispara",
       "registrado": [
-        "ispara"
+        "ispara",
+        "Ispara"
       ],
       "es": "machete",
       "categoria": "sustantivo",
@@ -997,7 +1037,8 @@
         "S1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -1005,7 +1046,8 @@
       "id": "duary",
       "forma": "duary",
       "registrado": [
-        "duary"
+        "duary",
+        "Duri"
       ],
       "es": "canoa (cayuco)",
       "categoria": "sustantivo",
@@ -1015,13 +1057,14 @@
         "origen": "dory",
         "confianza": "B"
       },
-      "notas": "La y final suena como i.",
+      "notas": "La y final suena como i. Matamoros: «canoa = Duri sirpi» (canoa pequeña).",
       "reglas": [
         "L1",
         "S2"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -1029,13 +1072,15 @@
       "id": "kwala",
       "forma": "kwala",
       "registrado": [
-        "kwala"
+        "kwala",
+        "Kwala"
       ],
       "es": "ropa",
       "categoria": "sustantivo",
       "tema": "casa",
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -1151,6 +1196,7 @@
         "origen": "book",
         "confianza": "A"
       },
+      "notas": "Matamoros da «libro = Paun».",
       "reglas": [
         "L1",
         "S1"
@@ -1164,18 +1210,20 @@
       "id": "wauhtaya",
       "forma": "wauhtaya",
       "registrado": [
-        "wauhtaya"
+        "wauhtaya",
+        "Wauhtaya"
       ],
       "es": "cuaderno",
       "categoria": "sustantivo",
       "tema": "escuela",
-      "notas": "Termina en -aya, como los verbos (M1). ¿Significa también «papel»? ¿Viene de un verbo?",
+      "notas": "Termina en -aya, como los verbos (M1). ¿Significa también «papel»? ¿Viene de un verbo? Matamoros traduce «papel» como «Wauhtaya»: el cuaderno se nombra por el papel.",
       "reglas": [
         "M1",
         "S3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -1193,6 +1241,7 @@
         "origen": "ink (tinta)",
         "confianza": "B"
       },
+      "notas": "Matamoros da «lápiz = Pinsil», del inglés «pencil».",
       "reglas": [
         "L1",
         "S4"
@@ -1206,7 +1255,8 @@
       "id": "stury",
       "forma": "stury",
       "registrado": [
-        "stury"
+        "stury",
+        "Sturi"
       ],
       "es": "palabra",
       "categoria": "sustantivo",
@@ -1216,13 +1266,14 @@
         "origen": "story",
         "confianza": "B"
       },
-      "revisar": "En inglés «story» es «cuento». ¿«stury» es «palabra» o «cuento, historia»? ¿Cómo se dice «palabra» en otras frases (por ejemplo, con «bila»)?",
+      "notas": "Matamoros: «palabra = Sturi aisanka».",
       "reglas": [
         "L1",
         "S2"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -1251,7 +1302,8 @@
       "id": "ulbaya",
       "forma": "ulbaya",
       "registrado": [
-        "ulbaya"
+        "ulbaya",
+        "Ulbaia"
       ],
       "es": "escribir",
       "categoria": "verbo",
@@ -1262,7 +1314,8 @@
         "M1"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -1333,14 +1386,16 @@
       "id": "siksa",
       "forma": "siksa",
       "registrado": [
-        "siksa"
+        "siksa",
+        "Siksa"
       ],
       "es": "negro",
       "categoria": "adjetivo",
       "tema": "colores",
       "fuentes": [
         "raiti-2026-09-28",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -1367,18 +1422,20 @@
       "id": "sangni",
       "forma": "sangni",
       "registrado": [
-        "sangni"
+        "sangni",
+        "Sangni"
       ],
       "es": "azul",
       "categoria": "adjetivo",
       "tema": "colores",
-      "notas": "¿Sirve también para verde? Ver L6.",
+      "notas": "¿Sirve también para verde? Ver L6. Matamoros traduce «verde» como «Sangni»; Teacher Smith la dio para «azul». Apoya L6.",
       "reglas": [
         "M9",
         "L6"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -1391,7 +1448,7 @@
       "es": "verde",
       "categoria": "expresion",
       "tema": "colores",
-      "revisar": "Parece una descripción («del color de…») más que un nombre de color. ¿«twi» es «zacate»? ¿«sangni» sirve también para verde?",
+      "revisar": "Matamoros traduce «verde» como «sangni», la palabra que Teacher Smith dio para «azul». ¿«sangni» sirve para los dos colores (L6)? ¿«twi» es «zacate»?",
       "reglas": [
         "L6"
       ],
@@ -1465,7 +1522,8 @@
       "id": "wapaya",
       "forma": "wapaya",
       "registrado": [
-        "wapaya"
+        "wapaya",
+        "Wapaia"
       ],
       "es": "caminar",
       "categoria": "verbo",
@@ -1477,7 +1535,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -1486,7 +1545,8 @@
       "forma": "aisaya",
       "registrado": [
         "aisaya",
-        "Aisaya"
+        "Aisaya",
+        "Aisaia"
       ],
       "es": "hablar",
       "categoria": "verbo",
@@ -1499,7 +1559,8 @@
       "fuentes": [
         "raiti-2026-09-28",
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -1542,7 +1603,8 @@
       "fuentes": [
         "raiti-2026-09-28",
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -1550,7 +1612,8 @@
       "id": "aiwanaya",
       "forma": "aiwanaya",
       "registrado": [
-        "aiwanaya"
+        "aiwanaya",
+        "Aiwanaia"
       ],
       "es": "cantar",
       "categoria": "verbo",
@@ -1562,7 +1625,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -1591,7 +1655,8 @@
       "id": "wark_takaya",
       "forma": "wark takaya",
       "registrado": [
-        "wark takaya"
+        "wark takaya",
+        "Wark takaia"
       ],
       "es": "trabajar",
       "categoria": "verbo",
@@ -1610,7 +1675,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -2000,7 +2066,8 @@
       "de": "frase.el_perro_come",
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -2017,7 +2084,8 @@
       "de": "frase.me_gusta_el_pescado",
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -2042,7 +2110,8 @@
       "fuentes": [
         "raiti-2026-09-28",
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -2095,11 +2164,13 @@
       "categoria": "sustantivo",
       "tema": "tiempo",
       "de": "titan_yamni",
+      "notas": "Matamoros: «mañana = Titan mani ar yauhka». «titan» también sirve para el día siguiente (L4).",
       "reglas": [
         "L4"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -2122,7 +2193,8 @@
       "id": "yauhka",
       "forma": "yauhka",
       "registrado": [
-        "Yauhka"
+        "Yauhka",
+        "yauhka"
       ],
       "es": "mañana (el día siguiente)",
       "categoria": "adverbio",
@@ -2133,7 +2205,8 @@
         "S3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -2192,7 +2265,7 @@
       "categoria": "sustantivo",
       "tema": "saludos",
       "de": "frase.gracias_amigo",
-      "notas": "Las dos personas la usan igual para «amigo». Queda por saber si tiene que ver con «pain» (bien).",
+      "notas": "Las dos personas la usan igual para «amigo». Queda por saber si tiene que ver con «pain» (bien). Matamoros da «amigo = Pana».",
       "fuentes": [
         "raiti-2026-09-28",
         "raiti-2026-09-30"
@@ -2216,7 +2289,8 @@
       "fuentes": [
         "raiti-2026-09-28",
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -2237,7 +2311,8 @@
       "fuentes": [
         "raiti-2026-09-28",
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -2245,7 +2320,8 @@
       "id": "almuk",
       "forma": "almuk",
       "registrado": [
-        "almuk"
+        "almuk",
+        "Almuk"
       ],
       "es": "viejo, mayor",
       "categoria": "adjetivo",
@@ -2255,7 +2331,8 @@
         "O3"
       ],
       "fuentes": [
-        "raiti-2026-09-28"
+        "raiti-2026-09-28",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -2264,7 +2341,8 @@
       "forma": "mama",
       "registrado": [
         "Mama",
-        "mama"
+        "mama",
+        "Mamá"
       ],
       "es": "mamá (en «mama almuk»)",
       "categoria": "sustantivo",
@@ -2275,7 +2353,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -2642,7 +2721,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-28",
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "varios_hablantes"
     },
@@ -3057,7 +3137,8 @@
       "id": "balaya",
       "forma": "balaya",
       "registrado": [
-        "balaya"
+        "balaya",
+        "Balaia"
       ],
       "es": "venir",
       "categoria": "verbo",
@@ -3069,7 +3150,8 @@
         "M1"
       ],
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3077,7 +3159,8 @@
       "id": "waya",
       "forma": "waya",
       "registrado": [
-        "waya"
+        "waya",
+        "Waia"
       ],
       "es": "ir",
       "categoria": "verbo",
@@ -3089,7 +3172,8 @@
         "M1"
       ],
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3153,13 +3237,15 @@
       "id": "limi",
       "forma": "limi",
       "registrado": [
-        "limi"
+        "limi",
+        "Limi"
       ],
       "es": "tigre (jaguar)",
       "categoria": "sustantivo",
       "tema": "animales",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3172,7 +3258,7 @@
       "es": "gato",
       "categoria": "sustantivo",
       "tema": "animales",
-      "notas": "¿Del español «michi», como se le dice al gato?",
+      "notas": "¿Del español «michi», como se le dice al gato? Matamoros da «gato = Pus», del inglés «puss».",
       "fuentes": [
         "raiti-2026-09-30"
       ],
@@ -3193,7 +3279,7 @@
         "origen": "gallina",
         "confianza": "B"
       },
-      "notas": "El diccionario de Scott Lackwood escribe «Kâlila»: k en lugar de g y la primera a larga.",
+      "notas": "El diccionario de Scott Lackwood escribe «Kâlila»: k en lugar de g y la primera a larga. Matamoros da «gallina = Kalika mairin».",
       "reglas": [
         "L1",
         "S1"
@@ -3225,7 +3311,8 @@
       ],
       "fuentes": [
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3241,7 +3328,8 @@
       "tema": "animales",
       "fuentes": [
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3257,7 +3345,8 @@
       "tema": "animales",
       "fuentes": [
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3271,6 +3360,7 @@
       "es": "iguana",
       "categoria": "sustantivo",
       "tema": "animales",
+      "notas": "Matamoros da «iguana = Islu»; Scott Lackwood, «Kakamuk». ¿Dos clases de iguana?",
       "fuentes": [
         "raiti-2026-09-30",
         "lackwood-2006"
@@ -3286,6 +3376,7 @@
       "es": "loro",
       "categoria": "sustantivo",
       "tema": "animales",
+      "revisar": "Matamoros da «loro = Rauha». ¿«iris» es otra clase de loro (por ejemplo, la lapa) o el mismo?",
       "fuentes": [
         "raiti-2026-09-30"
       ],
@@ -3324,14 +3415,16 @@
       "id": "daiwan_nawira",
       "forma": "daiwan nawira",
       "registrado": [
-        "daiwan nawira"
+        "daiwan nawira",
+        "Daiwan tnawira"
       ],
       "es": "pájaro",
       "categoria": "expresion",
       "tema": "animales",
-      "revisar": "¿«daiwan» quiere decir «animal»? ¿«pájaro» es «daiwan nawira» o alcanza con «nawira»?",
+      "notas": "Matamoros: «pájaro = Daiwan tnawira»; «daiwan» es «animal» (Scott Lackwood).",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3385,13 +3478,16 @@
       "id": "yaura",
       "forma": "yaura",
       "registrado": [
-        "yaura"
+        "yaura",
+        "Yauhra"
       ],
       "es": "yuca",
       "categoria": "sustantivo",
       "tema": "comida",
+      "notas": "Matamoros escribe «Yauhra», con h, igual que Scott Lackwood.",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3435,13 +3531,15 @@
       "id": "wina",
       "forma": "wina",
       "registrado": [
-        "wina"
+        "wina",
+        "Wina"
       ],
       "es": "carne",
       "categoria": "sustantivo",
       "tema": "comida",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3472,7 +3570,8 @@
       "id": "sal",
       "forma": "sal",
       "registrado": [
-        "sal"
+        "sal",
+        "Sal"
       ],
       "es": "sal",
       "categoria": "sustantivo",
@@ -3486,7 +3585,8 @@
         "L1"
       ],
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3517,13 +3617,16 @@
       "id": "haya",
       "forma": "haya",
       "registrado": [
-        "haya"
+        "haya",
+        "Aya"
       ],
       "es": "maíz",
       "categoria": "sustantivo",
       "tema": "comida",
+      "notas": "Matamoros y Scott Lackwood escriben «aya», sin h.",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3532,21 +3635,23 @@
       "forma": "galila mabra",
       "registrado": [
         "galila mabra",
-        "Kâlila mahbra"
+        "Kâlila mahbra",
+        "Mahbra"
       ],
       "es": "huevo",
       "categoria": "expresion",
       "tema": "comida",
       "analisis": "galila mabra",
       "glosa": "gallina huevo",
-      "notas": "Literalmente «huevo de gallina»: el poseedor va antes (O4). El diccionario escribe «mahbra», con h (S3).",
+      "notas": "Literalmente «huevo de gallina»: el poseedor va antes (O4). El diccionario escribe «mahbra», con h (S3). Matamoros: «huevo = Mahbra».",
       "reglas": [
         "O4",
         "L1"
       ],
       "fuentes": [
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3554,13 +3659,15 @@
       "id": "tasba",
       "forma": "tasba",
       "registrado": [
-        "tasba"
+        "tasba",
+        "Tasba"
       ],
       "es": "tierra",
       "categoria": "sustantivo",
       "tema": "naturaleza",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3582,13 +3689,15 @@
       "id": "kabu",
       "forma": "kabu",
       "registrado": [
-        "kabu"
+        "kabu",
+        "Kabu"
       ],
       "es": "mar",
       "categoria": "sustantivo",
       "tema": "naturaleza",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3601,6 +3710,7 @@
       "es": "sol",
       "categoria": "sustantivo",
       "tema": "naturaleza",
+      "revisar": "Matamoros da «sol = Yu». ¿«yapta» es otra palabra para el sol, o quiere decir otra cosa?",
       "fuentes": [
         "raiti-2026-09-30"
       ],
@@ -3618,7 +3728,8 @@
       "tema": "naturaleza",
       "fuentes": [
         "raiti-2026-09-30",
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3640,13 +3751,16 @@
       "id": "dus",
       "forma": "dus",
       "registrado": [
-        "dus"
+        "dus",
+        "Dus"
       ],
       "es": "árbol",
       "categoria": "sustantivo",
       "tema": "naturaleza",
+      "notas": "Matamoros: «Dus tara», árbol grande.",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3670,13 +3784,15 @@
       "id": "walpa",
       "forma": "walpa",
       "registrado": [
-        "walpa"
+        "walpa",
+        "Walpa"
       ],
       "es": "piedra",
       "categoria": "sustantivo",
       "tema": "naturaleza",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3684,13 +3800,15 @@
       "id": "pasa",
       "forma": "pasa",
       "registrado": [
-        "pasa"
+        "pasa",
+        "Pasa"
       ],
       "es": "viento",
       "categoria": "sustantivo",
       "tema": "naturaleza",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -3721,14 +3839,16 @@
       "id": "pauta_klawi",
       "forma": "pauta klawi",
       "registrado": [
-        "pauta klawi"
+        "pauta klawi",
+        "Pauta klauhan"
       ],
       "es": "fuego",
       "categoria": "expresion",
       "tema": "naturaleza",
-      "revisar": "¿Qué quiere decir cada palabra? ¿«pauta» sola es «fuego»?",
+      "notas": "Matamoros: «fuego = Pauta klauhan». «klawi» / «klauhan» sería «ardiendo».",
       "fuentes": [
-        "raiti-2026-09-30"
+        "raiti-2026-09-30",
+        "matamoros-1996"
       ],
       "estado": "un_hablante"
     },
@@ -4409,7 +4529,8 @@
       "id": "swahni",
       "forma": "swahni",
       "registrado": [
-        "Swahni"
+        "Swahni",
+        "swahni"
       ],
       "es": "ácido, agrio",
       "categoria": "adjetivo",
@@ -4418,7 +4539,8 @@
         "M9"
       ],
       "fuentes": [
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "publicada"
     },
@@ -4586,7 +4708,8 @@
         "M9"
       ],
       "fuentes": [
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "publicada"
     },
@@ -4608,7 +4731,8 @@
         "L1"
       ],
       "fuentes": [
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "publicada"
     },
@@ -4627,7 +4751,8 @@
         "O3"
       ],
       "fuentes": [
-        "lackwood-2006"
+        "lackwood-2006",
+        "matamoros-1996"
       ],
       "estado": "publicada"
     },
@@ -4892,6 +5017,414 @@
       ],
       "fuentes": [
         "lackwood-2006"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "nina",
+      "forma": "nina",
+      "registrado": [
+        "Nina"
+      ],
+      "es": "nombre",
+      "categoria": "sustantivo",
+      "tema": "gramatica",
+      "notas": "Acertó la predicción 1 de las versiones 0.1 y 0.2.",
+      "reglas": [
+        "M4"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kikaia",
+      "forma": "kikaia",
+      "registrado": [
+        "Kikaia"
+      ],
+      "es": "reír",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "analisis": "kik-aia",
+      "glosa": "reír-INF",
+      "notas": "Acertó la predicción: de «kikisa» (sonríe) salía «kikaya».",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "daukaia",
+      "forma": "daukaia",
+      "registrado": [
+        "Daukaia"
+      ],
+      "es": "hacer",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "analisis": "dauk-aia",
+      "glosa": "hacer-INF",
+      "reglas": [
+        "M1",
+        "M7"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "briaia",
+      "forma": "briaia",
+      "registrado": [
+        "Briaia"
+      ],
+      "es": "tener",
+      "categoria": "verbo",
+      "tema": "acciones",
+      "analisis": "bri-aia",
+      "glosa": "tener-INF",
+      "reglas": [
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "bila_aisanka",
+      "forma": "bila aisanka",
+      "registrado": [
+        "Bila aisanka"
+      ],
+      "es": "idioma",
+      "categoria": "expresion",
+      "tema": "escuela",
+      "analisis": "bila ais-anka",
+      "glosa": "boca hablar-NMLZ",
+      "notas": "«El hablar de la boca»: idioma.",
+      "reglas": [
+        "L5",
+        "M15"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "li_auhaia",
+      "forma": "li auhaia",
+      "registrado": [
+        "Li auhaia"
+      ],
+      "es": "llover",
+      "categoria": "verbo",
+      "tema": "naturaleza",
+      "analisis": "li auh-aia",
+      "glosa": "agua caer-INF",
+      "notas": "El infinitivo de «auhwisa» (cae): «el agua cae» es llover.",
+      "reglas": [
+        "L5",
+        "M1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "aisika",
+      "forma": "aisika",
+      "registrado": [
+        "Aisika"
+      ],
+      "es": "padre (su padre)",
+      "categoria": "forma_flexionada",
+      "tema": "familia",
+      "analisis": "ais-i-ka",
+      "glosa": "papá-3POSS",
+      "reglas": [
+        "M4",
+        "L9"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "papika",
+      "forma": "papika",
+      "registrado": [
+        "papika"
+      ],
+      "es": "papá (su papá)",
+      "categoria": "forma_flexionada",
+      "tema": "familia",
+      "analisis": "pap-i-ka",
+      "glosa": "papá-3POSS",
+      "reglas": [
+        "M4",
+        "L8",
+        "L9"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "muihnika",
+      "forma": "muihnika",
+      "registrado": [
+        "Muihnika"
+      ],
+      "es": "hermano (su hermano)",
+      "categoria": "forma_flexionada",
+      "tema": "familia",
+      "analisis": "muih-ni-ka",
+      "glosa": "hermano.o.hermana-3POSS",
+      "reglas": [
+        "M4",
+        "L7",
+        "L9"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "tuisa",
+      "forma": "tuisa",
+      "registrado": [
+        "Tuisa"
+      ],
+      "es": "lengua (del cuerpo)",
+      "categoria": "sustantivo",
+      "tema": "cuerpo",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "pus",
+      "forma": "pus",
+      "registrado": [
+        "Pus"
+      ],
+      "es": "gato",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "puss",
+        "confianza": "B"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "rauha",
+      "forma": "rauha",
+      "registrado": [
+        "Rauha"
+      ],
+      "es": "loro",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "islu",
+      "forma": "islu",
+      "registrado": [
+        "Islu"
+      ],
+      "es": "iguana",
+      "categoria": "sustantivo",
+      "tema": "animales",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "yu",
+      "forma": "yu",
+      "registrado": [
+        "Yu"
+      ],
+      "es": "sol",
+      "categoria": "sustantivo",
+      "tema": "naturaleza",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "pana",
+      "forma": "pana",
+      "registrado": [
+        "Pana"
+      ],
+      "es": "amigo",
+      "categoria": "sustantivo",
+      "tema": "saludos",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "paun",
+      "forma": "paun",
+      "registrado": [
+        "Paun"
+      ],
+      "es": "libro",
+      "categoria": "sustantivo",
+      "tema": "escuela",
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "pinsil",
+      "forma": "pinsil",
+      "registrado": [
+        "Pinsil"
+      ],
+      "es": "lápiz",
+      "categoria": "sustantivo",
+      "tema": "escuela",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "pencil",
+        "confianza": "A"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "kalika_mairin",
+      "forma": "kalika mairin",
+      "registrado": [
+        "Kalika mairin"
+      ],
+      "es": "gallina",
+      "categoria": "expresion",
+      "tema": "animales",
+      "glosa": "gallo(?) mujer",
+      "reglas": [
+        "L2"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "bip_mairin",
+      "forma": "bip mairin",
+      "registrado": [
+        "Bip mairin"
+      ],
+      "es": "vaca",
+      "categoria": "expresion",
+      "tema": "animales",
+      "glosa": "«beef» mujer",
+      "notas": "«bip» sola es el ganado; la vaca es la hembra.",
+      "reglas": [
+        "L1",
+        "L2"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "piuto_satka_nani",
+      "forma": "piuto satka nani",
+      "registrado": [
+        "Piuto satka nani"
+      ],
+      "es": "serpiente (las clases de serpiente)",
+      "categoria": "expresion",
+      "tema": "animales",
+      "glosa": "culebra clase PL",
+      "notas": "Tangni escribe «piuta».",
+      "reglas": [
+        "O11"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "ulu_watla",
+      "forma": "ulu watla",
+      "registrado": [
+        "Ulu watla"
+      ],
+      "es": "panal",
+      "categoria": "expresion",
+      "tema": "naturaleza",
+      "glosa": "abeja(?) casa.CSTR",
+      "notas": "«La casa de la abeja»: otra vez «watla» con el dueño adelante.",
+      "reglas": [
+        "M5",
+        "O4"
+      ],
+      "fuentes": [
+        "matamoros-1996"
+      ],
+      "estado": "publicada"
+    },
+    {
+      "id": "numba",
+      "forma": "numba",
+      "registrado": [
+        "Numba"
+      ],
+      "es": "número",
+      "categoria": "sustantivo",
+      "tema": "numeros",
+      "prestamo": {
+        "de": "inglés",
+        "origen": "number",
+        "confianza": "A"
+      },
+      "reglas": [
+        "L1"
+      ],
+      "fuentes": [
+        "matamoros-1996"
       ],
       "estado": "publicada"
     }
