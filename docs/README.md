@@ -13,6 +13,7 @@ Esta carpeta explica cómo está construido y por qué se tomó cada decisión.
 | [decisiones.md](decisiones.md) | Registro de decisiones con su contexto y sus consecuencias |
 | [desarrollo.md](desarrollo.md) | Correr, probar y compilar el APK |
 | [../app/content/README.md](../app/content/README.md) | Formato de los paquetes de contenido |
+| [../diccionario/metodologia.md](../diccionario/metodologia.md) | Cómo se descubren las reglas de cada lengua con modelos de razonamiento y hablantes nativos |
 
 ---
 
@@ -53,7 +54,7 @@ diga que la habla mal.
 - Identidad y progreso que siguen al estudiante entre dispositivos.
 - Contenido en inglés (6 paquetes, 43 ítems). Las cuatro lenguas indígenas
   tienen el formato listo y esperan material de hablantes nativos.
-- 121 pruebas automatizadas y un simulador que levanta un aula entera sin
+- 124 pruebas automatizadas y un simulador que levanta un aula entera sin
   necesidad de teléfonos.
 
 ## Qué falta

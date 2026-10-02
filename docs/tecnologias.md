@@ -80,7 +80,7 @@ React Native. Vitest arranca en menos de un segundo y no pide configuración de
 transformación. La suite completa corre en unos cuatro segundos, que es lo que
 hace que valga la pena correrla seguido.
 
-### Síntesis de voz sólo para inglés
+### Síntesis de voz para inglés, y para el miskito para mientras
 
 Android trae voces sintéticas para inglés, y eso resuelve los ejercicios de
 escucha sin grabar nada.
@@ -89,6 +89,10 @@ Para miskito, mayangna, rama y garífuna **no existe síntesis**, y hacerlas
 "hablar" con una voz en español enseñaría una pronunciación falsa. El validador
 de contenido rechaza a propósito la síntesis en esas lenguas: sus paquetes
 requieren grabaciones de hablantes reales.
+
+La excepción es el miskito, que puede usar la voz en español **para mientras**
+se consiguen grabaciones. La palabra se le pasa a la voz ya preparada por
+`diccionario/herramientas/voz.ts` (decisión 16).
 
 ## Rendimiento en gama baja
 

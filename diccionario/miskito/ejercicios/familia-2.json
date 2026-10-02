@@ -1,0 +1,100 @@
+{
+  "id": "miq.familia.2",
+  "lang": "miq",
+  "theme": "familia",
+  "difficulty": 2,
+  "title": "La familia: palabras que se arman",
+  "items": [
+    {
+      "id": "miq.familia.2.a",
+      "type": "build",
+      "skill": "miq.familia",
+      "target": "luhpi waitna",
+      "blocks": [
+        "luhpi",
+        "waitna",
+        "mairin",
+        "almuk"
+      ],
+      "gloss": "hijo"
+    },
+    {
+      "id": "miq.familia.2.b",
+      "type": "build",
+      "skill": "miq.familia",
+      "target": "luhpi mairin",
+      "blocks": [
+        "luhpi",
+        "mairin",
+        "waitna",
+        "almuk"
+      ],
+      "gloss": "hija"
+    },
+    {
+      "id": "miq.familia.2.c",
+      "type": "build",
+      "skill": "miq.familia",
+      "target": "aisa almuk",
+      "blocks": [
+        "aisa",
+        "almuk",
+        "luhpi",
+        "waitna"
+      ],
+      "gloss": "abuelo"
+    },
+    {
+      "id": "miq.familia.2.d",
+      "type": "build",
+      "skill": "miq.familia",
+      "target": "mama almuk",
+      "blocks": [
+        "mama",
+        "almuk",
+        "aisa",
+        "mairin"
+      ],
+      "gloss": "abuela"
+    },
+    {
+      "id": "miq.familia.2.e",
+      "type": "build",
+      "skill": "miq.familia",
+      "target": "smasmalkra mairin",
+      "blocks": [
+        "smasmalkra",
+        "mairin",
+        "waitna",
+        "almuk"
+      ],
+      "gloss": "maestra"
+    },
+    {
+      "id": "miq.familia.2.f",
+      "type": "build",
+      "skill": "miq.familia",
+      "target": "tuktan mairin",
+      "blocks": [
+        "tuktan",
+        "mairin",
+        "waitna",
+        "luhpi"
+      ],
+      "gloss": "niña"
+    },
+    {
+      "id": "miq.familia.2.g",
+      "type": "build",
+      "skill": "miq.familia",
+      "target": "tuktan waitna",
+      "blocks": [
+        "tuktan",
+        "waitna",
+        "mairin",
+        "almuk"
+      ],
+      "gloss": "niño"
+    }
+  ]
+}

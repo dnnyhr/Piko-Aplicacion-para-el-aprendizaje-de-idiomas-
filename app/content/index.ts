@@ -17,6 +17,8 @@ import engEscuela from './packs/eng/escuela.json';
 
 // Miskito, mayangna, rama y garífuna todavía no tienen paquetes: el formato
 // está listo, falta el material de hablantes nativos. Ver content/README.md.
+// Los primeros borradores del miskito esperan validación en
+// diccionario/miskito/ejercicios/.
 
 export const PACKS: Pack[] = [
   engSaludos,

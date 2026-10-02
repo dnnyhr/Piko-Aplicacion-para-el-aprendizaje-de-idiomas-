@@ -113,7 +113,7 @@ a low-end phone — only the injected transport changes.
 cd app
 npm install
 
-npm test              # 121 tests over the pure core and persistence
+npm test              # 124 tests over the pure core and persistence
 npm run typecheck
 npm run validate:packs
 
@@ -138,6 +138,7 @@ in a browser — a development build is required. See [`app/README.md`](app/READ
 | [docs/decisiones.md](docs/decisiones.md) | Decision log, with context and consequences |
 | [docs/desarrollo.md](docs/desarrollo.md) | Running, testing, building the APK |
 | [app/content/README.md](app/content/README.md) | Content pack format |
+| [diccionario/metodologia.md](diccionario/metodologia.md) | How each language's grammar is uncovered with reasoning models and native speakers (Spanish) |
 
 ## Contributing
 

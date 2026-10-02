@@ -35,6 +35,9 @@ jobs:
       - name: Formato de los paquetes de contenido
         run: npm run validate:packs
 
+      - name: Diccionario — de la encuesta al ejercicio
+        run: npm run validate:diccionario
+
   panel:
     name: Robot — panel y puente
     runs-on: ubuntu-latest

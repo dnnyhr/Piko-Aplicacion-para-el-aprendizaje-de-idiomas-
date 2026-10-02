@@ -1,6 +1,7 @@
 {
   // Lo que corre en Node: el simulador, el validador de paquetes, el
-  // transporte de pruebas y la suite de vitest. Nada de esto entra al APK.
+  // verificador del diccionario, el transporte de pruebas y la suite de
+  // vitest. Nada de esto entra al APK.
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "types": ["node"],
@@ -9,6 +10,6 @@
     "lib": ["ES2023"],
     "noEmit": true
   },
-  "include": ["tools/**/*.ts", "tests/**/*.ts", "src/**/*.ts", "vitest.config.mts"],
+  "include": ["tools/**/*.ts", "tests/**/*.ts", "src/**/*.ts", "vitest.config.mts", "../diccionario/herramientas/**/*.ts"],
   "exclude": ["node_modules", "**/*.tsx"]
 }

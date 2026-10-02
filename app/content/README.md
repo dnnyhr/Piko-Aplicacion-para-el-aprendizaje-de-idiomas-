@@ -15,7 +15,7 @@ npm run validate:packs
 | Código | Lengua | Estado |
 |---|---|---|
 | `eng` | Inglés | ✅ Con contenido |
-| `miq` | Miskito | ⬜ Vacío — necesita hablantes |
+| `miq` | Miskito | 🟨 Borradores en [`diccionario/miskito/ejercicios/`](../../diccionario/miskito/ejercicios/) — falta validarlos con hablantes |
 | `sum` | Mayangna | ⬜ Vacío — necesita hablantes |
 | `rma` | Rama | ⬜ Vacío — necesita hablantes |
 | `cab` | Garífuna | ⬜ Vacío — necesita hablantes |
@@ -89,13 +89,20 @@ presentarlo, así que no importa en qué posición se escriba.
 
 El sonido sale de una de dos fuentes:
 
-- **`tts` + `ttsLang`** — síntesis de voz del sistema. **Sólo válido para inglés.**
+- **`tts` + `ttsLang`** — síntesis de voz del sistema. Para inglés, y para miskito con voz en español (abajo).
 - **`audio`** — ruta relativa dentro de `content/audio/`, p. ej. `miq/saludos/naksa.m4a`.
 
 Android no tiene voces sintéticas para miskito, mayangna, rama ni garífuna, y
 hacerlas "hablar" con una voz en español enseñaría una pronunciación falsa. Por
-eso el validador **rechaza** `tts` en cualquier idioma que no sea inglés: esos
-paquetes necesitan grabaciones de hablantes reales.
+eso el validador **rechaza** `tts` en mayangna, rama y garífuna: esos paquetes
+necesitan grabaciones de hablantes reales.
+
+**El miskito es la excepción, para mientras se consiguen voces reales.** Se
+escribe casi como se lee en español, así que puede usar `"ttsLang": "es-US"`.
+El texto de `tts` no es la palabra tal cual: lo prepara
+`diccionario/herramientas/voz.ts` (*mihta* → «mijta», *walhwal* → «uáljual»).
+Cuando llegue la grabación, el ítem pasa a `audio`. Ver la decisión 16 de
+`docs/decisiones.md`.
 
 Para que el APK siga siendo liviano, las grabaciones van en mono a unos 24 kbps.
 
