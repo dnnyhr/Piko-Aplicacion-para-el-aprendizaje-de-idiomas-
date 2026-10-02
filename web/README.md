@@ -7,6 +7,8 @@ carpeta `web/` tal cual.
 web/
 ├── index.html              portada (la de siempre, con la barra arriba)
 ├── diccionario/            buscar palabras en miskito o en español
+├── reglas/                 cómo funciona el miskito: las reglas sólidas de la
+│                           gramática (la lista la escribe npm run contenido)
 ├── probar/                 Piko en el navegador
 │   └── app/                GENERADO: npm run web:sitio (expo export de app/, con
 │                           sus archivos en assets/paquetes/: ver abajo)
@@ -22,6 +24,7 @@ web/
 │   ├── js/portada.js       animaciones y datos vivos de la portada (GSAP)
 │   ├── js/animaciones.js   el movimiento de las páginas interiores (GSAP)
 │   ├── js/diccionario.js   la búsqueda del diccionario
+│   ├── js/reglas.js        filtrar y buscar en las reglas
 │   ├── js/aporta.js        el estado de cada lengua y los créditos
 │   ├── img/                logos, la mascota, el paisaje (escena.svg) y las fotos
 │                           (WebP con JPEG de respaldo)
@@ -40,6 +43,7 @@ web/
 | Cambiar un texto de una página | su `index.html` |
 | Agregar una página | una carpeta con su `index.html` (copiar el `<head>` de otra), sumarla a `PAGINAS` en `assets/js/nav.js`, a `PAGINAS_DEL_SITIO` en `diccionario/herramientas/web.ts` y a `herramientas/og.mjs` |
 | Corregir una palabra del diccionario | `diccionario/miskito/lexico.json` y `cd app && npm run contenido` (nunca `web/datos/`) |
+| Corregir o agregar una regla | `diccionario/miskito/gramatica.md` y `cd app && npm run contenido` (nunca la lista de `reglas/index.html`) |
 | Actualizar Piko en el navegador | `cd app && npm run web:sitio` (y subir todo `web/probar/app/`) |
 | Rehacer las imágenes para compartir | `npx -y -p playwright-core node web/herramientas/og.mjs` (con `app/node_modules` instalado) |
 
@@ -119,6 +123,11 @@ Las etiquetas de variantes del diccionario (dos maneras de contar, Raiti ·
 Bilwi, varía entre hablantes, varias escrituras, otra palabra) no se escriben
 a mano: las calcula `diccionario/herramientas/web.ts` a partir del léxico y
 del corpus, que dice quién escribió cada forma.
+
+Las reglas tampoco: `diccionario/herramientas/reglas.ts` lee
+`gramatica.md` y escribe en `reglas/index.html` sólo las reglas de confianza A
+(3 ejemplos o más, ninguno en contra), sin las glosas, las predicciones ni las
+hipótesis. Las probables y las hipótesis se quedan en el repositorio.
 
 El diccionario y el estado salen de `diccionario/` y nada más. El sitio
 muestra sólo lo confirmado: las palabras en revisión no aparecen, igual que en

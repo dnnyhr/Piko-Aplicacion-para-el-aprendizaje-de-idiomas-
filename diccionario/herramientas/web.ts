@@ -6,6 +6,8 @@
  *   web/diccionario/index.html            sólo la lista entre <!-- palabras:inicio --> y
  *                                         <!-- palabras:fin -->, para que los buscadores
  *                                         vean las palabras sin correr JavaScript
+ *   web/reglas/index.html                 sólo lo que está entre sus marcas: las reglas
+ *                                         sólidas de gramatica.md (ver reglas.ts)
  *   web/sitemap.xml                       las páginas del sitio
  *
  * Los escribe `npm run contenido`, igual que los paquetes de la app, así el
@@ -18,6 +20,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { avanceDeInterfaz } from './interfaz';
 import { armar, armarAlEspanol, leerCsv, leerDiccionario, leerLenguas, paraLaApp, RAIZ_DICCIONARIO, usable, type Entrada } from './recetas';
+import { reglasHtml, reglasSolidas } from './reglas';
 import { paraVozEspanola } from './voz';
 
 const WEB = path.resolve(RAIZ_DICCIONARIO, '..', 'web');
@@ -161,7 +164,7 @@ const html = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&
 
 const SITIO = 'https://piko.mugiware.com/';
 /** Las páginas del sitio, en el orden de la barra. */
-export const PAGINAS_DEL_SITIO = ['', 'diccionario/', 'probar/', 'docentes/', 'aporta/'];
+export const PAGINAS_DEL_SITIO = ['', 'diccionario/', 'reglas/', 'probar/', 'docentes/', 'aporta/'];
 
 function sitemap() {
   const urls = PAGINAS_DEL_SITIO.map((r) => `  <url><loc>${SITIO}${r}</loc><priority>${r ? '0.8' : '1.0'}</priority></url>`);
@@ -178,6 +181,15 @@ function conPalabras(pagina: string, entradas: { id: string; forma: string; es: 
     .sort((a, b) => a.forma.localeCompare(b.forma, 'es'))
     .map((e) => `<li id="${html(e.id)}"><b lang="miq">${html(e.forma)}</b> · ${html(e.es)}</li>`);
   return `${pagina.slice(0, abre)}\n<ul class="estatico">\n${lista.join('\n')}\n</ul>\n${pagina.slice(fin)}`;
+}
+
+/** Reemplaza lo que hay entre `<!-- nombre:inicio … -->` y `<!-- nombre:fin -->`. */
+function entreMarcas(pagina: string, archivo: string, nombre: string, contenido: string) {
+  const inicio = pagina.indexOf(`<!-- ${nombre}:inicio`);
+  const fin = pagina.indexOf(`<!-- ${nombre}:fin -->`);
+  if (inicio < 0 || fin < inicio) throw new Error(`${archivo} perdió las marcas <!-- ${nombre}:inicio --> y <!-- ${nombre}:fin -->`);
+  const abre = pagina.indexOf('-->', inicio) + 3;
+  return `${pagina.slice(0, abre)}\n${contenido}\n${pagina.slice(fin)}`;
 }
 
 /** `generados`: archivos que esta misma corrida está por escribir; se leen de ahí antes que del disco. */
@@ -246,6 +258,23 @@ export function archivosDeLaWeb(generados: ReadonlyMap<string, string> = new Map
     if (lengua.codigo === 'miq') {
       const pagina = path.join(WEB, 'diccionario', 'index.html');
       salida.set(pagina, conPalabras(fs.readFileSync(pagina, 'utf8'), entradas));
+
+      const gramatica = path.join(d.dir, 'gramatica.md');
+      const paginaReglas = path.join(WEB, 'reglas', 'index.html');
+      if (fs.existsSync(gramatica) && fs.existsSync(paginaReglas)) {
+        const reglas = reglasSolidas(fs.readFileSync(gramatica, 'utf8'));
+        const { lista, filtros } = reglasHtml(reglas);
+        const nota = 'lo escribe npm run contenido desde diccionario/miskito/gramatica.md';
+        let r = fs.readFileSync(paginaReglas, 'utf8');
+        r = entreMarcas(r, 'web/reglas/index.html', 'cifras', [
+          `<div class="cifra-chica" data-entra><b data-contar="${reglas.length}">${reglas.length}</b><span>reglas sólidas</span></div>`,
+          `<div class="cifra-chica" data-entra><b data-contar="${fuentes.filter((f) => f.tipo !== 'equipo').length}">${fuentes.filter((f) => f.tipo !== 'equipo').length}</b><span>fuentes</span></div>`,
+          `<div class="cifra-chica" data-entra><b data-contar="${publicables.length}">${publicables.length}</b><span>palabras en el diccionario</span></div>`,
+        ].join('\n'));
+        r = entreMarcas(r, 'web/reglas/index.html', 'filtros', filtros);
+        r = entreMarcas(r, 'web/reglas/index.html', 'reglas', lista);
+        salida.set(paginaReglas, r.replace(/(<!-- (?:cifras|filtros|reglas):inicio)[^>]*-->/g, `$1 · ${nota} -->`));
+      }
     }
   }
 

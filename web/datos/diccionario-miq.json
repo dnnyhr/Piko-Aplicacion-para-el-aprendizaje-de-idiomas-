@@ -1316,6 +1316,21 @@
    "forma": "sangni",
    "es": "azul",
    "tema": "colores",
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "blu",
+      "forma": "blû",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
    "fuentes": [
     "raiti-2026-09-28",
     "matamoros-1996"
@@ -2796,6 +2811,21 @@
    "forma": "nahki",
    "es": "¿cómo?",
    "tema": "gramatica",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "baku",
+      "forma": "baku",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "fuentes": [
     "raiti-2026-09-30"
    ],
@@ -3238,6 +3268,21 @@
    "forma": "tikni",
    "es": "río",
    "tema": "naturaleza",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "awala",
+      "forma": "awala",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
    "fuentes": [
     "raiti-2026-09-30"
    ],
@@ -3535,6 +3580,21 @@
    "forma": "smalkaia",
    "es": "enseñar",
    "tema": "escuela",
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "lan_daukaia",
+      "forma": "lan daukaia",
+      "quien": [
+       "Matamoros (1996)"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
    "fuentes": [
     "lackwood-2006"
    ],
@@ -4355,6 +4415,1565 @@
     "matamoros-1996"
    ],
    "voz": "numba"
+  },
+  {
+   "id": "daiwan",
+   "forma": "daiwan",
+   "es": "animal",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "daiuan"
+  },
+  {
+   "id": "kakaras",
+   "forma": "kakaras",
+   "es": "cucaracha",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kákaras"
+  },
+  {
+   "id": "klukum",
+   "forma": "klukum",
+   "es": "pato",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "klúkum"
+  },
+  {
+   "id": "matis",
+   "forma": "matis",
+   "es": "rata, ratón",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "matis"
+  },
+  {
+   "id": "papu",
+   "forma": "papu",
+   "es": "hormiga",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "papu"
+  },
+  {
+   "id": "pikpik",
+   "forma": "pikpik",
+   "es": "rana",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "píkpik"
+  },
+  {
+   "id": "pulhpul",
+   "forma": "pulhpul",
+   "es": "mariposa",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "púljpul"
+  },
+  {
+   "id": "sula",
+   "forma": "sula",
+   "es": "venado",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "sula"
+  },
+  {
+   "id": "bangbang",
+   "forma": "bangbang",
+   "es": "conejo",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "bángbang"
+  },
+  {
+   "id": "tilba",
+   "forma": "tilba",
+   "es": "danto",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tilba"
+  },
+  {
+   "id": "waihru",
+   "forma": "waihru",
+   "es": "cangrejo",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "uaijru"
+  },
+  {
+   "id": "usus",
+   "forma": "usus",
+   "es": "zopilote",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "usus"
+  },
+  {
+   "id": "wasi",
+   "forma": "wasi",
+   "es": "camarón",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "uasi"
+  },
+  {
+   "id": "yakal",
+   "forma": "yakal",
+   "es": "águila",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "yákal"
+  },
+  {
+   "id": "ulu",
+   "forma": "ulu",
+   "es": "avispa",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "ulu"
+  },
+  {
+   "id": "kukas",
+   "forma": "kukas",
+   "es": "mosca",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kukas"
+  },
+  {
+   "id": "ruskika",
+   "forma": "ruskika",
+   "es": "mono araña",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "rúskika"
+  },
+  {
+   "id": "tairi",
+   "forma": "tairi",
+   "es": "mosquito",
+   "tema": "animales",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tairi"
+  },
+  {
+   "id": "kisu",
+   "forma": "kisu",
+   "es": "queso",
+   "tema": "comida",
+   "viene_de": {
+    "lengua": "español",
+    "palabra": "queso"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kisu"
+  },
+  {
+   "id": "nasma",
+   "forma": "nasma",
+   "es": "miel",
+   "tema": "comida",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "nasma"
+  },
+  {
+   "id": "mangu",
+   "forma": "mangu",
+   "es": "mango",
+   "tema": "comida",
+   "viene_de": {
+    "lengua": "español",
+    "palabra": "mango"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "mangu"
+  },
+  {
+   "id": "pihtu",
+   "forma": "pihtu",
+   "es": "piña",
+   "tema": "comida",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "pijtu"
+  },
+  {
+   "id": "sikia",
+   "forma": "sikia",
+   "es": "aguacate",
+   "tema": "comida",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "sikia"
+  },
+  {
+   "id": "rayapisa",
+   "forma": "rayapisa",
+   "es": "sandía",
+   "tema": "comida",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "ráyapisa"
+  },
+  {
+   "id": "kayu",
+   "forma": "kayu",
+   "es": "caña de azúcar",
+   "tema": "comida",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kayu"
+  },
+  {
+   "id": "kuma",
+   "forma": "kuma",
+   "es": "chile",
+   "tema": "comida",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kuma"
+  },
+  {
+   "id": "iwa",
+   "forma": "iwa",
+   "es": "ayote, calabaza",
+   "tema": "comida",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "iua"
+  },
+  {
+   "id": "inian",
+   "forma": "inian",
+   "es": "cebolla",
+   "tema": "comida",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "onion"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "inian"
+  },
+  {
+   "id": "ma",
+   "forma": "ma",
+   "es": "fruta (de una planta)",
+   "tema": "comida",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "ma"
+  },
+  {
+   "id": "kakau",
+   "forma": "kakau",
+   "es": "cacao",
+   "tema": "comida",
+   "viene_de": {
+    "lengua": "español",
+    "palabra": "cacao"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kakau"
+  },
+  {
+   "id": "windar",
+   "forma": "windar",
+   "es": "ventana",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "window"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "úindar"
+  },
+  {
+   "id": "tibil",
+   "forma": "tibil",
+   "es": "mesa",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "table"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tíbil"
+  },
+  {
+   "id": "sir",
+   "forma": "sir",
+   "es": "silla",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "chair"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "sir"
+  },
+  {
+   "id": "plit",
+   "forma": "plît",
+   "es": "plato",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "plate"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "plit"
+  },
+  {
+   "id": "kap",
+   "forma": "kap",
+   "es": "taza",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "cup"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kap"
+  },
+  {
+   "id": "ispun",
+   "forma": "ispun",
+   "es": "cuchara",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "spoon"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "ispun"
+  },
+  {
+   "id": "brum",
+   "forma": "brum",
+   "es": "escoba",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "broom"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "brum"
+  },
+  {
+   "id": "tilar",
+   "forma": "tilar",
+   "es": "almohada",
+   "tema": "casa",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tílar"
+  },
+  {
+   "id": "bukit",
+   "forma": "bukit",
+   "es": "balde",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "bucket"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "búkit"
+  },
+  {
+   "id": "lamp",
+   "forma": "lamp",
+   "es": "lámpara",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "lamp"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "lamp"
+  },
+  {
+   "id": "banhta",
+   "forma": "banhta",
+   "es": "techo",
+   "tema": "casa",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "banjta"
+  },
+  {
+   "id": "rum",
+   "forma": "rum",
+   "es": "cuarto",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "room"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "rum"
+  },
+  {
+   "id": "plur",
+   "forma": "plur",
+   "es": "piso",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "floor"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "plur"
+  },
+  {
+   "id": "prak",
+   "forma": "prak",
+   "es": "camisa",
+   "tema": "casa",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "prak"
+  },
+  {
+   "id": "traus",
+   "forma": "traus",
+   "es": "pantalón",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "trousers"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "traus"
+  },
+  {
+   "id": "sup",
+   "forma": "sup",
+   "es": "jabón",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "soap"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "sup"
+  },
+  {
+   "id": "tawil",
+   "forma": "tawil",
+   "es": "toalla",
+   "tema": "casa",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "towel"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tauil"
+  },
+  {
+   "id": "awala",
+   "forma": "awala",
+   "es": "río",
+   "tema": "naturaleza",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "tikni",
+      "forma": "tikni",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "auala"
+  },
+  {
+   "id": "kasbrika",
+   "forma": "kasbrika",
+   "es": "nube",
+   "tema": "naturaleza",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kásbrika"
+  },
+  {
+   "id": "tangni",
+   "forma": "tangni",
+   "es": "flor",
+   "tema": "naturaleza",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tangni"
+  },
+  {
+   "id": "wahya",
+   "forma": "wahya",
+   "es": "hoja",
+   "tema": "naturaleza",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "uajya"
+  },
+  {
+   "id": "auhya",
+   "forma": "auhya",
+   "es": "arena",
+   "tema": "naturaleza",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "aujya"
+  },
+  {
+   "id": "kipla",
+   "forma": "kipla",
+   "es": "peña, roca",
+   "tema": "naturaleza",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kipla"
+  },
+  {
+   "id": "alwani",
+   "forma": "alwani",
+   "es": "trueno",
+   "tema": "naturaleza",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "áluani"
+  },
+  {
+   "id": "imyula",
+   "forma": "imyula",
+   "es": "relámpago",
+   "tema": "naturaleza",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "ímyula"
+  },
+  {
+   "id": "twi",
+   "forma": "twi",
+   "es": "zacate",
+   "tema": "naturaleza",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tui"
+  },
+  {
+   "id": "yabal",
+   "forma": "yabal",
+   "es": "camino",
+   "tema": "naturaleza",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "yábal"
+  },
+  {
+   "id": "ais",
+   "forma": "ais",
+   "es": "hielo",
+   "tema": "naturaleza",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "ice"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "ais"
+  },
+  {
+   "id": "karma",
+   "forma": "karma",
+   "es": "garganta",
+   "tema": "cuerpo",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "karma"
+  },
+  {
+   "id": "lula",
+   "forma": "lula",
+   "es": "rodilla",
+   "tema": "cuerpo",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "lula"
+  },
+  {
+   "id": "nana",
+   "forma": "nana",
+   "es": "cuello",
+   "tema": "cuerpo",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "nana"
+  },
+  {
+   "id": "asmala",
+   "forma": "asmala",
+   "es": "uña",
+   "tema": "cuerpo",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "ásmala"
+  },
+  {
+   "id": "klahkla",
+   "forma": "klahkla",
+   "es": "brazo",
+   "tema": "cuerpo",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "klajkla"
+  },
+  {
+   "id": "taya",
+   "forma": "taya",
+   "es": "piel",
+   "tema": "cuerpo",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "taya"
+  },
+  {
+   "id": "tala",
+   "forma": "tala",
+   "es": "sangre",
+   "tema": "cuerpo",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tala"
+  },
+  {
+   "id": "un",
+   "forma": "un",
+   "es": "labio",
+   "tema": "cuerpo",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "un"
+  },
+  {
+   "id": "pahpaya",
+   "forma": "pahpaya",
+   "es": "hombro",
+   "tema": "cuerpo",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "pájpaya"
+  },
+  {
+   "id": "biara",
+   "forma": "biara",
+   "es": "vientre",
+   "tema": "cuerpo",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "biara"
+  },
+  {
+   "id": "klunghka",
+   "forma": "klunghka",
+   "es": "estómago",
+   "tema": "cuerpo",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "klungjka"
+  },
+  {
+   "id": "tara",
+   "forma": "tara",
+   "es": "grande",
+   "tema": "cualidades",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tara"
+  },
+  {
+   "id": "sirpi",
+   "forma": "sirpi",
+   "es": "pequeño",
+   "tema": "cualidades",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "sirpi"
+  },
+  {
+   "id": "kauhla",
+   "forma": "kauhla",
+   "es": "frío",
+   "tema": "cualidades",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kaujla"
+  },
+  {
+   "id": "lapta",
+   "forma": "lapta",
+   "es": "caliente",
+   "tema": "cualidades",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "lapta"
+  },
+  {
+   "id": "yari",
+   "forma": "yari",
+   "es": "largo",
+   "tema": "cualidades",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "yari"
+  },
+  {
+   "id": "prahni",
+   "forma": "prahni",
+   "es": "corto",
+   "tema": "cualidades",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "prajni"
+  },
+  {
+   "id": "sari",
+   "forma": "sari",
+   "es": "triste",
+   "tema": "cualidades",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "sari"
+  },
+  {
+   "id": "taski",
+   "forma": "taski",
+   "es": "sucio",
+   "tema": "cualidades",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "taski"
+  },
+  {
+   "id": "klin",
+   "forma": "klîn",
+   "es": "limpio",
+   "tema": "cualidades",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "clean"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "klin"
+  },
+  {
+   "id": "auhni",
+   "forma": "auhni",
+   "es": "sabroso",
+   "tema": "cualidades",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "aujni"
+  },
+  {
+   "id": "umpira",
+   "forma": "umpira",
+   "es": "pobre",
+   "tema": "cualidades",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "úmpira"
+  },
+  {
+   "id": "ailal",
+   "forma": "ailal",
+   "es": "mucho, muchos",
+   "tema": "cualidades",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "áilal"
+  },
+  {
+   "id": "lilia",
+   "forma": "lilia",
+   "es": "alegría",
+   "tema": "cualidades",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "lilia"
+  },
+  {
+   "id": "balianta",
+   "forma": "balianta",
+   "es": "morado",
+   "tema": "colores",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "bálianta"
+  },
+  {
+   "id": "blu",
+   "forma": "blû",
+   "es": "azul",
+   "tema": "colores",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "blue"
+   },
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "sangni",
+      "forma": "sangni",
+      "quien": [
+       "Teacher Smith",
+       "Matamoros (1996)"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "blu"
+  },
+  {
+   "id": "inaia",
+   "forma": "inaia",
+   "es": "llorar",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "inaia"
+  },
+  {
+   "id": "plapaia",
+   "forma": "plapaia",
+   "es": "correr",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "plapaia"
+  },
+  {
+   "id": "yawaia",
+   "forma": "yawaia",
+   "es": "nadar",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "yauaia"
+  },
+  {
+   "id": "iwaia",
+   "forma": "iwaia",
+   "es": "sentarse; vivir",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "iuaia"
+  },
+  {
+   "id": "dimaia",
+   "forma": "dimaia",
+   "es": "entrar",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "dimaia"
+  },
+  {
+   "id": "sakaia",
+   "forma": "sakaia",
+   "es": "sacar",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "sakaia"
+  },
+  {
+   "id": "plikaia",
+   "forma": "plikaia",
+   "es": "buscar",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "plikaia"
+  },
+  {
+   "id": "wiaia",
+   "forma": "wiaia",
+   "es": "decir",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "uiaia"
+  },
+  {
+   "id": "yabaia",
+   "forma": "yabaia",
+   "es": "dar",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "yabaia"
+  },
+  {
+   "id": "kalkaia",
+   "forma": "kalkaia",
+   "es": "romper",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kalkaia"
+  },
+  {
+   "id": "kalwaia",
+   "forma": "kalwaia",
+   "es": "romperse",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kaluaia"
+  },
+  {
+   "id": "ilingkaia",
+   "forma": "ilingkaia",
+   "es": "abrir",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "ílingkaia"
+  },
+  {
+   "id": "ilingwaia",
+   "forma": "ilingwaia",
+   "es": "abrirse",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "ílinguaia"
+  },
+  {
+   "id": "prakaia",
+   "forma": "prakaia",
+   "es": "cerrar",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "prakaia"
+  },
+  {
+   "id": "sikbaia",
+   "forma": "sikbaia",
+   "es": "lavar",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "sikbaia"
+  },
+  {
+   "id": "pahbaia",
+   "forma": "pahbaia",
+   "es": "barrer",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "pajbaia"
+  },
+  {
+   "id": "makaia",
+   "forma": "makaia",
+   "es": "construir",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "makaia"
+  },
+  {
+   "id": "taukaia",
+   "forma": "taukaia",
+   "es": "andar",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "taukaia"
+  },
+  {
+   "id": "lukaia",
+   "forma": "lukaia",
+   "es": "pensar",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "lukaia"
+  },
+  {
+   "id": "bukaia",
+   "forma": "bukaia",
+   "es": "levantar",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "bukaia"
+  },
+  {
+   "id": "buwaia",
+   "forma": "buwaia",
+   "es": "levantarse",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "buuaia"
+  },
+  {
+   "id": "tahbaia",
+   "forma": "tahbaia",
+   "es": "bañar",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tajbaia"
+  },
+  {
+   "id": "aihtabaia",
+   "forma": "aihtabaia",
+   "es": "bañarse",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "áijtabaia"
+  },
+  {
+   "id": "makupaia",
+   "forma": "makupaia",
+   "es": "voltear",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "mákupaia"
+  },
+  {
+   "id": "aimakupaia",
+   "forma": "aimakupaia",
+   "es": "inclinarse",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "áimakupaia"
+  },
+  {
+   "id": "atkaia",
+   "forma": "atkaia",
+   "es": "comprar; vender",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "atkaia"
+  },
+  {
+   "id": "makabaia",
+   "forma": "makabaia",
+   "es": "pedir",
+   "tema": "acciones",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "mákabaia"
+  },
+  {
+   "id": "lawana",
+   "forma": "lawana",
+   "es": "canción",
+   "tema": "escuela",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "lauana"
+  },
+  {
+   "id": "kisi",
+   "forma": "kisi",
+   "es": "cuento",
+   "tema": "escuela",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kisi"
+  },
+  {
+   "id": "aiulbra",
+   "forma": "aiulbra",
+   "es": "escritor",
+   "tema": "escuela",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "aiulbra"
+  },
+  {
+   "id": "lan_daukaia",
+   "forma": "lan daukaia",
+   "es": "enseñar",
+   "tema": "escuela",
+   "variantes": {
+    "etiquetas": [
+     "sinonimo"
+    ],
+    "otras": [
+     {
+      "id": "smalkaia",
+      "forma": "smalkaia",
+      "quien": [
+       "Scott Lackwood (2006)"
+      ],
+      "tipo": "sinonimo"
+     }
+    ]
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "lan daukaia"
+  },
+  {
+   "id": "taim",
+   "forma": "taim",
+   "es": "tiempo",
+   "tema": "tiempo",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "time"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "taim"
+  },
+  {
+   "id": "tihmia",
+   "forma": "tihmia",
+   "es": "noche",
+   "tema": "tiempo",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tijmia"
+  },
+  {
+   "id": "mundi",
+   "forma": "mundi",
+   "es": "lunes",
+   "tema": "tiempo",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "Monday"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "mundi"
+  },
+  {
+   "id": "tiusdi",
+   "forma": "tiusdi",
+   "es": "martes",
+   "tema": "tiempo",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "Tuesday"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tiusdi"
+  },
+  {
+   "id": "sandi",
+   "forma": "sandi",
+   "es": "domingo",
+   "tema": "tiempo",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "Sunday"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "sandi"
+  },
+  {
+   "id": "satadi",
+   "forma": "satadi",
+   "es": "sábado",
+   "tema": "tiempo",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "Saturday"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "sátadi"
+  },
+  {
+   "id": "awar",
+   "forma": "awar",
+   "es": "hora",
+   "tema": "tiempo",
+   "viene_de": {
+    "lengua": "inglés",
+    "palabra": "hour"
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "auar"
+  },
+  {
+   "id": "mula",
+   "forma": "mula",
+   "es": "nieto, nieta",
+   "tema": "familia",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "mula"
+  },
+  {
+   "id": "yamsi",
+   "forma": "yamsi",
+   "es": "sobrino",
+   "tema": "familia",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "yamsi"
+  },
+  {
+   "id": "rapia",
+   "forma": "rapia",
+   "es": "tío (hermano del papá)",
+   "tema": "familia",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "rapia"
+  },
+  {
+   "id": "taihka",
+   "forma": "taihka",
+   "es": "tía (hermana del papá)",
+   "tema": "familia",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "taijka"
+  },
+  {
+   "id": "tapukra",
+   "forma": "tapukra",
+   "es": "hijastro, hijastra",
+   "tema": "familia",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "tápukra"
+  },
+  {
+   "id": "sip",
+   "forma": "sip",
+   "es": "poder, posible (en «sip sa», se puede)",
+   "tema": "gramatica",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "sip"
+  },
+  {
+   "id": "sakuna",
+   "forma": "sakuna",
+   "es": "pero",
+   "tema": "gramatica",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "sákuna"
+  },
+  {
+   "id": "kaka",
+   "forma": "kaka",
+   "es": "si (al final de la condición)",
+   "tema": "gramatica",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kaka"
+  },
+  {
+   "id": "dukiara",
+   "forma": "dukiara",
+   "es": "para (al final)",
+   "tema": "gramatica",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "dúkiara"
+  },
+  {
+   "id": "taka",
+   "forma": "taka",
+   "es": "por (la causa, al final)",
+   "tema": "gramatica",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "taka"
+  },
+  {
+   "id": "ninkara",
+   "forma": "ninkara",
+   "es": "después de",
+   "tema": "gramatica",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "nínkara"
+  },
+  {
+   "id": "kainara",
+   "forma": "kainara",
+   "es": "antes de (con el verbo en -ras)",
+   "tema": "gramatica",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "káinara"
+  },
+  {
+   "id": "kau",
+   "forma": "kau",
+   "es": "más (delante de la cualidad)",
+   "tema": "gramatica",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "kau"
+  },
+  {
+   "id": "wina_gram",
+   "forma": "wina",
+   "es": "de, desde",
+   "tema": "gramatica",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "uina"
+  },
+  {
+   "id": "bilara",
+   "forma": "bilara",
+   "es": "dentro de",
+   "tema": "gramatica",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "bílara"
+  },
+  {
+   "id": "baku",
+   "forma": "baku",
+   "es": "como",
+   "tema": "gramatica",
+   "variantes": {
+    "etiquetas": [
+     "region"
+    ],
+    "otras": [
+     {
+      "id": "nahki",
+      "forma": "nahki",
+      "quien": [
+       "Tangni"
+      ],
+      "tipo": "region"
+     }
+    ]
+   },
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "baku"
+  },
+  {
+   "id": "apu",
+   "forma": "apu",
+   "es": "no hay, no tiene",
+   "tema": "gramatica",
+   "fuentes": [
+    "matamoros-1996"
+   ],
+   "voz": "apu"
   }
  ]
 }
