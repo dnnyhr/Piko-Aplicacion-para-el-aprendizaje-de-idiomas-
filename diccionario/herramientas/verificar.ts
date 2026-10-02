@@ -18,6 +18,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { LANGS, LANG_NOMBRE, validatePack } from '../../app/src/core/content/schema';
+import { problemasDeLasReglas } from './reglas';
 import { armar, armarAlEspanol, leerCsv, leerDiccionario, leerLenguas, palabras, paraLaApp, RAIZ_DICCIONARIO, type Entrada, type Lengua } from './recetas';
 
 const RAIZ = RAIZ_DICCIONARIO;
@@ -85,6 +86,11 @@ async function verificarLengua(lengua: Lengua): Promise<string[]> {
   const reglas = (await existe(gramatica))
     ? new Set([...(await fs.readFile(gramatica, 'utf8')).matchAll(/^#{2,4} ([A-Z]\d+) /gm)].map((m) => m[1]))
     : null;
+  // El texto del sitio (reglas-sitio.md) sólo puede traer reglas sólidas
+  const textoSitio = path.join(dir, 'reglas-sitio.md');
+  if (reglas && (await existe(textoSitio))) {
+    errores.push(...problemasDeLasReglas(await fs.readFile(gramatica, 'utf8'), await fs.readFile(textoSitio, 'utf8')));
+  }
 
   // ── Léxico ────────────────────────────────────────────────────────────
   const ids = new Set<string>();
