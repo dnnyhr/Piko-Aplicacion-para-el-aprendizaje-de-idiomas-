@@ -4,20 +4,33 @@
 
 ```
 piko/
+├── app/                    la aplicación React Native (Ruta 1)
+│   ├── app/                pantallas — el enrutado sale de esta carpeta
+│   │   ├── index.tsx         inicio: soy maestro / unirme / practicar
+│   │   ├── practicar.tsx     práctica en solitario
+│   │   ├── maestro/          abrir la sala, lista, rondas, semáforo
+│   │   └── estudiante/       buscar la sala, reclamar el nombre, jugar
+│   ├── content/            paquetes de contenido en JSON + índice estático
+│   ├── src/
+│   │   ├── core/           ⚠ TypeScript puro, sin React Native
+│   │   ├── net/            transporte, anfitrión y cliente del aula
+│   │   ├── db/             SQLite: esquema, migraciones, log de eventos
+│   │   ├── ui/             sistema de diseño y la mascota
+│   │   └── features/       ejercicios, progreso, sala
+│   ├── tools/              simulador, validadores, generadores
+│   └── tests/              pruebas automatizadas
+├── robot/                  el acompañante de aula (Ruta 2)
+│   ├── firmware/           sketches de Arduino: el completo y los de prueba
+│   └── panel/              puente Node ↔ placa, panel del maestro y cara
+├── encuestas/              Cloudflare Worker + D1 (encuestas.piko.mugiware.com)
 ├── web/                    la landing (HTML estático, no se toca desde la app)
 ├── docs/                   esta documentación
-└── app/                    la aplicación React Native
-    ├── app/                pantallas — el enrutado sale de esta carpeta
-    ├── content/            paquetes de contenido en JSON + índice estático
-    ├── src/
-    │   ├── core/           ⚠ TypeScript puro, sin React Native
-    │   ├── net/            transporte, anfitrión y cliente del aula
-    │   ├── db/             SQLite: esquema, migraciones, log de eventos
-    │   ├── ui/             sistema de diseño y la mascota
-    │   └── features/       ejercicios, progreso, sala
-    ├── tools/              simulador, validadores, generadores
-    └── tests/              pruebas automatizadas
+└── .github/                CI, plantillas de issues y de pull request
 ```
+
+Este documento se centra en la app. El robot y las encuestas tienen su
+arquitectura explicada en su propio README — ver [Fuera de la app](#fuera-de-la-app)
+al final.
 
 ## La regla que sostiene todo
 
@@ -260,3 +273,45 @@ celebración y el ánimo.
 
 La animación es de respiración continua más un doble brinco al festejar, con el
 API nativo de animación para que no cueste cuadros en gama baja.
+
+## Fuera de la app
+
+Las otras dos partes del proyecto no comparten código con la app — sólo las
+reglas de producto.
+
+### El robot
+
+```
+                    ┌─ USB ──► MegaPi ──► servo · motor a pasos · 8 LEDs
+   PC (el puente) ──┤
+                    └─ HTTP/WebSocket ─┬─► /      teléfono del maestro   manda
+                                       └─► /cara  teléfono del robot     muestra
+```
+
+- **El puente** (`robot/panel/server.js`) es el único que habla con la placa,
+  por el puerto serie. Los dos teléfonos hablan con el puente y nunca entre sí.
+- **El protocolo serie es texto**, una orden por línea (`SV 90`, `PA 512 10`,
+  `PARA`…), para poder depurarlo a mano desde el Monitor Serie.
+- **Hombre muerto:** si la placa pasa 500 ms sin recibir una línea, frena. El
+  latido lo manda el navegador del maestro, no el servidor, para que un teléfono
+  que se cae detenga al robot.
+- **Las frases de Piko** salen de `app/src/ui/piko/frases.ts`, igual que en la
+  app: el robot tampoco dice «mal» ni «incorrecto».
+
+Todo el detalle — cableado, caras, voz, sonidos, el ejercicio simulado — está
+en [robot/README.md](../robot/README.md).
+
+### Las encuestas
+
+Un Cloudflare Worker (`encuestas/src/index.js`) sirve una sola página para
+todas las encuestas y guarda las respuestas en D1. Cada encuesta es un JSON en
+`encuestas/definiciones/`; la validación (`public/js/reglas.js`) es la misma en
+el navegador y en el Worker.
+
+Es la **única parte del proyecto que corre en un servidor**, y por eso vive
+fuera del aula: ni la app ni el robot dependen de ella. Su conexión con la app
+es de una sola vía y pasa por una persona — lo que los hablantes escriben en
+*Tu lengua en Piko* se revisa y confirma en el panel, y se exporta en el formato
+de `src/core/content/schema.ts` para sumarlo a `app/content/packs/`.
+
+Todo el detalle está en [encuestas/README.md](../encuestas/README.md).

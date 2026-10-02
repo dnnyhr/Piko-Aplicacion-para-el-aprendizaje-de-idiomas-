@@ -12,6 +12,9 @@ body:
         nomás, en texto plano, como te salga. Nosotros nos encargamos de
         convertirlo al formato de la aplicación.
 
+        ¿Preferís hacerlo desde el teléfono, con las palabras ya sugeridas?
+        Contestá [Tu lengua en Piko](https://encuestas.piko.mugiware.com/e/tu-lengua).
+
   - type: dropdown
     id: lengua
     attributes:

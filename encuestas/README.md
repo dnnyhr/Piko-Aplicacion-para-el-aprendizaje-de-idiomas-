@@ -1,7 +1,10 @@
 # Encuestas de Piko
 
-Una página, muchas encuestas. Corre en **Cloudflare Workers** y guarda las
-respuestas en **D1**. Hay dos:
+Una página, muchas encuestas, en
+[encuestas.piko.mugiware.com](https://encuestas.piko.mugiware.com). Corre en
+**Cloudflare Workers** y guarda las respuestas en **D1**. Es la única parte de
+Piko que corre en un servidor, y vive fuera del aula: ni la app ni el robot la
+necesitan. Hay dos:
 
 - [`¿Qué le falta a Piko?`](definiciones/que-le-falta-a-piko.json): qué quiere
   la gente en la app y en el robot, el acompañante de aula que **guía, escucha
@@ -33,6 +36,9 @@ encuestas/
 ├── herramientas/          publicar.mjs (sube las definiciones) y animar-pikobot.mjs
 └── test/                  pruebas en Node con un D1 falso sobre node:sqlite
 ```
+
+Hace falta **Node 22 o más nuevo**: las pruebas usan `node:sqlite` para hacer
+de D1.
 
 ## Poner en marcha
 
@@ -72,8 +78,12 @@ solo cuando cambia algo en `definiciones/`.
 La encuesta que se abre en la raíz del dominio es `ENCUESTA_PRINCIPAL`, en
 `vars` de `wrangler.jsonc`.
 
-Para un dominio propio (por ejemplo `encuestas.piko.mugiware.com`), agregá
-una *Custom Domain* al Worker desde el panel de Cloudflare.
+El dominio está fijo en `routes` de `wrangler.jsonc` (`custom_domain: true`), y
+Cloudflare lo crea solo en el primer `deploy`. La dirección `*.workers.dev` y
+las URLs de vista previa están **apagadas a propósito** (`workers_dev` y
+`preview_urls` en `false`). Si montás tu propia copia en otra cuenta, cambiá el
+`pattern` de `routes` por un dominio tuyo, o poné `workers_dev: true` y usá la
+dirección `https://piko-encuestas.<tu-cuenta>.workers.dev`.
 
 ### En local
 
@@ -129,7 +139,9 @@ npx wrangler secret put RESEND_API_KEY     # la API key de Resend
 
 y en `wrangler.jsonc`, dentro de `vars`, `CORREO_REMITENTE` (una dirección de
 un dominio verificado en Resend, por ejemplo `Piko <piko@mugiware.com>`) y
-`APP_DESCARGA_URL`. Después `npm run deploy`. Mientras falte algo, no se manda
+`APP_DESCARGA_URL`. Opcionales: `CORREO_RESPUESTA` (a dónde llegan las
+respuestas al correo) y `CORREOS_POR_DIA` (el tope diario, 100 si no se pone).
+Después `npm run deploy`. Mientras falte algo, no se manda
 nada y el motivo queda en la tabla `correos`.
 
 Para ver cómo salieron:
@@ -146,8 +158,8 @@ La lista `/e/` usa `public/img/og-encuestas.jpg`. Esas apps no ejecutan JavaScri
 aceptan direcciones relativas, así que el Worker atiende `/`, `/e/` y
 `/e/<slug>` (ver `run_worker_first` en `wrangler.jsonc`) y completa las etiquetas Open
 Graph con el dominio desde el que se abrió la página y con el título y la
-descripción de esa encuesta. Funciona igual en `workers.dev` y en un dominio
-propio.
+descripción de esa encuesta. Por eso funciona en cualquier dominio donde se
+publique, sin tocar el HTML.
 
 ## Pikobot animado
 

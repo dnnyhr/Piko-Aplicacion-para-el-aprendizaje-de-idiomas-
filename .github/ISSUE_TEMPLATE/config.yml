@@ -3,6 +3,9 @@ contact_links:
   - name: "¿Hablás miskito, mayangna, rama o garífuna?"
     url: https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/blob/main/CONTRIBUTING.md
     about: "La contribución que más falta hace no es código. Mirá cómo aportar contenido en una lengua."
+  - name: "Tu lengua en Piko — escribir palabras desde el teléfono"
+    url: https://encuestas.piko.mugiware.com/e/tu-lengua
+    about: "Una encuesta que te va mostrando palabras en español para que escribas cómo se dicen en tu lengua."
   - name: "Reportar un problema de seguridad"
     url: https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/blob/main/SECURITY.md
     about: "No abras un issue público — escribinos en privado."
