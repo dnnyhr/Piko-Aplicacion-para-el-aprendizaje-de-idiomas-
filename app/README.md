@@ -6,6 +6,9 @@ conectan a su hotspot para jugar entre sí.
 
 ## Arrancar
 
+Hace falta **Node 22 o más nuevo** (las pruebas de persistencia usan
+`node:sqlite`). Todos los comandos se corren desde esta carpeta.
+
 ```bash
 npm install
 ```
@@ -115,6 +118,14 @@ nativos — el validador rechaza a propósito la síntesis de voz en esas lengua
 para que nadie termine enseñando una pronunciación inventada. La excepción es
 el miskito: puede sonar con la voz en español para mientras se consiguen
 grabaciones (decisión 16 de `docs/decisiones.md`).
+
+## Más documentación
+
+| Documento | Para qué |
+|---|---|
+| [docs/desarrollo.md](../docs/desarrollo.md) | Guía completa: navegador, simulador, teléfono, APK y prueba de aceptación en el aula |
+| [docs/arquitectura.md](../docs/arquitectura.md) | Protocolo del aula, sincronización, semáforo, base local |
+| [docs/decisiones.md](../docs/decisiones.md) | Por qué está hecho así — conviene leerlo antes de "simplificar" algo |
 
 ## Detalles que no son obvios
 
