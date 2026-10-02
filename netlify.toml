@@ -1,0 +1,24 @@
+# piko.mugiware.com en Netlify: se publica la carpeta web/ tal cual, sin
+# compilar. Cada merge a main se publica solo, y cada PR tiene su vista previa.
+
+[build]
+  publish = "web"
+
+# La app del navegador (web/probar/app): sus archivos llevan una huella en el
+# nombre (entry-107ea8….js, Fredoka_700Bold.eaa3….ttf) y nunca cambian; una
+# versión nueva trae nombres nuevos. El navegador puede guardarlos un año.
+[[headers]]
+  for = "/probar/app/_expo/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/probar/app/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Sin esto Netlify lo sirve como application/octet-stream.
+[[headers]]
+  for = "/site.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json; charset=utf-8"

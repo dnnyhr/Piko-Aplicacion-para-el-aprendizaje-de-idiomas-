@@ -59,7 +59,11 @@
 
     // Al bajar, la barra toma sombra para separarse del contenido.
     var barra = document.querySelector(".nav");
-    var marcar = function () { barra.classList.toggle("nav--bajando", window.scrollY > 8); };
+    var bajando = null;
+    var marcar = function () {
+      var ahora = window.scrollY > 8;
+      if (ahora !== bajando) { bajando = ahora; barra.classList.toggle("nav--bajando", ahora); }
+    };
     marcar();
     window.addEventListener("scroll", marcar, { passive: true });
   }

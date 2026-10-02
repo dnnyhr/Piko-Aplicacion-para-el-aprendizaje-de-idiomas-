@@ -73,6 +73,7 @@
 </script>
 <link rel="stylesheet" href="../assets/css/nav.css">
 <link rel="stylesheet" href="../assets/css/sitio.css">
+<link rel="preload" href="../assets/img/escena.svg" as="fetch" type="image/svg+xml" crossorigin>
 <style>
   /* Buscador de vidrio líquido: una píldora chica que flota sobre el paisaje y
      acompaña al bajar; al tocarla se expande y muestra los filtros. */
@@ -188,6 +189,8 @@
     --tema:var(--verde-pasto);
     background:#fff; border-radius:var(--radio); box-shadow:var(--sombra-chica); padding:1.05rem 1.2rem 1.1rem;
     position:relative; overflow:hidden; scroll-margin-top:170px; min-width:0;
+    /* Las tarjetas fuera de pantalla no se dibujan hasta acercarse: son 251. */
+    content-visibility:auto; contain-intrinsic-size:auto 250px;
     transition:transform .3s cubic-bezier(.2,.8,.3,1.2), box-shadow .3s ease;
   }
   .palabra::before{content:""; position:absolute; left:0; right:0; top:0; height:6px; background:var(--tema)}
