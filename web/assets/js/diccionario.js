@@ -277,20 +277,62 @@
 
   // ---------- El buscador: chico, y se abre al tocarlo ----------
   var panel = $("panel");
+  var mas = $("panel-mas");
+  var conGsap = function () { return anim().animar && window.gsap; };
+  var animando = null;
+
+  /** Una onda de luz desde donde se tocó el vidrio. */
+  function onda(ev) {
+    if (!conGsap() || !ev || ev.clientX == null) return;
+    var r = panel.getBoundingClientRect();
+    var o = document.createElement("span");
+    o.className = "onda";
+    o.style.left = (ev.clientX - r.left) + "px";
+    o.style.top = (ev.clientY - r.top) + "px";
+    panel.appendChild(o);
+    gsap.fromTo(o, { scale: 0, opacity: 1 }, { scale: 40, opacity: 0, duration: .9, ease: "power2.out", onComplete: function () { o.remove(); } });
+  }
+
   function abrir() {
     if (panel.classList.contains("panel--abierto")) return;
-    panel.classList.add("panel--abierto");
     ultimoY = window.scrollY;
-    $("panel-mas").removeAttribute("inert");
+    mas.removeAttribute("inert");
     $("q").setAttribute("aria-expanded", "true");
+    if (!conGsap()) { panel.classList.add("panel--abierto"); return; }
+    if (animando) animando.kill();
+    var antes = panel.getBoundingClientRect().width;
+    panel.classList.add("panel--abierto");
+    var despues = panel.getBoundingClientRect().width;
+    var chips = mas.querySelectorAll(".filtro, .filtros__nombre, .cuenta");
+    animando = gsap.timeline({ onComplete: function () { gsap.set(panel, { clearProps: "width" }); animando = null; } })
+      .fromTo(panel, { width: antes }, { width: despues, duration: .7, ease: "elastic.out(1, .75)" }, 0)
+      .fromTo(panel, { scaleY: .94 }, { scaleY: 1, duration: .6, ease: "elastic.out(1.1, .5)", transformOrigin: "50% 0%" }, 0)
+      .fromTo(mas, { height: 0 }, { height: "auto", duration: .55, ease: "power3.out" }, .08)
+      .fromTo(chips, { y: 10, opacity: 0, scale: .9 }, { y: 0, opacity: 1, scale: 1, duration: .45, stagger: .018, ease: "back.out(2)", clearProps: "transform,opacity" }, .18)
+      .fromTo(panel.querySelector(".brillo"), { xPercent: -120, opacity: 1 }, { xPercent: 260, opacity: 0, duration: .9, ease: "power2.inOut" }, .05);
   }
+
   function cerrar() {
     if (!panel.classList.contains("panel--abierto")) return;
-    panel.classList.remove("panel--abierto");
-    $("panel-mas").setAttribute("inert", "");
+    mas.setAttribute("inert", "");
     $("q").setAttribute("aria-expanded", "false");
+    if (!conGsap()) { panel.classList.remove("panel--abierto"); return; }
+    if (animando) animando.kill();
+    var antes = panel.getBoundingClientRect().width;
+    animando = gsap.timeline({ onComplete: function () {
+      panel.classList.remove("panel--abierto");
+      var despues = panel.getBoundingClientRect().width;
+      gsap.fromTo(panel, { width: antes }, { width: despues, duration: .5, ease: "power3.inOut", clearProps: "width" });
+      animando = null;
+    } })
+      .to(mas.querySelectorAll(".filtro, .filtros__nombre, .cuenta"), { opacity: 0, y: -6, duration: .18, stagger: .006, ease: "power1.in" }, 0)
+      .to(mas, { height: 0, duration: .35, ease: "power3.inOut" }, .1)
+      .set(mas.querySelectorAll(".filtro, .filtros__nombre, .cuenta"), { clearProps: "transform,opacity" });
   }
+
+  if (conGsap()) { panel.classList.add("panel--gsap"); gsap.set(mas, { height: 0 }); }
   panel.addEventListener("focusin", abrir);
+  panel.addEventListener("pointerdown", onda);
   panel.addEventListener("click", abrir);
   document.addEventListener("click", function (ev) {
     if (!panel.contains(ev.target) && !ev.target.closest("[data-ver-variante]")) cerrar();
