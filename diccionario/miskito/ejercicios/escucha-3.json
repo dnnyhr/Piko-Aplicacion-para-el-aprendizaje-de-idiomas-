@@ -1,0 +1,93 @@
+{
+  "id": "miq.escucha.3",
+  "lang": "miq",
+  "theme": "escucha",
+  "difficulty": 3,
+  "title": "Escuchá: frases",
+  "items": [
+    {
+      "id": "miq.escucha.3.a",
+      "type": "listen",
+      "skill": "miq.escucha",
+      "tts": "pain sna",
+      "ttsLang": "es-US",
+      "answer": "Pain sna",
+      "options": [
+        "Pain sna",
+        "Nahkisma",
+        "Li want"
+      ],
+      "gloss": "Estoy bien"
+    },
+    {
+      "id": "miq.escucha.3.b",
+      "type": "listen",
+      "skill": "miq.escucha",
+      "tts": "li uant",
+      "ttsLang": "es-US",
+      "answer": "Li want",
+      "options": [
+        "Li want",
+        "Li auhwisa",
+        "Pain sna"
+      ],
+      "gloss": "Quiero agua"
+    },
+    {
+      "id": "miq.escucha.3.c",
+      "type": "listen",
+      "skill": "miq.escucha",
+      "tts": "li áujuisa",
+      "ttsLang": "es-US",
+      "answer": "Li auhwisa",
+      "options": [
+        "Li auhwisa",
+        "Li want",
+        "Anira iwisma"
+      ],
+      "gloss": "Está lloviendo"
+    },
+    {
+      "id": "miq.escucha.3.d",
+      "type": "listen",
+      "skill": "miq.escucha",
+      "tts": "ánira iuisma",
+      "ttsLang": "es-US",
+      "answer": "Anira iwisma",
+      "options": [
+        "Anira iwisma",
+        "Nahkisma",
+        "Pain sna"
+      ],
+      "gloss": "¿Dónde vivís?"
+    },
+    {
+      "id": "miq.escucha.3.e",
+      "type": "listen",
+      "skill": "miq.escucha",
+      "tts": "tingki páinika",
+      "ttsLang": "es-US",
+      "answer": "Tingki painika",
+      "options": [
+        "Tingki painika",
+        "Pain sna",
+        "Li want"
+      ],
+      "gloss": "Gracias, amigo"
+    },
+    {
+      "id": "miq.escucha.3.f",
+      "type": "listen",
+      "skill": "miq.escucha",
+      "tts": "yang nini ana",
+      "ttsLang": "es-US",
+      "answer": "Yang nini Ana",
+      "options": [
+        "Yang nini Ana",
+        "Anira iwisma",
+        "Tingki painika"
+      ],
+      "gloss": "Me llamo Ana"
+    }
+  ]
+}

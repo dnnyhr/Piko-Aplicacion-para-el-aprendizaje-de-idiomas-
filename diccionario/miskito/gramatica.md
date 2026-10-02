@@ -282,6 +282,17 @@ sólo se distingue por eso: *kati* (luna) y *kâti* (mes).
 tiene que aprenderla de grabaciones. Un niño que dice *kati* por *kâti* dijo
 otra palabra.
 
+### S9 · El acento va en la primera sílaba — Confianza C
+
+**De dónde sale.** De la literatura sobre el miskito, no del corpus: el texto
+de las encuestas no muestra el acento, y ninguna persona lo marcó.
+
+**Para Piko.** Lo usa la voz en español que suena **para mientras**, hasta
+tener grabaciones (decisión 16). `herramientas/voz.ts` le pone tilde a la
+primera sílaba cuando el español la cargaría en otra: *piyaya* → «píyaya»,
+*almuk* → «álmuk». Es lo primero que hay que preguntarle a un hablante al oír
+la voz. Si está mal, se cambia en ese archivo y se regeneran los ejercicios.
+
 ---
 
 ## Palabras: cómo se forman

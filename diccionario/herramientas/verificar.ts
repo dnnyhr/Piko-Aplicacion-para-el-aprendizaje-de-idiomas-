@@ -10,6 +10,9 @@
  *     → lexico.json   cada entrada dice de qué fuente sale y cómo se escribió
  *       → ejercicios/ sólo formas del léxico que no están por revisar
  *
+ * Y en los ejercicios de escucha del miskito, que la voz reciba la palabra
+ * preparada por `voz.ts` (voz en español para mientras, decisión 16).
+ *
  * Además valida los ejercicios con el mismo contrato que la app
  * (`validatePack`), así pasarlos a `app/content/packs/` es copiarlos.
  */
@@ -18,6 +21,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { leerPacks } from '../../app/tools/packs';
+import { paraVozEspanola } from './voz';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.resolve(AQUI, '..');
@@ -192,6 +196,11 @@ async function verificarLengua(dir: string, nombre: string): Promise<string[]> {
           if (!fichas.has(clave(b))) errores.push(`${en} ${it.id}: el bloque «${b}» no sale de ninguna forma usable del léxico`);
         }
       } else {
+        if (it.type === 'listen' && it.tts && lexico.lengua === 'miq') {
+          const esperado = paraVozEspanola(it.answer);
+          if (!it.ttsLang?.startsWith('es')) errores.push(`${en} ${it.id}: el miskito suena con la voz en español (\`ttsLang\` es-…)`);
+          if (it.tts !== esperado) errores.push(`${en} ${it.id}: \`tts\` tiene que ser «${esperado}» (voz.ts), no «${it.tts}»`);
+        }
         for (const o of new Set([it.answer, ...it.options])) {
           if (!formas.has(clave(o))) errores.push(`${en} ${it.id}: ${noAtestiguada(o)}`);
         }

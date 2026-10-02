@@ -88,6 +88,30 @@
         "Ninam dia",
         "Pain sna"
       ]
+    },
+    {
+      "id": "miq.posesion.2.h",
+      "type": "choice",
+      "skill": "miq.posesion",
+      "prompt": "mi mamá (como lo dice Tangni)",
+      "answer": "mamiki",
+      "options": [
+        "mamiki",
+        "mama",
+        "papiki"
+      ]
+    },
+    {
+      "id": "miq.posesion.2.i",
+      "type": "choice",
+      "skill": "miq.posesion",
+      "prompt": "mi papá (como lo dice Tangni)",
+      "answer": "papiki",
+      "options": [
+        "papiki",
+        "mamiki",
+        "aisa"
+      ]
     }
   ]
 }

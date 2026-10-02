@@ -26,7 +26,7 @@ diccionario/
 
 | Lengua | Versión | Fuentes | Léxico | Reglas | Ejercicios |
 |---|---|---|---|---|---|
-| Miskito (`miq`) | 0.4 | 2 hablantes (Raiti, Río Coco) y dos diccionarios publicados (Bilwi) | 269 entradas, 18 por revisar, 60 dichas por las dos personas | 47 (24 A · 17 B · 5 C · 1 mixta) | 16 paquetes, 137 ítems |
+| Miskito (`miq`) | 0.4 | 2 hablantes (Raiti, Río Coco) y dos diccionarios publicados (Bilwi) | 269 entradas, 18 por revisar, 60 dichas por las dos personas | 48 (24 A · 17 B · 6 C · 1 mixta) | 19 paquetes, 167 ítems (28 de escucha) |
 | Mayangna (`sum`) | — | — | — | — | — |
 | Rama (`rma`) | — | — | — | — | — |
 | Garífuna (`cab`) | — | — | — | — | — |
@@ -89,9 +89,11 @@ pasarlos es copiarlos:
 3. `cd app && npm run validate:packs`.
 4. Actualizar la tabla de estado de [`app/content/README.md`](../app/content/README.md).
 
-Hay un solo tipo de ejercicio que no se puede hacer todavía: los de escuchar.
-Necesitan grabaciones de hablantes, y en estas lenguas no se usa voz
-sintética.
+Los ejercicios de escuchar (`escucha-1` a `escucha-3`) suenan con la voz en
+español **para mientras** se consiguen grabaciones de hablantes. La palabra se
+le pasa a la voz preparada por [`herramientas/voz.ts`](herramientas/voz.ts), y
+el verificador exige que cada ejercicio use esa preparación. Sólo usan
+palabras que dieron igual las dos personas.
 
 ## Cómo se suma una tanda nueva
 
@@ -135,3 +137,4 @@ Una obra publicada respalda reglas y formas, pero no cuenta como un hablante: no
 | miskito 0.2 | 2026-10-02 | Segunda tanda: otra hablante de Raiti, de otra generación. Animales, comida y naturaleza; dos sistemas de números; hermanos según quién habla; «hermano» y «hermana» salen de los ejercicios | 3 comprobables: 2 acertadas y 1 a medias (2,5 / 3) · 23 siguen abiertas |
 | miskito 0.3 | 2026-10-02 | Diccionario de Scott Lackwood (2006) como respaldo publicado: pasado, futuro, negación, plural, pregunta con *ki*; *bara* es «ahí», *kaya* es «vamos», la vocal larga distingue palabras (*kati* / *kâti*) | 8 comprobables: 6,5 acertadas · acumulado 9 de 11 |
 | miskito 0.4 | 2026-10-02 | Diccionario de Matamoros (1996): *nina* (nombre) y *kikaia* (reír) confirmados; *sangni* también es verde; la familia y el cuerpo se citan con dueño; variantes entre Raiti y Bilwi; *iris* y *yapta* a revisión | 2 comprobables: 1,5 acertadas · acumulado 10,5 de 13 |
+| miskito 0.5 | 2026-10-02 | Ejercicios de escucha con la voz en español, para mientras se consiguen grabaciones (decisión 16); `voz.ts` prepara cada palabra; regla S9 (acento inicial); *mamiki* y *papiki* en «Mío y tuyo» | — |

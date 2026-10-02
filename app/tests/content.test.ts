@@ -147,3 +147,32 @@ describe('selección', () => {
     expect(temasDe([packDemo], 'rma')).toEqual([]);
   });
 });
+
+describe('voz sintética por lengua', () => {
+  const escucha = (lang: string, ttsLang: string) =>
+    validatePack({
+      ...packDemo,
+      lang,
+      items: [
+        { id: 'l1', type: 'listen', skill: 's', tts: 'kumi', ttsLang, answer: 'kumi', options: ['kumi', 'wal'], gloss: 'uno' },
+      ],
+    });
+
+  it('el miskito acepta la voz en español, para mientras no hay grabaciones', () => {
+    expect(escucha('miq', 'es-US').ok).toBe(true);
+  });
+
+  it('el miskito no acepta otra voz', () => {
+    const r = escucha('miq', 'en-US');
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.join(' ')).toContain('no se puede hacer sonar');
+  });
+
+  it('mayangna, rama y garífuna siguen sin voz sintética', () => {
+    for (const lang of ['sum', 'rma', 'cab']) {
+      const r = escucha(lang, 'es-US');
+      expect(r.ok).toBe(false);
+      if (!r.ok) expect(r.errors.join(' ')).toContain('grabación de hablante');
+    }
+  });
+});
