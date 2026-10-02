@@ -1,7 +1,7 @@
 /**
  * Los datos que muestra el sitio (piko.mugiware.com), sacados del diccionario.
  *
- *   web/datos/diccionario-<código>.json   las palabras, con su fuente y su análisis
+ *   web/datos/diccionario-<código>.json   las palabras confirmadas, con su fuente y sus variantes
  *   web/datos/estado.json                 cuánto hay de cada lengua y quiénes enseñaron
  *   web/diccionario/index.html            sólo la lista entre <!-- palabras:inicio --> y
  *                                         <!-- palabras:fin -->, para que los buscadores
@@ -21,7 +21,6 @@ import { armar, armarAlEspanol, leerCsv, leerDiccionario, leerLenguas, paraLaApp
 import { paraVozEspanola } from './voz';
 
 const WEB = path.resolve(RAIZ_DICCIONARIO, '..', 'web');
-const REPO = 'https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/blob/main';
 
 interface Fuente {
   id: string;
@@ -46,22 +45,6 @@ function fuentePublica(f: Fuente) {
     return { id: f.id, tipo: f.tipo, nombre: f.autor ?? '', detalle: [f.titulo, f.editorial].filter(Boolean).join('. '), fecha: f.fecha, enlace: f.consultado_en?.split(' ')[0] };
   }
   return { id: f.id, tipo: f.tipo, nombre: 'El equipo de Piko', detalle: '', fecha: f.fecha };
-}
-
-/** El ancla con que GitHub enlaza un título de Markdown. */
-const ancla = (titulo: string) =>
-  titulo.toLocaleLowerCase('es').replace(/[^\p{L}\p{N}\s-]/gu, '').trim().replace(/\s/g, '-');
-
-/** Las reglas de `gramatica.md`: id → título, confianza y enlace. */
-function reglasDe(dir: string, carpeta: string) {
-  const archivo = path.join(dir, 'gramatica.md');
-  if (!fs.existsSync(archivo)) return {};
-  const reglas: Record<string, { titulo: string; confianza: string; enlace: string }> = {};
-  for (const m of fs.readFileSync(archivo, 'utf8').matchAll(/^### (([A-Z]\d+) · (.+?) — Confianza (.+))$/gm)) {
-    const [, completo = '', id = '', titulo = '', confianza = ''] = m;
-    reglas[id] = { titulo, confianza, enlace: `${REPO}/diccionario/${carpeta}/gramatica.md#${ancla(completo)}` };
-  }
-  return reglas;
 }
 
 // ---------- Variantes ----------
@@ -236,25 +219,20 @@ export function archivosDeLaWeb(generados: ReadonlyMap<string, string> = new Map
     });
 
     if (lengua.codigo === 'eng') continue; // el inglés no necesita un diccionario en el sitio
-    const reglas = reglasDe(d.dir, lengua.carpeta);
+    // En el sitio sólo va lo confirmado: lo que está en revisión espera, como en
+    // los ejercicios de la app. Y sin lo técnico (glosas, reglas, categorías):
+    // eso vive en gramatica.md y en lexico.json para quien estudia la lengua.
+    const publicables = d.entradas.filter(usable);
     const corpus = leerCsv(fs.readFileSync(path.join(d.dir, 'corpus.csv'), 'utf8'));
-    const variantes = variantesDe(d.entradas, fuentes, corpus);
-    const entradas = d.entradas.map((e) => ({
+    const variantes = variantesDe(publicables, fuentes, corpus);
+    const entradas = publicables.map((e) => ({
       id: e.id,
       forma: e.forma,
       es: e.es,
-      categoria: e.categoria,
       tema: e.tema,
-      ...(e.analisis ? { analisis: e.analisis } : {}),
-      ...(e.glosa ? { glosa: e.glosa } : {}),
-      ...(e.prestamo ? { prestamo: e.prestamo } : {}),
-      ...(e.notas ? { notas: e.notas } : {}),
-      ...(e.revisar ? { revisar: e.revisar } : {}),
+      ...(e.prestamo ? { viene_de: { lengua: e.prestamo.de, palabra: e.prestamo.origen } } : {}),
       ...(variantes.has(e.id) ? { variantes: variantes.get(e.id) } : {}),
-      escrito: e.registrado,
-      reglas: (e.reglas ?? []).filter((r) => r in reglas),
       fuentes: e.fuentes,
-      estado: e.estado,
       voz: lengua.codigo === 'miq' ? paraVozEspanola(e.forma) : e.forma,
     }));
     salida.set(
@@ -262,7 +240,6 @@ export function archivosDeLaWeb(generados: ReadonlyMap<string, string> = new Map
       json({
         lengua: { codigo: lengua.codigo, nombre: lengua.nombre, autonimo: lengua.autonimo ?? null, voz: lengua.voz },
         fuentes: fuentes.filter((f) => f.tipo !== 'equipo').map(fuentePublica),
-        reglas,
         entradas,
       }),
     );

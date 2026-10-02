@@ -1,8 +1,10 @@
 /*
  * El diccionario consultable. Lee datos/diccionario-miq.json, que escribe
  * `npm run contenido` a partir de diccionario/miskito/; acá no se edita nada.
- * Las variantes (cómo la escribió cada persona, si cambia entre Raiti y
- * Bilwi, otras palabras con la misma traducción) también vienen calculadas.
+ * Sólo trae las palabras confirmadas, y las variantes (cómo la escribió cada
+ * persona, si cambia entre Raiti y Bilwi, otras palabras con la misma
+ * traducción) ya calculadas. Todo en palabras simples: lo técnico (reglas,
+ * glosas) está en diccionario/miskito/ para quien estudia la lengua.
  */
 (function () {
   "use strict";
@@ -14,42 +16,27 @@
     casa: ["Casa", "#B07A4F"], escuela: ["Escuela", "#3D8FD1"], acciones: ["Acciones", "#0F5D3D"],
     cualidades: ["Cómo es", "#C46BB0"], tiempo: ["Tiempo", "#5AB4C5"], gramatica: ["Palabras de enlace", "#7C8B82"]
   };
-  var ESTADOS = {
-    publicada: ["Diccionario publicado", "publicada"],
-    un_hablante: ["Una persona", ""],
-    varios_hablantes: ["Dos personas o más", "varias"],
-    probable: ["Probable", "varias"],
-    confirmada: ["Confirmada", "varias"]
-  };
-  var CATEGORIAS = {
-    sustantivo: "sustantivo", verbo: "verbo", adjetivo: "adjetivo", adverbio: "adverbio", numeral: "número",
-    pronombre: "pronombre", interjeccion: "interjección", expresion: "expresión", frase: "frase",
-    posposicion: "posposición", particula: "partícula", interrogativo: "palabra para preguntar",
-    forma_flexionada: "verbo conjugado o palabra con dueño"
-  };
   var I = {
     sistemas: '<path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zM4 16h4v4H4v-4zm6 0h4v4h-4v-4z"/>',
     region: '<path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>',
     hablantes: '<path d="M8 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm8 0a3 3 0 1 1 0-6 3 3 0 0 1 0 6zM1 20c0-3.3 3.1-6 7-6s7 2.7 7 6H1zm15 0c0-2-.8-3.8-2.1-5.1.7-.2 1.4-.3 2.1-.3 3.3 0 6 2.4 6 5.4H16z"/>',
     escrituras: '<path d="m15.2 3.8 5 5L9 20H4v-5L15.2 3.8zm0 2.8L6 15.8V18h2.2l9.2-9.2-2.2-2.2z"/>',
     sinonimo: '<path d="M7 7h11l-3-3 1.4-1.4L21.8 8l-5.4 5.4L15 12l3-3H7V7zm10 10H6l3 3-1.4 1.4L2.2 16l5.4-5.4L9 12l-3 3h11v2z"/>',
-    revision: '<path d="M12 2 1 21h22L12 2zm0 6 1 7h-2l1-7zm0 9a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/>',
     libro: '<path d="M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3zm0 16a1 1 0 0 0 0 2h12v-2H6z"/>',
     enlace: '<path d="M10.6 13.4a1 1 0 0 1 0-1.4l3.5-3.5a3 3 0 0 1 4.2 4.2l-2 2-1.4-1.4 2-2a1 1 0 0 0-1.4-1.4L12 13.4a1 1 0 0 1-1.4 0zm2.8-2.8a1 1 0 0 1 0 1.4L9.9 15.5a3 3 0 0 1-4.2-4.2l2-2 1.4 1.4-2 2a1 1 0 0 0 1.4 1.4l3.5-3.5a1 1 0 0 1 1.4 0z"/>',
     voz: '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/>'
   };
   var VARIANTES = {
-    sistemas: { corto: "Dos maneras de contar", largo: "Del 6 al 10 hay dos sistemas: desde el seis (como lo dio Teacher Smith) o desde el cinco (como lo dio Tangni). Las dos son reales." },
-    region: { corto: "Raiti · Bilwi", largo: "Las fuentes de Raiti (Río Coco) y las de Bilwi, en la costa, la dicen o la escriben distinto." },
-    hablantes: { corto: "Varía entre hablantes", largo: "Teacher Smith y Tangni, de Raiti, la dieron distinto. Puede ser la generación, la familia o la costumbre de cada uno." },
-    escrituras: { corto: "Varias escrituras", largo: "Se escribió de más de una forma. El miskito no tiene una ortografía única: todas las formas valen y se guardan." },
-    sinonimo: { corto: "Otra palabra", largo: "Hay otra palabra en el diccionario con la misma traducción, de la misma zona." }
+    sistemas: { corto: "Dos formas de contar", largo: "Del 6 al 10 se puede contar de dos maneras: desde el seis, como Teacher Smith, o desde el cinco, como Tangni. Las dos están bien." },
+    region: { corto: "Cambia según el lugar", largo: "En Raiti (Río Coco) y en Bilwi (la costa) se dice o se escribe distinto." },
+    hablantes: { corto: "Cada persona la dice distinto", largo: "Teacher Smith y Tangni, las dos personas de Raiti que nos enseñaron, la dijeron de forma diferente." },
+    escrituras: { corto: "Se escribe de varias formas", largo: "El miskito no tiene una sola forma de escribirse. Todas valen." },
+    sinonimo: { corto: "Tiene otra palabra", largo: "Hay otra palabra que quiere decir lo mismo." }
   };
 
   var datos = null;
   var tema = "";
   var variante = "";
-  var verRevision = true;
   var animadas = [];
   var $ = function (id) { return document.getElementById(id); };
   var anim = function () { return window.PikoAnim || { animar: false, aparecer: function () {}, contar: function () {} }; };
@@ -99,59 +86,53 @@
 
   function insigniaVariante(tipo, e) {
     var v = VARIANTES[tipo];
-    var texto = tipo === "escrituras" && e.variantes.escrituras ? e.variantes.escrituras.length + " escrituras" : v.corto;
-    return '<span class="insignia insignia--' + tipo + '" title="' + esc(v.largo) + '">' + icono(tipo) + esc(texto) + "</span>";
+    return '<span class="insignia insignia--' + tipo + '" title="' + esc(v.largo) + '">' + icono(tipo) + esc(v.corto) + "</span>";
   }
 
   function insignias(e, conTema) {
-    var est = ESTADOS[e.estado] || [e.estado, ""];
     var h = [];
-    if (e.revisar) h.push('<span class="insignia insignia--revision">' + icono("revision") + "En revisión</span>");
     if (e.variantes) e.variantes.etiquetas.forEach(function (t) { h.push(insigniaVariante(t, e)); });
-    h.push('<span class="insignia' + (est[1] ? " insignia--" + est[1] : "") + '">' + (e.estado === "publicada" ? icono("libro") : "") + esc(est[0]) + "</span>");
     if (conTema) h.push('<span class="insignia">' + esc((TEMAS[e.tema] || [e.tema])[0]) + "</span>");
-    return '<div class="palabra__insignias">' + h.join("") + "</div>";
+    return h.length ? '<div class="palabra__insignias">' + h.join("") + "</div>" : "";
   }
 
   function botonVoz(e) {
     return '<button class="escuchar" type="button" data-voz="' + esc(e.voz) + '" aria-label="Escuchar «' + esc(e.forma) + '»">' + icono("voz") + "</button>";
   }
 
+  function quienes(e) {
+    return e.fuentes.map(function (id) {
+      var f = fuente(id);
+      if (!f) return "";
+      return f.tipo === "publicacion" ? "el diccionario de " + fuenteCorta(id) : esc(f.nombre) + " (" + esc(f.detalle.split(",")[1] ? f.detalle.split(",")[1].trim() : f.detalle) + ")";
+    }).filter(Boolean).join(", ");
+  }
+
   function detalle(e) {
     var det = [];
-    det.push("<dt>Qué es</dt><dd>" + esc(CATEGORIAS[e.categoria] || e.categoria) + "</dd>");
-    if (e.glosa) det.push('<dt>Por partes</dt><dd><div class="glosa"><span>' + esc(e.analisis || e.forma) + "</span><span>" + esc(e.glosa) + "</span></div></dd>");
+    det.push("<dt>Quién la enseñó</dt><dd>" + quienes(e) + "</dd>");
     if (e.variantes && e.variantes.escrituras) {
-      det.push('<dt>Cómo la escribieron</dt><dd class="formas">' + e.variantes.escrituras.map(function (x) {
+      det.push('<dt>Formas de escribirla</dt><dd class="formas">' + e.variantes.escrituras.map(function (x) {
         return '<span class="forma-chip"><i lang="miq">' + esc(x.forma) + "</i>" + (x.quien.length ? " <small>· " + esc(x.quien.join(", ")) + "</small>" : "") + "</span>";
       }).join("") + "</dd>");
     }
     if (e.variantes && e.variantes.otras) {
       det.push('<dt>También se dice</dt><dd class="formas">' + e.variantes.otras.map(function (x) {
-        return '<a class="forma-chip" href="#' + esc(x.id) + '" data-ir="' + esc(x.id) + '"><i lang="miq">' + esc(x.forma) + "</i> <small>· " + esc(x.quien.join(", ")) + " · " + esc(VARIANTES[x.tipo].corto.toLowerCase()) + "</small></a>";
+        return '<a class="forma-chip" href="#' + esc(x.id) + '" data-ir="' + esc(x.id) + '"><i lang="miq">' + esc(x.forma) + "</i> <small>· " + esc(x.quien.join(", ")) + "</small></a>";
       }).join("") + "</dd>");
     }
-    if (e.prestamo) det.push("<dt>Viene de</dt><dd>" + esc(e.prestamo.de) + ", <i>" + esc(e.prestamo.origen) + "</i>" + (e.prestamo.confianza ? " · confianza " + esc(e.prestamo.confianza) : "") + "</dd>");
-    det.push("<dt>Fuentes</dt><dd>" + e.fuentes.map(fuenteCorta).join(" · ") + "</dd>");
-    if (e.reglas && e.reglas.length) {
-      det.push("<dt>Reglas</dt><dd>" + e.reglas.map(function (r) {
-        var g = datos.reglas[r];
-        return '<a class="regla insignia" href="' + esc(g.enlace) + '" target="_blank" rel="noopener" title="Confianza ' + esc(g.confianza) + '">' + esc(r) + " · " + esc(g.titulo) + "</a>";
-      }).join("") + "</dd>");
-    }
-    if (e.notas) det.push("<dt>Notas</dt><dd>" + esc(e.notas) + "</dd>");
+    if (e.viene_de) det.push("<dt>De dónde viene</dt><dd>Del " + esc(e.viene_de.lengua) + ": <i>" + esc(e.viene_de.palabra) + "</i></dd>");
     return '<details><summary>Más sobre esta palabra</summary><dl class="detalle">' + det.join("") + "</dl></details>";
   }
 
   function tarjeta(e) {
     var t = TEMAS[e.tema] || [e.tema, "#97C137"];
     return (
-      '<article class="palabra' + (e.revisar ? " palabra--revision" : "") + '" id="' + esc(e.id) + '" style="--tema:' + t[1] + '">' +
+      '<article class="palabra" id="' + esc(e.id) + '" style="--tema:' + t[1] + '">' +
       '<div class="palabra__tope"><span class="palabra__tema"><i></i>' + esc(t[0]) + "</span></div>" +
       '<div class="palabra__fila"><h3 class="palabra__forma" lang="miq">' + esc(e.forma) + "</h3>" + botonVoz(e) + "</div>" +
       '<p class="palabra__es">' + esc(e.es) + "</p>" +
       insignias(e, false) +
-      (e.revisar ? '<p class="revision"><b>Qué hay que revisar:</b> ' + esc(e.revisar) + "</p>" : "") +
       detalle(e) +
       '<a class="copiar-enlace" href="#' + esc(e.id) + '">Enlace a esta palabra</a>' +
       "</article>"
@@ -160,7 +141,10 @@
 
   // ---------- Palabra del día ----------
   function destacada() {
-    var buenas = datos.entradas.filter(function (e) { return !e.revisar && e.estado !== "publicada" && e.forma.length < 22; });
+    // Una palabra dicha por alguien de Raiti, corta, para el día.
+    var buenas = datos.entradas.filter(function (e) {
+      return e.forma.length < 22 && e.fuentes.some(function (id) { var f = fuente(id); return f && f.tipo === "encuesta"; });
+    });
     if (!buenas.length) return;
     var hoy = new Date();
     var dia = Math.floor((hoy - new Date(hoy.getFullYear(), 0, 0)) / 864e5);
@@ -188,7 +172,6 @@
     if (f.indexOf(q) >= 0) return 30;
     if (es.indexOf(q) >= 0) return 25;
     if ((e.escrito || []).some(function (x) { return llano(x).indexOf(q) >= 0; })) return 20;
-    if (e.glosa && llano(e.glosa).indexOf(q) >= 0) return 10;
     return 0;
   }
 
@@ -197,7 +180,6 @@
     var lista = datos.entradas
       .filter(function (e) {
         if (tema && e.tema !== tema) return false;
-        if (!verRevision && e.revisar) return false;
         if (variante === "cualquiera" && !e.variantes) return false;
         if (variante && variante !== "cualquiera" && !(e.variantes && e.variantes.etiquetas.indexOf(variante) >= 0)) return false;
         return true;
@@ -231,11 +213,9 @@
     });
     var temas = Object.keys(TEMAS).filter(function (t) { return cuenta[t]; });
     Object.keys(cuenta).forEach(function (t) { if (temas.indexOf(t) < 0) temas.push(t); });
-    var revision = datos.entradas.filter(function (e) { return e.revisar; }).length;
     $("filtros").innerHTML = '<span class="filtros__nombre">Tema</span>' +
       chip('data-tema=""', "Todo", true) +
-      temas.map(function (t) { return chip('data-tema="' + esc(t) + '"', esc((TEMAS[t] || [t])[0]) + " <small>" + cuenta[t] + "</small>", false); }).join("") +
-      chip("data-revision", "Con las " + revision + " en revisión", true, "revision");
+      temas.map(function (t) { return chip('data-tema="' + esc(t) + '"', esc((TEMAS[t] || [t])[0]) + " <small>" + cuenta[t] + "</small>", false); }).join("");
     $("filtros-variantes").innerHTML = '<span class="filtros__nombre">Variantes</span>' +
       chip('data-variante=""', "Todas", true) +
       chip('data-variante="cualquiera"', "Con alguna variante <small>" + porVariante.cualquiera + "</small>", false) +
@@ -280,7 +260,7 @@
     var el = document.getElementById(id);
     if (!el) {
       // Puede estar oculta por un filtro: se limpian y se vuelve a dibujar.
-      $("q").value = ""; tema = ""; variante = ""; verRevision = true; filtros(); mostrar();
+      $("q").value = ""; tema = ""; variante = ""; filtros(); mostrar();
       el = document.getElementById(id);
     }
     if (!el) return;
@@ -295,9 +275,7 @@
   document.addEventListener("click", function (ev) {
     var b = ev.target.closest(".filtro");
     if (b) {
-      if (b.hasAttribute("data-revision")) {
-        verRevision = !verRevision; b.setAttribute("aria-pressed", String(verRevision));
-      } else if (b.hasAttribute("data-tema")) {
+      if (b.hasAttribute("data-tema")) {
         tema = b.getAttribute("data-tema");
         document.querySelectorAll(".filtro[data-tema]").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
       } else if (b.hasAttribute("data-variante")) {
@@ -325,8 +303,7 @@
   var espera;
   $("q").addEventListener("input", function () { clearTimeout(espera); espera = setTimeout(mostrar, 140); });
   $("azar").addEventListener("click", function () {
-    var lista = datos.entradas.filter(function (e) { return !e.revisar; });
-    var e = lista[Math.floor(Math.random() * lista.length)];
+    var e = datos.entradas[Math.floor(Math.random() * datos.entradas.length)];
     $("q").value = e.forma; mostrar();
     var el = document.getElementById(e.id); if (el) { var d = el.querySelector("details"); if (d) d.open = true; }
   });

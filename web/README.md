@@ -11,7 +11,7 @@ web/
 │   └── app/                GENERADO: npm run web:sitio (expo export de app/, con
 │                           sus archivos en assets/paquetes/: ver abajo)
 ├── docentes/               cómo dar una clase, y el miskito en 10 ideas
-├── aporta/                 cómo ayudar, estado de cada lengua, palabras en revisión
+├── aporta/                 cómo ayudar, estado de cada lengua y créditos
 ├── datos/                  GENERADO: npm run contenido (diccionario y estado)
 ├── assets/
 │   ├── css/nav.css         la barra y el pie, en todas las páginas
@@ -103,7 +103,9 @@ Bilwi, varía entre hablantes, varias escrituras, otra palabra) no se escriben
 a mano: las calcula `diccionario/herramientas/web.ts` a partir del léxico y
 del corpus, que dice quién escribió cada forma.
 
-El diccionario y el estado salen de `diccionario/` y nada más: lo que está
-en revisión se ve marcado como tal, y de las encuestas sólo se muestra lo que
-ya pasó al diccionario, con el crédito que eligió cada persona. Nunca datos de
-contacto.
+El diccionario y el estado salen de `diccionario/` y nada más. El sitio
+muestra sólo lo confirmado: las palabras en revisión no aparecen, igual que en
+los ejercicios de la app, y entran solas cuando se resuelven. Tampoco lleva lo
+técnico (glosas, reglas, categorías), que queda en `diccionario/miskito/` para
+quien estudia la lengua. De las encuestas sólo se muestra lo que ya pasó al
+diccionario, con el crédito que eligió cada persona. Nunca datos de contacto.

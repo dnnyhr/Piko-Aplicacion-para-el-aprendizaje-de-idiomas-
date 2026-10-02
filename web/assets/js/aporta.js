@@ -1,6 +1,6 @@
 /*
- * «Aportá tu lengua»: el estado de cada lengua, los créditos y las palabras en
- * revisión. Todo sale de datos/, que escribe `npm run contenido`.
+ * «Aportá tu lengua»: el estado de cada lengua y los créditos. Sale de
+ * datos/estado.json, que escribe `npm run contenido`.
  */
 (function () {
   "use strict";
@@ -44,7 +44,6 @@
       cifra(l.entradas, "palabras y frases") +
       cifra(l.ejercicios, "ejercicios desde el español") +
       (l.al_espanol ? cifra(l.al_espanol, "ejercicios de español desde esta lengua") : "") +
-      (l.por_revisar ? cifra(l.por_revisar, "en revisión") : "") +
       (l.dichas_por_varias_personas ? cifra(l.dichas_por_varias_personas, "dichas por dos personas o más") : "") +
       "</dl>" + interfaz +
       (l.diccionario ? '<p style="margin:1rem 0 0"><a class="btn btn--linea" href="../diccionario/">Abrir el diccionario</a></p>' : "") +
@@ -82,15 +81,4 @@
     })
     .catch(function () { $("lenguas").innerHTML = "<p>No se pudo cargar el estado.</p>"; });
 
-  fetch("../datos/diccionario-miq.json")
-    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function (d) {
-      var dudas = d.entradas.filter(function (e) { return e.revisar; });
-      $("revisar").innerHTML = dudas.map(function (e) {
-        return '<li><a href="../diccionario/#' + encodeURIComponent(e.id) + '" lang="miq">' + esc(e.forma) + "</a> · " + esc(e.es) +
-          ' <span class="insignia">Miskito</span><p>' + esc(e.revisar) + "</p></li>";
-      }).join("");
-      anim().aparecer($("revisar").children, { stagger: .05 });
-    })
-    .catch(function () { $("revisar").innerHTML = "<li>No se pudieron cargar las palabras.</li>"; });
 })();
