@@ -56,8 +56,8 @@
       "editorial": "CIDCA (Centro de Investigaciones y Documentación de la Costa Atlántica)",
       "fecha": "1996",
       "zona": "bilwi",
-      "consultado_en": "https://pueblosoriginarios.com/lenguas/miskito.php (2026-10-02)",
-      "notas": "El autor es miskito, de Krukira, y vive en Bilwi. La página publica la parte Español–Miskito como tabla de texto (1.311 entradas, de la A a la Z); la única imagen es la portada. En corpus.csv están sólo las entradas citadas como evidencia, copiadas tal cual; «item» es la letra. La obra completa no se redistribuye."
+      "consultado_en": "https://pueblosoriginarios.com/lenguas/miskito.php (2026-10-02; páginas escaneadas en https://pueblosoriginarios.com/lenguas/miskito/N.jpg)",
+      "notas": "El autor es miskito, de Krukira, y vive en Bilwi. La página publica dos partes: la Español–Miskito como tabla de texto (1.311 entradas, de la A a la Z) y la Miskitu–Miskitu como 98 imágenes escaneadas (galería «miskito/1.jpg» a «miskito/102.jpg»; no existen la 43 a la 46), con cada palabra definida en miskito y en español y un ejemplo en las dos lenguas. En corpus.csv están sólo las entradas y frases citadas como evidencia, copiadas tal cual: «item» es la letra (parte Español–Miskito) o la página («p. 34», parte Miskitu–Miskitu). Las páginas escaneadas se leyeron con OCR y cada palabra o frase citada se cotejó con la imagen. La obra completa no se redistribuye."
     }
   ]
 }

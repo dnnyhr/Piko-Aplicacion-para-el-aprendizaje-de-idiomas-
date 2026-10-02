@@ -1,6 +1,6 @@
 # Miskito: patrones y reglas
 
-> **Versión 0.4** · 2 de octubre de 2026 · dos tandas de datos y dos diccionarios publicados
+> **Versión 0.6** · 2 de octubre de 2026 · dos tandas de datos y dos diccionarios publicados
 
 **De dónde sale.** De dos personas de la misma comunidad, Raiti (Río Coco), las
 dos hablantes maternas, de dos generaciones distintas:
@@ -10,7 +10,7 @@ dos hablantes maternas, de dos generaciones distintas:
 | `raiti-2026-09-28` | Teacher Smith, docente | 80 palabras, 15 frases, una oración libre |
 | `raiti-2026-09-30` | Tangni, estudiante de 18 años | 84 palabras, 15 frases, una presentación |
 | `lackwood-2006` | *Diccionario Bilingüe: Términos de Medicina Tradicional en Lengua Miskita*, Ernesto Scott Lackwood (URACCAN – IMTRADEC, Bilwi, 2006) | 88 entradas citadas como evidencia |
-| `matamoros-1996` | *Diccionario Miskito–Miskitu, Español–Miskito*, Jorge Matamoros R. (CIDCA, 1996), en pueblosoriginarios.com | 80 entradas citadas como evidencia |
+| `matamoros-1996` | *Diccionario Miskito–Miskitu, Español–Miskito*, Jorge Matamoros R. (CIDCA, 1996), en pueblosoriginarios.com | La parte Español–Miskito (texto) y la Miskitu–Miskitu (98 páginas escaneadas); se citan las entradas y los ejemplos que sirven de evidencia |
 
 Todo está en [`corpus.csv`](corpus.csv) tal cual lo escribieron. De los diccionarios
 publicados sólo se copiaron las entradas que sirven de evidencia, no las obras
@@ -40,6 +40,8 @@ valen.
 **Glosas** (Reglas de Leipzig): `1`, `2`, `3` = persona · `POSS` = poseedor ·
 `PRS` = presente · `INF` = infinitivo · `CVB` = converbo («haciendo…») ·
 `IMP` = orden · `LOC` = lugar («a», «en») · `CSTR` = forma con dueño ·
+`FUT` = futuro · `PST` = pasado · `NEG` = negación · `TR` = transitivo ·
+`INTR` = intransitivo · `REFL` = reflexivo · `REL` = «lo que…» ·
 `(?)` = significado todavía hipotético.
 
 ---
@@ -90,12 +92,64 @@ entre registros (cómo se habla en la casa y cómo en la escuela). No es una
 diferencia de región, porque las dos son de Raiti. Hay que preguntarlo, no
 suponerlo.
 
+## Qué trajo el diccionario Miskitu–Miskitu de Matamoros (v0.6)
+
+La v0.4 sólo había usado la tabla Español–Miskito. La parte principal del
+diccionario de Matamoros es otra: **cada palabra explicada en miskito y en
+español, con un ejemplo en las dos lenguas**. Está publicada como 98 imágenes
+escaneadas (las páginas 1 a 102 de la galería; la 43 a la 46 no existen).
+
+**Cómo se leyó.** Cada página se pasó por reconocimiento de texto (OCR),
+columna por columna, y un programa separó las entradas: palabra, tipo,
+traducción, definición en miskito, definición en español y ejemplos. Salieron
+**1.174 entradas y 1.149 ejemplos con su traducción**: un corpus paralelo
+diez veces más grande que todo lo que teníamos. El OCR confunde algunas letras
+del miskito (v por u, f por t, *â* por *á*), que se corrigieron con reglas, y
+**cada ejemplo citado acá se comparó a ojo con la página escaneada**. Las
+obras no se copian: en [`corpus.csv`](corpus.csv) entran sólo las frases que
+respaldan una regla o una palabra.
+
+**Lo que cambia.**
+
+- **El futuro estaba mal descrito (M13, corregida).** *-aisna* no es el
+  futuro: es *-aia* + *sna*, «voy a…». El futuro propio es *-amna* (yo),
+  *-ma* (vos) y *-bia* (él, ella, nosotros): *daukamna*, «haré»; *balma*,
+  «vengas»; *balbia*, «vendrá».
+- **«ai» ya se entiende (M11, resuelta → M17).** Delante del verbo, *ai-*
+  es «me» y también «se» (reflexivo): *aiwiram*, «me dijiste»;
+  *makupaia* «voltear» → *aimakupaia* «inclinarse». *mai-* es «te»:
+  *maiwiri*, «te dije».
+- **Los verbos tienen pareja (M16, nueva).** *kalkaia* «romper» /
+  *kalwaia* «romperse». La k o la b dicen que la acción pasa a otra cosa; la
+  w, que le pasa a uno mismo. Diez parejas.
+- **Poder y no poder (M18, nueva).** *V-aia sip sa*, «se puede»; *sip
+  V-ras*, «no puede».
+- **Frases compuestas (O13 a O15, nuevas).** «Si», «porque», «para»,
+  «antes de», «después de», «hasta», «más que…» y «lo que…» tienen cada uno
+  su pieza, siempre al final de su parte de la frase.
+- **Cómo se toma un verbo del inglés (M19, nueva).** *yus munaia* (usar),
+  *stadi munaia* (estudiar), *ansa munaia* (contestar): el préstamo y
+  *munaia*, «hacer».
+- ***lalah* es «dinero»** (M9): *Lalah ainghwa briaia*, «tener bastante
+  dinero». La hipótesis de la v0.2 se cumplió.
+
+**Predicciones de la v0.4.** Se pudieron comprobar tres:
+
+| # | Predicción | Matamoros dice | Resultado |
+|---|---|---|---|
+| 16 | dinero = *lalah* | *Lalah ainghwa briaia*, «tener bastante dinero» | ✅ acertó |
+| 14 | ¿Tenés hambre? termina en *ki* | *Pali? balan ki?*, «¿de veras vino?» | ✅ acertó (la regla O10, no la frase) |
+| 26 | Mañana voy a comer = *piaisna* | el futuro es *-amna*: «comeré» sería *piamna* | ❌ falló: la regla M13 estaba mal |
+
+**Tasa de acierto: 2 de 3. Acumulada: 12,5 de 16.**
+
 ## Qué trajo el diccionario de Matamoros (v0.4)
 
 Jorge Matamoros es miskito, de Krukira, y vive en Bilwi. La página publica la
 parte Español–Miskito de su diccionario: 1.311 entradas en una tabla de texto.
-La imagen de la página es sólo la portada. Se cruzaron las 1.311 con el
-léxico.
+Se cruzaron las 1.311 con el léxico. (En esta versión creímos que la única
+imagen de la página era la portada; en la v0.6 aparecieron las 98 páginas
+escaneadas de la parte Miskitu–Miskitu.)
 
 **Predicciones.** Se pudieron comprobar dos:
 
@@ -167,7 +221,7 @@ no con *ki* (O10) y el plural con *nani* (O11).
 
 ---
 
-## Lo principal, en diez líneas
+## Lo principal, en once líneas
 
 1. **Tres vocales: a, i, u.** Ni una palabra miskita lleva e ni o; sólo los préstamos. (S1)
 2. **El verbo va al final.** «Yul plun pisa» es *perro comida come*. (O1)
@@ -175,10 +229,11 @@ no con *ki* (O10) y el plural con *nani* (O11).
 4. **La persona va pegada al verbo:** -sna es yo, -sma es vos, -sa es él o ella. Por eso «yo» se puede omitir. (M2, O5)
 5. **«Estar» no tiene raíz:** es sólo la terminación, *sna*, *sma*, *sa*. (M3)
 6. **«Mi» se forma cambiando la a final por i y sumando *ki*:** kuka → kuki ki, mama → mamiki, papa → papiki. (M4)
-7. **En la familia se nombra con dueño:** para «mamá» se dice «mi mamá». (L9)
-8. **Hay dos maneras de contar del 6 al 10:** desde el seis o desde el cinco. (N1, N3)
-9. **El inglés y el español dejaron huella** en la escuela y en las comidas que llegaron de afuera, no en el cuerpo ni en los números. (L1)
-10. **Las palabras no tienen género.** Cuando hace falta, se agrega *waitna* (hombre) o *mairin* (mujer). (L2)
+7. **Los verbos vienen en pareja:** *kalkaia* es «romper algo» y *kalwaia*, «romperse». (M16)
+8. **En la familia se nombra con dueño:** para «mamá» se dice «mi mamá». (L9)
+9. **Hay dos maneras de contar del 6 al 10:** desde el seis o desde el cinco. (N1, N3)
+10. **El inglés y el español dejaron huella** en la escuela y en las comidas que llegaron de afuera, no en el cuerpo ni en los números. (L1)
+11. **Las palabras no tienen género.** Cuando hace falta, se agrega *waitna* (hombre) o *mairin* (mujer). (L2)
 
 ---
 
@@ -350,7 +405,7 @@ el verbo es sólo la terminación.
 **Para Piko.** Enseñar *sna / sma / sa* es enseñar «estar» y las terminaciones
 de todos los verbos a la vez.
 
-### M4 · «Mi» y «tu» se pegan al sustantivo — Confianza A (mi), B (tu), C (su)
+### M4 · «Mi» y «tu» se pegan al sustantivo — Confianza A (mi, tu, su desde la v0.6)
 
 |  | mi | tu | su |
 |---|---|---|---|
@@ -377,6 +432,9 @@ Tangni dice *papa*, no *aisa*: *papiki*.
 
 **Predicciones.** Nombre, *nina*. Tu mamá, *yaptikam* o *mamikam*. Mi papá,
 para quien dice *aisa*: *aisiki*.
+
+**Con Matamoros (v0.6)** el cuadro se completa, con decenas de ejemplos: *papikam*
+(tu papá), *ai papika* (su papá), *wan tasbaya* (nuestra tierra). Ver M20.
 
 ### M5 · «utla» cambia cuando la casa tiene dueño: watla — Confianza A
 
@@ -416,7 +474,8 @@ dejarlo sin nada (*Li want*, *Lii want*).
 *Klin takaia* es «limpiarse» y *Klin daukaia*, «limpiarlo». *takaya* es
 «volverse» (la acción le pasa a uno) y *daukaya*, «hacer» (se la hace a otra
 cosa). Otros ejemplos del diccionario: *laik takaia* (enamorar), *wâri
-takisma* (estás pensando).
+takisma* (estás pensando). Matamoros agrega un tercer verbo, *munaia*, para
+los préstamos del inglés: ver M19.
 
 ### M8 · Una orden es raíz + s — Confianza A
 
@@ -433,11 +492,13 @@ La excepción es *siksa* (negro). Tangni no contestó los colores. El
 diccionario publicado muestra que no es cosa de colores: *damni* (dulce),
 *swahni* (ácido), *pakni* (profundo). -ni forma palabras de cualidad.
 
-**Hipótesis (C).** *lalahni* (amarillo) vendría de *lalah*. La predicción
-«oro = *lalah*» falló (el diccionario dice *gul*, del inglés); queda preguntar
-si *lalah* es «dinero».
+**Resuelto (v0.6).** *lalahni* (amarillo) viene de *lalah*, que es
+«dinero»: *Lalah ainghwa briaia*, «tener bastante dinero»; *¡Bika!, lalahka
+narasa*, «¡mirá!, aquí está el dinero» (Matamoros, pp. 3 y 16). La predicción
+«oro = *lalah*» había fallado (oro es *gul*, del inglés), pero la idea de
+fondo era buena: el amarillo se nombra por la plata.
 
-### M10 · Repetir para formar palabras — Confianza C
+### M10 · Repetir para formar palabras — Confianza B (subió desde C)
 
 **Evidencia.** *krikri* (cama), *walhwal* (cuatro, «dos-dos»), *smasmalkra*
 (maestro).
@@ -445,58 +506,237 @@ si *lalah* es «dinero».
 **Predicción acertada.** Enseñar es *smalkaia* (diccionario). *smasmalkra*
 es *sma-smalk-ra*: la raíz repetida y la terminación de quien hace algo (M15).
 
-### M11 · «ai», una pieza que todavía no entendemos — Confianza C
+**Lo que agregó Matamoros (v0.6).** Además de formar palabras, repetir una
+palabra entera le cambia el sentido de manera regular:
 
-**Evidencia.** *ai kuku ka* (su coco) y *Plun aidauksa* (tengo hambre). Tangni
-dijo *Plun aidauki*: la misma pieza *ai* con otra terminación.
+| Repetida | Sola | Significa | Ejemplo |
+|---|---|---|---|
+| *pat pat* | *pat* (ya) | muchas veces | *Pat pat ini uplika*, «persona que llora con frecuencia» (p. 3) |
+| *pana pana* | *pana* (amigo) | uno al otro | *pana pana prukisa*, «se golpean mutuamente» (p. 69) |
+| *kum kum* | *kum* (un) | algunos, uno por uno | *Daiwan nani kum kum*, «algunos animales» (p. 92) |
+| *sat sat* | *sat* (clase) | de todas clases | *kalatka sat sat brisa*, «tiene colores diversos» (p. 69) |
 
-**Dos hipótesis.** *ai* es un pronombre que no es de segunda persona («me» o
-«su», según la frase), o son dos palabras distintas que suenan igual. Para
-decidir, hay que preguntar «¿Tenés hambre?» y «mi coco, tu coco, su coco».
+Repetir una palabra es «muchas veces», «entre varios» o «de a uno».
 
-**Lo que agregó el diccionario.** *mai* es «te»: *¿Anira mai klahwisa?*, «¿en
-qué parte te duele?». Y *ai* aparece como «su» delante de partes del cuerpo.
-Gana terreno la primera hipótesis.
+### M11 · «ai», resuelta: ver M17 — Confianza A
 
-### M12 · El pasado: -ri, -ram, -an — Confianza B
+**Historia.** En la v0.1 no entendíamos *ai* en *ai kuku ka* (su coco) y
+*Plun aidauksa* (tengo hambre). Con los ejemplos de Matamoros se ve que son
+dos usos de la misma pieza de tercera o primera persona: delante de un
+sustantivo, *ai … -ka* es «su» (M4); delante de un verbo, *ai-* es «me» o
+«se» (M17). *Plun ai-dauk-sa* es, palabra por palabra, «la comida me hace»:
+el hambre es la que hace, y *ai-* es a quién.
 
-Todo sale del diccionario publicado; las encuestas no preguntan el pasado.
+### M12 · El pasado: -ri, -ram, -an — Confianza A (subió desde B)
+
+Todo sale de los diccionarios publicados; las encuestas no preguntan el
+pasado.
 
 | Persona | Terminación | Ejemplo |
 |---|---|---|
-| yo | -ri | *Bilara dim-ri*: entré adentro |
-| vos | -(a)ram | *Baku ais-aram*: así hablaste |
-| él, ella | -an, -wan | *Yap-an*: durmió · *Pru-an*: falleció · *Yukuw-an*: se escondió · *dim-wan*: entró |
+| yo | -ri | *kaik-ri* (vi), *yab-ri* (di), *wi-ri* (dije), *wark tak-ri* (trabajé) |
+| vos | -(a)ram | *lu-ram* (pasaste), *ais-aram* (hablaste), *dauk-ram* (hiciste) |
+| él, ella | -an, -wan | *dauk-an* (hizo), *yap-an* (durmió), *pru-wan* (murió), *dim-wan* (entró) |
+
+```
+Yu    kumi  man   wark  tak-ri.          Kaik-ras  piuta  lamak  lu-ram.
+día   uno   solo  work  volverse-PST.1   ver-NEG   culebra cerca pasar-PST.2
+'Trabajé solamente un día.' (p. 42)      'Pasaste cerca de la serpiente sin verla.' (p. 48)
+```
+
+**«Estaba haciendo»: verbo en -i + *kan*.** *kan* es el pasado de «estar»:
+*Asla impaki tauki banghwi kan*, «andaban viajando juntos» (p. 9); *Devid harp
+kangbi kan*, «David tocaba el arpa» (p. 26); *12 bri kan*, «tenía 12» (p. 22).
 
 **Predicción.** «Comí» es *piri*; «dormiste», *yaparam*.
 
-### M13 · El futuro: -aisna, -aisma, -aisa — Confianza B
+### M13 · El futuro: -amna, -ma, -bia — Confianza A (corregida en la v0.6)
+
+**Lo que decía la v0.4, y estaba mal.** Que el futuro era *-aisna*, *-aisma*,
+*-aisa*. Esas formas existen, pero son otra cosa: el infinitivo *-aia* más
+«estar» (*sna*, *sma*, *sa*), «voy a…», «está por…». *Aikab-aisa*: «va a
+vomitar» (está por vomitar).
+
+**El futuro propio:**
 
 | Persona | Terminación | Ejemplo |
 |---|---|---|
-| yo | -aisna | *Yukuw-aisna*: me voy a esconder |
-| vos | -aisma | *¿Atk-aisma ki?*: ¿lo vas a comprar? |
-| él, ella | -aisa | *Aikab-aisa*: va a vomitar |
+| yo | -amna, -mna | *dauk-amna* (haré), *dim-amna* (me pondré), *bri-mna* (tendré) |
+| vos | -ma | *bal-ma* (vengas, vendrás) |
+| él, ella, nosotros | -bia | *bal-bia* (vendrá), *alk-bia* (tomará), *lu-bia* (venceremos) |
 
-Es la terminación del presente (-sna, -sma, -sa) con *ai* delante.
+```
+Aiwi-ram     ba    dauk-amna,   sakuna  taim  bri-mna    piuara.
+me.decir-PST.2 REL hacer-FUT.1  pero    tiempo tener-FUT.1 cuando
+'Haré lo que me dijiste, pero cuando tenga tiempo.' (p. 75)
 
-**Predicción.** «Voy a comer» es *piaisna*.
+Dinar-ra      bal-bia.
+mediodía-LOC  venir-FUT.3
+'Vendrá a mediodía.' (p. 71)
+```
 
-### M14 · La negación: -ras, -kas, apu — Confianza B
+**El futuro sirve también para lo que todavía no pasó** en las frases con
+«si», «hasta» y «después de» (O13): *balma kat*, «hasta que vengas»; *King ba
+prubia ninkara*, «después de que el rey muera».
 
-- **-ras**, en el verbo: *Bus-ras*, sin mojarse. En el diccionario hay muchas:
-  *wark takras* (no trabaja), *briras* (no tiene), *piras* (sin comer).
+**Predicción.** «Comeré» es *piamna*; «vendré», *balamna*.
+
+### M14 · La negación: -ras, apia, apu — Confianza A (subió desde B)
+
+- **-ras**, en el verbo, «no» y «sin»: *briras* (no tiene), *Kaikras* (sin
+  verla), *Plun piras kainara* (antes de comer: «comida no-comer antes»).
 - **-kas**, en el sustantivo, «sin»: *latwan-kas*, sin amor.
-- ***apu***, «no hay»: *Plun apu*, no hay comida.
-- ***apia*** es el «no» suelto.
+- ***apia***, después, niega lo demás: un adjetivo (*Tuktan ainra ba lilia
+  apia*, «el niño llorón no es feliz», p. 3), un futuro (*dingkbia apia*, «no
+  entrará», p. 9) o un juicio (*yamni apia*, «no está bien»). 95 ejemplos.
+- ***apu*** es «no hay», «no tiene»: *Upla tatumra ba pana apu*, «la persona
+  envidiosa no tiene amigos» (p. 85); *Sahsing ba wainhkika baman brisa,
+  mairka apu*, «sólo hay machos, no hembras» (p. 74).
 
-**Predicción.** «No como» es *piras* (con *sna* o *apia*). Hay que preguntarlo.
+**Predicción.** «No como» es *pisras* o *piras sna*; hay que preguntarlo.
 
 ### M15 · Quien hace algo: -ra, -kra; quien tiene algo: -kira — Confianza B
 
 **Evidencia.** *smasmalkra* (maestro: el que enseña, de *smalkaia*), *rarakra*
 (curandero). Y con -kira, «el que tiene»: *sibrin-kira* (miedoso, de *sibrin*,
 miedo).
+
+### M16 · Los verbos vienen en pareja: -kaia / -baia hacen, -waia pasa — Confianza A
+
+**Evidencia.** En Matamoros, de los verbos en *-kaia*, 83 son transitivos
+(«hacerle algo a algo») y 10 intransitivos; en *-baia*, 71 contra 16; en
+*-waia*, 61 son intransitivos y 4 transitivos. Y hay **diez parejas** con la
+misma raíz:
+
+| Hacer algo | Que le pase a uno | Página |
+|---|---|---|
+| *kal-kaia*, romper | *kal-waia*, romperse | 34 |
+| *iling-kaia*, abrir | *iling-waia*, abrirse | 28 |
+| *dra-baia*, estirar | *dra-waia*, estirarse | 23 |
+| *bu-kaia*, levantar | *bu-waia*, levantarse | 19 |
+| *karh-baia*, menear | *karh-waia*, menearse | 35 |
+| *klas-kaia*, cuajar | *klas-waia*, cuajarse | 39 |
+| *lai-kaia*, verter | *lai-waia*, derramarse | 47 |
+| *nuh-kaia*, engordar | *nuh-waia*, engordarse | 61 |
+| *tuh-kaia*, tostar | *tuh-waia*, quemarse | 89 |
+| *bai-kaia*, partir | *bai-waia*, reventar | 12–13 |
+
+El propio diccionario lo dice: define siete verbos en *-waia* como «forma
+intransitiva de…», y en miskito, *Silp kalkaia sip ba*: «lo que se puede
+romper solo» (*silp*, por sí mismo).
+
+```
+Kwala  almuk  kal-waia.            Kwala  kal-kaia.
+ropa   vieja  romper-INTR-INF      ropa   romper-TR-INF
+'Romperse la ropa vieja.'          'Romper la ropa.'          (p. 34)
+```
+
+**Para Piko.** Aprender una pareja es aprender dos verbos.
+
+**Predicción:**
+«la puerta se abrió» es *Dur ba ilingwan* (M12); «abrí la puerta», *Dur ba
+ilingkri*.
+
+### M17 · ai- y mai- delante del verbo: «me», «se», «te» — Confianza A
+
+**«Se» (la acción vuelve sobre uno).** 17 verbos de Matamoros empiezan con
+*ai-*; 14 son intransitivos. Varios tienen la forma sin *ai-*:
+
+| Sin ai- | Con ai- |
+|---|---|
+| *makupaia*, voltear (p. 54) | *aimakupaia*, inclinarse (p. 3) |
+| *kruskaia*, empuñar | *aikruskaia*, agazaparse |
+| *paskaia*, fabricar, formar | *aipaskaia*, juntarse (formarse) |
+| *madiskaia*, nublar | *aimadiskaia*, nublarse |
+| *auhbaia*, cargar | *aiauhbaia*, amontonarse |
+| *tahbaia*, bañar | *aihtabaia*, bañarse (la h cambia de lugar, S3) |
+
+**«Me» y «te».** Delante de un verbo conjugado, *ai-* es «me» y *mai-*,
+«te»; la m es la de «vos» (M4):
+
+```
+Ai-wi-ram      ba   dauk-amna.         Yang  mai-wi-ri    ba   dauk-ram.
+1-decir-PST.2  REL  hacer-FUT.1        yo    2-decir-PST.1 REL  hacer-PST.2
+'Haré lo que me dijiste.' (p. 75)      'Hiciste lo que te dije.' (p. 13/14)
+```
+
+**«Le» no se marca en el verbo.** La persona a quien se le da o se le dice
+algo lleva *-ra* (O2): *Witin-ra wi-ri ba aitani daukan*, «hizo bien lo que
+le dije» (p. 4); *Kyambda-ra 500 córdobas kum yab-ri*, «le di 500 córdobas al
+carpintero» (p. 9).
+
+**Predicción.** «Me ves» es *aikaikisma*; «te veo», *maikaikisna*. Hay que
+preguntarlo.
+
+### M18 · Poder: V-aia sip sa; no poder: sip V-ras — Confianza A
+
+**Evidencia.** *sip* es «posible». Con un infinitivo y «estar», «se puede»:
+*Ahi ba wal supka auhni daukaia sip sa*, «con la almeja se puede hacer una
+sopa rica» (p. 1). Cuatro ejemplos en las primeras tres páginas y decenas más.
+
+Para «no puede», *sip* va **antes** y el verbo lleva *-ras* (M14):
+
+```
+Karma  latwan  taka  sip   aiwan-ras.
+garganta dolor  por   poder cantar-NEG
+'Por un dolor de garganta, no puede cantar.' (p. 35)
+```
+
+Otros: *sip ris briras* (no se puede descansar, p. 17), *sip kaikras* (no se
+puede ver, p. 79).
+
+**Predicción.** «No puedo dormir» es *sip yapras*.
+
+### M19 · Verbos de dos piezas: takaia, daukaia, munaia — Confianza A
+
+Muchos verbos son una palabra (casi siempre un préstamo) más un verbo
+«liviano» que lleva las terminaciones:
+
+| Liviano | Qué aporta | Ejemplos de Matamoros |
+|---|---|---|
+| *takaia* | volverse, que a uno le pase | *lan takaia* (aprender), *wark takaia* (trabajar), *lilia takaia* (alegrarse), *klin takaia* (limpiarse) |
+| *daukaia* | hacer, causar | *lan daukaia* (enseñar: «hacer aprender»), *klin daukaia* (limpiar) |
+| *munaia* | hacer (con préstamos del inglés) | *yus munaia* (usar), *stadi munaia* (estudiar), *hilp munaia* (ayudar), *ansa munaia* (contestar), *rispik munaia* (respetar) |
+
+*lan takaia* / *lan daukaia* es la misma pareja que M16, armada con dos
+palabras: aprender es que le pase a uno, enseñar es hacérselo a otro. Amplía
+M7.
+
+```
+Aisi kaikaia   lan    dauk-aia.
+leer           learn  hacer-INF
+'Enseñar a leer.' (p. 49)
+```
+
+### M20 · -ka: «de» pegado al que tiene dueño — Confianza A
+
+El dueño va antes (O4) y la cosa lleva *-ka*, o cambia su vocal final por
+*-ika*:
+
+| Frase | Palabra por palabra | Página |
+|---|---|---|
+| *Waspam tawanka* | Waspam pueblo-de | 11 |
+| *Krukira uplika nani* | Krukira gente-de PL: la gente de Krukira | 2 |
+| *Miskitu tawanka nani* | miskito pueblos-de: las comunidades miskitas | 21 |
+| *ai papika* | su papá-de: su papá | 60 |
+
+*upla* (persona) → *uplika*; *papa* → *papika*. Es la misma -ka de *ai kuku
+ka* (M4). Con *-anka* se hace un sustantivo de un verbo: *luk-anka* (el
+pensamiento, de *lukaia*, pensar), *pask-anka* (la forma, de *paskaia*),
+*klakw-anka* (la herida).
+
+**Mi, tu, su, nuestro, completo** (amplía M4):
+
+| | Cómo | Ejemplos de Matamoros |
+|---|---|---|
+| mi | -ki, -i | *bip-ki* (mi ganado), *lalah-ki*, *yapti-ki*, *muih-ki*, *tahti-ki* |
+| tu | -kam, -m (con *man* delante, si se quiere) | *papi-kam* (tu papá), *Man klakwan-kam* (tu herida), *bila-m* (tu boca) |
+| su | *ai* … -ka | *ai papi-ka* (su papá), *ai bila* (su boca) |
+| nuestro (de todos) | *wan* delante | *Wan Aisa* (Nuestro Padre), *wan tasbaya* (nuestra tierra) |
+| nuestro (sin vos) | *yang nani* delante | *yang nani watla-ra* (a nuestra casa, p. 83) |
+
+*wan* también es «uno, cualquiera»: *wan mihta* es «la mano» (de cualquiera),
+por eso el cuerpo se cita así (L9).
 
 ---
 
@@ -522,6 +762,28 @@ sabemos qué es.
 - *kat* (hasta): *yauhka kat*.
 - *pura* (encima, más): *matlalkahbi pura kum*, *matsip pura kum* y, en el
   diccionario, *Nakra pura tamaya* (la ceja: «el pelo de encima del ojo»).
+
+**El inventario, con Matamoros (v0.6).** Todas van después:
+
+| Posposición | Significa | Ejemplo | Página |
+|---|---|---|---|
+| *ra* | a, en; también «a él» (M17) | *Dinar-ra balbia*, vendrá a mediodía | 71 |
+| *wina* | de, desde (220 ejemplos) | *Liwanhta wina bukit aubaia*, sacar el balde del pozo | 10 |
+| *wal* | con; «que» al comparar (O14) | *kin wal wapisa*, camina con bastón | 6 |
+| *kat* | hasta | *Ahkia balma kat*, hasta que vengas | 1 |
+| *bilara* | dentro de | *utla bilara*, dentro de la casa | 89 |
+| *tilara* | entre | *tangni nani tilara*, entre las flores | 69 |
+| *mapara* | contra, frente a | *lapta mapara*, contra el sol | 14 |
+| *munhta* | debajo de | *Tibil munhta*, debajo de la mesa | 57 |
+| *pura* | encima de, sobre | *dus purara*, por encima de los árboles | 73 |
+| *baila* | cerca de | *tnata baila*, cerca de la meta | 12 |
+| *piuara* | durante, cuando | *Mani piuara*, durante el verano | 9 |
+| *dukiara* | para, por (O13) | *waitla makaia dukiara*, para hacer mi casa | 9 |
+| *taka* | por (causa) (O13) | *Uba pasa ailal taka*, por exceso de gas | 13 |
+
+Varias son un sustantivo de lugar con *-ra*: *bila* (boca) → *bila-ra*
+(dentro), *pura* → *pura-ra*, *mapa* → *mapa-ra*. Es como decir «en la boca
+de la casa».
 
 ### O3 · Lo que describe al sustantivo va después — Confianza A
 
@@ -564,31 +826,142 @@ el miskito: *Yul pisa*, *Yul plun pisa*, *Inska laiksna*, *utla ra*, *skul
 ra*. Otras fuentes mencionan *ba* («ese») y *kum* («un»), y *nani* para el
 plural; en el corpus no aparecen.
 
-### O9 · El número va antes del sustantivo, y el sustantivo no cambia — Confianza C
+### O9 · El número va después del sustantivo — Confianza A (corregida en la v0.6)
 
-**Evidencia.** *18 mani brisna*, «18 año tengo». Un solo ejemplo, y escrito con
-cifras.
+**Lo que decía la v0.4.** Que iba antes, por *18 mani brisna* («tengo 18
+años»). Era un solo ejemplo, escrito con cifras.
 
-**Predicción.** «Dos perros» será *wal yul* o *yul wal*: hay que preguntarlo.
+**Lo que muestra Matamoros.** Con el número escrito en palabras, va después,
+como cualquier cualidad (O3), y el sustantivo no cambia:
 
-### O10 · La pregunta de sí o no termina en ki — Confianza C
+| Ejemplo | Página |
+|---|---|
+| *mani wal*, dos años («año dos») | 4 |
+| *tuisa wal bri kan*, tenía dos lenguas | 2 |
+| *Taim yua 30 bri ba*, tiempo de 30 días («días 30») | 36 |
+| *Yu kumi man*, un solo día | 42 |
 
-**Evidencia.** *¿Atkaisma ki?*, «¿lo vas a comprar?» (diccionario). Las
-preguntas con *dia*, *nahki* o *anira* no lo llevan.
+Con cifras puede ir en cualquiera de los dos lugares: *yua 30*, pero *18
+mani* y *500 córdobas kum*, como en español.
+
+**Predicción.** «Dos perros» es *yul wal*.
+
+### O10 · La pregunta de sí o no termina en ki — Confianza B (subió desde C)
+
+**Evidencia.** *¿Atkaisma ki?*, «¿lo vas a comprar?» (Scott Lackwood), y
+*¿Pali? ¿balan ki?*, «¿de veras vino?» (Matamoros, p. 62). Las preguntas con
+*dia*, *nahki*, *anira* o *yâ* (quién: *¿Man ba yâ?*, «¿quién sos?») no lo
+llevan.
 
 **Predicción.** «¿Tenés hambre?» terminará en *ki*.
 
-### O11 · El plural es nani; «un» es kum; los dos van después — Confianza B
+### O11 · El plural es nani; «un» es kum; los dos van después — Confianza A (subió desde B)
 
 **Evidencia.** *Una nani* (labios), *Kabu inskika nani* (mariscos), *siknis
 kum* (una enfermedad). En las encuestas no aparece ninguno: las frases no los
 piden.
+
+**El orden completo, con Matamoros (v0.6).** sustantivo – cualidad – *nani* –
+*ba*: *Tuktan sirpi nani ba*, «los niños pequeños» (p. 3); *Krukira uplika
+nani ba*, «la gente de Krukira» (p. 2). *ba* («ese, el ya sabido») cierra el
+grupo que hace de tema de la frase: aparece en casi todos los ejemplos con
+sujeto, y no hace falta traducirlo.
 
 ### O12 · «Vamos» es kaisa o kaya, al principio — Confianza B
 
 **Evidencia.** *Kaisa, kaia maka* (vamos, vámonos) en el diccionario, y *Kaya
 skul ra* (vamos a la escuela) de Tangni. Teacher Smith dijo *Skul ra wapp*.
 Puede que las dos maneras convivan.
+
+### O13 · Si, porque, para, antes, después: la pieza va al final — Confianza A
+
+En miskito, la parte que en español empieza con «si», «porque» o «para»
+**termina** con su pieza, y va antes de la frase principal (con la excepción
+de *bara* y *bamna*, «porque», que pueden ir después). En los ejemplos de
+Matamoros no apareció ninguno en contra:
+
+| Significa | Cómo se arma | Ejemplo | Página |
+|---|---|---|---|
+| si | … V-bia / -aia **kaka**, … | *Asla wark takbia kaka, yawan purman lâka ba pura lubia*: si trabajamos juntos, venceremos la miseria | 70 |
+| porque, por | … **taka** | *Karma latwan taka sip aiwanras*: por un dolor de garganta no puede cantar | 35 |
+| porque | … V-an **bara** / **bamna** | *asangra mangkram bara*: porque la sembraste en el barranco | 9 |
+| para | … V-aia **dukiara** | *waitla makaia dukiara*: para hacer mi casa | 9 |
+| antes de | … V-ras **kainara** | *Plun piras kainara*: antes de comer | 77 |
+| después de | … V-bia **ninkara** | *King ba prubia ninkara, luhpia ba kraun alkbia*: después de que el rey muera, el hijo tomará la corona | 60 |
+| hasta que | … V-ma / -bia **kat** | *Ahkia balma kat, yang naha wina waisna*: hasta que vengas, yo me iré de aquí | 1 |
+| cuando | … **taim** / **piuara** | *sukwan taim*: cuando está madura | 36 |
+| pero | **sakuna** … (al principio) | *…daukamna, sakuna taim brimna piuara*: lo haré, pero cuando tenga tiempo | 75 |
+| como | … **baku** | *Papikam luki ba baku*: como piensa tu papá | 13 |
+
+Dos detalles:
+- **«Antes de comer» es «no-comer antes».** *kainara* pide el verbo en
+  negativo: *plun pi-ras kainara*. Lo que todavía no pasó se dice como algo
+  que no pasó.
+- **«Después» y «hasta» piden futuro** (*-bia*, *-ma*) aunque se cuente en
+  general: lo que todavía no ocurrió va en futuro (M13).
+
+```
+Asla      wark  tak-bia      kaka,  yawan  purman   lâka  ba  pura  lu-bia.
+juntos    work  volverse-FUT si     nosotros pobre  -dad  ese encima pasar-FUT
+'Si trabajamos juntos, venceremos la miseria.' (p. 70)
+```
+
+**Predicción.** «Si llueve, no voy» es *Li auhbia kaka, wapras* o *…waia
+apia*: hay que preguntarlo.
+
+### O14 · Comparar: kau + cualidad … wal — Confianza A
+
+**Evidencia.** *kau* es «más» y va delante de la cualidad o del verbo; lo
+comparado lleva *wal* (con) y suele ir al final. 89 ejemplos con *kau*:
+
+```
+Naiwa  kau  bitar   sna,      nahwala  wal.
+hoy    más  better  estar.1   ayer     con
+'Hoy estoy mucho mejor que ayer.' (p. 17)
+
+Beriku  ba   kau  paun  wihra   bukisa,      aras     ba   wal.
+burro   ese  más  peso  pesado  levanta.3    caballo  ese  con
+'El burro aguanta más peso que el caballo.' (p. 17)
+```
+
+Sin *wal*, *kau* es «muy, el más»: *kau tara ba Jûpita*, «el más grande es
+Júpiter» (p. 47).
+
+**Predicción.** «Mi perro es más grande que el tuyo»:
+*Yulki ba kau tara, yulkam ba wal*.
+
+### O15 · «Lo que…», «el que…»: la frase va antes, con ba o ya ba — Confianza A
+
+**Evidencia.** Para describir una cosa con una frase, la frase va antes y
+termina en *ba* (ese):
+
+| Ejemplo | Palabra por palabra | Página |
+|---|---|---|
+| *Aiwiram ba daukamna* | me-dijiste ese haré: haré lo que me dijiste | 75 |
+| *Waihla bri uplika nani* | enemistad tener personas: las personas que tienen enemistad | 3 |
+| *Klasit pain ba tasba salhki dauki ya ba* | excusado bueno ese, tierra cavando hecho el-que: el buen excusado es el que se hace cavando | 39 |
+
+*ya ba* («el que») cierra casi todas las definiciones del diccionario: 179
+veces. El verbo de la frase de adentro va con -i (M6) o con su terminación:
+*bri* (que tiene), *dauki ya ba* (el que se hace). Como en el resto del
+idioma, lo que describe va antes de lo descrito (O4).
+
+### O16 · «Estar haciendo»: V-i taukisa — Confianza A
+
+**Evidencia.** El verbo con -i (M6) y *taukaia* (andar, moverse) conjugado:
+«anda haciendo», «está haciendo». 72 ejemplos:
+
+| Ejemplo | Página |
+|---|---|
+| *Aras ba utla latara twi pih taukisa*: el caballo anda comiendo zacate en el patio | 8 |
+| *Tuktan ba utla bilara kwasi taukisa*: el niño anda gateando dentro de la casa | 89 |
+| *Aman kaiki tauki bas*: andá con cuidado («andá mirando») | 6 |
+
+Con *kan* al final es pasado: *Asla impaki tauki banghwi kan*, «andaban
+viajando juntos» (p. 9, M12).
+
+**Predicción.** «Estoy comiendo» es *pih
+taukisna*.
 
 ---
 
@@ -781,7 +1154,6 @@ estas filas, para quienes ya contestaron y se ofrecieron a ayudar.
 | 13 | un perro · dos perros | *yul kum* · ? | N2, O9, O11 |
 | 14 | ¿Tenés hambre? | *Plun mai dauksa ki?* | M11, O10 |
 | 15 | mi coco · tu coco · su coco | — | M4, M11 |
-| 16 | dinero | *lalah* (oro ya se sabe: *gul*) | M9 |
 | 17 | zacate · ¿*sangni* es verde, azul o los dos? | *twi* · los dos | L6 |
 | 18 | **Hermano y hermana, a una mujer y a un hombre** | — | L7 |
 | 19 | **¿Qué es *pruabia*? ¿*titan* es también «el día siguiente»?** | — | L4 |
@@ -790,8 +1162,12 @@ estas filas, para quienes ya contestaron y se ofrecieron a ayudar.
 | 22 | ¿*Kaya skul ra* o *Skul ra kaya*? | — | O1, O12 |
 | 23 | Mi abuela sonríe cuando yo veo su coco | — (¿cambia *kaiki*?) | M6 |
 | 24 | los niños | *tuktan nani* | O11 |
-| 25 | No quiero agua · No como | *piras* | M14 (sólo hay datos del diccionario) |
-| 26 | Ayer comí · Mañana voy a comer | *piri* · *piaisna* | M12, M13 (sólo hay datos del diccionario) |
+| 25 | No quiero agua · No como | *pisras* o *piras sna* | M14 (sólo hay datos de los diccionarios) |
+| 26 | Ayer comí · Mañana comeré | *piri* · *piamna* | M12, M13 (corregida en la v0.6) |
+| 27 | La puerta se abrió · Abrí la puerta | *Dur ba ilingwan* · *Dur ba ilingkri* | M16 |
+| 28 | Me ves · Te veo | *aikaikisma* · *maikaikisna* | M17 |
+| 29 | No puedo dormir · Estoy comiendo | *sip yapras* · *pih taukisna* | M18, O16 |
+| 30 | Si llueve, no voy | *Li auhbia kaka, …* | O13 |
 
 Además:
 - **Personas de otras zonas.** Las dos fuentes son de Raiti. Para que una
