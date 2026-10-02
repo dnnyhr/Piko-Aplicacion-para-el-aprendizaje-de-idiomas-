@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diccionario miskito–español · Piko</title>
+<meta name="description" content="Buscá palabras en miskito o en español. Cada una con su fuente: hablantes de Raiti (Río Coco) y diccionarios publicados.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0F5D3D">
+<link rel="canonical" href="https://piko.mugiware.com/diccionario/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="Equipo MugiWare">
+<!-- Íconos -->
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<link rel="icon" href="../assets/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="manifest" href="../site.webmanifest">
+<!-- Al compartir (Open Graph y X/Twitter) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Piko">
+<meta property="og:locale" content="es_NI">
+<meta property="og:url" content="https://piko.mugiware.com/diccionario/">
+<meta property="og:title" content="Diccionario miskito–español · Piko">
+<meta property="og:description" content="Buscá palabras en miskito o en español. Cada una con su fuente: hablantes de Raiti (Río Coco) y diccionarios publicados.">
+<meta property="og:image" content="https://piko.mugiware.com/assets/og/diccionario.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Diccionario miskitu–español de Piko.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Diccionario miskito–español · Piko">
+<meta name="twitter:description" content="Buscá palabras en miskito o en español. Cada una con su fuente: hablantes de Raiti (Río Coco) y diccionarios publicados.">
+<meta name="twitter:image" content="https://piko.mugiware.com/assets/og/diccionario.png">
+<meta name="twitter:image:alt" content="Diccionario miskitu–español de Piko.">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "DefinedTermSet",
+   "@id": "https://piko.mugiware.com/diccionario/#diccionario",
+   "name": "Diccionario miskito–español de Piko",
+   "url": "https://piko.mugiware.com/diccionario/",
+   "inLanguage": [
+    "miq",
+    "es"
+   ],
+   "description": "Palabras y frases en miskito con su traducción, su análisis y su fuente: hablantes de Raiti (Río Coco) y diccionarios publicados.",
+   "publisher": {
+    "@id": "https://piko.mugiware.com/#mugiware"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Piko",
+     "item": "https://piko.mugiware.com/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Diccionario",
+     "item": "https://piko.mugiware.com/diccionario/"
+    }
+   ]
+  }
+ ]
+}
+</script>
+<link rel="stylesheet" href="../assets/css/nav.css">
+<link rel="stylesheet" href="../assets/css/sitio.css">
+<style>
+  .buscador{display:grid; gap:.9rem; position:sticky; top:58px; z-index:5; background:var(--papel); padding:.8rem 0 1rem}
+  .buscador__campo{position:relative}
+  .buscador__campo svg{position:absolute; left:1rem; top:50%; transform:translateY(-50%); width:22px; height:22px; fill:var(--verde-hoja)}
+  .buscador input{
+    width:100%; font:inherit; font-size:1.1rem; padding:.9rem 1rem .9rem 3rem;
+    border-radius:999px; border:2px solid rgba(15,93,61,.18); background:#fff; color:var(--grafito);
+  }
+  .buscador input:focus{outline:none; border-color:var(--verde-piko); box-shadow:0 0 0 4px rgba(151,193,55,.25)}
+  .filtros{display:flex; gap:.4rem; overflow-x:auto; padding-bottom:.2rem; scrollbar-width:thin}
+  .filtro{
+    flex:none; font-family:Fredoka,sans-serif; font-weight:500; font-size:.88rem; cursor:pointer;
+    background:#fff; color:var(--verde-piko); border:2px solid rgba(15,93,61,.14); border-radius:999px; padding:.3rem .85rem;
+  }
+  .filtro[aria-pressed="true"]{background:var(--verde-piko); color:var(--papel); border-color:var(--verde-piko)}
+  .filtro--revision[aria-pressed="true"]{background:var(--pico); border-color:var(--pico); color:#3d2700}
+  .cuenta{font-size:.92rem; color:var(--tinta-suave)}
+
+  .palabras{display:grid; gap:.9rem; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); align-items:start}
+  .palabra{background:#fff; border-radius:var(--radio); box-shadow:var(--sombra-chica); padding:1.1rem 1.2rem; border-top:5px solid var(--verde-pasto); scroll-margin-top:190px}
+  .palabra--revision{border-top-color:var(--pico)}
+  .palabra--publicada{border-top-color:#9C88C9}
+  .palabra:target{box-shadow:0 0 0 3px var(--pico), var(--sombra-chica)}
+  .palabra__fila{display:flex; align-items:flex-start; gap:.6rem}
+  .palabra__forma{font-family:Fredoka,sans-serif; font-weight:600; font-size:1.5rem; color:var(--verde-piko); line-height:1.15; flex:1; word-break:break-word}
+  .palabra__es{font-size:1.05rem; margin:.25rem 0 .6rem}
+  .palabra__insignias{display:flex; flex-wrap:wrap; gap:.35rem}
+  .escuchar{
+    flex:none; width:42px; height:42px; border-radius:50%; border:none; cursor:pointer;
+    background:var(--cielo); display:grid; place-items:center; box-shadow:0 6px 14px rgba(96,197,250,.45);
+  }
+  .escuchar svg{width:22px; height:22px; fill:#fff}
+  .escuchar:focus-visible{outline:3px solid var(--pico); outline-offset:2px}
+  .palabra details{margin-top:.8rem; border-top:1px dashed rgba(15,93,61,.18); padding-top:.6rem}
+  .palabra summary{cursor:pointer; font-family:Fredoka,sans-serif; font-weight:500; color:var(--verde-bosque); font-size:.92rem}
+  .detalle{display:grid; gap:.55rem; margin-top:.6rem; font-size:.93rem}
+  .detalle dt{font-family:Fredoka,sans-serif; font-weight:600; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--tinta-suave)}
+  .detalle dd{margin:0}
+  .glosa{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.85rem; background:var(--papel); border-radius:10px; padding:.45rem .6rem; display:grid; gap:.1rem}
+  .regla{display:inline-block; margin:0 .3rem .3rem 0; font-size:.85rem}
+  .revision{background:#FDF0D5; border-radius:12px; padding:.6rem .75rem; font-size:.9rem; color:#5C3D02; margin-top:.7rem}
+  .estatico{grid-column:1/-1; columns:3 240px; list-style:none; padding:0; margin:0}
+  .estatico li{break-inside:avoid; padding:.2rem 0}
+  .estatico b{font-family:Fredoka,sans-serif; font-weight:600; color:var(--verde-piko)}
+  .vacio{text-align:center; color:var(--tinta-suave); padding:3rem 0}
+  .fuentes-lista{display:grid; gap:.6rem; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); padding:0; list-style:none; margin:1rem 0 0}
+  .fuentes-lista li{background:#fff; border-radius:14px; padding:.8rem 1rem; box-shadow:var(--sombra-chica); font-size:.93rem}
+  .fuentes-lista b{font-family:Fredoka,sans-serif; font-weight:600; color:var(--verde-piko)}
+  @media (max-width:760px){ .buscador{top:92px} .palabra{scroll-margin-top:230px} .cabeza__piko{display:none} }
+</style>
+</head>
+<body class="pagina">
+
+<div id="nav" data-pagina="diccionario" data-raiz="../"></div>
+
+<header class="cabeza contenedor">
+  <div class="cabeza__grid">
+    <div>
+      <p class="etiqueta">Diccionario</p>
+      <h1><em>Miskitu</em> ↔ español</h1>
+      <p class="cabeza__bajada" id="bajada">Buscá en miskito o en español. Cada palabra dice de dónde sale: hablantes de Raiti (Río Coco) y diccionarios publicados.</p>
+    </div>
+    <img class="cabeza__piko" src="../assets/img/piko.svg" alt="" width="150" height="246">
+  </div>
+</header>
+
+<main class="contenedor">
+  <div class="buscador">
+    <label class="buscador__campo">
+      <span style="position:absolute;left:-9999px">Buscar en el diccionario</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 0 1 6.3 12.9l5.4 5.4-1.4 1.4-5.4-5.4A8 8 0 1 1 10 2zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Buscá: yul, perro, mano, kumi…">
+    </label>
+    <div class="filtros" id="filtros" role="group" aria-label="Filtrar por tema"></div>
+    <div class="cuenta" id="cuenta" aria-live="polite"></div>
+  </div>
+
+  <div class="palabras" id="palabras">
+<!-- palabras:inicio · lo escribe npm run contenido, no se edita a mano -->
+<ul class="estatico">
+<li id="ai"><b lang="miq">ai</b> · (pronombre; ver M11)</li>
+<li id="aikabaisa"><b lang="miq">aikabaisa</b> · va a vomitar</li>
+<li id="aisa"><b lang="miq">aisa</b> · papá</li>
+<li id="aisa_almuk"><b lang="miq">aisa almuk</b> · abuelo</li>
+<li id="aisaby"><b lang="miq">aisaby</b> · adiós</li>
+<li id="aisaram"><b lang="miq">aisaram</b> · hablaste</li>
+<li id="aisaya"><b lang="miq">aisaya</b> · hablar</li>
+<li id="aisi_kaikaya"><b lang="miq">aisi kaikaya</b> · leer</li>
+<li id="aisika"><b lang="miq">aisika</b> · padre (su padre)</li>
+<li id="aisisa"><b lang="miq">aisisa</b> · está hablando</li>
+<li id="aiwanaya"><b lang="miq">aiwanaya</b> · cantar</li>
+<li id="almuk"><b lang="miq">almuk</b> · viejo, mayor</li>
+<li id="andris"><b lang="miq">andris</b> · naranja</li>
+<li id="anira"><b lang="miq">anira</b> · ¿dónde?</li>
+<li id="frase.donde_vivis"><b lang="miq">anira iwisma</b> · ¿Dónde vivís?</li>
+<li id="anti"><b lang="miq">anti</b> · tía</li>
+<li id="apia"><b lang="miq">apia</b> · no</li>
+<li id="aras"><b lang="miq">aras</b> · caballo</li>
+<li id="aras_mairin"><b lang="miq">aras mairin</b> · yegua</li>
+<li id="aras_wainhka"><b lang="miq">aras wainhka</b> · caballo macho</li>
+<li id="atkaisma_ki"><b lang="miq">atkaisma ki</b> · ¿lo vas a comprar?</li>
+<li id="atki_briaia"><b lang="miq">atki briaia</b> · comprar para tenerlo</li>
+<li id="au"><b lang="miq">au</b> · sí</li>
+<li id="auhwisa"><b lang="miq">auhwisa</b> · cae (la lluvia)</li>
+<li id="bal"><b lang="miq">bal</b> · venir</li>
+<li id="balaya"><b lang="miq">balaya</b> · venir</li>
+<li id="bara"><b lang="miq">bara</b> · hola</li>
+<li id="bibi"><b lang="miq">bibi</b> · bebé</li>
+<li id="bila"><b lang="miq">bila</b> · boca</li>
+<li id="bila_aisanka"><b lang="miq">bila aisanka</b> · idioma</li>
+<li id="bilam"><b lang="miq">bilam</b> · tu boca</li>
+<li id="bins"><b lang="miq">bins</b> · frijoles</li>
+<li id="bip"><b lang="miq">bip</b> · vaca</li>
+<li id="bip_mairin"><b lang="miq">bip mairin</b> · vaca</li>
+<li id="bret"><b lang="miq">bret</b> · pan</li>
+<li id="briaia"><b lang="miq">briaia</b> · tener</li>
+<li id="brisna"><b lang="miq">brisna</b> · tengo</li>
+<li id="buk"><b lang="miq">buk</b> · libro</li>
+<li id="busras"><b lang="miq">busras</b> · sin mojarse</li>
+<li id="cafi"><b lang="miq">cafi</b> · café</li>
+<li id="daiwan_nawira"><b lang="miq">daiwan nawira</b> · pájaro</li>
+<li id="dama"><b lang="miq">dama</b> · abuelo</li>
+<li id="damni"><b lang="miq">damni</b> · dulce</li>
+<li id="daukaia"><b lang="miq">daukaia</b> · hacer</li>
+<li id="dia"><b lang="miq">dia</b> · ¿qué?</li>
+<li id="dikua"><b lang="miq">dikua</b> · olla</li>
+<li id="dimisna"><b lang="miq">dimisna</b> · entro, estudio («skul dimisna»)</li>
+<li id="dimri"><b lang="miq">dimri</b> · entré</li>
+<li id="dimwan"><b lang="miq">dimwan</b> · entró</li>
+<li id="diyaya"><b lang="miq">diyaya</b> · beber</li>
+<li id="du_plis"><b lang="miq">du plis</b> · por favor</li>
+<li id="duary"><b lang="miq">duary</b> · canoa (cayuco)</li>
+<li id="dur"><b lang="miq">dur</b> · puerta</li>
+<li id="dus"><b lang="miq">dus</b> · árbol</li>
+<li id="galila"><b lang="miq">galila</b> · gallina</li>
+<li id="galila_mabra"><b lang="miq">galila mabra</b> · huevo</li>
+<li id="gul"><b lang="miq">gul</b> · oro</li>
+<li id="haya"><b lang="miq">haya</b> · maíz</li>
+<li id="ingk"><b lang="miq">ingk</b> · lápiz</li>
+<li id="inska"><b lang="miq">inska</b> · pescado, pez</li>
+<li id="frase.me_gusta_el_pescado"><b lang="miq">inska laiksna</b> · Me gusta el pescado.</li>
+<li id="iris"><b lang="miq">iris</b> · loro</li>
+<li id="islu"><b lang="miq">islu</b> · iguana</li>
+<li id="ispara"><b lang="miq">ispara</b> · machete</li>
+<li id="iwisma"><b lang="miq">iwisma</b> · vivís</li>
+<li id="kabu"><b lang="miq">kabu</b> · mar</li>
+<li id="kaikaya"><b lang="miq">kaikaya</b> · ver</li>
+<li id="kaiki"><b lang="miq">kaiki</b> · viendo, al ver</li>
+<li id="kaiks"><b lang="miq">kaiks</b> · ¡mirá! (en «Aman kaiks»: ¡cuidado!)</li>
+<li id="kaisa"><b lang="miq">kaisa</b> · vamos</li>
+<li id="kakamuk"><b lang="miq">kakamuk</b> · iguana</li>
+<li id="kakamuk_mahbra"><b lang="miq">kakamuk mahbra</b> · huevo de iguana</li>
+<li id="kakma"><b lang="miq">kakma</b> · nariz</li>
+<li id="kalika_mairin"><b lang="miq">kalika mairin</b> · gallina</li>
+<li id="kat"><b lang="miq">kat</b> · hasta</li>
+<li id="kati"><b lang="miq">kati</b> · luna</li>
+<li id="kati_mes"><b lang="miq">kâti</b> · mes</li>
+<li id="frase.vamos_a_la_escuela.2"><b lang="miq">kaya skul ra</b> · Vamos a la escuela.</li>
+<li id="ki_pregunta"><b lang="miq">ki</b> · (marca de pregunta de sí o no, al final)</li>
+<li id="kiama"><b lang="miq">kiama</b> · oreja</li>
+<li id="kikaia"><b lang="miq">kikaia</b> · reír</li>
+<li id="kikisa"><b lang="miq">kikisa</b> · sonríe, ríe (él, ella)</li>
+<li id="kisni_brisma"><b lang="miq">kisni brisma</b> · tenés ardor</li>
+<li id="kisni_brisna"><b lang="miq">kisni brisna</b> · tengo ardor</li>
+<li id="kisura"><b lang="miq">kisura</b> · cuchillo</li>
+<li id="klin_daukaia"><b lang="miq">klin daukaia</b> · limpiarlo</li>
+<li id="klin_takaia"><b lang="miq">klin takaia</b> · limpiarse</li>
+<li id="krikri"><b lang="miq">krikri</b> · cama</li>
+<li id="kuaks"><b lang="miq">kuaks</b> · ¡abrí!</li>
+<li id="kuka"><b lang="miq">kuka</b> · abuela</li>
+<li id="kuki_ki"><b lang="miq">kuki ki</b> · mi abuela</li>
+<li id="frase.aporte_abuela_coco"><b lang="miq">kuki ki ai kuku ka kaiki kikisa</b> · Mi abuela sonríe al ver su coco.</li>
+<li id="kuku"><b lang="miq">kuku</b> · coco</li>
+<li id="kum"><b lang="miq">kum</b> · uno (dentro de otra palabra)</li>
+<li id="kumi"><b lang="miq">kumi</b> · uno</li>
+<li id="kupia"><b lang="miq">kupia</b> · corazón</li>
+<li id="kuswa"><b lang="miq">kuswa</b> · tortuga</li>
+<li id="kuswa_mahbra"><b lang="miq">kuswa mahbra</b> · huevo de tortuga</li>
+<li id="kwala"><b lang="miq">kwala</b> · ropa</li>
+<li id="laik_takaia"><b lang="miq">laik takaia</b> · enamorar</li>
+<li id="laikra"><b lang="miq">laikra</b> · hermana</li>
+<li id="laiksna"><b lang="miq">laiksna</b> · me gusta</li>
+<li id="lal"><b lang="miq">lal</b> · cabeza</li>
+<li id="lalahni"><b lang="miq">lalahni</b> · amarillo</li>
+<li id="lan_takaya"><b lang="miq">lan takaya</b> · aprender</li>
+<li id="latwankas"><b lang="miq">latwankas</b> · sin amor</li>
+<li id="li"><b lang="miq">li</b> · agua; lluvia</li>
+<li id="li_auhaia"><b lang="miq">li auhaia</b> · llover</li>
+<li id="frase.esta_lloviendo"><b lang="miq">li auhwisa</b> · Está lloviendo.</li>
+<li id="li_ausisa"><b lang="miq">li ausisa</b> · lluvia</li>
+<li id="frase.quiero_agua"><b lang="miq">li want</b> · Quiero agua.</li>
+<li id="limi"><b lang="miq">limi</b> · tigre (jaguar)</li>
+<li id="luhpa_watlara"><b lang="miq">luhpa watlara</b> · útero (en «Luhpa watlara trabil briba»)</li>
+<li id="luhpi"><b lang="miq">luhpi</b> · hijo o hija</li>
+<li id="luhpi_mairin"><b lang="miq">luhpi mairin</b> · hija</li>
+<li id="luhpi_waitna"><b lang="miq">luhpi waitna</b> · hijo</li>
+<li id="mai"><b lang="miq">mai</b> · te (a vos)</li>
+<li id="mairin"><b lang="miq">mairin</b> · mujer</li>
+<li id="maistro"><b lang="miq">maistro</b> · maestro</li>
+<li id="mama"><b lang="miq">mama</b> · mamá (en «mama almuk»)</li>
+<li id="mama_almuk"><b lang="miq">mama almuk</b> · abuela</li>
+<li id="mamiki"><b lang="miq">mamiki</b> · mi mamá</li>
+<li id="frase.mi_mama_esta_en_la_casa.2"><b lang="miq">mamiki utlara sa</b> · Mi mamá está en la casa.</li>
+<li id="mani"><b lang="miq">mani</b> · año</li>
+<li id="mata"><b lang="miq">mata</b> · mano (en los números)</li>
+<li id="mata_walsip"><b lang="miq">mata walsip</b> · diez</li>
+<li id="matlalkahbi"><b lang="miq">matlalkahbi</b> · seis</li>
+<li id="matlalkahbi_pura_kum"><b lang="miq">matlalkahbi pura kum</b> · siete</li>
+<li id="matlalkahbi_pura_wal"><b lang="miq">matlalkahbi pura wal</b> · ocho</li>
+<li id="matlalkahbi_pura_yumpha"><b lang="miq">matlalkahbi pura yumpha</b> · nueve</li>
+<li id="matsip"><b lang="miq">matsip</b> · cinco</li>
+<li id="matsip_pura_kum"><b lang="miq">matsip pura kum</b> · seis</li>
+<li id="matsip_pura_matsip"><b lang="miq">matsip pura matsip</b> · diez</li>
+<li id="matsip_pura_wal"><b lang="miq">matsip pura wal</b> · siete</li>
+<li id="matsip_pura_walhwal"><b lang="miq">matsip pura walhwal</b> · nueve</li>
+<li id="matsip_pura_yumpha"><b lang="miq">matsip pura yumpha</b> · ocho</li>
+<li id="micki"><b lang="miq">micki</b> · gato</li>
+<li id="mihta"><b lang="miq">mihta</b> · mano</li>
+<li id="mina"><b lang="miq">mina</b> · pie</li>
+<li id="muih"><b lang="miq">muih</b> · hermano</li>
+<li id="muihnika"><b lang="miq">muihnika</b> · hermano (su hermano)</li>
+<li id="muiki"><b lang="miq">muiki</b> · hermana (mi hermana)</li>
+<li id="nahki"><b lang="miq">nahki</b> · ¿cómo?</li>
+<li id="nahkisma"><b lang="miq">nahkisma</b> · ¿cómo estás?</li>
+<li id="nakra"><b lang="miq">nakra</b> · ojo</li>
+<li id="nakra_pura_tamaya"><b lang="miq">nakra pura tamaya</b> · ceja</li>
+<li id="nani"><b lang="miq">nani</b> · (plural: va después del sustantivo)</li>
+<li id="napa"><b lang="miq">napa</b> · diente</li>
+<li id="frase.como_te_llamas.2"><b lang="miq">niman naki</b> · ¿Cómo te llamás?</li>
+<li id="nina"><b lang="miq">nina</b> · nombre</li>
+<li id="ninam"><b lang="miq">ninam</b> · tu nombre</li>
+<li id="frase.como_te_llamas"><b lang="miq">ninam dia</b> · ¿Cómo te llamás?</li>
+<li id="nini"><b lang="miq">nini</b> · mi nombre</li>
+<li id="numba"><b lang="miq">numba</b> · número</li>
+<li id="pain"><b lang="miq">pain</b> · bien</li>
+<li id="frase.estoy_bien"><b lang="miq">pain sna</b> · Estoy bien.</li>
+<li id="painika"><b lang="miq">painika</b> · amigo</li>
+<li id="pakni"><b lang="miq">pakni</b> · profundo</li>
+<li id="pana"><b lang="miq">pana</b> · amigo</li>
+<li id="papa_almuk"><b lang="miq">papa almuk</b> · abuelo</li>
+<li id="papika"><b lang="miq">papika</b> · papá (su papá)</li>
+<li id="papiki"><b lang="miq">papiki</b> · mi papá</li>
+<li id="pasa"><b lang="miq">pasa</b> · viento</li>
+<li id="paun"><b lang="miq">paun</b> · libro</li>
+<li id="pauni"><b lang="miq">pauni</b> · rojo</li>
+<li id="pauta_klawi"><b lang="miq">pauta klawi</b> · fuego</li>
+<li id="pihni"><b lang="miq">pihni</b> · blanco</li>
+<li id="pinsil"><b lang="miq">pinsil</b> · lápiz</li>
+<li id="pisa"><b lang="miq">pisa</b> · come (él, ella)</li>
+<li id="piuta"><b lang="miq">piuta</b> · culebra</li>
+<li id="piuto_satka_nani"><b lang="miq">piuto satka nani</b> · serpiente (las clases de serpiente)</li>
+<li id="piyaya"><b lang="miq">piyaya</b> · comer</li>
+<li id="platu"><b lang="miq">platu</b> · plátano</li>
+<li id="plun"><b lang="miq">plun</b> · comida</li>
+<li id="frase.tengo_hambre.2"><b lang="miq">plun aidauki</b> · Tengo hambre.</li>
+<li id="frase.tengo_hambre"><b lang="miq">plun aidauksa</b> · Tengo hambre.</li>
+<li id="plun_apu"><b lang="miq">plun apu</b> · no hay comida</li>
+<li id="plun_piyaya"><b lang="miq">plun piyaya</b> · comer</li>
+<li id="pruan"><b lang="miq">pruan</b> · falleció</li>
+<li id="pulaya"><b lang="miq">pulaya</b> · jugar</li>
+<li id="pura"><b lang="miq">pura</b> · más (en los números: seis más uno)</li>
+<li id="pus"><b lang="miq">pus</b> · gato</li>
+<li id="ra"><b lang="miq">ra</b> · a, en (lugar)</li>
+<li id="rais"><b lang="miq">rais</b> · arroz</li>
+<li id="rarakra"><b lang="miq">rarakra</b> · curandero</li>
+<li id="rauha"><b lang="miq">rauha</b> · loro</li>
+<li id="sa"><b lang="miq">sa</b> · está</li>
+<li id="sal"><b lang="miq">sal</b> · sal</li>
+<li id="sangni"><b lang="miq">sangni</b> · azul</li>
+<li id="saura"><b lang="miq">saura</b> · malo, feo</li>
+<li id="sibrinkira"><b lang="miq">sibrinkira</b> · miedoso</li>
+<li id="siksa"><b lang="miq">siksa</b> · negro</li>
+<li id="skul"><b lang="miq">skul</b> · escuela</li>
+<li id="frase.vamos_a_la_escuela"><b lang="miq">skul ra wapp</b> · Vamos a la escuela.</li>
+<li id="skul_tuktan"><b lang="miq">skul tuktan</b> · estudiante</li>
+<li id="skul_watla"><b lang="miq">skul watla</b> · escuela</li>
+<li id="slilmika"><b lang="miq">slilmika</b> · hamaca</li>
+<li id="slisma"><b lang="miq">slisma</b> · estrella</li>
+<li id="smalkaia"><b lang="miq">smalkaia</b> · enseñar</li>
+<li id="smasmalkra"><b lang="miq">smasmalkra</b> · maestro o maestra</li>
+<li id="smasmalkra_mairin"><b lang="miq">smasmalkra mairin</b> · maestra</li>
+<li id="sna"><b lang="miq">sna</b> · estoy</li>
+<li id="stury"><b lang="miq">stury</b> · palabra</li>
+<li id="sus"><b lang="miq">sus</b> · zapato</li>
+<li id="swahni"><b lang="miq">swahni</b> · ácido, agrio</li>
+<li id="tahti"><b lang="miq">tahti</b> · tío</li>
+<li id="tama"><b lang="miq">tama</b> · banano</li>
+<li id="tasba"><b lang="miq">tasba</b> · tierra</li>
+<li id="tawa"><b lang="miq">tawa</b> · pelo</li>
+<li id="tikni"><b lang="miq">tikni</b> · río</li>
+<li id="tingki"><b lang="miq">tingki</b> · gracias</li>
+<li id="frase.gracias_amigo"><b lang="miq">tingki painika</b> · Gracias, amigo.</li>
+<li id="titan"><b lang="miq">titan</b> · mañana (la parte del día)</li>
+<li id="frase.hasta_manana.2"><b lang="miq">titan pruabia</b> · Hasta mañana.</li>
+<li id="titan_yamni"><b lang="miq">titan yamni</b> · buenos días</li>
+<li id="frase.buenos_dias_maestra.2"><b lang="miq">titan yamni maistro</b> · Buenos días, maestra.</li>
+<li id="frase.buenos_dias_maestra"><b lang="miq">titan yamni smasmalkra mairin</b> · Buenos días, maestra.</li>
+<li id="tuisa"><b lang="miq">tuisa</b> · lengua (del cuerpo)</li>
+<li id="tuktan"><b lang="miq">tuktan</b> · niño o niña</li>
+<li id="tuktan_mairin"><b lang="miq">tuktan mairin</b> · niña</li>
+<li id="tuktan_waitna"><b lang="miq">tuktan waitna</b> · niño</li>
+<li id="tuktan_watla_laika"><b lang="miq">tuktan watla laîka</b> · líquido amniótico</li>
+<li id="tutni"><b lang="miq">tutni</b> · tarde</li>
+<li id="tutni_yamni"><b lang="miq">tutni yamni</b> · buenas tardes</li>
+<li id="twi_maplalka"><b lang="miq">twi maplalka</b> · verde</li>
+<li id="ulbaya"><b lang="miq">ulbaya</b> · escribir</li>
+<li id="ulu_watla"><b lang="miq">ulu watla</b> · panal</li>
+<li id="unta"><b lang="miq">unta</b> · monte</li>
+<li id="urus"><b lang="miq">urus</b> · mono</li>
+<li id="utla"><b lang="miq">utla</b> · casa</li>
+<li id="waitna"><b lang="miq">waitna</b> · hombre, varón</li>
+<li id="wal"><b lang="miq">wal</b> · dos</li>
+<li id="walaya"><b lang="miq">walaya</b> · escuchar</li>
+<li id="walhwal"><b lang="miq">walhwal</b> · cuatro</li>
+<li id="walpa"><b lang="miq">walpa</b> · piedra</li>
+<li id="wan"><b lang="miq">wan</b> · nuestro (de todos, incluyéndote)</li>
+<li id="wap"><b lang="miq">wap</b> · ir</li>
+<li id="wapaya"><b lang="miq">wapaya</b> · caminar</li>
+<li id="wari_takisma"><b lang="miq">wâri takisma</b> · estás pensando</li>
+<li id="wark_takaya"><b lang="miq">wark takaya</b> · trabajar</li>
+<li id="watla"><b lang="miq">watla</b> · casa de (forma de «utla» con dueño)</li>
+<li id="wauhtaya"><b lang="miq">wauhtaya</b> · cuaderno</li>
+<li id="waya"><b lang="miq">waya</b> · ir</li>
+<li id="wina"><b lang="miq">wina</b> · carne</li>
+<li id="wuirku"><b lang="miq">wuirku</b> · cerdo</li>
+<li id="yaikra"><b lang="miq">yaikra</b> · hermano</li>
+<li id="frase.me_gusta_el_pescado.2"><b lang="miq">yaiksna inska</b> · Me gusta el pescado.</li>
+<li id="yamni"><b lang="miq">yamni</b> · bueno; bien</li>
+<li id="yamni_yaps"><b lang="miq">yamni yaps</b> · buenas noches</li>
+<li id="yang"><b lang="miq">yang</b> · yo</li>
+<li id="frase.me_llamo_ana"><b lang="miq">yang nini Ana</b> · Me llamo Ana.</li>
+<li id="frase.aporte_tangni"><b lang="miq">yang nini Tangni 18 mani brisna Jinotega ra skul dimisna</b> · Mi nombre es Tangni, tengo 18 años y estudio en Jinotega.</li>
+<li id="yapan"><b lang="miq">yapan</b> · durmió</li>
+<li id="yapaya"><b lang="miq">yapaya</b> · dormir</li>
+<li id="yapta"><b lang="miq">yapta</b> · sol</li>
+<li id="yapti"><b lang="miq">yapti</b> · mamá</li>
+<li id="yaptiki"><b lang="miq">yaptiki</b> · mi mamá</li>
+<li id="frase.mi_mama_esta_en_la_casa"><b lang="miq">yaptiki utla ra sa</b> · Mi mamá está en la casa.</li>
+<li id="yauhka"><b lang="miq">yauhka</b> · mañana (el día siguiente)</li>
+<li id="frase.hasta_manana"><b lang="miq">yauhka kat</b> · Hasta mañana.</li>
+<li id="yaura"><b lang="miq">yaura</b> · yuca</li>
+<li id="yu"><b lang="miq">yu</b> · sol</li>
+<li id="yukuwaisna"><b lang="miq">yukuwaisna</b> · me voy a esconder</li>
+<li id="yukuwan"><b lang="miq">yukuwan</b> · se escondió</li>
+<li id="yukuwisa"><b lang="miq">yukuwisa</b> · se esconde</li>
+<li id="yul"><b lang="miq">yul</b> · perro</li>
+<li id="frase.el_perro_come"><b lang="miq">yul pisa</b> · El perro come.</li>
+<li id="frase.el_perro_come.2"><b lang="miq">yul plun pisa</b> · El perro come.</li>
+<li id="yumpha"><b lang="miq">yumpha</b> · tres</li>
+</ul>
+<!-- palabras:fin -->
+</div>
+
+  <section class="bloque">
+    <p class="aviso"><b>Sobre la voz.</b> El botón celeste usa la voz en español del teléfono o la computadora, preparada para acercarse al miskito, <b>para mientras</b> conseguimos grabaciones de hablantes. No distingue las vocales largas (<i>kati</i>, luna, y <i>kâti</i>, mes, suenan igual).</p>
+    <p class="aviso aviso--pico" style="margin-top:.8rem"><b>Las palabras «en revisión»</b> tienen una duda abierta: dos fuentes dicen distinto, o falta confirmar el significado. No aparecen en los ejercicios de la app hasta que un hablante las revise.</p>
+  </section>
+
+  <section class="bloque">
+    <h2>De dónde salen las palabras</h2>
+    <p class="bloque__bajada">Lo que escribió cada persona se guarda tal cual. Lo de los libros se cita, no se copia entero.</p>
+    <ul class="fuentes-lista" id="fuentes"></ul>
+  </section>
+</main>
+
+<div id="pie"></div>
+<script src="../assets/js/nav.js"></script>
+<script src="../assets/js/diccionario.js"></script>
+</body>
+</html>

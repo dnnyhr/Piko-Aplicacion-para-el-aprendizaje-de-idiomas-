@@ -1,0 +1,57 @@
+/*
+ * La barra de navegación y el pie del sitio. Es lo único que carga la portada
+ * de lo nuevo; las páginas interiores cargan además `sitio.css`.
+ * Usa las variables de color de la portada (las repite `sitio.css`).
+ */
+
+/* ---------- Barra de navegación ---------- */
+.nav{
+  position:sticky; top:0; z-index:50;
+  background:rgba(247,240,228,.92);
+  backdrop-filter:saturate(1.4) blur(10px); -webkit-backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid rgba(15,93,61,.10);
+}
+.nav__fila{
+  width:min(1180px,92vw); margin-inline:auto;
+  display:flex; align-items:center; gap:1rem; padding:.55rem 0;
+}
+.nav__marca{display:flex; align-items:center; gap:.5rem; text-decoration:none; flex:none}
+.nav__marca img{height:34px; width:auto}
+.nav__enlaces{
+  display:flex; gap:.4rem; margin:0 0 0 auto; padding:0; list-style:none;
+  overflow-x:auto; scrollbar-width:none;
+}
+.nav__enlaces::-webkit-scrollbar{display:none}
+.nav__enlace{
+  display:inline-flex; align-items:center; gap:.45rem; white-space:nowrap;
+  font-family:Fredoka,"Nunito Sans",sans-serif; font-weight:600; font-size:.95rem;
+  color:var(--verde-piko); text-decoration:none;
+  padding:.5rem .95rem; border-radius:999px; border:2px solid transparent;
+  transition:background .18s ease, border-color .18s ease, transform .18s ease;
+}
+.nav__enlace svg{width:19px; height:19px; flex:none; fill:currentColor}
+.nav__enlace:hover{background:#fff; border-color:rgba(15,93,61,.14); transform:translateY(-1px)}
+.nav__enlace[aria-current="page"]{background:var(--verde-piko); color:var(--papel); border-color:var(--verde-piko)}
+.nav__enlace:focus-visible{outline:3px solid var(--pico); outline-offset:2px}
+/* Cada sección con su color, como las plumas de Piko. */
+.nav__enlace--diccionario svg{color:var(--verde-pasto)}
+.nav__enlace--probar svg{color:var(--cielo)}
+.nav__enlace--docentes svg{color:var(--pico)}
+.nav__enlace--aporta svg{color:var(--copete)}
+.nav__enlace[aria-current="page"] svg{color:currentColor}
+
+@media (max-width:760px){
+  .nav__fila{flex-wrap:wrap; gap:.35rem; padding:.45rem 0 .5rem}
+  .nav__marca img{height:28px}
+  .nav__enlaces{margin:0; width:100%}
+  .nav__enlace{font-size:.88rem; padding:.42rem .8rem}
+}
+
+/* ---------- Pie ---------- */
+.sitio-pie{background:var(--verde-hondo); color:#DCEBE2; margin-top:clamp(2rem,6vw,4rem)}
+.sitio-pie__fila{width:min(1180px,92vw); margin-inline:auto; display:flex; flex-wrap:wrap; gap:1rem 2rem; align-items:center; justify-content:space-between; padding:1.6rem 0; font-size:.92rem}
+footer.sitio-pie a{color:#fff}
+
+@media (prefers-reduced-motion:reduce){
+  .nav__enlace{transition:none}
+}

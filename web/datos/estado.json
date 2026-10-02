@@ -1,0 +1,89 @@
+{
+ "lenguas": [
+  {
+   "codigo": "eng",
+   "nombre": "Inglés",
+   "autonimo": null,
+   "entradas": 91,
+   "por_revisar": 0,
+   "dichas_por_varias_personas": 0,
+   "paquetes": 6,
+   "ejercicios": 43,
+   "al_espanol": 0,
+   "interfaz": null,
+   "fuentes": [],
+   "diccionario": null
+  },
+  {
+   "codigo": "miq",
+   "nombre": "Miskito",
+   "autonimo": "Miskitu",
+   "entradas": 269,
+   "por_revisar": 18,
+   "dichas_por_varias_personas": 60,
+   "paquetes": 19,
+   "ejercicios": 167,
+   "al_espanol": 151,
+   "interfaz": {
+    "traducidos": 0,
+    "total": 110
+   },
+   "fuentes": [
+    {
+     "id": "raiti-2026-09-28",
+     "tipo": "encuesta",
+     "nombre": "Teacher Smith",
+     "detalle": "docente, Raiti, Río Coco",
+     "fecha": "2026-09-28"
+    },
+    {
+     "id": "raiti-2026-09-30",
+     "tipo": "encuesta",
+     "nombre": "Tangni",
+     "detalle": "estudiante, Raiti, Río Coco",
+     "fecha": "2026-09-30"
+    },
+    {
+     "id": "lackwood-2006",
+     "tipo": "publicacion",
+     "nombre": "Ernesto Scott Lackwood",
+     "detalle": "Diccionario Bilingüe: Términos de Medicina Tradicional en Lengua Miskita (Miskito – Español). URACCAN – IMTRADEC (Instituto de Medicina Tradicional y Desarrollo Comunitario), Bilwi, RAAN",
+     "fecha": "2006"
+    },
+    {
+     "id": "matamoros-1996",
+     "tipo": "publicacion",
+     "nombre": "Jorge Matamoros R.",
+     "detalle": "Diccionario Miskito–Miskitu, Español–Miskito. CIDCA (Centro de Investigaciones y Documentación de la Costa Atlántica)",
+     "fecha": "1996",
+     "enlace": "https://pueblosoriginarios.com/lenguas/miskito.php"
+    }
+   ],
+   "diccionario": "datos/diccionario-miq.json"
+  },
+  {
+   "codigo": "sum",
+   "nombre": "Mayangna",
+   "autonimo": null,
+   "desde": null
+  },
+  {
+   "codigo": "rma",
+   "nombre": "Rama",
+   "autonimo": null,
+   "desde": null
+  },
+  {
+   "codigo": "cab",
+   "nombre": "Garífuna",
+   "autonimo": null,
+   "desde": null
+  },
+  {
+   "codigo": "spa",
+   "nombre": "Español",
+   "autonimo": null,
+   "desde": "miq"
+  }
+ ]
+}

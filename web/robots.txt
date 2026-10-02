@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+# La app del navegador y los datos crudos no son páginas para buscar.
+Disallow: /probar/app/
+Disallow: /datos/
+Disallow: /herramientas/
+
+Sitemap: https://piko.mugiware.com/sitemap.xml

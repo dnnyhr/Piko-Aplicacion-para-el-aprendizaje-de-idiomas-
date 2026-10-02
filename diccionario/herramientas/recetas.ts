@@ -41,6 +41,11 @@ export interface Entrada {
   es: string;
   categoria: string;
   tema: string;
+  analisis?: string;
+  glosa?: string;
+  prestamo?: { de: string; origen: string; confianza: string };
+  normalizacion?: string;
+  notas?: string;
   de?: string;
   revisar?: string;
   reglas?: string[];

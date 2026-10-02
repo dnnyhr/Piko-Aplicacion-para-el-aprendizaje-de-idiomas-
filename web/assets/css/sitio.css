@@ -1,0 +1,85 @@
+/*
+ * Las piezas de las páginas interiores (diccionario, probar, docentes,
+ * aportá). La barra y el pie están en `nav.css`; la portada conserva sus
+ * propios estilos y sólo carga la barra.
+ *
+ * La paleta y las tipografías son las de la portada.
+ */
+
+:root{
+  --verde-piko:#0F5D3D;
+  --verde-hondo:#0A4530;
+  --verde-bosque:#197249;
+  --verde-hoja:#61A66B;
+  --verde-pasto:#97C137;
+  --cielo:#60C5FA;
+  --nube:#DDF1FC;
+  --papel:#F7F0E4;
+  --papel-hondo:#ECE1CC;
+  --copete:#E97927;
+  --pico:#E8A429;
+  --grafito:#16241D;
+  --tinta-suave:#55665C;
+  --sombra:0 18px 44px rgba(10,69,48,.14);
+  --sombra-chica:0 6px 18px rgba(10,69,48,.08);
+  --radio:18px;
+}
+
+/* ---------- Páginas interiores ---------- */
+.pagina{background:var(--papel); color:var(--grafito); font-family:"Nunito Sans",system-ui,sans-serif; font-size:17px; line-height:1.6; margin:0; -webkit-font-smoothing:antialiased}
+.pagina *{box-sizing:border-box}
+.pagina h1,.pagina h2,.pagina h3{font-family:Fredoka,"Nunito Sans",sans-serif; font-weight:600; line-height:1.1; margin:0; letter-spacing:-.01em}
+.pagina a{color:var(--verde-bosque)}
+.pagina p{margin:0 0 1rem}
+.contenedor{width:min(1180px,92vw); margin-inline:auto}
+
+.cabeza{padding:clamp(2.2rem,5vw,3.6rem) 0 clamp(1.4rem,3vw,2.2rem)}
+.cabeza__grid{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2rem; align-items:end}
+.cabeza h1{font-size:clamp(2rem,4.6vw,3.2rem); margin-bottom:.8rem}
+.cabeza h1 em{font-style:normal; color:var(--verde-piko)}
+.cabeza__bajada{font-size:clamp(1rem,1.4vw,1.15rem); color:#33453B; max-width:62ch; margin:0}
+.cabeza__piko{width:clamp(90px,12vw,150px); height:auto; filter:drop-shadow(0 16px 18px rgba(10,69,48,.22))}
+.etiqueta{
+  font-family:Fredoka,sans-serif; font-weight:600; font-size:.78rem;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--verde-bosque);
+  display:flex; align-items:center; gap:.6rem; margin:0 0 .9rem;
+}
+.etiqueta::before{content:""; width:26px; height:3px; border-radius:2px; background:var(--pico)}
+
+.bloque{padding:clamp(1.8rem,4vw,3rem) 0}
+.bloque--hondo{background:var(--papel-hondo)}
+.bloque h2{font-size:clamp(1.5rem,2.8vw,2.1rem); margin-bottom:.8rem}
+.bloque__bajada{color:#3B4C42; max-width:64ch}
+
+.tarjeta{background:#fff; border-radius:var(--radio); padding:clamp(1.1rem,2.4vw,1.6rem); box-shadow:var(--sombra-chica)}
+.rejilla{display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+
+.btn{
+  font-family:Fredoka,sans-serif; font-weight:600; font-size:1rem;
+  padding:.8rem 1.4rem; border-radius:999px; text-decoration:none; cursor:pointer;
+  display:inline-flex; align-items:center; gap:.5rem; border:2px solid transparent;
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.btn--solido{background:var(--verde-piko); color:var(--papel) !important; box-shadow:0 10px 22px rgba(15,93,61,.24)}
+.btn--solido:hover{transform:translateY(-2px)}
+.btn--linea{border-color:var(--verde-piko); color:var(--verde-piko) !important; background:rgba(255,255,255,.6)}
+.btn--linea:hover{background:#fff; transform:translateY(-2px)}
+
+.insignia{
+  display:inline-flex; align-items:center; gap:.3rem;
+  font-family:Fredoka,sans-serif; font-weight:500; font-size:.78rem;
+  padding:.18rem .6rem; border-radius:999px; background:var(--nube); color:var(--verde-hondo);
+}
+.insignia--revision{background:#FCE8C6; color:#7A4A05}
+.insignia--publicada{background:#EDE6F7; color:#4B3A72}
+.insignia--varias{background:#DFF0D2; color:#2E5A16}
+
+.aviso{
+  background:var(--nube); border-radius:var(--radio); padding:1rem 1.2rem;
+  font-size:.95rem; color:#24453A;
+}
+.aviso--pico{background:#FDF0D5; color:#5C3D02}
+
+@media (prefers-reduced-motion:reduce){
+  .btn{transition:none}
+}

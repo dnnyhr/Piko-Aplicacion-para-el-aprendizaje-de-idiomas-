@@ -15,6 +15,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { archivosDeInterfaz, avanceDeInterfaz } from './interfaz';
+import { archivosDeLaWeb } from './web';
 import { armar, armarAlEspanol, leerDiccionario, leerLenguas, paraLaApp, RAIZ_DICCIONARIO, type Armado, type Receta, type RecetaPaquete } from './recetas';
 
 const CONTENIDO = path.resolve(RAIZ_DICCIONARIO, '..', 'app', 'content');
@@ -84,6 +85,10 @@ for (const lengua of lenguas) {
   }
 }
 
+// Los datos del sitio web.
+for (const [ruta, texto] of archivosDeLaWeb()) otros.set(ruta, texto);
+resumen.push('  ✓ Sitio web       web/datos/');
+
 esperado.set(
   'index.ts',
   `/**
@@ -147,7 +152,10 @@ if (comprobar) {
     fs.writeFileSync(path.join(CONTENIDO, ruta), texto);
   }
   for (const r of sobran) fs.rmSync(path.join(CONTENIDO, r));
-  for (const [ruta, texto] of otrosDistintos) fs.writeFileSync(ruta, texto);
+  for (const [ruta, texto] of otrosDistintos) {
+    fs.mkdirSync(path.dirname(ruta), { recursive: true });
+    fs.writeFileSync(ruta, texto);
+  }
   console.log(`  ${distintos.length + otrosDistintos.length} archivo(s) escritos, ${sobran.length} borrados.\n`);
 }
 

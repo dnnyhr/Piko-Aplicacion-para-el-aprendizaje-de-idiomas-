@@ -22,6 +22,7 @@ diccionario/
 │   ├── contenido.ts          npm run contenido: escribe app/content/packs/ e index.ts
 │   ├── voz.ts                prepara cada palabra para la voz sintética
 │   ├── interfaz.ts           la planilla de traducción de la interfaz
+│   ├── web.ts                los datos del sitio: web/datos/, la lista del diccionario y el sitemap
 │   └── verificar.ts          npm run validate:diccionario: de la fuente al ejercicio
 ├── ingles/
 │   ├── fuentes.json · corpus.csv · lexico.json    escrito y revisado por el equipo

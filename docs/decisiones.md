@@ -338,6 +338,37 @@ en español.
 
 ---
 
+## 19. El sitio, de folleto a herramienta: páginas separadas y sin compilar
+
+**Contexto.** piko.mugiware.com era una sola página de scroll, sólo
+informativa, de 856 KB: las fotos iban en base64 y los logos repetidos dentro
+del HTML. Mientras tanto el repositorio ya tenía un diccionario, ejercicios y
+una app que corre en el navegador.
+
+**Decisión.** La portada queda como estaba, y una barra común lleva a cuatro
+páginas propias: el diccionario consultable, Piko en el navegador, la guía
+para docentes y «Aportá tu lengua». Sigue siendo un sitio estático, sin paso de
+compilación: HTML a mano, CSS y JS compartidos en `web/assets/`. Lo que sale
+de datos lo escribe `npm run contenido` (`web/datos/`, la lista de palabras
+del diccionario y el `sitemap.xml`), así el sitio nunca queda atrás del
+diccionario y CI lo comprueba. La app del navegador es el `expo export` de
+`app/` en `web/probar/app/`, con una carga por pantalla (`asyncRoutes` sólo en
+web).
+
+**Por qué.** Un docente o un hablante encuentra en el sitio lo mismo que usa
+la app, sin instalar nada. Sin compilación, cualquiera del equipo edita una
+página con un editor de texto. Separar fotos, logos, estilos y scripts en
+archivos deja la portada en 48 KB de HTML y permite que el navegador guarde
+en caché lo que se repite entre páginas.
+
+**Costo.** La copia de la app en `web/probar/app/` hay que regenerarla a mano
+(`npm run web:sitio`) cuando cambia la app. Las imágenes para compartir
+también (`web/herramientas/og.mjs`). El diccionario del sitio sólo muestra lo
+publicado en el repositorio: no muestra nada de las encuestas que no haya
+pasado al diccionario.
+
+---
+
 ## Pendientes conocidos
 
 - **El contenido de mayangna, rama y garífuna, y grabaciones de hablantes de
