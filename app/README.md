@@ -88,10 +88,11 @@ src/
     progress/   eventos, proyección determinista, semáforo de rezago
     content/    esquema, selección de ítems, corrección de respuestas
     session/    la sala como reductor puro
+    minijuegos/ preguntas y niveles de los minijuegos, desde el vocabulario aprendido
   net/          transporte (nativo / Node), host y cliente
   db/           SQLite: esquema, migraciones, log de eventos
   ui/           sistema de diseño y Piko
-  features/     ejercicios, progreso, sala
+  features/     ejercicios, progreso, sala, minijuegos
 tools/          simulador, validador de paquetes, generador de SVG
 tests/          vitest
 ```
@@ -100,6 +101,20 @@ tests/          vitest
 protocolo, la sincronización y el motor de progreso se prueban en Node, y la
 misma lógica de sala corre igual en el simulador que en el teléfono — lo único
 que cambia es qué transporte se le inyecta.
+
+## Minijuegos
+
+`app/minijuegos/` es la sección de minijuegos; la lista sale de
+`src/features/minijuegos/catalogo.ts`, que explica cómo sumar uno nuevo. El
+primero es la **Rayuela de Piko**: se juega en inglés o en miskito, sólo con
+palabras de las lecciones que el estudiante ya hizo, y sus niveles (inicial,
+intermedio, avanzado) se abren con esas lecciones.
+
+Al terminar, la partida queda en el log como un evento `gameDone`. La
+proyección le da sacuanjoches si se acertó al primer intento al menos dos
+tercios, y **una sola vez por día** por juego, lengua y nivel: repetir la misma
+partida es práctica, no flores. Como todo el progreso, suman al total, se ven
+en el perfil, hacen crecer el madroño y viajan al maestro.
 
 ## Los sprites de Piko
 

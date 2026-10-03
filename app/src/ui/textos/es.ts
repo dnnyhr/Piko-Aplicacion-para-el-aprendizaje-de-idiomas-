@@ -22,6 +22,7 @@ export const ES = {
   'portada.unirme': 'Unirme a la clase',
   'portada.maestro': 'Soy el maestro',
   'portada.lengua_app': 'La app en',
+  'portada.minijuegos': 'Minijuegos',
 
   // ── Comunes
   'comun.volver': 'Volver',
@@ -93,6 +94,56 @@ export const ES = {
   'maestro.empezar_ronda': 'Empezar una ronda',
   'maestro.cerrar': 'Cerrar la sala',
 
+  // ── Minijuegos
+  'minijuegos.titulo': 'Minijuegos',
+  'minijuegos.sub': 'Jugá con las palabras que ya aprendiste en tus lecciones.',
+  'minijuegos.jugar': 'Jugar',
+  'minijuegos.pronto': 'Pronto va a haber más juegos.',
+
+  // ── Rayuela de Piko
+  'rayuela.nombre': 'Rayuela de Piko',
+  'rayuela.descripcion': 'Saltá con Piko por la rayuela eligiendo la casilla correcta.',
+  'rayuela.elegir_lengua': '¿En qué lengua querés saltar?',
+  'rayuela.nivel': 'Nivel',
+  'rayuela.sugerido': 'Sugerido',
+  'rayuela.segun_lecciones': 'Según tus lecciones: {nivel}',
+  'rayuela.nivel_inicial': 'Inicial',
+  'rayuela.nivel_intermedio': 'Intermedio',
+  'rayuela.nivel_avanzado': 'Avanzado',
+  'rayuela.desc_inicial': 'Palabras sencillas con dibujos de apoyo.',
+  'rayuela.desc_intermedio': 'Más palabras y menos dibujos, en las dos direcciones.',
+  'rayuela.desc_avanzado': 'Frases cortas y audio, sin dibujos. Escuchá y elegí.',
+  'rayuela.casillas': '{n} casillas',
+  'rayuela.bloqueado': 'Se abre con {n} lecciones más',
+  'rayuela.bloqueado_palabras': 'Se abre con más palabras aprendidas',
+  'rayuela.sin_vocabulario': 'Todavía no hay palabras aprendidas de {lengua}. Hacé una lección y volvé a saltar.',
+  'rayuela.ir_a_practicar': 'Ir a practicar',
+  'rayuela.a_saltar': '¡A saltar!',
+  'rayuela.cambiar_lengua': 'Podés cambiar la lengua en cualquier partida con el globo.',
+  'rayuela.pregunta_directo': '¿Qué significa en español?',
+  'rayuela.pregunta_inverso': '¿Cómo se dice en {lengua}?',
+  'rayuela.pregunta_escucha': 'Escuchá a Piko. ¿Qué dijo?',
+  'rayuela.etiqueta': '{lengua} · {nivel} · {n} de {total}',
+  'rayuela.seguir': 'Seguir saltando',
+  'rayuela.al_cielo': 'Saltar al cielo',
+  'rayuela.reintentar': 'Intentar de nuevo',
+  'rayuela.pista_escucha': 'Tocá el parlante para escuchar otra vez.',
+  'rayuela.pista_mirar': 'Mirá bien y elegí otra casilla.',
+  'rayuela.cielo': 'Cielo',
+  'rayuela.escuchar': 'Escuchar',
+  'rayuela.salir': 'Salir de la rayuela',
+  'rayuela.casilla': 'Casilla {n}: {texto}',
+  'rayuela.fin_cielo': '¡Llegaste al cielo!',
+  'rayuela.fin_bien': '¡Bien saltado!',
+  'rayuela.fin_sin_flores': '¡Terminaste la rayuela!',
+  'rayuela.fin_repetida': '¡Rayuela terminada!',
+  'rayuela.sin_flores_explica': 'Con {n} de {total} al primer salto ganás sacuanjoches. Repasá estas palabras y volvé a saltar.',
+  'rayuela.repetida_explica': 'Esta rayuela ya te dio flores hoy. Mañana vuelve a dar, o probá otro nivel u otra lengua.',
+  'rayuela.al_primer_salto': 'Al primer salto',
+  'rayuela.volver_a_saltar': 'Volver a saltar',
+  'rayuela.otra_rayuela': 'Otra rayuela',
+  'rayuela.sacuanjoches': 'Sacuanjoches',
+
   // ── Nombres de las lenguas
   'lengua.eng': 'Inglés',
   'lengua.miq': 'Miskito',
@@ -129,5 +180,9 @@ export const ES = {
   'piko.subir_nivel': ['¡Subimos una rama!', '¡Más arriba! Desde acá se ve todo.', '¡Tu árbol nos está llevando alto!'],
   /** Cuando el madroño pasa a la etapa siguiente. */
   'piko.arbol_crece': ['¡Mirá cómo creció tu madroño!', '¡Tu árbol está creciendo!'],
+  /** Rayuela: al caer en la casilla correcta. */
+  'piko.rayuela_salto': ['¡Eso!', '¡Buen salto!', '¡Así se hace!', '¡Muy bien!', '¡Bien saltado!'],
+  /** Rayuela: al caer en otra casilla. Sin "no" ni "mal": se vuelve a probar. */
+  'piko.rayuela_casi': ['Casi. Probá otra casilla.', 'Buen intento. Elegí otra.', 'Ya casi. Probá de nuevo.'],
   'piko.esperando': ['Esperando a la clase…', 'Ya casi empezamos.', 'El maestro está preparando la ronda.'],
 } as const;
