@@ -4,7 +4,7 @@
  * dos dispositivos converjan al mismo estado sin coordinarse.
  */
 
-export type ProgressEventKind = 'answer' | 'lessonDone' | 'joinedSession';
+export type ProgressEventKind = 'answer' | 'lessonDone' | 'joinedSession' | 'gameDone';
 
 export interface AnswerPayload {
   itemId: string;
@@ -22,6 +22,28 @@ export interface LessonDonePayload {
   total: number;
 }
 
+/**
+ * Una partida de minijuego terminada. Da sacuanjoches una sola vez por día y
+ * por juego, lengua y nivel (`clavePremio`): repetir la misma partida sirve
+ * para practicar, no para juntar flores.
+ */
+export interface GameDonePayload {
+  /** Qué minijuego, p. ej. `rayuela`. */
+  game: string;
+  /** La lengua que se practicó. */
+  lang: string;
+  /** El nivel de la partida, p. ej. `inicial`. */
+  level: string;
+  /** Aciertos al primer intento. */
+  correct: number;
+  total: number;
+  /**
+   * El día en el teléfono que la jugó, `AAAA-MM-DD`. Va en el evento y no se
+   * calcula al proyectar, para que todos los teléfonos lleguen al mismo estado.
+   */
+  day: string;
+}
+
 export interface JoinedSessionPayload {
   sessionId: string;
 }
@@ -29,7 +51,8 @@ export interface JoinedSessionPayload {
 export type ProgressPayload =
   | ({ kind: 'answer' } & AnswerPayload)
   | ({ kind: 'lessonDone' } & LessonDonePayload)
-  | ({ kind: 'joinedSession' } & JoinedSessionPayload);
+  | ({ kind: 'joinedSession' } & JoinedSessionPayload)
+  | ({ kind: 'gameDone' } & GameDonePayload);
 
 export interface ProgressEvent {
   /** UUID. Es la clave de idempotencia: reenviar un evento nunca lo duplica. */
@@ -113,6 +136,13 @@ export function lessonDoneEvent(args: {
   return { id, studentId, originDevice, createdAt, kind: 'lessonDone', payload: { ...rest } };
 }
 
+export function gameDoneEvent(
+  args: { id: string; studentId: string; originDevice: string; createdAt: number } & GameDonePayload,
+): ProgressEvent {
+  const { id, studentId, originDevice, createdAt, ...rest } = args;
+  return { id, studentId, originDevice, createdAt, kind: 'gameDone', payload: { ...rest } };
+}
+
 export function joinedSessionEvent(args: {
   id: string;
   studentId: string;
@@ -126,7 +156,7 @@ export function joinedSessionEvent(args: {
 
 // ------------------------------------------------------------------ validación
 
-const KINDS: ReadonlySet<string> = new Set(['answer', 'lessonDone', 'joinedSession']);
+const KINDS: ReadonlySet<string> = new Set(['answer', 'lessonDone', 'joinedSession', 'gameDone']);
 
 /** Valida un evento que llegó por la red. Nunca confiar en el otro extremo. */
 export function parseEvent(raw: unknown): ProgressEvent | null {

@@ -70,6 +70,9 @@ export default function Portada() {
           <Boton ancho tono="verde" onPress={() => router.push('/practicar')}>
             {t('portada.practicar')}
           </Boton>
+          <Boton ancho tono="pico" onPress={() => router.push('/minijuegos')}>
+            {t('portada.minijuegos')}
+          </Boton>
           <Boton ancho tono="cielo" onPress={() => router.push('/estudiante/unirse')}>
             {t('portada.unirme')}
           </Boton>
