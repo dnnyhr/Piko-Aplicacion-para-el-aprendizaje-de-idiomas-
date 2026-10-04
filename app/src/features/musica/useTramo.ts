@@ -4,6 +4,10 @@
  *
  * Para cortar un tramo se mira el tiempo del reproductor y se pausa al
  * pasar el final; con una actualización cada 100 ms el corte cae a tiempo.
+ *
+ * Saltar a un segundo antes de que la grabación termine de cargar no hace
+ * nada (en la web, por ejemplo): el salto queda pendiente y se hace apenas
+ * la grabación sabe cuánto dura.
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -14,10 +18,19 @@ export function useTramo(fuente: number) {
   const status = useAudioPlayerStatus(player);
   const [fin, setFin] = useState<number | null>(null);
   const alTerminar = useRef<(() => void) | null>(null);
+  const pendiente = useRef<number | null>(null);
+
+  // El salto pendiente, apenas la grabación está lista.
+  useEffect(() => {
+    if (pendiente.current === null || !(status.duration > 0)) return;
+    const desde = pendiente.current;
+    pendiente.current = null;
+    if (Math.abs(status.currentTime - desde) > 0.5) player.seekTo(desde).catch(() => undefined);
+  }, [status.duration, status.currentTime, player]);
 
   // Al pasar el final del tramo: pausa y avisa.
   useEffect(() => {
-    if (fin === null || !status.playing) return;
+    if (fin === null || !status.playing || pendiente.current !== null) return;
     if (status.currentTime >= fin) {
       player.pause();
       setFin(null);
@@ -41,6 +54,7 @@ export function useTramo(fuente: number) {
   const tocar = (desde = 0, hasta?: number, cuandoTermine?: () => void) => {
     alTerminar.current = cuandoTermine ?? null;
     setFin(hasta ?? null);
+    if (!(status.duration > 0)) pendiente.current = desde;
     player
       .seekTo(desde)
       .then(() => player.play())
@@ -49,6 +63,7 @@ export function useTramo(fuente: number) {
 
   const pausar = () => {
     alTerminar.current = null;
+    pendiente.current = null;
     setFin(null);
     player.pause();
   };

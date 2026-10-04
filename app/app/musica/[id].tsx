@@ -102,7 +102,7 @@ export default function CancionPantalla() {
   if (fase === 'cancion') {
     return (
       <Pantalla>
-        <Experiencia key={intento} cancion={c} audio={audio} onTerminar={terminar} onSalir={() => setFase('conoce')} />
+        <Experiencia key={intento} cancion={c} audio={audio} premiable={premiable} onTerminar={terminar} onSalir={() => setFase('conoce')} />
       </Pantalla>
     );
   }
@@ -147,6 +147,7 @@ export default function CancionPantalla() {
 
         <View style={styles.conoce}>
           <Text style={styles.subtitulo}>{t('musica.conoce')}</Text>
+          <Text style={styles.cultura}>{t('musica.cultura')}</Text>
           <Dato etiqueta={t('musica.de_donde')} valor={c.conoce.origen} />
           <Dato etiqueta={t('musica.lengua')} valor={c.conoce.lengua} />
           <Dato etiqueta={t('musica.region')} valor={c.conoce.region} />
@@ -195,6 +196,7 @@ const styles = StyleSheet.create({
     padding: espacio.lg,
   },
   subtitulo: { ...texto.subtitulo, color: color.grafito },
+  cultura: { ...texto.cuerpoFuerte, color: color.verde },
   dato: { gap: 2 },
   datoEtiqueta: { ...texto.etiqueta, fontSize: 11, color: color.tintaSuave },
   datoValor: { ...texto.cuerpo, color: color.grafito },
