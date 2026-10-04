@@ -12,5 +12,14 @@
  */
 
 import type { Cancion } from '../../src/core/canciones/cancion';
+import mayaya from './mayaya.json';
+import daleSuRondon from './dale-su-rondon.json';
+import paloDeMayo from './palo-de-mayo.json';
+import saborARondonYAPinol from './sabor-a-rondon-y-a-pinol.json';
 
-export const CANCIONES: readonly Cancion[] = [];
+export const CANCIONES: readonly Cancion[] = [
+  mayaya as Cancion,
+  daleSuRondon as Cancion,
+  paloDeMayo as Cancion,
+  saborARondonYAPinol as Cancion,
+];
