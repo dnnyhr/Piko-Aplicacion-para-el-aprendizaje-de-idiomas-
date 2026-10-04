@@ -1,39 +1,55 @@
 /**
- * Al terminar la rayuela.
+ * Al terminar cualquier minijuego.
  *
- * El festejo depende de cómo se saltó: sólo hay cielo, flores y madroño que
- * crece cuando hubo flores. Sin aciertos suficientes Piko anima a volver a
- * intentarlo; si la rayuela ya dio flores hoy, lo dice: no se festeja algo
- * que no pasó.
+ * El festejo depende de cómo se jugó: sólo hay flores y madroño que crece
+ * cuando hubo flores. Si no alcanzó, Piko anima a volver a intentarlo; si el
+ * juego ya dio flores hoy, lo dice: no se festeja algo que no pasó.
  */
 
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Boton } from '../../../ui/components/Boton';
-import { Globo } from '../../../ui/components/Globo';
-import { PikoMascota } from '../../../ui/piko/PikoMascota';
-import { Sacuanjoche } from '../../../ui/arbol/Sacuanjoche';
-import { RecompensaLeccion } from '../../arbol/RecompensaLeccion';
-import { useTextos } from '../../../ui/textos/useTextos';
-import type { Recompensa } from '../../../core/progress/arbol';
-import { SALTOS } from '../../../core/minijuegos/rayuela';
-import { color, espacio, radio, texto } from '../../../ui/tokens';
+import { Boton } from '../../ui/components/Boton';
+import { Globo } from '../../ui/components/Globo';
+import { PikoMascota } from '../../ui/piko/PikoMascota';
+import { Sacuanjoche } from '../../ui/arbol/Sacuanjoche';
+import { RecompensaLeccion } from '../arbol/RecompensaLeccion';
+import { useTextos } from '../../ui/textos/useTextos';
+import type { Recompensa } from '../../core/progress/arbol';
+import { color, espacio, radio, texto } from '../../ui/tokens';
 
-/** Aciertos al primer salto que hacen falta para que haya flores. */
-export const MINIMO_FLORES = Math.ceil((SALTOS * 2) / 3);
+export interface DatoPartida {
+  valor: string;
+  etiqueta: string;
+}
 
-export interface FinProps {
+export interface FinPartidaProps {
   recompensa: Recompensa;
-  primeros: number;
-  /** La rayuela ya había dado flores hoy: esta partida fue de práctica. */
+  /** El juego ya había dado flores hoy: esta partida fue de práctica. */
   repetida: boolean;
-  xpGanado: number;
   titulo: string;
+  /** Qué faltó para que hubiera flores. */
+  explicacionSinFlores: string;
+  /** Los números de la partida, en tarjetitas. */
+  datos: readonly DatoPartida[];
+  /** «Volver a saltar», «Lanzar otra vez»… */
+  textoReintentar: string;
+  textoOtra: string;
+  onReintentar: () => void;
   onOtra: () => void;
-  onVolverASaltar: () => void;
   onVerArbol: () => void;
 }
 
-export function Fin({ recompensa, primeros, repetida, xpGanado, titulo, onOtra, onVolverASaltar, onVerArbol }: FinProps) {
+export function FinPartida({
+  recompensa,
+  repetida,
+  titulo,
+  explicacionSinFlores,
+  datos,
+  textoReintentar,
+  textoOtra,
+  onReintentar,
+  onOtra,
+  onVerArbol,
+}: FinPartidaProps) {
   const { t } = useTextos();
   const hubo = recompensa.ganadas > 0;
 
@@ -55,46 +71,36 @@ export function Fin({ recompensa, primeros, repetida, xpGanado, titulo, onOtra, 
               </View>
             ))}
           </View>
-          <Text style={styles.explica}>
-            {repetida
-              ? t('rayuela.repetida_explica')
-              : t('rayuela.sin_flores_explica', { n: MINIMO_FLORES, total: SALTOS })}
-          </Text>
+          <Text style={styles.explica}>{repetida ? t('minijuegos.repetida_explica') : explicacionSinFlores}</Text>
         </View>
       )}
 
       <View style={styles.marcador}>
-        <Dato valor={`${primeros}/${SALTOS}`} etiqueta={t('rayuela.al_primer_salto')} />
-        <Dato valor={`+${xpGanado}`} etiqueta="XP" />
-        <Dato valor={`+${recompensa.ganadas}`} etiqueta={t('rayuela.sacuanjoches')} />
+        {datos.map((d) => (
+          <View key={d.etiqueta} style={styles.dato}>
+            <Text style={styles.datoValor}>{d.valor}</Text>
+            <Text style={styles.datoEtiqueta}>{d.etiqueta}</Text>
+          </View>
+        ))}
       </View>
 
       <View style={styles.acciones}>
         {!hubo && !repetida ? (
           <>
-            <Boton ancho onPress={onVolverASaltar}>
-              {t('rayuela.volver_a_saltar')}
+            <Boton ancho onPress={onReintentar}>
+              {textoReintentar}
             </Boton>
             <Boton ancho tono="papel" onPress={onOtra}>
-              {t('rayuela.otra_rayuela')}
+              {textoOtra}
             </Boton>
           </>
         ) : (
           <Boton ancho onPress={onOtra}>
-            {t('rayuela.otra_rayuela')}
+            {textoOtra}
           </Boton>
         )}
       </View>
     </ScrollView>
-  );
-}
-
-function Dato({ valor, etiqueta }: { valor: string; etiqueta: string }) {
-  return (
-    <View style={styles.dato}>
-      <Text style={styles.datoValor}>{valor}</Text>
-      <Text style={styles.datoEtiqueta}>{etiqueta}</Text>
-    </View>
   );
 }
 

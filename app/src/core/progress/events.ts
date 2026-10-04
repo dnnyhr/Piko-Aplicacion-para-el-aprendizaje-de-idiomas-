@@ -37,6 +37,8 @@ export interface GameDonePayload {
   /** Aciertos al primer intento. */
   correct: number;
   total: number;
+  /** Mejor racha de aciertos seguidos, para los juegos que la premian (el trompo). */
+  streak?: number;
   /**
    * El día en el teléfono que la jugó, `AAAA-MM-DD`. Va en el evento y no se
    * calcula al proyectar, para que todos los teléfonos lleguen al mismo estado.

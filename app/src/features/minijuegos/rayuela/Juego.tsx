@@ -27,7 +27,7 @@ import {
 } from '../../../core/minijuegos/rayuela';
 import { callar, decir, vozDePiko } from '../voz';
 import { Tablero, type Casilla } from './Tablero';
-import { Globito } from './Elegir';
+import { Globito } from '../../../ui/minijuegos/Iconos';
 import { color, espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
 
 /** Dónde termina el cielo y empieza el patio. */
@@ -171,7 +171,7 @@ export function Juego({ preguntas, lengua, nivel, sacuanjoches, onResponder, onT
         <View
           style={styles.progreso}
           accessible
-          accessibilityLabel={t('rayuela.etiqueta', { lengua: nombreLengua, nivel: t(`rayuela.nivel_${nivel}`), n: paso + 1, total: SALTOS })}
+          accessibilityLabel={t('rayuela.etiqueta', { lengua: nombreLengua, nivel: t(`minijuegos.nivel_${nivel}`), n: paso + 1, total: SALTOS })}
         >
           {preguntas.map((_, i) => {
             const hecho = i < paso || (i === paso && resultado === 'acierto');
@@ -193,7 +193,7 @@ export function Juego({ preguntas, lengua, nivel, sacuanjoches, onResponder, onT
         )}
         <View style={styles.tarjetaTextos}>
           <Text style={styles.etiqueta}>
-            {t('rayuela.etiqueta', { lengua: nombreLengua, nivel: t(`rayuela.nivel_${nivel}`), n: paso + 1, total: SALTOS })}
+            {t('rayuela.etiqueta', { lengua: nombreLengua, nivel: t(`minijuegos.nivel_${nivel}`), n: paso + 1, total: SALTOS })}
           </Text>
           <Text style={styles.pregunta}>{pregunta}</Text>
           {mostrarFoco ? (
@@ -208,7 +208,7 @@ export function Juego({ preguntas, lengua, nivel, sacuanjoches, onResponder, onT
           <Pressable
             onPress={escuchar}
             accessibilityRole="button"
-            accessibilityLabel={t('rayuela.escuchar')}
+            accessibilityLabel={t('minijuegos.escuchar')}
             style={[styles.parlante, q.tipo === 'escucha' ? styles.parlanteGrande : null, sonando ? styles.parlanteSonando : null]}
           >
             <Svg width={28} height={28} viewBox="0 0 24 24" fill="none" stroke={color.blanco} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">

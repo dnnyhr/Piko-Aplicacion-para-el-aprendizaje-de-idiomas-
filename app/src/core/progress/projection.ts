@@ -9,7 +9,8 @@
  */
 
 import { compareEvents, type AnswerPayload, type ProgressEvent } from './events';
-import { sacuanjochesPorLeccion, sacuanjochesPorMinijuego } from './arbol';
+import { sacuanjochesPorLeccion } from './arbol';
+import { floresDeMinijuego } from '../minijuegos/premios';
 
 export const XP_ACIERTO = 10;
 export const XP_INTENTO = 2;
@@ -161,11 +162,16 @@ function step(state: StudentState, ev: ProgressEvent): void {
     }
 
     case 'gameDone': {
-      const { game, lang, level, correct, total, day } = ev.payload;
+      const { game, lang, level, correct, total, day, streak } = ev.payload;
       if (typeof game !== 'string' || typeof lang !== 'string' || typeof level !== 'string') return;
       if (typeof correct !== 'number' || typeof total !== 'number' || typeof day !== 'string') return;
       const clave = clavePremio(game, lang, level);
-      const flores = sacuanjochesPorMinijuego(correct, total);
+      const flores = floresDeMinijuego({
+        game,
+        correct,
+        total,
+        streak: typeof streak === 'number' ? streak : undefined,
+      });
       if (flores > 0 && !yaPremiado(state, clave, day)) {
         state.sacuanjoches += flores;
         state.premiosJuegos[clave] = day;

@@ -1,11 +1,11 @@
 /**
- * Rayuela de Piko.
+ * El Trompo de Piko.
  *
- * Aprendo → juego → salto con Piko → gano sacuanjoches → crece mi madroño.
- * Las palabras salen de las lecciones que el estudiante ya hizo; las flores
- * entran al mismo log de progreso que las lecciones, así que suman al total,
- * se ven en el perfil, hacen crecer el madroño y no se pierden al cerrar la
- * app.
+ * Aprendo → lanzo el trompo → respondo → lo mantengo girando → gano
+ * sacuanjoches → crece mi madroño. Las palabras salen de las lecciones que
+ * el estudiante ya hizo; las respuestas y las flores entran al mismo log de
+ * progreso que las lecciones: se guardan sin internet, suman al total y al
+ * madroño, y viajan al maestro cuando hay clase.
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -17,25 +17,23 @@ import { useProgreso } from '../../src/features/progreso/store';
 import { useMinijuegos } from '../../src/features/minijuegos/store';
 import { decir, vozDePiko } from '../../src/features/minijuegos/voz';
 import { ElegirPartida } from '../../src/features/minijuegos/ElegirPartida';
-import { Juego } from '../../src/features/minijuegos/rayuela/Juego';
 import { FinPartida } from '../../src/features/minijuegos/FinPartida';
+import { JuegoTrompo } from '../../src/features/minijuegos/trompo/Juego';
 import { Bandera } from '../../src/ui/minijuegos/Bandera';
-import { IconoRayuela } from '../../src/ui/minijuegos/IconoRayuela';
+import { Hoja } from '../../src/ui/minijuegos/Iconos';
+import { DibujoTrompo } from '../../src/ui/minijuegos/Trompo';
+import { tienePictograma } from '../../src/ui/minijuegos/Pictograma';
 import {
-  armarPartida,
-  CASILLAS,
   diaLocal,
-  ID_RAYUELA,
-  LENGUAS_RAYUELA,
+  LENGUAS_MINIJUEGOS,
   nivelesDe,
   nivelSugerido,
   paquetesEstudiados,
-  SALTOS,
   vocabularioAprendido,
-  type LenguaRayuela,
-  type NivelRayuela,
-  type Pregunta,
-} from '../../src/core/minijuegos/rayuela';
+  type LenguaMinijuego,
+  type NivelMinijuego,
+} from '../../src/core/minijuegos/vocabulario';
+import { armarRetos, ID_TROMPO, META, OPCIONES, SEGUNDOS, type EstadoTrompo, type Reto } from '../../src/core/minijuegos/trompo';
 import { clavePremio, yaPremiado } from '../../src/core/progress/projection';
 import type { Recompensa } from '../../src/core/progress/arbol';
 import { color } from '../../src/ui/tokens';
@@ -43,18 +41,14 @@ import { PACKS } from '../../content';
 
 type Fase = 'elegir' | 'jugando' | 'fin';
 
-/** Aciertos al primer salto que hacen falta para que haya flores (ver `sacuanjochesPorMinijuego`). */
-const MINIMO_FLORES = Math.ceil((SALTOS * 2) / 3);
-
 interface Final {
   recompensa: Recompensa;
-  primeros: number;
+  partida: EstadoTrompo;
   repetida: boolean;
-  xpGanado: number;
   titulo: string;
 }
 
-export default function Rayuela() {
+export default function Trompo() {
   const router = useRouter();
   const { t, frases, idioma } = useTextos();
   const estado = useProgreso((s) => s.estado);
@@ -62,61 +56,59 @@ export default function Rayuela() {
   const terminarMinijuego = useProgreso((s) => s.terminarMinijuego);
   const lenguaGuardada = useMinijuegos((s) => s.lengua);
   const elegirLengua = useMinijuegos((s) => s.elegirLengua);
-  const lengua: LenguaRayuela = lenguaGuardada ?? 'eng';
+  const lengua: LenguaMinijuego = lenguaGuardada ?? 'eng';
 
   // Lo guardado de otras veces: las lecciones hechas abren los niveles.
   useEffect(() => {
     useProgreso.getState().recomputar();
   }, []);
 
-  const niveles = useMemo(() => nivelesDe(PACKS, estado, lengua), [estado, lengua]);
+  const niveles = useMemo(() => nivelesDe(PACKS, estado, lengua, OPCIONES), [estado, lengua]);
   const sugerido = nivelSugerido(niveles);
-  const [elegido, setElegido] = useState<NivelRayuela | null>(null);
-  const abierto = (n: NivelRayuela | null) => !!n && niveles.some((x) => x.nivel === n && x.abierto);
+  const [elegido, setElegido] = useState<NivelMinijuego | null>(null);
+  const abierto = (n: NivelMinijuego | null) => !!n && niveles.some((x) => x.nivel === n && x.abierto);
   const nivel = abierto(elegido) ? elegido : sugerido;
 
   const temas = useMemo(() => {
-    const out = {} as Record<LenguaRayuela, string[]>;
-    for (const l of LENGUAS_RAYUELA) {
+    const out = {} as Record<LenguaMinijuego, string[]>;
+    for (const l of LENGUAS_MINIJUEGOS) {
       out[l] = [...new Set(paquetesEstudiados(PACKS, estado, l).map((p) => p.theme))].sort();
     }
     return out;
   }, [estado]);
 
   const [fase, setFase] = useState<Fase>('elegir');
-  const [preguntas, setPreguntas] = useState<Pregunta[]>([]);
+  const [retos, setRetos] = useState<Reto[]>([]);
+  const [intento, setIntento] = useState(0);
   const [final, setFinal] = useState<Final | null>(null);
-  // Fijados al empezar: lo que cambia durante la partida no debe mover la regla.
-  const partida = useRef<{ nivel: NivelRayuela; premiable: boolean; xpInicio: number }>({
-    nivel: 'inicial',
-    premiable: true,
-    xpInicio: 0,
-  });
+  // Fijados al lanzar: lo que cambia durante la partida no debe mover la regla.
+  const partida = useRef<{ nivel: NivelMinijuego; premiable: boolean }>({ nivel: 'inicial', premiable: true });
 
   const empezar = () => {
     if (!nivel) return;
     const actual = useProgreso.getState().estado;
-    const armada = armarPartida(vocabularioAprendido(PACKS, actual, lengua), nivel, actual, Math.random);
-    if (armada.length === 0) return;
+    const armados = armarRetos(vocabularioAprendido(PACKS, actual, lengua), nivel, actual, Math.random, tienePictograma);
+    if (armados.length === 0) return;
     partida.current = {
       nivel,
-      // Si esta rayuela ya dio flores hoy, se juega de práctica: sin XP ni flores.
-      premiable: !yaPremiado(actual, clavePremio(ID_RAYUELA, lengua, nivel), diaLocal()),
-      xpInicio: actual.xp,
+      // Si este trompo ya dio flores hoy en este nivel, se juega de práctica: sin XP ni flores.
+      premiable: !yaPremiado(actual, clavePremio(ID_TROMPO, lengua, nivel), diaLocal()),
     };
-    setPreguntas(armada);
+    setRetos(armados);
+    setIntento((n) => n + 1);
     setFinal(null);
     setFase('jugando');
   };
 
-  const terminar = (primeros: number) => {
-    const { nivel: jugado, premiable, xpInicio } = partida.current;
+  const terminar = (resultado: EstadoTrompo) => {
+    const { nivel: jugado, premiable } = partida.current;
     const recompensa = terminarMinijuego({
-      game: ID_RAYUELA,
+      game: ID_TROMPO,
       lang: lengua,
       level: jugado,
-      correct: primeros,
-      total: SALTOS,
+      correct: resultado.aciertos,
+      total: resultado.respondidas,
+      streak: resultado.mejorRacha,
       day: diaLocal(),
     });
     const repetida = !premiable;
@@ -124,28 +116,21 @@ export default function Rayuela() {
       recompensa.ganadas > 0
         ? recompensa.crecioArbol
           ? elegir(frases('piko.arbol_crece'))
-          : primeros === SALTOS
-            ? t('rayuela.fin_cielo')
-            : t('rayuela.fin_bien')
+          : t('trompo.fin_completo')
         : repetida
-          ? t('rayuela.fin_repetida')
-          : t('rayuela.fin_sin_flores');
+          ? t('trompo.fin_repetida')
+          : t('trompo.fin_cayo');
     decir([vozDePiko(titulo, idioma)]);
-    setFinal({
-      recompensa,
-      primeros,
-      repetida,
-      xpGanado: Math.max(0, useProgreso.getState().estado.xp - xpInicio),
-      titulo,
-    });
+    setFinal({ recompensa, partida: resultado, repetida, titulo });
     setFase('fin');
   };
 
-  if (fase === 'jugando' && preguntas.length > 0) {
+  if (fase === 'jugando' && retos.length > 0) {
     return (
       <Pantalla acolchado={false} fondo={color.nube}>
-        <Juego
-          preguntas={preguntas}
+        <JuegoTrompo
+          key={intento}
+          retos={retos}
           lengua={lengua}
           nivel={partida.current.nivel}
           sacuanjoches={estado.sacuanjoches}
@@ -160,20 +145,21 @@ export default function Rayuela() {
   }
 
   if (fase === 'fin' && final) {
+    const p = final.partida;
     return (
       <Pantalla>
         <FinPartida
           recompensa={final.recompensa}
           repetida={final.repetida}
           titulo={final.titulo}
-          explicacionSinFlores={t('rayuela.sin_flores_explica', { n: MINIMO_FLORES, total: SALTOS })}
+          explicacionSinFlores={t('trompo.sin_flores_explica', { meta: META })}
           datos={[
-            { valor: `${final.primeros}/${SALTOS}`, etiqueta: t('rayuela.al_primer_salto') },
-            { valor: `+${final.xpGanado}`, etiqueta: 'XP' },
-            { valor: `+${final.recompensa.ganadas}`, etiqueta: t('minijuegos.sacuanjoches') },
+            { valor: `${p.aciertos}/${p.respondidas}`, etiqueta: t('trompo.aciertos_etiqueta') },
+            { valor: String(p.mejorRacha), etiqueta: t('trompo.mejor_racha') },
+            { valor: String(p.puntos), etiqueta: t('trompo.puntos_etiqueta') },
           ]}
-          textoReintentar={t('rayuela.volver_a_saltar')}
-          textoOtra={t('rayuela.otra_rayuela')}
+          textoReintentar={t('trompo.lanzar_otra_vez')}
+          textoOtra={t('trompo.otra_partida')}
           onReintentar={empezar}
           onOtra={() => setFase('elegir')}
           onVerArbol={() => router.push('/arbol')}
@@ -185,13 +171,13 @@ export default function Rayuela() {
   return (
     <Pantalla>
       <ElegirPartida
-        titulo={t('rayuela.nombre')}
-        portada={<IconoRayuela tam={110} />}
-        pregunta={t('rayuela.elegir_lengua')}
-        iconoLengua={(l) => <Bandera lengua={l} />}
-        detalleNivel={(n) => t('rayuela.casillas', { n: CASILLAS[n] })}
-        descNivel={(n) => t(`rayuela.desc_${n}`)}
-        empezar={t('rayuela.a_saltar')}
+        titulo={t('trompo.nombre')}
+        portada={<DibujoTrompo tam={120} />}
+        pregunta={t('trompo.elegir_lengua')}
+        iconoLengua={(l) => (l === 'miq' ? <Hoja /> : <Bandera lengua={l} />)}
+        detalleNivel={(n) => t('trompo.detalle_nivel', { n: OPCIONES[n], s: SEGUNDOS[n] })}
+        descNivel={(n) => t(`trompo.desc_${n}`)}
+        empezar={t('trompo.a_jugar')}
         lengua={lengua}
         nivel={nivel}
         niveles={niveles}
