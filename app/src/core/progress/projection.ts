@@ -11,6 +11,7 @@
 import { compareEvents, type AnswerPayload, type ProgressEvent } from './events';
 import { sacuanjochesPorLeccion } from './arbol';
 import { floresDeMinijuego } from '../minijuegos/premios';
+import { ID_MUSICA } from '../canciones/cancion';
 
 export const XP_ACIERTO = 10;
 export const XP_INTENTO = 2;
@@ -50,6 +51,12 @@ export interface StudentState {
    * la misma partida: una vez por día, y después sólo práctica.
    */
   premiosJuegos: Record<string, string>;
+  /**
+   * Las canciones de «La Música de Piko» completadas (con al menos la mitad
+   * de las respuestas buenas), por id, ordenadas. Para el perfil y para
+   * abrir las canciones del nivel siguiente.
+   */
+  cancionesCompletas: string[];
   lastActiveAt: number;
   /** Mayor `seq` aplicado. Los eventos locales sin sincronizar no lo mueven. */
   throughSeq: number;
@@ -68,6 +75,7 @@ export function emptyState(studentId: string): StudentState {
     lessons: 0,
     sacuanjoches: 0,
     premiosJuegos: {},
+    cancionesCompletas: [],
     lastActiveAt: 0,
     throughSeq: 0,
   };
@@ -95,6 +103,7 @@ export function cloneState(s: StudentState): StudentState {
     lessons: s.lessons ?? 0,
     sacuanjoches: s.sacuanjoches ?? 0,
     premiosJuegos: { ...(s.premiosJuegos ?? {}) },
+    cancionesCompletas: (s.cancionesCompletas ?? []).slice(),
   };
 }
 
@@ -175,6 +184,12 @@ function step(state: StudentState, ev: ProgressEvent): void {
       if (flores > 0 && !yaPremiado(state, clave, day)) {
         state.sacuanjoches += flores;
         state.premiosJuegos[clave] = day;
+      }
+      // Una canción cuenta como completada aunque hoy ya hubiera dado flores.
+      // En la música, `level` es el id de la canción.
+      if (game === ID_MUSICA && flores > 0 && !state.cancionesCompletas.includes(level)) {
+        state.cancionesCompletas.push(level);
+        state.cancionesCompletas.sort();
       }
       return;
     }
