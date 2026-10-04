@@ -88,6 +88,12 @@ async function verificarLengua(lengua: Lengua): Promise<string[]> {
     : null;
   // El texto del sitio (reglas-sitio.md) sólo puede traer reglas sólidas
   const textoSitio = path.join(dir, 'reglas-sitio.md');
+  // El miskito tiene página de reglas en el sitio (web/reglas/): sin estos dos
+  // archivos, la página quedaría con reglas viejas.
+  if (lengua.codigo === 'miq') {
+    if (!reglas) errores.push('falta gramatica.md: de ahí sale qué reglas publica web/reglas/');
+    if (!(await existe(textoSitio))) errores.push('falta reglas-sitio.md: de ahí sale el texto de web/reglas/');
+  }
   if (reglas && (await existe(textoSitio))) {
     errores.push(...problemasDeLasReglas(await fs.readFile(gramatica, 'utf8'), await fs.readFile(textoSitio, 'utf8')));
   }

@@ -234,12 +234,16 @@
       texto.textContent = m;
       setTimeout(function () { texto.textContent = "Compartir esta palabra"; }, 2200);
     };
+    var copiar = function () {
+      if (navigator.clipboard) navigator.clipboard.writeText(url).then(function () { aviso("Enlace copiado"); }, function () { aviso(url); });
+      else aviso(url);
+    };
     if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
-      navigator.share({ title: boton.getAttribute("data-forma") + " · Diccionario miskito de Piko", url: url }).catch(function () {});
-    } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(function () { aviso("Enlace copiado"); }, function () { aviso(url); });
+      // Si la persona cierra el menú (AbortError) no pasa nada; si falla, se copia.
+      navigator.share({ title: boton.getAttribute("data-forma") + " · Diccionario miskito de Piko", url: url })
+        .catch(function (e) { if (!e || e.name !== "AbortError") copiar(); });
     } else {
-      aviso(url);
+      copiar();
     }
   }
 
@@ -301,7 +305,19 @@
     });
   }
 
+  /** Las correcciones pendientes del último salto a una palabra. */
+  var correcciones = [];
+  function cancelarCorrecciones() {
+    correcciones.forEach(clearTimeout);
+    correcciones = [];
+  }
+  // Si la persona se mueve por su cuenta, el salto ya no la reubica.
+  ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) {
+    window.addEventListener(ev, cancelarCorrecciones, { passive: true });
+  });
+
   function ir(id) {
+    cancelarCorrecciones();
     var el = document.getElementById(id);
     var donde = function () { return actual.findIndex(function (e) { return e.id === id; }); };
     if (!el && donde() < 0) {
@@ -316,8 +332,8 @@
     // Las tarjetas lejanas no se dibujan hasta acercarse (content-visibility) y
     // cambian de alto al hacerlo: se salta sin animación y se corrige al llegar.
     el.scrollIntoView({ block: "start" });
-    [80, 250, 600].forEach(function (ms) {
-      setTimeout(function () {
+    correcciones = [80, 250, 600].map(function (ms) {
+      return setTimeout(function () {
         var arriba = el.getBoundingClientRect().top;
         var margen = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
         if (Math.abs(arriba - margen) > 4) el.scrollIntoView({ block: "start" });

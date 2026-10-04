@@ -262,7 +262,11 @@ export function archivosDeLaWeb(generados: ReadonlyMap<string, string> = new Map
       const gramatica = path.join(d.dir, 'gramatica.md');
       const textoSitio = path.join(d.dir, 'reglas-sitio.md');
       const paginaReglas = path.join(WEB, 'reglas', 'index.html');
-      if (fs.existsSync(gramatica) && fs.existsSync(textoSitio) && fs.existsSync(paginaReglas)) {
+      if (fs.existsSync(paginaReglas)) {
+        // Sin sus fuentes, la página quedaría publicada con reglas viejas: mejor fallar.
+        for (const f of [gramatica, textoSitio]) {
+          if (!fs.existsSync(f)) throw new Error(`Falta ${path.relative(path.resolve(RAIZ_DICCIONARIO, '..'), f)}: de ahí sale web/reglas/index.html`);
+        }
         const reglas = reglasSolidas(fs.readFileSync(gramatica, 'utf8'), fs.readFileSync(textoSitio, 'utf8'));
         const { lista, filtros } = reglasHtml(reglas);
         const nota = 'lo escribe npm run contenido desde diccionario/miskito/reglas-sitio.md';
