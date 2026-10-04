@@ -1,14 +1,18 @@
 /**
  * Una partida de chibolas.
  *
- * En la rueda de tiza hay una chibola por respuesta, alrededor del hoyito. Se
- * apunta arrastrando el tiro hacia atrás (como cuando se tira con el dedo) y
- * se suelta; o, más fácil, se toca la chibola elegida. Si el tiro le pega a
- * la correcta, esa chibola cae al hoyito; si no, el tiro rebota, Piko da una
- * pista y se vuelve a tirar.
+ * En la rueda de tiza hay una chibola por respuesta, alrededor del hoyito.
+ * Se tira como de verdad: se agarra el tiro, se estira hacia atrás (la línea
+ * de puntos dice hacia dónde va a salir) y se suelta. El tiro vuela hasta la
+ * chibola que queda en esa dirección y se detiene al tocarla. Si es la
+ * correcta, cae al hoyito; si no, el tiro rebota, Piko da una pista y se
+ * vuelve a tirar.
  *
- * Sin físicas: el tiro va derecho a la chibola que queda más cerca de la
- * dirección apuntada, con `transform` y el driver nativo.
+ * Sin motor de físicas: el vuelo es un traslado en línea recta, con
+ * `transform` y el driver nativo. Mientras se apunta no se vuelve a dibujar la
+ * pantalla en cada movimiento del dedo: la chibola estirada y la línea se
+ * mueven con valores animados, y el estado cambia sólo cuando cambia la
+ * chibola apuntada. Así anda en un Android de gama baja.
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -27,6 +31,7 @@ import * as Haptics from 'expo-haptics';
 import Svg, { Circle, Line } from 'react-native-svg';
 import { BarraFeedback } from '../../exercises/BarraFeedback';
 import { ContadorSacuanjoches } from '../../../ui/arbol/ContadorSacuanjoches';
+import { Sacuanjoche } from '../../../ui/arbol/Sacuanjoche';
 import { Escena, TIZA } from '../../../ui/minijuegos/Escena';
 import { Chibola, COLORES_CHIBOLA, COLOR_TIRO } from '../../../ui/minijuegos/Chibola';
 import { Cerrar, Globito, Parlante } from '../../../ui/minijuegos/Iconos';
@@ -37,14 +42,22 @@ import { elegir } from '../../../ui/piko/frases';
 import { useTextos } from '../../../ui/textos/useTextos';
 import { vozDePalabra, type LenguaMinijuego, type NivelMinijuego, type Palabra } from '../../../core/minijuegos/vocabulario';
 import { pistaDe, type Reto } from '../../../core/minijuegos/retos';
-import { chibolaAlcanzada, TIROS } from '../../../core/minijuegos/chibolas';
+import { ARRASTRE_MAXIMO, chibolaAlcanzada, leerArrastre, puntoDeImpacto, TIROS } from '../../../core/minijuegos/chibolas';
 import { callar, decir, vozDePiko } from '../voz';
 import { color, espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
 
 const HORIZONTE = 236;
 const TAM_CHIBOLA = 46;
 const TAM_TIRO = 40;
-const VUELO_MS = 380;
+/** La zona donde se agarra el tiro: mucho más grande que la chibola, para que no haga falta puntería con el dedo. */
+const AGARRE = 120;
+/** Velocidad del vuelo, en puntos por milisegundo (con un mínimo y un máximo de duración). */
+const VELOCIDAD = 0.9;
+/** Largo de la línea de puntos y cuántos puntos la forman. */
+const LARGO_MIRA = 150;
+const PUNTOS_MIRA = 7;
+/** Si una animación no termina (la app se fue al fondo, por ejemplo), el tiro se destraba solo. */
+const DESTRABE_MS = 2600;
 
 export interface JuegoChibolasProps {
   retos: readonly Reto[];
@@ -86,6 +99,16 @@ function anguloHacia(a: Punto, b: Punto): number {
   return (Math.atan2(b.x - a.x, a.y - b.y) * 180) / Math.PI;
 }
 
+/** Las flores del festejo: salen del hoyito para los costados. */
+const FLORES = [
+  { x: -70, y: -60 },
+  { x: 70, y: -60 },
+  { x: -95, y: 5 },
+  { x: 95, y: 5 },
+  { x: -45, y: 55 },
+  { x: 45, y: 55 },
+];
+
 export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoChibolasProps) {
   const { t, frases, idioma } = useTextos();
   const [paso, setPaso] = useState(0);
@@ -95,16 +118,26 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
   const [frase, setFrase] = useState('');
   const [ocupado, setOcupado] = useState(false);
   const [sonando, setSonando] = useState(false);
-  const [apunta, setApunta] = useState<{ angulo: number; largo: number } | null>(null);
+  const [apuntando, setApuntando] = useState(false);
+  const [apuntada, setApuntada] = useState<number | null>(null);
+  const [aviso, setAviso] = useState<string | null>(null);
   const [campo, setCampo] = useState<{ w: number; h: number } | null>(null);
   const [quieto, setQuieto] = useState(false);
 
   const primeros = useRef(0);
   const desde = useRef(Date.now());
   const relojes = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const destrabe = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** El tiro, relativo a su lugar en la raya. */
   const tiro = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  /** La línea de puntos: hacia dónde y qué tan estirado. */
+  const mira = useRef(new Animated.Value(0)).current;
+  const fuerza = useRef(new Animated.Value(0)).current;
+  /** La chibola golpeada: cae al hoyito, o tiembla si no era. */
   const caida = useRef(new Animated.Value(0)).current;
+  const tiembla = useRef(new Animated.Value(0)).current;
   const destello = useRef(new Animated.Value(0)).current;
+  const festejo = useRef(new Animated.Value(0)).current;
 
   const r = retos[paso] as Reto;
   const nombreLengua = t(`lengua.${lengua}`);
@@ -115,6 +148,7 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
       .catch(() => undefined);
     return () => {
       relojes.current.forEach(clearTimeout);
+      if (destrabe.current) clearTimeout(destrabe.current);
       callar();
     };
   }, []);
@@ -126,9 +160,10 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
   // La geometría del patio: la rueda arriba, el tiro abajo al centro.
   const geo = useMemo(() => {
     if (!campo) return null;
-    const radioRueda = Math.min(campo.w * 0.44, campo.h * 0.36);
+    // Abajo del tiro queda lugar para estirarlo entero sin que se salga de la pantalla.
+    const inicio = { x: campo.w / 2, y: campo.h - TAM_TIRO / 2 - ARRASTRE_MAXIMO - 12 };
+    const radioRueda = Math.min(campo.w * 0.44, (inicio.y - TAM_TIRO - 150) / 2);
     const centro = { x: campo.w / 2, y: radioRueda + 16 };
-    const inicio = { x: campo.w / 2, y: campo.h - TAM_TIRO / 2 - 20 };
     const puntos = lugares(r.opciones.length, centro, radioRueda);
     return { radioRueda, centro, inicio, puntos, angulos: puntos.map((p) => ({ angulo: anguloHacia(inicio, p) })) };
   }, [campo, r.opciones.length]);
@@ -143,10 +178,34 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
     desde.current = Date.now();
     tiro.setValue({ x: 0, y: 0 });
     caida.setValue(0);
+    tiembla.setValue(0);
+    festejo.setValue(0);
     if (r.tipo === 'audio') luego(escuchar, 350);
   }, [paso]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const tirar = (i: number) => {
+  /** Las chibolas que todavía se pueden tirar en esta pregunta. */
+  const libres = r.opciones.map((_, i) => i).filter((i) => !probadas.includes(i));
+
+  /** Si algo se traba, el tiro vuelve a la mano y se puede seguir tirando. */
+  const armarDestrabe = () => {
+    if (destrabe.current) clearTimeout(destrabe.current);
+    destrabe.current = setTimeout(() => {
+      setOcupado((o) => {
+        if (o) tiro.setValue({ x: 0, y: 0 });
+        return false;
+      });
+    }, DESTRABE_MS);
+  };
+  const soltarDestrabe = () => {
+    if (destrabe.current) clearTimeout(destrabe.current);
+    destrabe.current = null;
+  };
+
+  /**
+   * Lanza el tiro desde donde quedó estirado (`suelto`) hasta la chibola `i`.
+   * Lo usa el gesto y, para quien usa lector de pantalla, la acción de cada chibola.
+   */
+  const lanzar = (i: number, suelto: Punto = { x: 0, y: 0 }) => {
     if (!geo || ocupado || resultado || probadas.includes(i)) return;
     const primerTiro = probadas.length === 0;
     const acerto = i === r.correcta;
@@ -155,15 +214,20 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
       if (acerto) primeros.current += 1;
     }
     setOcupado(true);
-    setApunta(null);
+    setApuntada(null);
     setGolpeada(i);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+    setAviso(null);
+    armarDestrabe();
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => undefined);
 
     const blanco = geo.puntos[i] as Punto;
-    const hasta = { x: blanco.x - geo.inicio.x, y: blanco.y - geo.inicio.y + TAM_CHIBOLA * 0.45 };
+    const salida = { x: geo.inicio.x + suelto.x, y: geo.inicio.y + suelto.y };
+    const choque = puntoDeImpacto(salida, blanco, (TAM_CHIBOLA + TAM_TIRO) / 2 - 4);
+    const hasta = { x: choque.x - geo.inicio.x, y: choque.y - geo.inicio.y };
+    const distancia = Math.hypot(choque.x - salida.x, choque.y - salida.y);
     const vuelo = Animated.timing(tiro, {
       toValue: hasta,
-      duration: quieto ? 0 : VUELO_MS,
+      duration: quieto ? 0 : Math.max(220, Math.min(520, distancia / VELOCIDAD)),
       easing: Easing.out(Easing.quad),
       useNativeDriver: true,
     });
@@ -174,12 +238,21 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
       vuelo.start(() => {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
         destello.setValue(0);
+        festejo.setValue(0);
         Animated.parallel([
           Animated.timing(caida, { toValue: 1, duration: quieto ? 0 : 480, easing: Easing.in(Easing.quad), useNativeDriver: true }),
           Animated.timing(destello, { toValue: 1, duration: quieto ? 0 : 600, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+          Animated.timing(festejo, { toValue: 1, duration: quieto ? 0 : 900, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
+          // El tiro se queda donde pegó, apenas empujado hacia atrás.
+          Animated.timing(tiro, {
+            toValue: { x: hasta.x * 0.92, y: hasta.y * 0.92 },
+            duration: quieto ? 0 : 200,
+            useNativeDriver: true,
+          }),
         ]).start();
         decir([vozDePiko(dicho, idioma), vozDePalabra(lengua, r.palabra)]);
         luego(() => {
+          soltarDestrabe();
           setResultado('acierto');
           setOcupado(false);
         }, 420);
@@ -187,59 +260,107 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
     } else {
       const dicho = elegir(frases('piko.chibola_rebota'));
       setFrase(dicho);
-      Animated.sequence([
-        vuelo,
-        Animated.timing(tiro, {
-          toValue: { x: hasta.x * 0.25, y: hasta.y * 0.25 },
-          duration: quieto ? 0 : 420,
-          easing: Easing.bounce,
-          useNativeDriver: true,
-        }),
-      ]).start(() => {
+      vuelo.start(() => {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => undefined);
-        decir([vozDePiko(dicho, idioma)]);
-        setProbadas((p) => [...p, i]);
-        setResultado('reboto');
-        setOcupado(false);
+        tiembla.setValue(0);
+        Animated.parallel([
+          // La chibola golpeada se sacude…
+          Animated.timing(tiembla, { toValue: 1, duration: quieto ? 0 : 420, easing: Easing.linear, useNativeDriver: true }),
+          // …y el tiro rebota hacia atrás.
+          Animated.timing(tiro, {
+            toValue: { x: hasta.x * 0.45, y: hasta.y * 0.45 },
+            duration: quieto ? 0 : 420,
+            easing: Easing.out(Easing.bounce),
+            useNativeDriver: true,
+          }),
+        ]).start(() => {
+          soltarDestrabe();
+          decir([vozDePiko(dicho, idioma)]);
+          setProbadas((p) => [...p, i]);
+          setResultado('reboto');
+          setOcupado(false);
+        });
       });
     }
   };
 
-  // Apuntar: se arrastra el tiro hacia atrás y sale para el otro lado.
-  const tirarRef = useRef(tirar);
-  tirarRef.current = tirar;
+  // El gesto vive en un ref: el PanResponder se arma una sola vez.
+  const lanzarRef = useRef(lanzar);
+  lanzarRef.current = lanzar;
   const geoRef = useRef(geo);
   geoRef.current = geo;
-  const libres = useRef<number[]>([]);
-  libres.current = r.opciones.map((_, i) => i).filter((i) => !probadas.includes(i));
+  const libresRef = useRef(libres);
+  libresRef.current = libres;
+  const listoRef = useRef(false);
+  listoRef.current = !ocupado && !resultado;
+  const apuntadaRef = useRef<number | null>(null);
+
+  const blancoDe = (angulo: number): number | undefined => {
+    const g = geoRef.current;
+    const posibles = libresRef.current;
+    if (!g || posibles.length === 0) return undefined;
+    return posibles[chibolaAlcanzada(angulo, posibles.map((k) => g.angulos[k] as { angulo: number }))];
+  };
+
   const pan = useMemo(
     () =>
       PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
-        onMoveShouldSetPanResponder: () => true,
+        onStartShouldSetPanResponder: () => listoRef.current,
+        onMoveShouldSetPanResponder: () => listoRef.current,
+        // Nadie le roba el gesto mientras se apunta (un scroll, un gesto del sistema).
+        onPanResponderTerminationRequest: () => false,
+        onShouldBlockNativeResponder: () => true,
+        onPanResponderGrant: () => {
+          Haptics.selectionAsync().catch(() => undefined);
+          tiro.setValue({ x: 0, y: 0 });
+          fuerza.setValue(0);
+          apuntadaRef.current = null;
+          setAviso(null);
+          setApuntando(true);
+        },
         onPanResponderMove: (_, g) => {
-          const largo = Math.hypot(g.dx, g.dy);
-          if (largo < 8) return setApunta(null);
-          setApunta({ angulo: (Math.atan2(-g.dx, g.dy) * 180) / Math.PI, largo: Math.min(largo, 120) });
+          const a = leerArrastre(g.dx, g.dy);
+          tiro.setValue({ x: a.x, y: a.y });
+          mira.setValue(a.angulo);
+          fuerza.setValue(a.lanza ? a.fuerza : 0);
+          const i = a.lanza ? blancoDe(a.angulo) : undefined;
+          const nueva = i ?? null;
+          if (nueva !== apuntadaRef.current) {
+            apuntadaRef.current = nueva;
+            setApuntada(nueva);
+            if (nueva !== null) Haptics.selectionAsync().catch(() => undefined);
+          }
         },
         onPanResponderRelease: (_, g) => {
-          const g2 = geoRef.current;
-          const largo = Math.hypot(g.dx, g.dy);
-          setApunta(null);
-          if (!g2 || largo < 20) return;
-          const angulo = (Math.atan2(-g.dx, g.dy) * 180) / Math.PI;
-          const posibles = libres.current;
-          const i = posibles[chibolaAlcanzada(angulo, posibles.map((k) => g2.angulos[k] as { angulo: number }))];
-          if (i !== undefined) tirarRef.current(i);
+          const a = leerArrastre(g.dx, g.dy);
+          setApuntando(false);
+          setApuntada(null);
+          apuntadaRef.current = null;
+          fuerza.setValue(0);
+          const i = a.lanza ? blancoDe(a.angulo) : undefined;
+          if (i === undefined) {
+            // Un toque o un estirón muy corto: el tiro vuelve y Piko explica.
+            Animated.spring(tiro, { toValue: { x: 0, y: 0 }, friction: 5, tension: 120, useNativeDriver: true }).start();
+            setAviso(t('chibolas.estira_mas'));
+            return;
+          }
+          lanzarRef.current(i, { x: a.x, y: a.y });
         },
-        onPanResponderTerminate: () => setApunta(null),
+        onPanResponderTerminate: () => {
+          setApuntando(false);
+          setApuntada(null);
+          apuntadaRef.current = null;
+          fuerza.setValue(0);
+          Animated.spring(tiro, { toValue: { x: 0, y: 0 }, friction: 5, tension: 120, useNativeDriver: true }).start();
+        },
       }),
-    [],
+    [], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const seguir = () => {
     if (resultado === 'reboto') {
-      tiro.setValue({ x: 0, y: 0 });
+      Animated.timing(tiro, { toValue: { x: 0, y: 0 }, duration: quieto ? 0 : 180, useNativeDriver: true }).start();
+      tiembla.setValue(0);
       setResultado(null);
       setGolpeada(null);
       return;
@@ -255,11 +376,7 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
     setResultado(null);
   };
 
-  const apuntada =
-    apunta && geo
-      ? libres.current[chibolaAlcanzada(apunta.angulo, libres.current.map((k) => geo.angulos[k] as { angulo: number }))]
-      : undefined;
-  const estadoPiko: EstadoPiko = resultado === 'acierto' ? 'celebrando' : resultado === 'reboto' ? 'animando' : apunta ? 'pensando' : 'idle';
+  const estadoPiko: EstadoPiko = resultado === 'acierto' ? 'celebrando' : resultado === 'reboto' ? 'animando' : apuntando ? 'pensando' : 'idle';
   const pista = pistaDe(r);
   const pregunta =
     r.tipo === 'traduccion'
@@ -273,6 +390,7 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
             : t('chibolas.pregunta_audio_frase');
   const verFoco = r.tipo === 'traduccion' || r.tipo === 'significado' || (r.tipo === 'audio' && resultado === 'acierto');
   const conDibujos = nivel === 'inicial' && !r.opcionesEnMeta;
+  const ayuda = aviso ?? (!resultado && !ocupado && paso === 0 && probadas.length === 0 ? t('chibolas.como') : null);
 
   return (
     <View style={styles.raiz}>
@@ -336,31 +454,19 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
       <View style={styles.campo} onLayout={(e: LayoutChangeEvent) => setCampo({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}>
         {geo && (
           <>
-            {/* La rueda de tiza, el hoyito y la línea de tiro */}
+            {/* La rueda de tiza, el hoyito y la raya de tiro */}
             <Svg width={campo!.w} height={campo!.h} style={StyleSheet.absoluteFill} pointerEvents="none">
               <Circle cx={geo.centro.x} cy={geo.centro.y} r={geo.radioRueda} fill="none" stroke={TIZA} strokeWidth={3} />
               <Circle cx={geo.centro.x} cy={geo.centro.y} r={11} fill="#8A6A45" stroke="#6E5233" strokeWidth={2} />
               <Line
-                x1={geo.inicio.x - 60}
-                y1={geo.inicio.y - TAM_TIRO / 2 - 8}
-                x2={geo.inicio.x + 60}
-                y2={geo.inicio.y - TAM_TIRO / 2 - 8}
+                x1={geo.inicio.x - 70}
+                y1={geo.inicio.y - TAM_TIRO / 2 - 10}
+                x2={geo.inicio.x + 70}
+                y2={geo.inicio.y - TAM_TIRO / 2 - 10}
                 stroke={TIZA}
                 strokeWidth={3}
                 strokeDasharray="8 6"
               />
-              {apunta && (
-                <Line
-                  x1={geo.inicio.x}
-                  y1={geo.inicio.y}
-                  x2={geo.inicio.x + Math.sin((apunta.angulo * Math.PI) / 180) * (60 + apunta.largo * 1.4)}
-                  y2={geo.inicio.y - Math.cos((apunta.angulo * Math.PI) / 180) * (60 + apunta.largo * 1.4)}
-                  stroke={color.verde}
-                  strokeWidth={3}
-                  strokeDasharray="2 8"
-                  strokeLinecap="round"
-                />
-              )}
             </Svg>
 
             {/* El destello del acierto, en el hoyito */}
@@ -381,18 +487,32 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
               const p = geo.puntos[i] as Punto;
               const probada = probadas.includes(i);
               const cae = resultado === 'acierto' && i === r.correcta;
-              const golpeadaAhora = golpeada === i && i === r.correcta;
-              const moverX = golpeadaAhora ? caida.interpolate({ inputRange: [0, 1], outputRange: [0, geo.centro.x - p.x] }) : 0;
-              const moverY = golpeadaAhora ? caida.interpolate({ inputRange: [0, 1], outputRange: [0, geo.centro.y - p.y] }) : 0;
-              const achica = golpeadaAhora ? caida.interpolate({ inputRange: [0, 1], outputRange: [1, 0.35] }) : 1;
+              const golpeadaAhora = golpeada === i;
+              const buena = golpeadaAhora && i === r.correcta;
+              const mala = golpeadaAhora && i !== r.correcta;
+              const moverX = buena
+                ? caida.interpolate({ inputRange: [0, 1], outputRange: [0, geo.centro.x - p.x] })
+                : mala
+                  ? tiembla.interpolate({ inputRange: [0, 0.2, 0.4, 0.6, 0.8, 1], outputRange: [0, -7, 7, -5, 3, 0] })
+                  : 0;
+              const moverY = buena ? caida.interpolate({ inputRange: [0, 1], outputRange: [0, geo.centro.y - p.y] }) : 0;
+              const achica = buena ? caida.interpolate({ inputRange: [0, 1], outputRange: [1, 0.35] }) : 1;
               return (
-                <View key={`${paso}-${i}`} style={[styles.lugar, { left: p.x - 70, top: p.y - TAM_CHIBOLA / 2 }]}>
-                  <Pressable
-                    onPress={() => tirar(i)}
-                    disabled={ocupado || !!resultado || probada}
+                <View
+                  key={`${paso}-${i}`}
+                  pointerEvents="none"
+                  style={[styles.lugar, { left: p.x - 70, top: p.y - TAM_CHIBOLA / 2 }]}
+                >
+                  <View
+                    // Para lectores de pantalla: la acción de la chibola es tirarle.
+                    testID={`chibola-${i}`}
+                    accessible
                     accessibilityRole="button"
                     accessibilityLabel={t('chibolas.chibola', { texto: op })}
+                    accessibilityHint={t('chibolas.como')}
                     accessibilityState={{ disabled: ocupado || !!resultado || probada }}
+                    accessibilityActions={[{ name: 'activate' }]}
+                    onAccessibilityAction={() => lanzar(i)}
                     style={[styles.blanco, probada ? styles.apagada : null]}
                   >
                     <Animated.View
@@ -403,40 +523,90 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
                     >
                       <Chibola tinte={COLORES_CHIBOLA[i % COLORES_CHIBOLA.length] as string} tam={TAM_CHIBOLA} />
                     </Animated.View>
-                    <View style={[styles.rotulo, cae ? styles.rotuloBueno : null]}>
+                    <View style={[styles.rotulo, apuntada === i ? styles.rotuloApuntado : null, cae ? styles.rotuloBueno : null, mala && resultado ? styles.rotuloMalo : null]}>
                       {conDibujos && tienePictograma(op) && <Pictograma es={op} tam={22} />}
                       <Text style={[styles.rotuloTexto, op.length > 14 ? styles.rotuloLargo : null]} numberOfLines={2}>
                         {op}
                       </Text>
                     </View>
-                  </Pressable>
+                  </View>
                 </View>
               );
             })}
 
+            {/* El festejo: sacuanjoches que salen del hoyito */}
+            {resultado === 'acierto' &&
+              FLORES.map((f, k) => (
+                <Animated.View
+                  key={k}
+                  pointerEvents="none"
+                  style={[
+                    styles.flor,
+                    {
+                      left: geo.centro.x - 13,
+                      top: geo.centro.y - 13,
+                      opacity: festejo.interpolate({ inputRange: [0, 0.15, 0.75, 1], outputRange: [0, 1, 1, 0] }),
+                      transform: [
+                        { translateX: festejo.interpolate({ inputRange: [0, 1], outputRange: [0, f.x] }) },
+                        { translateY: festejo.interpolate({ inputRange: [0, 1], outputRange: [0, f.y] }) },
+                        { rotate: festejo.interpolate({ inputRange: [0, 1], outputRange: ['0deg', `${k % 2 ? 160 : -160}deg`] }) },
+                      ],
+                    },
+                  ]}
+                >
+                  <Sacuanjoche tam={26} />
+                </Animated.View>
+              ))}
+
             {/* Piko, al lado de la raya */}
-            <View pointerEvents="none" style={[styles.piko, { left: geo.inicio.x - 150, top: geo.inicio.y - 100 }]}>
+            <View pointerEvents="none" style={[styles.piko, { left: geo.inicio.x - 160, top: geo.inicio.y - 96 }]}>
               <PikoMascota estado={estadoPiko} tam={104} />
             </View>
 
-            {/* El tiro: se arrastra para apuntar */}
-            <Animated.View
+            {/* La mira: puntos desde el tiro hacia donde va a salir */}
+            {apuntando && (
+              <Animated.View
+                pointerEvents="none"
+                style={[
+                  styles.mira,
+                  {
+                    left: geo.inicio.x - 6,
+                    top: geo.inicio.y - LARGO_MIRA,
+                    opacity: fuerza.interpolate({ inputRange: [0, 0.01, 1], outputRange: [0, 0.6, 1] }),
+                    transform: [
+                      { translateX: tiro.x },
+                      { translateY: tiro.y },
+                      { rotate: mira.interpolate({ inputRange: [-180, 180], outputRange: ['-180deg', '180deg'] }) },
+                    ],
+                  },
+                ]}
+              >
+                {Array.from({ length: PUNTOS_MIRA }, (_, k) => (
+                  <View key={k} style={[styles.puntoMira, { opacity: 0.35 + k * 0.1, transform: [{ scale: 0.7 + k * 0.05 }] }]} />
+                ))}
+              </Animated.View>
+            )}
+
+            {/* El tiro: se agarra desde una zona grande y se estira hacia atrás */}
+            <View
               {...pan.panHandlers}
+              testID="tiro"
               accessibilityElementsHidden
               importantForAccessibility="no-hide-descendants"
-              style={[
-                styles.tiro,
-                {
-                  left: geo.inicio.x - TAM_TIRO / 2,
-                  top: geo.inicio.y - TAM_TIRO / 2,
-                  transform: [{ translateX: tiro.x }, { translateY: tiro.y }],
-                },
-              ]}
+              style={[styles.agarre, { left: geo.inicio.x - AGARRE / 2, top: geo.inicio.y - AGARRE / 2 }]}
             >
-              <Chibola tinte={COLOR_TIRO} tam={TAM_TIRO} />
-            </Animated.View>
-            {!resultado && !ocupado && paso === 0 && probadas.length === 0 && (
-              <Text style={[styles.como, { top: geo.inicio.y + TAM_TIRO / 2 - 4 }]}>{t('chibolas.como')}</Text>
+              <Animated.View
+                pointerEvents="none"
+                style={[styles.tiro, apuntando ? styles.tiroAgarrado : null, { transform: [{ translateX: tiro.x }, { translateY: tiro.y }] }]}
+              >
+                <Chibola tinte={COLOR_TIRO} tam={TAM_TIRO} />
+              </Animated.View>
+            </View>
+
+            {ayuda && (
+              <View pointerEvents="none" style={[styles.comoCaja, { top: geo.inicio.y - 146 }]}>
+                <Text style={[styles.como, aviso ? styles.aviso : null]}>{ayuda}</Text>
+              </View>
             )}
           </>
         )}
@@ -528,7 +698,7 @@ const styles = StyleSheet.create({
   lugar: { position: 'absolute', width: 140, alignItems: 'center' },
   blanco: { alignItems: 'center', gap: 4, minWidth: 64, minHeight: 64 },
   apagada: { opacity: 0.35 },
-  apuntada: { transform: [{ scale: 1.15 }] },
+  apuntada: { transform: [{ scale: 1.18 }] },
   rotulo: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -541,7 +711,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
   },
+  rotuloApuntado: { borderColor: color.verde, backgroundColor: color.blanco },
   rotuloBueno: { backgroundColor: color.aciertoFondo, borderColor: color.acierto },
+  rotuloMalo: { backgroundColor: color.intentoFondo, borderColor: color.intento },
   rotuloTexto: { fontFamily: fuente.titulo, fontSize: 16, lineHeight: 20, color: color.grafito, flexShrink: 1, textAlign: 'center' },
   rotuloLargo: { fontFamily: fuente.cuerpoFuerte, fontSize: 13, lineHeight: 16 },
   destello: {
@@ -552,14 +724,49 @@ const styles = StyleSheet.create({
     borderWidth: 6,
     borderColor: color.verdePasto,
   },
+  flor: { position: 'absolute', width: 26, height: 26 },
   piko: { position: 'absolute' },
-  tiro: { position: 'absolute', width: TAM_TIRO, height: TAM_TIRO, zIndex: 4 },
-  como: {
+  // La mira mide el doble de largo y gira sobre su centro, que es el tiro: los puntos van en la mitad de arriba.
+  mira: {
+    position: 'absolute',
+    width: 12,
+    height: LARGO_MIRA * 2,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: (LARGO_MIRA - PUNTOS_MIRA * 10) / PUNTOS_MIRA,
+  },
+  puntoMira: { width: 10, height: 10, borderRadius: 5, backgroundColor: color.blanco, borderWidth: 2, borderColor: color.verde },
+  agarre: {
+    position: 'absolute',
+    width: AGARRE,
+    height: AGARRE,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 4,
+  },
+  tiro: {
+    width: TAM_TIRO + 8,
+    height: TAM_TIRO + 8,
+    borderRadius: (TAM_TIRO + 8) / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: 'rgba(255,253,244,0.8)',
+  },
+  tiroAgarrado: { borderColor: color.verde },
+  comoCaja: {
     position: 'absolute',
     left: espacio.xl,
     right: espacio.xl,
+    backgroundColor: 'rgba(255,253,244,0.92)',
+    borderRadius: radio.md,
+    paddingHorizontal: espacio.md,
+    paddingVertical: espacio.xs,
+  },
+  como: {
     textAlign: 'center',
     ...texto.chico,
     color: color.tinta,
   },
+  aviso: { ...texto.cuerpoFuerte, fontSize: 14, color: color.verdeHondo },
 });

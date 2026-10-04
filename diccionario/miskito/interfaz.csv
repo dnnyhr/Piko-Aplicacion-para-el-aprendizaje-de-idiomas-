@@ -151,7 +151,8 @@ chibolas.desc_inicial,"Dibujos y palabras sencillas, con 3 chibolas.",,
 chibolas.desc_intermedio,"4 chibolas y menos ayudas, con audio.",,
 chibolas.desc_avanzado,"Frases y audio, sin dibujos.",,
 chibolas.a_jugar,¡A tirar!,,
-chibolas.como,"Arrastrá tu chibola hacia atrás y soltala, o tocá la chibola que elegís.",,
+chibolas.como,"Agarrá tu chibola, estirala hacia atrás apuntando y soltala para tirar.",,
+chibolas.estira_mas,¡Estirala un poco más hacia atrás y soltala!,,
 chibolas.pregunta_traduccion,¿Cómo se dice en {lengua}?,,Dejar {lengua} tal cual: ahí la app pone un valor.
 chibolas.pregunta_significado,¿Qué significa?,,
 chibolas.pregunta_imagen,¿Cómo se dice en {lengua}?,,Dejar {lengua} tal cual: ahí la app pone un valor.
