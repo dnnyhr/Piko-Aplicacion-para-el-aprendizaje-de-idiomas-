@@ -7,6 +7,10 @@
   "nivel": "inicial",
   "imagen": "tambor",
   "audio": "mayaya.m4a",
+  "ritmo": {
+    "bpm": 136,
+    "pulso": 10.46
+  },
   "fuente": {
     "interpreta": "Dimensión Costeña",
     "autoria": "Tradicional del Palo de Mayo, en versión de Dimensión Costeña",
@@ -25,142 +29,181 @@
   "letra": [
     {
       "texto": "Mayaya lasiqui (mayaya oh)",
+      "nota": "Es el coro tradicional del Palo de Mayo: se canta igual en cualquier idioma.",
       "inicio": 24.2,
       "fin": 28.0
     },
     {
       "texto": "Quiero la llave que se perdió",
+      "en": "I want the key that got lost.",
       "inicio": 28.2,
       "fin": 31.5
     },
     {
       "texto": "Si no encuentro la llave no puedo entrar",
+      "en": "If I can't find the key, I can't go in.",
       "inicio": 31.5,
       "fin": 34.6
     },
     {
       "texto": "Toqué y toqué y nadie me abrió",
+      "en": "I knocked and knocked, and nobody opened.",
       "inicio": 35.2,
       "fin": 38.4
     },
     {
       "texto": "Si no hallo la llave me van a matar",
+      "en": "If I can't find the key, I'm in big trouble!",
+      "aproximado": true,
+      "nota": "La canción exagera en broma: dice «me van a matar». En inglés decimos «I'm in big trouble» (me meto en un gran lío).",
       "inicio": 38.4,
       "fin": 41.4
     },
     {
       "texto": "En mayo la llave se me perdió",
+      "en": "In May, I lost the key.",
       "inicio": 70.3,
       "fin": 74.0
     },
     {
       "texto": "Y la puerta cerrada se me quedó",
+      "en": "And the door stayed closed.",
       "inicio": 74.0,
       "fin": 77.6
     },
     {
       "texto": "Estoy contento, ya se encontró",
+      "en": "I'm happy, it was found!",
       "inicio": 77.6,
       "fin": 80.4
     },
     {
       "texto": "Y ahora la fiesta comienza a sonar",
+      "en": "And now the party music starts to play!",
       "inicio": 80.4,
       "fin": 84.0
     },
     {
       "texto": "Mayaya ven aquí",
+      "en": "Mayaya, come here!",
       "inicio": 219.6,
       "fin": 222.4
     },
     {
       "texto": "Mayaya ven acá",
+      "en": "Mayaya, come over here!",
       "inicio": 223.1,
       "fin": 226.2
     },
     {
       "texto": "Mayaya en Bluefields",
+      "en": "Mayaya in Bluefields",
       "inicio": 226.6,
       "fin": 229.6
     },
     {
       "texto": "De mi Nicaragua",
+      "en": "From my Nicaragua",
       "inicio": 229.9,
       "fin": 233.2
     },
     {
       "texto": "Mayaya en Miami",
+      "en": "Mayaya in Miami",
       "inicio": 233.8,
       "fin": 236.8
     },
     {
       "texto": "Mayaya en Nueva York",
+      "en": "Mayaya in New York",
       "inicio": 237.3,
       "fin": 240.3
     }
   ],
-  "palabras": [
-    {
-      "texto": "llave",
-      "es": "llave",
-      "en": "key",
-      "inicio": 28.75,
-      "fin": 29.35
-    },
-    {
-      "texto": "puerta",
-      "es": "puerta",
-      "en": "door",
-      "inicio": 74.4,
-      "fin": 75.0
-    },
-    {
-      "texto": "fiesta",
-      "es": "fiesta",
-      "en": "party",
-      "inicio": 82.0,
-      "fin": 82.55
-    },
-    {
-      "texto": "contento",
-      "es": "contento",
-      "en": "happy",
-      "inicio": 78.25,
-      "fin": 79.0
-    },
-    {
-      "texto": "mayo",
-      "es": "mayo",
-      "en": "May",
-      "inicio": 70.9,
-      "fin": 71.45
-    }
+  "coro": [
+    0
   ],
-  "completar": [
+  "lecciones": [
     {
       "verso": 1,
-      "en": "texto",
-      "oculta": "llave"
+      "completar": {
+        "oculta": "key",
+        "opciones": [
+          "key",
+          "ball",
+          "book"
+        ]
+      },
+      "palabra": {
+        "en": "key",
+        "es": "llave",
+        "ejemplo": "I have a key to my house.",
+        "ejemploEs": "Tengo una llave de mi casa.",
+        "opciones": [
+          "key",
+          "cat",
+          "song"
+        ]
+      },
+      "ordenar": "I want the key.",
+      "escucha": [
+        "I want the door that got lost.",
+        "I want the key to my house."
+      ]
     },
     {
       "verso": 6,
-      "en": "texto",
-      "oculta": "puerta"
+      "completar": {
+        "oculta": "door",
+        "opciones": [
+          "door",
+          "dog",
+          "song"
+        ]
+      },
+      "palabra": {
+        "en": "closed",
+        "es": "cerrada",
+        "ejemplo": "The store is closed today.",
+        "ejemploEs": "La tienda está cerrada hoy.",
+        "opciones": [
+          "closed",
+          "hungry",
+          "singing"
+        ]
+      },
+      "ordenar": "The door is closed.",
+      "escucha": [
+        "And the door stayed open.",
+        "And the window stayed closed."
+      ]
     },
     {
       "verso": 7,
-      "en": "texto",
-      "oculta": "contento"
-    },
-    {
-      "verso": 8,
-      "en": "texto",
-      "oculta": "fiesta"
-    },
-    {
-      "verso": 5,
-      "en": "texto",
-      "oculta": "mayo"
+      "completar": {
+        "oculta": "happy",
+        "opciones": [
+          "happy",
+          "hungry",
+          "sleepy"
+        ]
+      },
+      "palabra": {
+        "en": "happy",
+        "es": "contento",
+        "ejemplo": "My grandma is happy today.",
+        "ejemploEs": "Mi abuela está contenta hoy.",
+        "opciones": [
+          "happy",
+          "blue",
+          "fast"
+        ]
+      },
+      "ordenar": "I am happy today.",
+      "escucha": [
+        "I'm hungry, it was found!",
+        "I'm happy, it was lost!"
+      ]
     }
   ],
   "canta": {

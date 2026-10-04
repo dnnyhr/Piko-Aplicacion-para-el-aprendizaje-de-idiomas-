@@ -37,3 +37,22 @@ export function Sacuanjoche({ tam = 24 }: SacuanjocheProps) {
     </Svg>
   );
 }
+
+/**
+ * La misma flor para usar adentro de otro dibujo SVG (la falda de Piko):
+ * centrada en `x`, `y`, de `tam` unidades del dibujo que la contiene.
+ */
+export function FlorEnDibujo({ x, y, tam, giro = 0 }: { x: number; y: number; tam: number; giro?: number }) {
+  const k = tam / 40;
+  return (
+    <G transform={`translate(${x - tam / 2} ${y - tam / 2}) scale(${k}) rotate(${giro} 20 20)`}>
+      {GIROS.map((g) => (
+        <G key={g} rotation={g} origin="20, 20">
+          <Path d={PETALO} fill={SACUANJOCHE_COLOR.petalo} stroke={SACUANJOCHE_COLOR.borde} strokeWidth={1.4} />
+          <Path d={CORAZON} fill={SACUANJOCHE_COLOR.corazon} />
+        </G>
+      ))}
+      <Circle cx={20} cy={20} r={2.8} fill={SACUANJOCHE_COLOR.centro} />
+    </G>
+  );
+}

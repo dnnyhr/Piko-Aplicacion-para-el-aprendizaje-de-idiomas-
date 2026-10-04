@@ -7,6 +7,10 @@
   "nivel": "inicial",
   "imagen": "maracas",
   "audio": "dale-su-rondon.m4a",
+  "ritmo": {
+    "bpm": 161.5,
+    "pulso": 10.12
+  },
   "fuente": {
     "interpreta": "Dimensión Costeña",
     "autoria": "Dimensión Costeña",
@@ -25,127 +29,164 @@
   "letra": [
     {
       "texto": "Ay, qué ganas de comer,",
+      "en": "Oh, I really want to eat!",
       "inicio": 0.8,
       "fin": 5.2
     },
     {
       "texto": "sufro mucho sin cesar,",
+      "en": "I suffer so much, without end,",
       "inicio": 5.4,
       "fin": 9.0
     },
     {
       "texto": "un buen plato de rondón",
+      "en": "A good plate of rondón,",
+      "nota": "El rondón (en el inglés de la Costa, «rundown») es el plato típico: leche de coco, pescado o carne y tubérculos. Su nombre no se traduce.",
       "inicio": 9.2,
       "fin": 12.9
     },
     {
       "texto": "yo quisiera saborear.",
+      "en": "I would love to taste.",
       "inicio": 13.0,
       "fin": 17.0
     },
     {
       "texto": "Estoy feliz y también contento",
+      "en": "I'm happy and glad too",
       "inicio": 48.7,
       "fin": 50.4
     },
     {
       "texto": "por el rondón del cual llevo dentro,",
+      "en": "because of the rondón inside me,",
       "inicio": 50.4,
       "fin": 51.9
     },
     {
       "texto": "barriga llena, corazón contento,",
+      "en": "Full belly, happy heart,",
+      "aproximado": true,
+      "nota": "Es un dicho: cuando comemos bien, estamos felices. En inglés se entiende igual, palabra por palabra.",
       "inicio": 51.9,
       "fin": 54.0
     },
     {
       "texto": "ese es el mejor alimento.",
+      "en": "that is the best food.",
       "inicio": 54.0,
       "fin": 56.4
     },
     {
       "texto": "Todo costeño come rondón,",
+      "en": "Everyone from the Coast eats rondón,",
       "inicio": 63.7,
       "fin": 67.6
     },
     {
       "texto": "típico plato de mi nación.",
+      "en": "the typical dish of my nation.",
       "inicio": 67.6,
       "fin": 71.5
     },
     {
       "texto": "Rondón, don rondón, don,",
+      "nota": "Es el ritmo del coro, con el nombre del plato: se canta igual en inglés.",
       "inicio": 71.5,
       "fin": 75.6
     },
     {
       "texto": "rondón, rondón, don, don...",
+      "nota": "Es el ritmo del coro, con el nombre del plato: se canta igual en inglés.",
       "inicio": 75.6,
       "fin": 78.0
     }
   ],
-  "palabras": [
-    {
-      "texto": "comer",
-      "es": "comer",
-      "en": "to eat",
-      "inicio": 2.55,
-      "fin": 4.0
-    },
-    {
-      "texto": "plato",
-      "es": "plato",
-      "en": "dish",
-      "inicio": 9.55,
-      "fin": 10.1
-    },
-    {
-      "texto": "rondón",
-      "es": "rondón",
-      "en": "rundown (coconut stew)",
-      "inicio": 10.3,
-      "fin": 11.6
-    },
-    {
-      "texto": "barriga",
-      "es": "barriga",
-      "en": "belly",
-      "inicio": 51.85,
-      "fin": 52.6
-    },
-    {
-      "texto": "corazón",
-      "es": "corazón",
-      "en": "heart",
-      "inicio": 52.85,
-      "fin": 53.35
-    }
+  "coro": [
+    10
   ],
-  "completar": [
+  "lecciones": [
     {
       "verso": 0,
-      "en": "texto",
-      "oculta": "comer"
+      "completar": {
+        "oculta": "eat",
+        "opciones": [
+          "eat",
+          "sleep",
+          "sing"
+        ]
+      },
+      "palabra": {
+        "en": "eat",
+        "es": "comer",
+        "ejemplo": "We eat rice and beans at home.",
+        "ejemploEs": "En casa comemos arroz con frijoles.",
+        "opciones": [
+          "eat",
+          "jump",
+          "read"
+        ]
+      },
+      "ordenar": "I want to eat.",
+      "escucha": [
+        "Oh, I really want to sleep!",
+        "Oh, I really want to sing!"
+      ]
     },
     {
       "verso": 2,
-      "en": "texto",
-      "oculta": "rondón"
+      "completar": {
+        "oculta": "plate",
+        "opciones": [
+          "plate",
+          "shoe",
+          "door"
+        ]
+      },
+      "palabra": {
+        "en": "plate",
+        "es": "plato",
+        "ejemplo": "Put the plate on the table.",
+        "ejemploEs": "Poné el plato en la mesa.",
+        "opciones": [
+          "plate",
+          "cloud",
+          "river"
+        ]
+      },
+      "ordenar": "This is a good plate.",
+      "escucha": [
+        "A good cup of rondón.",
+        "A big plate of rice."
+      ]
     },
     {
       "verso": 6,
-      "en": "texto",
-      "oculta": "corazón"
-    },
-    {
-      "verso": 9,
-      "en": "texto",
-      "oculta": "plato"
-    },
-    {
-      "verso": 6,
-      "en": "texto",
-      "oculta": "barriga"
+      "completar": {
+        "oculta": "heart",
+        "opciones": [
+          "heart",
+          "hand",
+          "hat"
+        ]
+      },
+      "palabra": {
+        "en": "full",
+        "es": "llena",
+        "ejemplo": "My glass is full of water.",
+        "ejemploEs": "Mi vaso está lleno de agua.",
+        "opciones": [
+          "full",
+          "happy",
+          "fast"
+        ]
+      },
+      "ordenar": "My belly is full.",
+      "escucha": [
+        "Full belly, sad heart.",
+        "Happy belly, full heart."
+      ]
     }
   ],
   "canta": {
