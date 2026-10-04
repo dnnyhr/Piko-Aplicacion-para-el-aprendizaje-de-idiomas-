@@ -1,0 +1,215 @@
+{
+  "id": "tululu",
+  "titulo": "Tululu",
+  "lengua": "bzk",
+  "region": "Región Autónoma de la Costa Caribe Sur",
+  "comunidad": "Bluefields",
+  "nivel": "intermedio",
+  "imagen": "concha",
+  "audio": "tululu.m4a",
+  "fuente": {
+    "interpreta": "Dimensión Costeña",
+    "autoria": "Tradicional del Palo de Mayo, en versión de Dimensión Costeña",
+    "autoriza": "Dimensión Costeña",
+    "forma": "verbal",
+    "fecha": "2026-10-04",
+    "validado_por": "ruby845",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Una canción tradicional del Palo de Mayo de Bluefields, en la versión de Dimensión Costeña.",
+    "lengua": "Kriol, el inglés criollo de la Costa Caribe de Nicaragua.",
+    "region": "Región Autónoma de la Costa Caribe Sur, Nicaragua.",
+    "representa": "La fiesta de mayo en la calle: la gente va pasando y bailando, y la canción nombra a todos los que pasan, muchachas, muchachos, vecinos y amigos de Bluefields, Managua y Miami."
+  },
+  "letra": [
+    {
+      "texto": "Tulululu pasanda",
+      "es": "Tulululu está pasando",
+      "inicio": 20.4,
+      "fin": 21.5
+    },
+    {
+      "texto": "Gyal a boy dem pasanda",
+      "es": "Las muchachas y los muchachos están pasando",
+      "inicio": 21.5,
+      "fin": 23.2
+    },
+    {
+      "texto": "All a dem dey pasanda",
+      "es": "Todos ellos están pasando",
+      "inicio": 23.2,
+      "fin": 24.9
+    },
+    {
+      "texto": "Gyal a boy dem pasanda",
+      "es": "Las muchachas y los muchachos están pasando",
+      "inicio": 24.9,
+      "fin": 26.8
+    },
+    {
+      "texto": "Tulululu pasanda",
+      "es": "Tulululu está pasando",
+      "inicio": 26.8,
+      "fin": 28.2
+    },
+    {
+      "texto": "Gyal a boy dem pasanda",
+      "es": "Las muchachas y los muchachos están pasando",
+      "inicio": 28.2,
+      "fin": 29.7
+    },
+    {
+      "texto": "Yes, pass, pass, pasanda",
+      "es": "Sí, pasen, pasen, pasanda",
+      "inicio": 29.7,
+      "fin": 31.7
+    },
+    {
+      "texto": "Gyal a boy dem pasanda",
+      "es": "Las muchachas y los muchachos están pasando",
+      "inicio": 31.7,
+      "fin": 33.2
+    },
+    {
+      "texto": "Sakie Champa pasanda",
+      "es": "Sakie Champa está pasando",
+      "inicio": 33.2,
+      "fin": 35.2
+    },
+    {
+      "texto": "Gyal a boy dem pasanda",
+      "es": "Las muchachas y los muchachos están pasando",
+      "inicio": 35.2,
+      "fin": 36.7
+    },
+    {
+      "texto": "All a dem dey pasanda",
+      "es": "Todos ellos están pasando",
+      "inicio": 36.7,
+      "fin": 38.7
+    },
+    {
+      "texto": "Gyal a boy dem pasanda",
+      "es": "Las muchachas y los muchachos están pasando",
+      "inicio": 38.7,
+      "fin": 40.1
+    },
+    {
+      "texto": "Orlando Chamorro pasanda",
+      "es": "Orlando Chamorro está pasando",
+      "inicio": 40.1,
+      "fin": 42.1
+    },
+    {
+      "texto": "Gyal a boy dem pasanda",
+      "es": "Las muchachas y los muchachos están pasando",
+      "inicio": 42.1,
+      "fin": 43.6
+    },
+    {
+      "texto": "All a dem dey pasanda",
+      "es": "Todos ellos están pasando",
+      "inicio": 43.6,
+      "fin": 45.6
+    },
+    {
+      "texto": "Gyal a boy dem pasanda",
+      "es": "Las muchachas y los muchachos están pasando",
+      "inicio": 45.6,
+      "fin": 47.4
+    },
+    {
+      "texto": "Managua girl dey pasanda",
+      "es": "La muchacha de Managua está pasando",
+      "inicio": 89.0,
+      "fin": 90.8
+    },
+    {
+      "texto": "Gyal a boy dem pasanda",
+      "es": "Las muchachas y los muchachos están pasando",
+      "inicio": 90.8,
+      "fin": 92.5
+    },
+    {
+      "texto": "All a dem dey pasanda",
+      "es": "Todos ellos están pasando",
+      "inicio": 92.5,
+      "fin": 94.2
+    },
+    {
+      "texto": "Gyal a boy dem pasanda",
+      "es": "Las muchachas y los muchachos están pasando",
+      "inicio": 94.2,
+      "fin": 96.0
+    }
+  ],
+  "palabras": [
+    {
+      "texto": "gyal",
+      "es": "muchachas",
+      "en": "girls",
+      "inicio": 21.4,
+      "fin": 21.95
+    },
+    {
+      "texto": "boy",
+      "es": "muchachos",
+      "en": "boys",
+      "inicio": 32.1,
+      "fin": 32.55
+    },
+    {
+      "texto": "pass",
+      "es": "pasen",
+      "en": "pass",
+      "inicio": 30.1,
+      "fin": 30.65
+    },
+    {
+      "texto": "pasanda",
+      "es": "pasando",
+      "en": "passing",
+      "inicio": 20.75,
+      "fin": 21.45
+    },
+    {
+      "texto": "all a dem",
+      "es": "todos",
+      "en": "all of them",
+      "inicio": 23.15,
+      "fin": 23.85
+    }
+  ],
+  "completar": [
+    {
+      "verso": 1,
+      "en": "texto",
+      "oculta": "gyal"
+    },
+    {
+      "verso": 6,
+      "en": "texto",
+      "oculta": "pass"
+    },
+    {
+      "verso": 3,
+      "en": "texto",
+      "oculta": "boy"
+    },
+    {
+      "verso": 1,
+      "en": "es",
+      "oculta": "muchachas"
+    },
+    {
+      "verso": 2,
+      "en": "es",
+      "oculta": "todos"
+    }
+  ],
+  "canta": {
+    "desde": 0,
+    "hasta": 3
+  }
+}

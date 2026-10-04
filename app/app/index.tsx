@@ -73,6 +73,9 @@ export default function Portada() {
           <Boton ancho tono="pico" onPress={() => router.push('/minijuegos')}>
             {t('portada.minijuegos')}
           </Boton>
+          <Boton ancho tono="papel" onPress={() => router.push('/musica')}>
+            {t('portada.musica')}
+          </Boton>
           <Boton ancho tono="cielo" onPress={() => router.push('/estudiante/unirse')}>
             {t('portada.unirme')}
           </Boton>
