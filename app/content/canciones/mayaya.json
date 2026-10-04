@@ -1,0 +1,170 @@
+{
+  "id": "mayaya",
+  "titulo": "Mayaya",
+  "lengua": "spa",
+  "region": "Región Autónoma de la Costa Caribe Sur",
+  "comunidad": "Bluefields",
+  "nivel": "inicial",
+  "imagen": "tambor",
+  "audio": "mayaya.m4a",
+  "fuente": {
+    "interpreta": "Grabación entregada por el equipo de Piko",
+    "autoria": "Tradicional del Palo de Mayo",
+    "autoriza": "Titulares de la grabación, confirmado por ruby845",
+    "forma": "Permiso confirmado por ruby845 al equipo de Piko",
+    "fecha": "2026-10-04",
+    "validado_por": "ruby845 (letra entregada por el equipo)",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Es una de las canciones más conocidas del Palo de Mayo, la fiesta de mayo de Bluefields.",
+    "lengua": "Español, con el coro «Mayaya lasiqui» de la tradición del Palo de Mayo.",
+    "region": "Región Autónoma de la Costa Caribe Sur, Nicaragua.",
+    "representa": "La alegría de mayo en la Costa Caribe: la gente baila y celebra junta, y la canción lleva a Mayaya de Bluefields a todo el mundo."
+  },
+  "letra": [
+    {
+      "texto": "Mayaya lasiqui (mayaya oh)",
+      "inicio": 24.2,
+      "fin": 28.0
+    },
+    {
+      "texto": "Quiero la llave que se perdió",
+      "inicio": 28.2,
+      "fin": 31.5
+    },
+    {
+      "texto": "Si no encuentro la llave no puedo entrar",
+      "inicio": 31.5,
+      "fin": 34.6
+    },
+    {
+      "texto": "Toqué y toqué y nadie me abrió",
+      "inicio": 35.2,
+      "fin": 38.4
+    },
+    {
+      "texto": "Si no hallo la llave me van a matar",
+      "inicio": 38.4,
+      "fin": 41.4
+    },
+    {
+      "texto": "En mayo la llave se me perdió",
+      "inicio": 70.3,
+      "fin": 74.0
+    },
+    {
+      "texto": "Y la puerta cerrada se me quedó",
+      "inicio": 74.0,
+      "fin": 77.6
+    },
+    {
+      "texto": "Estoy contento, ya se encontró",
+      "inicio": 77.6,
+      "fin": 80.4
+    },
+    {
+      "texto": "Y ahora la fiesta comienza a sonar",
+      "inicio": 80.4,
+      "fin": 84.0
+    },
+    {
+      "texto": "Mayaya ven aquí",
+      "inicio": 219.6,
+      "fin": 222.4
+    },
+    {
+      "texto": "Mayaya ven acá",
+      "inicio": 223.1,
+      "fin": 226.2
+    },
+    {
+      "texto": "Mayaya en Bluefields",
+      "inicio": 226.6,
+      "fin": 229.6
+    },
+    {
+      "texto": "De mi Nicaragua",
+      "inicio": 229.9,
+      "fin": 233.2
+    },
+    {
+      "texto": "Mayaya en Miami",
+      "inicio": 233.8,
+      "fin": 236.8
+    },
+    {
+      "texto": "Mayaya en Nueva York",
+      "inicio": 237.3,
+      "fin": 240.3
+    }
+  ],
+  "palabras": [
+    {
+      "texto": "llave",
+      "es": "llave",
+      "en": "key",
+      "inicio": 28.75,
+      "fin": 29.35
+    },
+    {
+      "texto": "puerta",
+      "es": "puerta",
+      "en": "door",
+      "inicio": 74.4,
+      "fin": 75.0
+    },
+    {
+      "texto": "fiesta",
+      "es": "fiesta",
+      "en": "party",
+      "inicio": 82.0,
+      "fin": 82.55
+    },
+    {
+      "texto": "contento",
+      "es": "contento",
+      "en": "happy",
+      "inicio": 78.25,
+      "fin": 79.0
+    },
+    {
+      "texto": "mayo",
+      "es": "mayo",
+      "en": "May",
+      "inicio": 70.9,
+      "fin": 71.45
+    }
+  ],
+  "completar": [
+    {
+      "verso": 1,
+      "en": "texto",
+      "oculta": "llave"
+    },
+    {
+      "verso": 6,
+      "en": "texto",
+      "oculta": "puerta"
+    },
+    {
+      "verso": 7,
+      "en": "texto",
+      "oculta": "contento"
+    },
+    {
+      "verso": 8,
+      "en": "texto",
+      "oculta": "fiesta"
+    },
+    {
+      "verso": 5,
+      "en": "texto",
+      "oculta": "mayo"
+    }
+  ],
+  "canta": {
+    "desde": 5,
+    "hasta": 8
+  }
+}

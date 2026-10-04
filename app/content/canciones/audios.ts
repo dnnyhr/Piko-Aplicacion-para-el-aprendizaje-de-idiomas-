@@ -10,4 +10,9 @@
  *   };
  */
 
-export const AUDIOS: Record<string, number> = {};
+export const AUDIOS: Record<string, number> = {
+  'mayaya': require('./audio/mayaya.m4a'),
+  'dale-su-rondon': require('./audio/dale-su-rondon.m4a'),
+  'palo-de-mayo': require('./audio/palo-de-mayo.m4a'),
+  'sabor-a-rondon-y-a-pinol': require('./audio/sabor-a-rondon-y-a-pinol.m4a'),
+};
