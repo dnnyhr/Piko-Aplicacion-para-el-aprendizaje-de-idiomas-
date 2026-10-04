@@ -42,6 +42,20 @@ export function sacuanjochesPorLeccion(correctas: number, total: number): number
   return n;
 }
 
+/**
+ * Los minijuegos dan flores sólo si se jugaron bien: hace falta acertar al
+ * primer intento al menos dos tercios (4 de 6 en la rayuela). Desde ahí, la
+ * misma escala que una lección. Por debajo no hay flores, sólo práctica: un
+ * juego no es una lección, y terminarlo a fuerza de reintentos no es haberlo
+ * jugado bien.
+ */
+export function sacuanjochesPorMinijuego(correctas: number, total: number): number {
+  if (!Number.isFinite(total) || total <= 0) return 0;
+  const bien = Math.max(0, Math.min(correctas, total));
+  if (bien * 3 < total * 2) return 0;
+  return sacuanjochesPorLeccion(bien, total);
+}
+
 // ----------------------------------------------------------------- etapas
 
 export type EtapaId = 'semilla' | 'brote' | 'arbolito' | 'hojas' | 'flores' | 'florecido';

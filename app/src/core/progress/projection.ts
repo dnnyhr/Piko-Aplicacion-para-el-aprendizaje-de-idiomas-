@@ -10,6 +10,7 @@
 
 import { compareEvents, type AnswerPayload, type ProgressEvent } from './events';
 import { sacuanjochesPorLeccion } from './arbol';
+import { floresDeMinijuego } from '../minijuegos/premios';
 
 export const XP_ACIERTO = 10;
 export const XP_INTENTO = 2;
@@ -43,6 +44,12 @@ export interface StudentState {
    * las gasta. Ver `arbol.ts`.
    */
   sacuanjoches: number;
+  /**
+   * El último día en que cada minijuego dio flores, por `clavePremio`
+   * (juego, lengua y nivel). Es lo que impide juntar sacuanjoches repitiendo
+   * la misma partida: una vez por día, y después sólo práctica.
+   */
+  premiosJuegos: Record<string, string>;
   lastActiveAt: number;
   /** Mayor `seq` aplicado. Los eventos locales sin sincronizar no lo mueven. */
   throughSeq: number;
@@ -60,9 +67,20 @@ export function emptyState(studentId: string): StudentState {
     packsDone: [],
     lessons: 0,
     sacuanjoches: 0,
+    premiosJuegos: {},
     lastActiveAt: 0,
     throughSeq: 0,
   };
+}
+
+/** Con qué se identifica un minijuego para el tope diario de flores. */
+export function clavePremio(game: string, lang: string, level: string): string {
+  return `${game}:${lang}:${level}`;
+}
+
+/** Si ese minijuego ya dio flores el día `day`. */
+export function yaPremiado(state: StudentState, clave: string, day: string): boolean {
+  return state.premiosJuegos[clave] === day;
 }
 
 export function cloneState(s: StudentState): StudentState {
@@ -76,6 +94,7 @@ export function cloneState(s: StudentState): StudentState {
     packsDone: s.packsDone.slice(),
     lessons: s.lessons ?? 0,
     sacuanjoches: s.sacuanjoches ?? 0,
+    premiosJuegos: { ...(s.premiosJuegos ?? {}) },
   };
 }
 
@@ -138,6 +157,24 @@ function step(state: StudentState, ev: ProgressEvent): void {
       if (typeof correct === 'number' && typeof total === 'number') {
         state.lessons += 1;
         state.sacuanjoches += sacuanjochesPorLeccion(correct, total);
+      }
+      return;
+    }
+
+    case 'gameDone': {
+      const { game, lang, level, correct, total, day, streak } = ev.payload;
+      if (typeof game !== 'string' || typeof lang !== 'string' || typeof level !== 'string') return;
+      if (typeof correct !== 'number' || typeof total !== 'number' || typeof day !== 'string') return;
+      const clave = clavePremio(game, lang, level);
+      const flores = floresDeMinijuego({
+        game,
+        correct,
+        total,
+        streak: typeof streak === 'number' ? streak : undefined,
+      });
+      if (flores > 0 && !yaPremiado(state, clave, day)) {
+        state.sacuanjoches += flores;
+        state.premiosJuegos[clave] = day;
       }
       return;
     }

@@ -8,7 +8,7 @@
  * batería.
  */
 
-export const VERSION_ESQUEMA = 2;
+export const VERSION_ESQUEMA = 3;
 
 /**
  * Notas de diseño de las tablas:
@@ -86,6 +86,8 @@ export const MIGRACIONES: readonly string[][] = [
   ],
   // v2: la lengua en que está la app (`spa` o `miq`). NULL = español.
   ['ALTER TABLE device ADD COLUMN idioma_app TEXT'],
+  // v3: la lengua elegida para los minijuegos (`eng` o `miq`). NULL = sin elegir.
+  ['ALTER TABLE device ADD COLUMN lengua_minijuegos TEXT'],
 ];
 
 export const SQL_INICIAL = [
