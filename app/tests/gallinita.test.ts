@@ -18,6 +18,9 @@ import {
   responder,
   RONDAS,
   sacuanjochesPorGallinita,
+  escondites,
+  RADIO_LUZ,
+  soloSeEscuchan,
 } from '@core/minijuegos/gallinita';
 import { PACKS } from '../content';
 
@@ -129,5 +132,34 @@ describe('gallinita: sacuanjoches', () => {
   it('suman al total una vez por día', () => {
     expect(project('ana', [partida({}, 1), partida({}, 2)]).sacuanjoches).toBe(5);
     expect(project('ana', [partida({}, 1), partida({ day: '2026-10-05' }, 2)]).sacuanjoches).toBe(10);
+  });
+});
+
+describe('Pikito Ciego: la oscuridad', () => {
+  it('el círculo de luz se achica con el nivel', () => {
+    expect(RADIO_LUZ.inicial).toBeGreaterThan(RADIO_LUZ.intermedio);
+    expect(RADIO_LUZ.intermedio).toBeGreaterThan(RADIO_LUZ.avanzado);
+  });
+
+  it('las respuestas escondidas quedan lejos unas de otras: con la luz en una no se ve otra', () => {
+    for (const n of [3, 4]) {
+      const e = escondites(n);
+      expect(e).toHaveLength(n);
+      // En un patio de 360 × 560, la distancia entre escondites supera el diámetro de la luz más grande.
+      for (let a = 0; a < n; a++) {
+        for (let b = a + 1; b < n; b++) {
+          const d = Math.hypot((e[a]!.x - e[b]!.x) * 360, (e[a]!.y - e[b]!.y) * 560);
+          expect(d).toBeGreaterThan(RADIO_LUZ.inicial * 1.4);
+        }
+      }
+    }
+  });
+
+  it('en el avanzado las respuestas en la lengua que se aprende sólo se escuchan', () => {
+    const r = { tipo: 'oye_palabra', opcionesEnMeta: true } as Parameters<typeof soloSeEscuchan>[0];
+    expect(soloSeEscuchan(r, 'avanzado')).toBe(true);
+    expect(soloSeEscuchan(r, 'intermedio')).toBe(false);
+    expect(soloSeEscuchan({ ...r, tipo: 'dibujo_oye' }, 'inicial')).toBe(true);
+    expect(soloSeEscuchan({ ...r, tipo: 'oye_frase', opcionesEnMeta: false }, 'avanzado')).toBe(false);
   });
 });

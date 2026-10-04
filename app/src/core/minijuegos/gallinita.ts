@@ -1,10 +1,12 @@
 /**
- * Gallinita Ciega de Piko: escuchar y reconocer.
+ * Pikito Ciego (la gallinita ciega de Piko): escuchar y reconocer.
  *
- * Piko tiene los ojos vendados y sólo puede guiarse por el oído: suena una
- * palabra o una frase y hay que elegir, entre lo que hay en el patio, lo que
- * se escuchó. Piko camina hacia lo elegido. Es el juego de la comprensión
- * auditiva: casi todos los retos empiezan por escuchar.
+ * El patio está a oscuras: sólo se ve un círculo de luz alrededor de Piko,
+ * que anda con los ojos vendados. Suena una palabra o una frase; las
+ * respuestas están escondidas en la oscuridad y Piko tiene que ir hasta cada
+ * una para descubrirla, de a una por vez. Como nunca se ven todas juntas, hay
+ * que guiarse por lo que se escuchó. Cuanto más alto el nivel, más chico el
+ * círculo de luz y más respuestas que sólo se escuchan, sin texto.
  *
  * Puro y sin React, para poder probarlo en Node.
  */
@@ -22,6 +24,9 @@ export const RONDAS = 8;
 
 /** Opciones en el patio, por nivel. */
 export const OPCIONES: Record<NivelMinijuego, number> = { inicial: 3, intermedio: 4, avanzado: 4 };
+
+/** El radio del círculo de luz alrededor de Piko, en puntos. Más chico, menos se ve. */
+export const RADIO_LUZ: Record<NivelMinijuego, number> = { inicial: 118, intermedio: 100, avanzado: 86 };
 
 /** Cuántas veces se puede escuchar cada audio. Sin límite al empezar; en el avanzado, dos. */
 export const ESCUCHAS: Record<NivelMinijuego, number> = { inicial: Infinity, intermedio: Infinity, avanzado: 2 };
@@ -142,6 +147,36 @@ export function armarRondas(
     rondas.push({ tipo, palabra, opciones, correcta, opcionesEnMeta: enMeta });
   });
   return rondas.length === RONDAS ? rondas : [];
+}
+
+/**
+ * Si las respuestas de la ronda sólo se escuchan (sin texto ni dibujo): las
+ * de `dibujo_oye` siempre, y en el avanzado todas las que están en la lengua
+ * que se aprende. Así, cuanto más alto el nivel, más depende del oído.
+ */
+export function soloSeEscuchan(r: Ronda, nivel: NivelMinijuego): boolean {
+  return r.tipo === 'dibujo_oye' || (nivel === 'avanzado' && r.opcionesEnMeta);
+}
+
+/**
+ * Dónde se esconde cada respuesta en el patio, en fracciones del ancho y del
+ * alto: repartidas lejos unas de otras y lejos de donde arranca Piko (abajo
+ * al centro), para que haya que ir a buscarlas.
+ */
+export function escondites(n: number): { x: number; y: number }[] {
+  if (n <= 3) {
+    return [
+      { x: 0.24, y: 0.16 },
+      { x: 0.76, y: 0.16 },
+      { x: 0.5, y: 0.46 },
+    ].slice(0, n);
+  }
+  return [
+    { x: 0.25, y: 0.13 },
+    { x: 0.75, y: 0.13 },
+    { x: 0.25, y: 0.46 },
+    { x: 0.75, y: 0.46 },
+  ].slice(0, n);
 }
 
 // ------------------------------------------------------------------ partida

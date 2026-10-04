@@ -1,16 +1,20 @@
 /**
- * Una partida de gallinita ciega.
+ * Una partida de Pikito Ciego.
  *
- * Piko tiene los ojos vendados: sólo puede guiarse por lo que se escucha.
- * Suena una palabra o una frase, se elige en el patio lo que se escuchó y
- * Piko camina hasta ahí. Si es lo correcto, lo encuentra y festeja; si no,
- * llega a otro lado, se da cuenta y muestra dónde estaba.
+ * El patio está a oscuras: sólo se ve un círculo de luz alrededor de Piko,
+ * que anda con los ojos vendados. Suena una palabra o una frase. Las
+ * respuestas están escondidas en la oscuridad, marcadas apenas con un «?»:
+ * al tocar uno, Piko camina hasta ahí y la luz la descubre. Nunca se ven
+ * todas juntas, así que hay que guiarse por lo que se escuchó. Cuando la que
+ * está a la luz es la que sonó, se toca «¡Es esta!». Ahí se prende la luz
+ * del patio y se ve dónde estaba cada cosa.
  *
- * Caminar sin navegación: un traslado en línea recta con un bamboleo de
- * pasos, todo con `transform` y el driver nativo.
+ * Liviano a propósito: la oscuridad es un solo dibujo con un degradado
+ * circular que se traslada con `transform` (driver nativo); no se vuelve a
+ * dibujar mientras Piko camina.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   Animated,
@@ -22,7 +26,9 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg';
 import { BarraFeedback } from '../../exercises/BarraFeedback';
+import { Boton } from '../../../ui/components/Boton';
 import { ContadorSacuanjoches } from '../../../ui/arbol/ContadorSacuanjoches';
 import { Escena, TIZA } from '../../../ui/minijuegos/Escena';
 import { Cerrar, Globito, Parlante } from '../../../ui/minijuegos/Iconos';
@@ -36,11 +42,14 @@ import { vozDe, vozDePalabra, type LenguaMinijuego, type NivelMinijuego, type Pa
 import {
   BONO_GRAN_RACHA,
   BONO_RACHA,
+  escondites,
   ESCUCHAS,
   partidaNueva,
   rachaFestejada,
+  RADIO_LUZ,
   responder,
   RONDAS,
+  soloSeEscuchan,
   type EstadoGallinita,
   type Ronda,
 } from '../../../core/minijuegos/gallinita';
@@ -48,8 +57,13 @@ import { callar, decir, vozDePiko } from '../voz';
 import { color, espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
 
 const HORIZONTE = 226;
-const PIKO = 96;
-const CAMINAR_MS = 820;
+const PIKO = 92;
+const ANCHO_PIKO = (PIKO * 178) / 292;
+const CAMINAR_MS = 700;
+const ANCHO_ESCONDITE = 140;
+/** El lado del dibujo de la oscuridad: alcanza para tapar el patio esté donde esté la luz. */
+const LADO_OSCURIDAD = 2400;
+const NOCHE = '#0D1422';
 
 export interface JuegoGallinitaProps {
   rondas: readonly Ronda[];
@@ -61,24 +75,52 @@ export interface JuegoGallinitaProps {
   onSalir: () => void;
 }
 
-type Fase = 'escucha' | 'camina' | 'respuesta';
+/** `busca`: a oscuras, Piko va de escondite en escondite. `camina`: va en camino. `respuesta`: se prendió la luz. */
+type Fase = 'busca' | 'camina' | 'respuesta';
+
+interface Punto {
+  x: number;
+  y: number;
+}
+
+/** La oscuridad con un agujero de luz de radio `r` en el centro, con el borde difuso. */
+function Oscuridad({ r }: { r: number }) {
+  const mitad = LADO_OSCURIDAD / 2;
+  const claro = r / mitad;
+  return (
+    <Svg width={LADO_OSCURIDAD} height={LADO_OSCURIDAD}>
+      <Defs>
+        <RadialGradient id="luz" cx={mitad} cy={mitad} r={mitad} gradientUnits="userSpaceOnUse">
+          <Stop offset="0" stopColor={NOCHE} stopOpacity={0} />
+          <Stop offset={claro * 0.72} stopColor={NOCHE} stopOpacity={0} />
+          <Stop offset={claro} stopColor={NOCHE} stopOpacity={0.7} />
+          <Stop offset={claro * 1.25} stopColor={NOCHE} stopOpacity={0.95} />
+          <Stop offset="1" stopColor={NOCHE} stopOpacity={0.95} />
+        </RadialGradient>
+      </Defs>
+      <Rect x={0} y={0} width={LADO_OSCURIDAD} height={LADO_OSCURIDAD} fill="url(#luz)" />
+    </Svg>
+  );
+}
 
 export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoGallinitaProps) {
   const { t, frases, idioma } = useTextos();
   const [indice, setIndice] = useState(0);
   const [partida, setPartida] = useState<EstadoGallinita>(partidaNueva);
-  const [fase, setFase] = useState<Fase>('escucha');
+  const [fase, setFase] = useState<Fase>('busca');
+  const [visita, setVisita] = useState<number | null>(null);
   const [elegida, setElegida] = useState<number | null>(null);
+  const [visitadas, setVisitadas] = useState<number[]>([]);
   const [escuchas, setEscuchas] = useState(0);
   const [sonando, setSonando] = useState<number | 'pregunta' | null>(null);
   const [frase, setFrase] = useState('');
   const [festejo, setFestejo] = useState<string | null>(null);
   const [quieto, setQuieto] = useState(false);
   const [patio, setPatio] = useState<{ w: number; h: number } | null>(null);
-  const [lugares, setLugares] = useState<Record<number, { x: number; y: number; w: number; h: number }>>({});
-  const grilla = useRef({ x: 0, y: 0 });
 
   const camino = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const luz = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const apagon = useRef(new Animated.Value(1)).current;
   const pasos = useRef(new Animated.Value(0)).current;
   const cartel = useRef(new Animated.Value(0)).current;
   const relojes = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -88,6 +130,9 @@ export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponde
   const nombreLengua = t(`lengua.${lengua}`);
   const maximo = ESCUCHAS[nivel];
   const quedan = maximo === Infinity ? Infinity : Math.max(0, maximo - escuchas);
+  const soloOido = soloSeEscuchan(r, nivel);
+  const verDibujos = r.tipo === 'oye_dibujo';
+  const altoEscondite = verDibujos ? 104 : 64;
 
   useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled()
@@ -103,6 +148,21 @@ export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponde
     relojes.current.push(setTimeout(fn, ms));
   };
 
+  // Dónde arranca Piko, dónde está cada escondite y dónde se para Piko al llegar a uno.
+  const geo = useMemo(() => {
+    if (!patio) return null;
+    const inicio = { x: patio.w / 2 - ANCHO_PIKO / 2, y: patio.h - PIKO - 8 };
+    const centros = escondites(r.opciones.length).map((e) => ({ x: e.x * patio.w, y: e.y * patio.h + altoEscondite / 2 }));
+    const paradas = centros.map((c) => ({
+      x: Math.max(0, Math.min(patio.w - ANCHO_PIKO, c.x - ANCHO_PIKO / 2)),
+      y: Math.min(patio.h - PIKO, c.y + altoEscondite / 2 - 10),
+    }));
+    return { inicio, centros, paradas };
+  }, [patio, r.opciones.length, altoEscondite]);
+
+  /** El centro de la luz cuando Piko está en `p` (arriba a la izquierda de Piko). */
+  const luzSobre = (p: Punto): Punto => ({ x: p.x + ANCHO_PIKO / 2, y: p.y + PIKO * 0.45 });
+
   /** La palabra de la ronda. Cuenta para el límite de escuchas. */
   const escucharPregunta = (cuenta = true) => {
     if (r.tipo === 'dibujo_oye') return;
@@ -112,62 +172,65 @@ export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponde
     decir([vozDePalabra(lengua, r.palabra)], () => setSonando(null));
   };
 
-  /** Una opción, en la ronda donde las opciones se escuchan. Sin límite: son varias. */
+  /** Una respuesta escondida, cuando sólo se escucha. Sin límite: son varias. */
   const escucharOpcion = (i: number) => {
     setSonando(i);
     decir([vozDe(lengua, r.opciones[i] as string, i === r.correcta ? r.palabra.tts : undefined)], () => setSonando(null));
   };
 
-  // Cada ronda nueva: Piko vuelve al medio y suena la palabra sola.
+  // Cada ronda nueva: se apaga la luz, Piko vuelve abajo al centro y suena la palabra.
   useEffect(() => {
     desde.current = Date.now();
-    camino.setValue({ x: 0, y: 0 });
     setEscuchas(0);
+    setVisita(null);
+    setVisitadas([]);
+    if (geo) {
+      camino.setValue({ x: 0, y: 0 });
+      luz.setValue(luzSobre(geo.inicio));
+    }
+    Animated.timing(apagon, { toValue: 1, duration: quieto ? 0 : 350, useNativeDriver: true }).start();
     if (r.tipo !== 'dibujo_oye') {
       luego(() => {
         setEscuchas(1);
         setSonando('pregunta');
         decir([vozDePalabra(lengua, r.palabra)], () => setSonando(null));
-      }, 400);
+      }, 450);
     }
   }, [indice]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /** Dónde arranca Piko: abajo al centro del patio. */
-  const inicio = patio ? { x: patio.w / 2 - (PIKO * 178) / 292 / 2, y: patio.h - PIKO - 6 } : { x: 0, y: 0 };
+  // Al medir el patio, la luz arranca sobre Piko.
+  useEffect(() => {
+    if (geo && visita === null && fase === 'busca') luz.setValue(luzSobre(geo.inicio));
+  }, [geo]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const elegirOpcion = (i: number) => {
-    if (fase !== 'escucha') return;
-    const acerto = i === r.correcta;
-    onResponder(r.palabra, acerto, Date.now() - desde.current);
-    const despues = responder(partida, acerto);
-    setElegida(i);
-    setFase('camina');
-    callar();
-
-    // Piko camina hasta la opción elegida.
-    const lugar = lugares[i];
-    const anchoPiko = (PIKO * 178) / 292;
-    let hasta = { x: 0, y: -40 };
-    if (lugar && patio) {
-      // Se para al costado de lo elegido, sin taparlo: del lado que da al borde.
-      const izq = grilla.current.x + lugar.x;
-      const der = izq + lugar.w;
-      const alLado = izq + lugar.w / 2 <= patio.w / 2 ? izq - anchoPiko * 0.7 : der - anchoPiko * 0.3;
-      const x = Math.max(0, Math.min(patio.w - anchoPiko, alLado));
-      const y = grilla.current.y + lugar.y + lugar.h - PIKO;
-      hasta = { x: x - inicio.x, y: y - inicio.y };
+  /** Piko va a tantear el escondite `i`: camina hasta ahí y la luz lo descubre. */
+  const ir = (i: number) => {
+    if (!geo || fase !== 'busca') return;
+    if (visita === i) {
+      // Ya está ahí: si sólo se escucha, vuelve a sonar.
+      if (soloOido) escucharOpcion(i);
+      return;
     }
+    callar();
+    setFase('camina');
+    setVisita(null);
+    Haptics.selectionAsync().catch(() => undefined);
+    const parada = geo.paradas[i] as Punto;
+    const hasta = { x: parada.x - geo.inicio.x, y: parada.y - geo.inicio.y };
     pasos.setValue(0);
     const bamboleo = Animated.loop(
       Animated.sequence([
-        Animated.timing(pasos, { toValue: 1, duration: 140, useNativeDriver: true }),
-        Animated.timing(pasos, { toValue: 0, duration: 140, useNativeDriver: true }),
+        Animated.timing(pasos, { toValue: 1, duration: 130, useNativeDriver: true }),
+        Animated.timing(pasos, { toValue: 0, duration: 130, useNativeDriver: true }),
       ]),
-      { iterations: Math.round(CAMINAR_MS / 280) },
+      { iterations: Math.round(CAMINAR_MS / 260) },
     );
+    const centro = geo.centros[i] as Punto;
     Animated.parallel([
-      Animated.timing(camino, {
-        toValue: hasta,
+      Animated.timing(camino, { toValue: hasta, duration: quieto ? 0 : CAMINAR_MS, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
+      // La luz llega al escondite: queda entre lo escondido y Piko.
+      Animated.timing(luz, {
+        toValue: { x: centro.x, y: (centro.y + parada.y + PIKO * 0.3) / 2 },
         duration: quieto ? 0 : CAMINAR_MS,
         easing: Easing.inOut(Easing.quad),
         useNativeDriver: true,
@@ -175,38 +238,57 @@ export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponde
       quieto ? Animated.delay(0) : bamboleo,
     ]).start(() => {
       pasos.setValue(0);
-      setPartida(despues);
-      setFase('respuesta');
-      const racha = acerto ? rachaFestejada(despues.racha) : null;
-      const perfecta = acerto && despues.aciertos === RONDAS;
-      if (acerto) {
-        const dicho = elegir(frases('piko.acierto'));
-        setFrase(`${t('gallinita.encontro')} ${dicho}`);
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
-        decir([vozDePiko(dicho, idioma), vozDePalabra(lengua, r.palabra)]);
-      } else {
-        const dicho = elegir(frases('piko.gallinita_choca'));
-        setFrase(dicho);
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => undefined);
-        decir([vozDePiko(dicho, idioma), vozDePalabra(lengua, r.palabra)]);
-      }
-      const texto = perfecta
-        ? t('gallinita.perfecta')
-        : racha === 'gran'
-          ? t('gallinita.gran_racha', { n: BONO_GRAN_RACHA })
-          : racha === 'racha'
-            ? t('gallinita.racha', { n: BONO_RACHA })
-            : null;
-      if (texto) {
-        setFestejo(texto);
-        cartel.setValue(0);
-        Animated.sequence([
-          Animated.spring(cartel, { toValue: 1, friction: 4, tension: 160, useNativeDriver: true }),
-          Animated.delay(900),
-          Animated.timing(cartel, { toValue: 0, duration: 200, useNativeDriver: true }),
-        ]).start(() => setFestejo(null));
-      }
+      setVisita(i);
+      setVisitadas((v) => (v.includes(i) ? v : [...v, i]));
+      setFase('busca');
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => undefined);
+      if (soloOido) escucharOpcion(i);
     });
+  };
+
+  /** «¡Es esta!»: responde con lo que está a la luz. */
+  const confirmar = () => {
+    if (fase !== 'busca' || visita === null) return;
+    const i = visita;
+    const acerto = i === r.correcta;
+    onResponder(r.palabra, acerto, Date.now() - desde.current);
+    const despues = responder(partida, acerto);
+    setElegida(i);
+    setPartida(despues);
+    setFase('respuesta');
+    callar();
+    // Se prende la luz del patio: se ve dónde estaba cada cosa.
+    Animated.timing(apagon, { toValue: 0.12, duration: quieto ? 0 : 500, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
+
+    const racha = acerto ? rachaFestejada(despues.racha) : null;
+    const perfecta = acerto && despues.aciertos === RONDAS;
+    if (acerto) {
+      const dicho = elegir(frases('piko.acierto'));
+      setFrase(`${t('gallinita.encontro')} ${dicho}`);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
+      decir([vozDePiko(dicho, idioma), vozDePalabra(lengua, r.palabra)]);
+    } else {
+      const dicho = elegir(frases('piko.gallinita_choca'));
+      setFrase(dicho);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => undefined);
+      decir([vozDePiko(dicho, idioma), vozDePalabra(lengua, r.palabra)]);
+    }
+    const textoFestejo = perfecta
+      ? t('gallinita.perfecta')
+      : racha === 'gran'
+        ? t('gallinita.gran_racha', { n: BONO_GRAN_RACHA })
+        : racha === 'racha'
+          ? t('gallinita.racha', { n: BONO_RACHA })
+          : null;
+    if (textoFestejo) {
+      setFestejo(textoFestejo);
+      cartel.setValue(0);
+      Animated.sequence([
+        Animated.spring(cartel, { toValue: 1, friction: 4, tension: 160, useNativeDriver: true }),
+        Animated.delay(900),
+        Animated.timing(cartel, { toValue: 0, duration: 200, useNativeDriver: true }),
+      ]).start(() => setFestejo(null));
+    }
   };
 
   const seguir = () => {
@@ -217,19 +299,19 @@ export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponde
     }
     setIndice(indice + 1);
     setElegida(null);
-    setFase('escucha');
+    setFase('busca');
   };
 
   const acerto = fase === 'respuesta' && elegida === r.correcta;
   const estadoPiko: EstadoPiko =
-    fase === 'respuesta' ? (acerto ? 'celebrando' : 'animando') : fase === 'camina' ? 'idle' : sonando === 'pregunta' ? 'pensando' : 'idle';
+    fase === 'respuesta' ? (acerto ? 'celebrando' : 'animando') : fase === 'camina' ? 'idle' : sonando !== null ? 'pensando' : 'idle';
   const pregunta = t(`gallinita.pregunta_${r.tipo}`);
-  const verDibujos = r.tipo === 'oye_dibujo';
   const sube = pasos.interpolate({ inputRange: [0, 1], outputRange: [0, -6] });
   const gira = pasos.interpolate({ inputRange: [0, 1], outputRange: ['-4deg', '4deg'] });
+  const enLuz = (i: number) => fase === 'respuesta' || visita === i;
 
-  const estiloOpcion = (i: number) => {
-    if (fase !== 'respuesta') return null;
+  const estiloEscondite = (i: number) => {
+    if (fase !== 'respuesta') return visita === i ? styles.esconditeALaLuz : null;
     if (i === r.correcta) return styles.opcionBuena;
     if (i === elegida) return styles.opcionOtra;
     return styles.opcionApagada;
@@ -282,18 +364,18 @@ export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponde
               {r.palabra.meta}
             </Text>
           )}
-          {r.tipo !== 'dibujo_oye' && maximo !== Infinity && fase === 'escucha' && (
+          {r.tipo !== 'dibujo_oye' && maximo !== Infinity && fase !== 'respuesta' && (
             <Text style={styles.quedan}>{quedan > 0 ? t('gallinita.escuchas_quedan', { n: quedan }) : t('gallinita.sin_escuchas')}</Text>
           )}
         </View>
         {r.tipo !== 'dibujo_oye' && (
           <Pressable
             onPress={() => escucharPregunta()}
-            disabled={quedan <= 0 && fase === 'escucha'}
+            disabled={quedan <= 0 && fase !== 'respuesta'}
             accessibilityRole="button"
             accessibilityLabel={t('gallinita.escuchar')}
-            accessibilityState={{ disabled: quedan <= 0 && fase === 'escucha' }}
-            style={[styles.parlante, sonando === 'pregunta' ? styles.parlanteSonando : null, quedan <= 0 && fase === 'escucha' ? styles.parlanteApagado : null]}
+            accessibilityState={{ disabled: quedan <= 0 && fase !== 'respuesta' }}
+            style={[styles.parlante, sonando === 'pregunta' ? styles.parlanteSonando : null, quedan <= 0 && fase !== 'respuesta' ? styles.parlanteApagado : null]}
           >
             <Parlante tam={32} />
           </Pressable>
@@ -301,89 +383,131 @@ export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponde
       </View>
 
       <View style={styles.patio} onLayout={(e: LayoutChangeEvent) => setPatio({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}>
-        <View
-          style={styles.grilla}
-          onLayout={(e) => {
-            grilla.current = { x: e.nativeEvent.layout.x, y: e.nativeEvent.layout.y };
-          }}
-        >
-          {r.opciones.map((op, i) => (
-            <View
-              key={`${indice}-${i}`}
-              style={r.opciones.length > 3 || verDibujos ? styles.mitad : styles.entera}
-              onLayout={(e) => {
-                const { x, y, width, height } = e.nativeEvent.layout;
-                setLugares((l) => ({ ...l, [i]: { x, y, w: width, h: height } }));
-              }}
-            >
-              {r.tipo === 'dibujo_oye' ? (
-                <View style={[styles.opcion, styles.opcionFila, estiloOpcion(i)]}>
-                  <Pressable
-                    onPress={() => escucharOpcion(i)}
-                    accessibilityRole="button"
-                    accessibilityLabel={t('gallinita.escuchar_opcion', { n: i + 1 })}
-                    style={[styles.parlanteChico, sonando === i ? styles.parlanteSonando : null]}
-                  >
-                    <Parlante tam={22} />
-                  </Pressable>
-                  <Pressable
-                    onPress={() => elegirOpcion(i)}
-                    disabled={fase !== 'escucha'}
-                    accessibilityRole="button"
-                    accessibilityLabel={t('gallinita.elegir_opcion', { n: i + 1 })}
-                    style={styles.elegirEsta}
-                  >
-                    <Text style={styles.opcionTexto}>{fase === 'respuesta' ? op : t('gallinita.opcion', { n: i + 1 })}</Text>
-                  </Pressable>
-                </View>
-              ) : (
-                <Pressable
-                  onPress={() => elegirOpcion(i)}
-                  disabled={fase !== 'escucha'}
-                  accessibilityRole="button"
-                  accessibilityLabel={op}
-                  style={[styles.opcion, verDibujos ? styles.opcionDibujo : null, estiloOpcion(i)]}
+        {geo && (
+          <>
+            {/* Lo escondido: queda debajo de la oscuridad */}
+            {r.opciones.map((op, i) => {
+              const c = geo.centros[i] as Punto;
+              const mostrar = enLuz(i);
+              return (
+                <View
+                  key={`${indice}-${i}`}
+                  pointerEvents="none"
+                  style={[
+                    styles.escondite,
+                    verDibujos ? styles.esconditeDibujo : null,
+                    { left: c.x - ANCHO_ESCONDITE / 2, top: c.y - altoEscondite / 2, height: altoEscondite },
+                    estiloEscondite(i),
+                  ]}
                 >
-                  {verDibujos && <Pictograma es={op} tam={56} />}
-                  <Text style={[styles.opcionTexto, verDibujos ? styles.opcionPie : null, op.length > 16 ? styles.opcionLarga : null]} numberOfLines={2}>
-                    {op}
-                  </Text>
+                  {soloOido && fase !== 'respuesta' ? (
+                    <View style={[styles.soloOido, mostrar ? null : styles.oculto]}>
+                      <View style={[styles.parlanteChico, sonando === i ? styles.parlanteSonando : null]}>
+                        <Parlante tam={20} />
+                      </View>
+                      <Text style={styles.opcionTexto}>{t('gallinita.opcion', { n: i + 1 })}</Text>
+                    </View>
+                  ) : (
+                    <>
+                      {verDibujos && mostrar && <Pictograma es={op} tam={52} />}
+                      <Text
+                        style={[styles.opcionTexto, verDibujos ? styles.opcionPie : null, op.length > 16 ? styles.opcionLarga : null]}
+                        numberOfLines={2}
+                      >
+                        {mostrar ? op : ''}
+                      </Text>
+                    </>
+                  )}
+                </View>
+              );
+            })}
+
+            {/* La oscuridad, con el círculo de luz que sigue a Piko */}
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.oscuridad,
+                {
+                  opacity: apagon,
+                  transform: [
+                    { translateX: Animated.subtract(luz.x, LADO_OSCURIDAD / 2) },
+                    { translateY: Animated.subtract(luz.y, LADO_OSCURIDAD / 2) },
+                  ],
+                },
+              ]}
+            >
+              <Oscuridad r={RADIO_LUZ[nivel]} />
+            </Animated.View>
+
+            {/* Las marcas en la oscuridad: dónde se puede ir a tantear */}
+            {r.opciones.map((op, i) => {
+              const c = geo.centros[i] as Punto;
+              const aca = visita === i;
+              return (
+                <Pressable
+                  key={`marca-${indice}-${i}`}
+                  testID={`escondite-${i}`}
+                  onPress={() => ir(i)}
+                  disabled={fase !== 'busca'}
+                  accessibilityRole="button"
+                  accessibilityLabel={aca && !soloOido ? op : t('gallinita.ir', { n: i + 1 })}
+                  accessibilityState={{ disabled: fase !== 'busca', selected: aca }}
+                  style={[styles.marca, { left: c.x - ANCHO_ESCONDITE / 2, top: c.y - altoEscondite / 2, height: altoEscondite }]}
+                >
+                  {!aca && fase !== 'respuesta' && (
+                    <View style={[styles.signo, visitadas.includes(i) ? styles.signoVisto : null]}>
+                      <Text style={styles.signoTexto}>?</Text>
+                    </View>
+                  )}
                 </Pressable>
-              )}
-            </View>
-          ))}
-        </View>
+              );
+            })}
 
-        {patio && (
-          <Animated.View
-            pointerEvents="none"
-            accessibilityElementsHidden
-            importantForAccessibility="no-hide-descendants"
-            style={[
-              styles.piko,
-              {
-                left: inicio.x,
-                top: inicio.y,
-                transform: [{ translateX: camino.x }, { translateY: camino.y }, { translateY: sube }, { rotate: gira }],
-              },
-            ]}
-          >
-            <PikoMascota estado={estadoPiko} tam={PIKO} accesorio={<Venda />} />
-          </Animated.View>
-        )}
+            {/* Piko, vendado: siempre se ve */}
+            <Animated.View
+              pointerEvents="none"
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+              style={[
+                styles.piko,
+                {
+                  left: geo.inicio.x,
+                  top: geo.inicio.y,
+                  transform: [{ translateX: camino.x }, { translateY: camino.y }, { translateY: sube }, { rotate: gira }],
+                },
+              ]}
+            >
+              <PikoMascota estado={estadoPiko} tam={PIKO} accesorio={<Venda />} />
+            </Animated.View>
 
-        {festejo && (
-          <Animated.View
-            pointerEvents="none"
-            style={[
-              styles.cartel,
-              { opacity: cartel, transform: [{ scale: cartel.interpolate({ inputRange: [0, 1], outputRange: [0.4, 1] }) }] },
-            ]}
-          >
-            <Text style={styles.cartelTexto}>{festejo}</Text>
-          </Animated.View>
+            {fase !== 'respuesta' && visita === null && (
+              <View pointerEvents="none" style={styles.como}>
+                <Text style={styles.comoTexto}>{t('gallinita.como')}</Text>
+              </View>
+            )}
+
+            {festejo && (
+              <Animated.View
+                pointerEvents="none"
+                style={[
+                  styles.cartel,
+                  { opacity: cartel, transform: [{ scale: cartel.interpolate({ inputRange: [0, 1], outputRange: [0.4, 1] }) }] },
+                ]}
+              >
+                <Text style={styles.cartelTexto}>{festejo}</Text>
+              </Animated.View>
+            )}
+          </>
         )}
       </View>
+
+      {fase !== 'respuesta' && (
+        <View style={styles.pie}>
+          <Boton ancho onPress={confirmar} disabled={visita === null || fase !== 'busca'}>
+            {visita === null ? t('gallinita.busca') : t('gallinita.es_esta')}
+          </Boton>
+        </View>
+      )}
 
       <BarraFeedback
         visible={fase === 'respuesta'}
@@ -446,6 +570,7 @@ const styles = StyleSheet.create({
     borderRadius: radio.lg,
     paddingHorizontal: espacio.lg,
     paddingVertical: espacio.md,
+    zIndex: 2,
   },
   dibujo: {
     width: 72,
@@ -473,47 +598,70 @@ const styles = StyleSheet.create({
   },
   parlanteSonando: { backgroundColor: '#1F7FB0' },
   parlanteApagado: { backgroundColor: color.bordeHondo, borderBottomColor: color.borde },
-  patio: { flex: 1, marginTop: espacio.lg },
-  grilla: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: espacio.md,
-    paddingHorizontal: espacio.lg,
-    paddingTop: espacio.lg,
-  },
-  mitad: { width: '46%' },
-  entera: { width: '70%' },
-  opcion: {
-    minHeight: 64,
+  patio: { flex: 1, marginTop: espacio.md, overflow: 'hidden' },
+  oscuridad: { position: 'absolute', left: 0, top: 0, width: LADO_OSCURIDAD, height: LADO_OSCURIDAD },
+  escondite: {
+    position: 'absolute',
+    width: ANCHO_ESCONDITE,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(255,253,244,0.92)',
+    gap: 2,
+    backgroundColor: 'rgba(255,253,244,0.95)',
     borderWidth: 3,
     borderColor: TIZA,
     borderRadius: radio.lg,
-    paddingHorizontal: espacio.md,
-    paddingVertical: espacio.sm,
+    paddingHorizontal: espacio.sm,
   },
-  opcionDibujo: { minHeight: 104 },
-  opcionFila: { flexDirection: 'row', justifyContent: 'flex-start', gap: espacio.sm },
+  esconditeDibujo: { paddingTop: 4 },
+  esconditeALaLuz: { borderColor: color.pico },
   opcionBuena: { backgroundColor: color.aciertoFondo, borderColor: color.acierto },
   opcionOtra: { backgroundColor: color.intentoFondo, borderColor: color.intento },
-  opcionApagada: { opacity: 0.5 },
-  opcionTexto: { fontFamily: fuente.titulo, fontSize: 18, lineHeight: 22, color: color.grafito, textAlign: 'center' },
+  opcionApagada: { opacity: 0.55 },
+  opcionTexto: { fontFamily: fuente.titulo, fontSize: 17, lineHeight: 21, color: color.grafito, textAlign: 'center' },
   opcionPie: { fontSize: 14, lineHeight: 18, color: color.tinta },
-  opcionLarga: { fontFamily: fuente.cuerpoFuerte, fontSize: 14, lineHeight: 18 },
+  opcionLarga: { fontFamily: fuente.cuerpoFuerte, fontSize: 13, lineHeight: 17 },
+  soloOido: { flexDirection: 'row', alignItems: 'center', gap: espacio.sm },
+  oculto: { opacity: 0 },
   parlanteChico: {
-    width: 44,
-    height: 44,
+    width: 36,
+    height: 36,
     borderRadius: radio.redondo,
     backgroundColor: color.cieloHondo,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  elegirEsta: { flex: 1, minHeight: 44, justifyContent: 'center' },
+  marca: { position: 'absolute', width: ANCHO_ESCONDITE, alignItems: 'center', justifyContent: 'center' },
+  signo: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: 'rgba(255,253,244,0.55)',
+    backgroundColor: 'rgba(255,253,244,0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  signoVisto: { borderStyle: 'dashed', backgroundColor: 'rgba(255,253,244,0.05)' },
+  signoTexto: { fontFamily: fuente.tituloFuerte, fontSize: 20, color: 'rgba(255,253,244,0.8)' },
   piko: { position: 'absolute' },
+  como: {
+    position: 'absolute',
+    left: espacio.lg,
+    right: espacio.lg,
+    bottom: PIKO + 18,
+    alignItems: 'center',
+  },
+  comoTexto: {
+    ...texto.chico,
+    color: '#F3EBD5',
+    textAlign: 'center',
+    backgroundColor: 'rgba(13,20,34,0.75)',
+    borderRadius: radio.md,
+    paddingHorizontal: espacio.md,
+    paddingVertical: espacio.xs,
+    overflow: 'hidden',
+  },
+  pie: { paddingHorizontal: espacio.lg, paddingVertical: espacio.sm, backgroundColor: NOCHE },
   cartel: {
     position: 'absolute',
     bottom: PIKO + 24,
