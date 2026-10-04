@@ -10,7 +10,7 @@
  * tocar ninguna pantalla.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { Animated, Easing, Image, StyleSheet, View, type ViewStyle } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { PIKO_SVG } from './vector.gen';
@@ -26,6 +26,12 @@ export interface PikoMascotaProps {
   /** Apagar la animación en listas largas, donde costaría cuadros. */
   animado?: boolean;
   style?: ViewStyle;
+  /**
+   * Algo que Piko lleva puesto (la venda de la gallinita ciega). Se dibuja
+   * encima, dentro de la misma animación: respira y salta con él. Va en las
+   * coordenadas del dibujo vectorial (viewBox 178×292).
+   */
+  accesorio?: ReactNode;
 }
 
 export function PikoMascota({
@@ -33,6 +39,7 @@ export function PikoMascota({
   tam = 120,
   animado = true,
   style,
+  accesorio,
 }: PikoMascotaProps) {
   const respira = useRef(new Animated.Value(0)).current;
   const salta = useRef(new Animated.Value(0)).current;
@@ -110,6 +117,7 @@ export function PikoMascota({
         ) : (
           <SvgXml xml={PIKO_SVG} width="100%" height="100%" />
         )}
+        {accesorio ? <View style={StyleSheet.absoluteFill}>{accesorio}</View> : null}
       </Animated.View>
     </View>
   );

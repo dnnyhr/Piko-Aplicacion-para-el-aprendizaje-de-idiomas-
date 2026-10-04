@@ -13,13 +13,8 @@
 import type { Rng } from '../ids';
 import type { StudentState } from '../progress/projection';
 import { SACUANJOCHES_BASE } from '../progress/arbol';
-import {
-  elegirObjetivos,
-  opcionesPara,
-  palabrasDeNivel,
-  type NivelMinijuego,
-  type Palabra,
-} from './vocabulario';
+import type { NivelMinijuego, Palabra } from './vocabulario';
+import { armarRetos as armarRetosComunes, type FormaDeRetos, type Reto } from './retos';
 
 export const ID_TROMPO = 'trompo';
 
@@ -48,42 +43,22 @@ export const PUNTOS_ACIERTO = 10;
 
 // --------------------------------------------------------------------- retos
 
-/**
- * - `traduccion`: se muestra en español; se elige en la lengua meta.
- * - `significado`: se muestra en la lengua meta; se elige en español.
- * - `imagen`: se muestra un dibujo; se elige en la lengua meta.
- * - `audio`: Piko la dice sin mostrarla. En los primeros niveles se elige la
- *   palabra que se escuchó; en el avanzado, qué significa la frase.
- */
-export type TipoReto = 'traduccion' | 'significado' | 'imagen' | 'audio';
+export type { Reto, TipoReto } from './retos';
 
-export interface Reto {
-  tipo: TipoReto;
-  palabra: Palabra;
-  /** Lo que se muestra: en español, en la lengua meta, o la palabra del dibujo. */
-  foco: string;
-  opciones: string[];
-  correcta: number;
-  /** Si las opciones están en la lengua meta. */
-  opcionesEnMeta: boolean;
-}
-
-const TIPOS: Record<NivelMinijuego, readonly TipoReto[]> = {
-  inicial: ['significado', 'imagen', 'traduccion', 'imagen'],
-  intermedio: ['traduccion', 'significado', 'audio'],
-  avanzado: ['audio', 'traduccion', 'audio', 'significado'],
+const FORMA: FormaDeRetos = {
+  cantidad: MAX_RETOS,
+  opciones: OPCIONES,
+  tipos: {
+    inicial: ['significado', 'imagen', 'traduccion', 'imagen'],
+    intermedio: ['traduccion', 'significado', 'audio'],
+    avanzado: ['audio', 'traduccion', 'audio', 'significado'],
+  },
 };
 
-function opcionesEnMeta(tipo: TipoReto, nivel: NivelMinijuego): boolean {
-  if (tipo === 'significado') return false;
-  if (tipo === 'audio') return nivel !== 'avanzado';
-  return true;
-}
-
 /**
- * Los retos de una partida, del vocabulario aprendido. `conDibujo` dice qué
- * palabras (en español) tienen dibujo: las que no, salen como traducción.
- * Vacío si el nivel no tiene con qué llenarse.
+ * Los retos de una partida de trompo, del vocabulario aprendido. `conDibujo`
+ * dice qué palabras (en español) tienen dibujo. Vacío si el nivel no tiene
+ * con qué llenarse.
  */
 export function armarRetos(
   vocab: readonly Palabra[],
@@ -92,24 +67,7 @@ export function armarRetos(
   rng: Rng,
   conDibujo: (es: string) => boolean = () => false,
 ): Reto[] {
-  const pool = palabrasDeNivel(vocab, nivel);
-  const retos: Reto[] = [];
-  elegirObjetivos(pool, MAX_RETOS, state, rng).forEach((palabra, i) => {
-    let tipo = TIPOS[nivel][i % TIPOS[nivel].length] as TipoReto;
-    if (tipo === 'imagen' && !conDibujo(palabra.es)) tipo = 'traduccion';
-    const enMeta = opcionesEnMeta(tipo, nivel);
-    const armadas = opcionesPara(palabra, pool, vocab, enMeta, OPCIONES[nivel], rng);
-    if (!armadas) return;
-    retos.push({
-      tipo,
-      palabra,
-      foco: tipo === 'significado' || tipo === 'audio' ? palabra.meta : palabra.es,
-      opciones: armadas.opciones,
-      correcta: armadas.correcta,
-      opcionesEnMeta: enMeta,
-    });
-  });
-  return retos.length === MAX_RETOS ? retos : [];
+  return armarRetosComunes(vocab, nivel, state, rng, FORMA, conDibujo);
 }
 
 // ------------------------------------------------------------------- partida

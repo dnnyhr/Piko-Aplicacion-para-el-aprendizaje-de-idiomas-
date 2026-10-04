@@ -1,11 +1,10 @@
 /**
- * El Trompo de Piko.
+ * Gallinita Ciega de Piko.
  *
- * Aprendo → lanzo el trompo → respondo → lo mantengo girando → gano
- * sacuanjoches → crece mi madroño. Las palabras salen de las lecciones que
- * el estudiante ya hizo; las respuestas y las flores entran al mismo log de
- * progreso que las lecciones: se guardan sin internet, suman al total y al
- * madroño, y viajan al maestro cuando hay clase.
+ * Escucho → identifico → respondo → encuentro la respuesta con Piko → gano
+ * sacuanjoches → crece mi madroño. Es el juego de la comprensión auditiva:
+ * las palabras salen de las lecciones que el estudiante ya hizo y suenan con
+ * la misma voz que en los ejercicios de escucha.
  */
 
 import { useState } from 'react';
@@ -17,62 +16,74 @@ import { useMinijuego, type CierreMinijuego } from '../../src/features/minijuego
 import { decir, vozDePiko } from '../../src/features/minijuegos/voz';
 import { ElegirPartida } from '../../src/features/minijuegos/ElegirPartida';
 import { FinPartida } from '../../src/features/minijuegos/FinPartida';
-import { JuegoTrompo } from '../../src/features/minijuegos/trompo/Juego';
+import { JuegoGallinita } from '../../src/features/minijuegos/gallinita/Juego';
 import { Bandera } from '../../src/ui/minijuegos/Bandera';
 import { Hoja } from '../../src/ui/minijuegos/Iconos';
-import { DibujoTrompo } from '../../src/ui/minijuegos/Trompo';
+import { IconoGallinita } from '../../src/ui/minijuegos/Venda';
 import { tienePictograma } from '../../src/ui/minijuegos/Pictograma';
-import { armarRetos, ID_TROMPO, META, OPCIONES, SEGUNDOS, type EstadoTrompo, type Reto } from '../../src/core/minijuegos/trompo';
+import {
+  armarRondas,
+  ID_GALLINITA,
+  OPCIONES,
+  RONDAS,
+  type EstadoGallinita,
+  type Ronda,
+} from '../../src/core/minijuegos/gallinita';
 import { color } from '../../src/ui/tokens';
 
 type Fase = 'elegir' | 'jugando' | 'fin';
 
+/** Aciertos que hacen falta para que haya flores (ver `sacuanjochesPorGallinita`). */
+const MINIMO_FLORES = Math.ceil((RONDAS * 2) / 3);
+
 interface Final extends CierreMinijuego {
-  partida: EstadoTrompo;
+  partida: EstadoGallinita;
   titulo: string;
 }
 
-export default function Trompo() {
+export default function Gallinita() {
   const router = useRouter();
   const { t, frases, idioma } = useTextos();
-  const juego = useMinijuego(ID_TROMPO, OPCIONES);
+  const juego = useMinijuego(ID_GALLINITA, OPCIONES);
   const [fase, setFase] = useState<Fase>('elegir');
-  const [retos, setRetos] = useState<Reto[]>([]);
+  const [rondas, setRondas] = useState<Ronda[]>([]);
   const [intento, setIntento] = useState(0);
   const [final, setFinal] = useState<Final | null>(null);
 
   const empezar = () => {
     const base = juego.empezar();
     if (!base) return;
-    const armados = armarRetos(base.vocab, base.nivel, base.estado, Math.random, tienePictograma);
-    if (armados.length === 0) return;
-    setRetos(armados);
+    const armadas = armarRondas(base.vocab, base.nivel, base.estado, Math.random, tienePictograma);
+    if (armadas.length === 0) return;
+    setRondas(armadas);
     setIntento((n) => n + 1);
     setFinal(null);
     setFase('jugando');
   };
 
-  const terminar = (resultado: EstadoTrompo) => {
+  const terminar = (resultado: EstadoGallinita) => {
     const cierre = juego.cerrar({ correct: resultado.aciertos, total: resultado.respondidas, streak: resultado.mejorRacha });
     const titulo =
       cierre.recompensa.ganadas > 0
         ? cierre.recompensa.crecioArbol
           ? elegir(frases('piko.arbol_crece'))
-          : t('trompo.fin_completo')
+          : resultado.aciertos === RONDAS
+            ? t('gallinita.perfecta')
+            : t('gallinita.fin_bien')
         : cierre.repetida
-          ? t('trompo.fin_repetida')
-          : t('trompo.fin_cayo');
+          ? t('gallinita.fin_repetida')
+          : t('gallinita.fin_sin_flores');
     decir([vozDePiko(titulo, idioma)]);
     setFinal({ ...cierre, partida: resultado, titulo });
     setFase('fin');
   };
 
-  if (fase === 'jugando' && retos.length > 0) {
+  if (fase === 'jugando' && rondas.length > 0) {
     return (
       <Pantalla acolchado={false} fondo={color.nube}>
-        <JuegoTrompo
+        <JuegoGallinita
           key={intento}
-          retos={retos}
+          rondas={rondas}
           lengua={juego.lengua}
           nivel={juego.partida.current.nivel}
           sacuanjoches={juego.estado.sacuanjoches}
@@ -92,14 +103,14 @@ export default function Trompo() {
           recompensa={final.recompensa}
           repetida={final.repetida}
           titulo={final.titulo}
-          explicacionSinFlores={t('trompo.sin_flores_explica', { meta: META })}
+          explicacionSinFlores={t('gallinita.sin_flores_explica', { n: MINIMO_FLORES, total: RONDAS })}
           datos={[
-            { valor: `${p.aciertos}/${p.respondidas}`, etiqueta: t('trompo.aciertos_etiqueta') },
-            { valor: String(p.mejorRacha), etiqueta: t('trompo.mejor_racha') },
-            { valor: String(p.puntos), etiqueta: t('trompo.puntos_etiqueta') },
+            { valor: `${p.aciertos}/${p.respondidas}`, etiqueta: t('gallinita.aciertos') },
+            { valor: String(p.mejorRacha), etiqueta: t('gallinita.mejor_racha') },
+            { valor: String(p.puntos), etiqueta: t('gallinita.puntos') },
           ]}
-          textoReintentar={t('trompo.lanzar_otra_vez')}
-          textoOtra={t('trompo.otra_partida')}
+          textoReintentar={t('gallinita.jugar_otra_vez')}
+          textoOtra={t('gallinita.otra_partida')}
           onReintentar={empezar}
           onOtra={() => setFase('elegir')}
           onVerArbol={() => router.push('/arbol')}
@@ -112,13 +123,13 @@ export default function Trompo() {
     <Pantalla>
       <ElegirPartida
         {...juego.eleccion}
-        titulo={t('trompo.nombre')}
-        portada={<DibujoTrompo tam={120} />}
-        pregunta={t('trompo.elegir_lengua')}
+        titulo={t('gallinita.nombre')}
+        portada={<IconoGallinita tam={120} />}
+        pregunta={t('gallinita.elegir_lengua')}
         iconoLengua={(l) => (l === 'miq' ? <Hoja /> : <Bandera lengua={l} />)}
-        detalleNivel={(n) => t('trompo.detalle_nivel', { n: OPCIONES[n], s: SEGUNDOS[n] })}
-        descNivel={(n) => t(`trompo.desc_${n}`)}
-        empezar={t('trompo.a_jugar')}
+        detalleNivel={(n) => t('gallinita.detalle_nivel', { n: OPCIONES[n] })}
+        descNivel={(n) => t(`gallinita.desc_${n}`)}
+        empezar={t('gallinita.a_jugar')}
         onEmpezar={empezar}
         onPracticar={() => router.push('/practicar')}
         onVolver={() => router.back()}
