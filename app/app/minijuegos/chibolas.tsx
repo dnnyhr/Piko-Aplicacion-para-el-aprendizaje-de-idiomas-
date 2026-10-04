@@ -1,11 +1,10 @@
 /**
- * El Trompo de Piko.
+ * Bolas chinas.
  *
- * Aprendo → lanzo el trompo → respondo → lo mantengo girando → gano
+ * Aprendo una palabra → lanzo mi chibola → respondo → acierto → gano
  * sacuanjoches → crece mi madroño. Las palabras salen de las lecciones que
  * el estudiante ya hizo; las respuestas y las flores entran al mismo log de
- * progreso que las lecciones: se guardan sin internet, suman al total y al
- * madroño, y viajan al maestro cuando hay clase.
+ * progreso que las lecciones.
  */
 
 import { useState } from 'react';
@@ -17,25 +16,29 @@ import { useMinijuego, type CierreMinijuego } from '../../src/features/minijuego
 import { decir, vozDePiko } from '../../src/features/minijuegos/voz';
 import { ElegirPartida } from '../../src/features/minijuegos/ElegirPartida';
 import { FinPartida } from '../../src/features/minijuegos/FinPartida';
-import { JuegoTrompo } from '../../src/features/minijuegos/trompo/Juego';
+import { JuegoChibolas } from '../../src/features/minijuegos/chibolas/Juego';
 import { Bandera } from '../../src/ui/minijuegos/Bandera';
 import { Hoja } from '../../src/ui/minijuegos/Iconos';
-import { DibujoTrompo } from '../../src/ui/minijuegos/Trompo';
+import { IconoChibolas } from '../../src/ui/minijuegos/Chibola';
 import { tienePictograma } from '../../src/ui/minijuegos/Pictograma';
-import { armarRetos, ID_TROMPO, META, OPCIONES, SEGUNDOS, type EstadoTrompo, type Reto } from '../../src/core/minijuegos/trompo';
+import { armarPartida, CHIBOLAS, ID_CHIBOLAS, TIROS } from '../../src/core/minijuegos/chibolas';
+import type { Reto } from '../../src/core/minijuegos/retos';
 import { color } from '../../src/ui/tokens';
 
 type Fase = 'elegir' | 'jugando' | 'fin';
 
+/** Aciertos al primer tiro que hacen falta para que haya flores (ver `sacuanjochesPorMinijuego`). */
+const MINIMO_FLORES = Math.ceil((TIROS * 2) / 3);
+
 interface Final extends CierreMinijuego {
-  partida: EstadoTrompo;
+  primeros: number;
   titulo: string;
 }
 
-export default function Trompo() {
+export default function Chibolas() {
   const router = useRouter();
   const { t, frases, idioma } = useTextos();
-  const juego = useMinijuego(ID_TROMPO, OPCIONES);
+  const juego = useMinijuego(ID_CHIBOLAS, CHIBOLAS);
   const [fase, setFase] = useState<Fase>('elegir');
   const [retos, setRetos] = useState<Reto[]>([]);
   const [intento, setIntento] = useState(0);
@@ -44,7 +47,7 @@ export default function Trompo() {
   const empezar = () => {
     const base = juego.empezar();
     if (!base) return;
-    const armados = armarRetos(base.vocab, base.nivel, base.estado, Math.random, tienePictograma);
+    const armados = armarPartida(base.vocab, base.nivel, base.estado, Math.random, tienePictograma);
     if (armados.length === 0) return;
     setRetos(armados);
     setIntento((n) => n + 1);
@@ -52,25 +55,25 @@ export default function Trompo() {
     setFase('jugando');
   };
 
-  const terminar = (resultado: EstadoTrompo) => {
-    const cierre = juego.cerrar({ correct: resultado.aciertos, total: resultado.respondidas, streak: resultado.mejorRacha });
+  const terminar = (primeros: number) => {
+    const cierre = juego.cerrar({ correct: primeros, total: TIROS });
     const titulo =
       cierre.recompensa.ganadas > 0
         ? cierre.recompensa.crecioArbol
           ? elegir(frases('piko.arbol_crece'))
-          : t('trompo.fin_completo')
+          : t('chibolas.fin_bien')
         : cierre.repetida
-          ? t('trompo.fin_repetida')
-          : t('trompo.fin_cayo');
+          ? t('chibolas.fin_repetida')
+          : t('chibolas.fin_sin_flores');
     decir([vozDePiko(titulo, idioma)]);
-    setFinal({ ...cierre, partida: resultado, titulo });
+    setFinal({ ...cierre, primeros, titulo });
     setFase('fin');
   };
 
   if (fase === 'jugando' && retos.length > 0) {
     return (
       <Pantalla acolchado={false} fondo={color.nube}>
-        <JuegoTrompo
+        <JuegoChibolas
           key={intento}
           retos={retos}
           lengua={juego.lengua}
@@ -85,21 +88,20 @@ export default function Trompo() {
   }
 
   if (fase === 'fin' && final) {
-    const p = final.partida;
     return (
       <Pantalla>
         <FinPartida
           recompensa={final.recompensa}
           repetida={final.repetida}
           titulo={final.titulo}
-          explicacionSinFlores={t('trompo.sin_flores_explica', { meta: META })}
+          explicacionSinFlores={t('chibolas.sin_flores_explica', { n: MINIMO_FLORES, total: TIROS })}
           datos={[
-            { valor: `${p.aciertos}/${p.respondidas}`, etiqueta: t('trompo.aciertos_etiqueta') },
-            { valor: String(p.mejorRacha), etiqueta: t('trompo.mejor_racha') },
-            { valor: String(p.puntos), etiqueta: t('trompo.puntos_etiqueta') },
+            { valor: `${final.primeros}/${TIROS}`, etiqueta: t('chibolas.al_primer_tiro') },
+            { valor: `+${final.xpGanado}`, etiqueta: 'XP' },
+            { valor: `+${final.recompensa.ganadas}`, etiqueta: t('minijuegos.sacuanjoches') },
           ]}
-          textoReintentar={t('trompo.lanzar_otra_vez')}
-          textoOtra={t('trompo.otra_partida')}
+          textoReintentar={t('chibolas.jugar_otra_vez')}
+          textoOtra={t('chibolas.otra_partida')}
           onReintentar={empezar}
           onOtra={() => setFase('elegir')}
           onVerArbol={() => router.push('/arbol')}
@@ -112,13 +114,13 @@ export default function Trompo() {
     <Pantalla>
       <ElegirPartida
         {...juego.eleccion}
-        titulo={t('trompo.nombre')}
-        portada={<DibujoTrompo tam={120} />}
-        pregunta={t('trompo.elegir_lengua')}
+        titulo={t('chibolas.nombre')}
+        portada={<IconoChibolas tam={110} />}
+        pregunta={t('chibolas.elegir_lengua')}
         iconoLengua={(l) => (l === 'miq' ? <Hoja /> : <Bandera lengua={l} />)}
-        detalleNivel={(n) => t('trompo.detalle_nivel', { n: OPCIONES[n], s: SEGUNDOS[n] })}
-        descNivel={(n) => t(`trompo.desc_${n}`)}
-        empezar={t('trompo.a_jugar')}
+        detalleNivel={(n) => t('chibolas.detalle_nivel', { n: CHIBOLAS[n] })}
+        descNivel={(n) => t(`chibolas.desc_${n}`)}
+        empezar={t('chibolas.a_jugar')}
         onEmpezar={empezar}
         onPracticar={() => router.push('/practicar')}
         onVolver={() => router.back()}
