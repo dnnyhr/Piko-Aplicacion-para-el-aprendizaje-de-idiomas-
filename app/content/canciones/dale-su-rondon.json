@@ -1,0 +1,155 @@
+{
+  "id": "dale-su-rondon",
+  "titulo": "Dale su rondón",
+  "lengua": "spa",
+  "region": "Región Autónoma de la Costa Caribe Sur",
+  "comunidad": "Bluefields",
+  "nivel": "inicial",
+  "imagen": "maracas",
+  "audio": "dale-su-rondon.m4a",
+  "fuente": {
+    "interpreta": "Dimensión Costeña",
+    "autoria": "Dimensión Costeña",
+    "autoriza": "Titulares de la grabación, confirmado por ruby845",
+    "forma": "Permiso confirmado por ruby845 al equipo de Piko",
+    "fecha": "2026-10-04",
+    "validado_por": "ruby845 (letra entregada por el equipo)",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Una canción de Dimensión Costeña, grupo de Bluefields que lleva la música de la Costa Caribe a toda Nicaragua.",
+    "lengua": "Español de la Costa Caribe.",
+    "region": "Región Autónoma de la Costa Caribe Sur, Nicaragua.",
+    "representa": "El rondón, el plato típico de la Costa: se cocina con leche de coco, pescado o carne y tubérculos. La canción celebra la comida que se comparte en familia."
+  },
+  "letra": [
+    {
+      "texto": "Ay, qué ganas de comer,",
+      "inicio": 0.8,
+      "fin": 5.2
+    },
+    {
+      "texto": "sufro mucho sin cesar,",
+      "inicio": 5.4,
+      "fin": 9.0
+    },
+    {
+      "texto": "un buen plato de rondón",
+      "inicio": 9.2,
+      "fin": 12.9
+    },
+    {
+      "texto": "yo quisiera saborear.",
+      "inicio": 13.0,
+      "fin": 17.0
+    },
+    {
+      "texto": "Estoy feliz y también contento",
+      "inicio": 48.7,
+      "fin": 50.4
+    },
+    {
+      "texto": "por el rondón del cual llevo dentro,",
+      "inicio": 50.4,
+      "fin": 51.9
+    },
+    {
+      "texto": "barriga llena, corazón contento,",
+      "inicio": 51.9,
+      "fin": 54.0
+    },
+    {
+      "texto": "ese es el mejor alimento.",
+      "inicio": 54.0,
+      "fin": 56.4
+    },
+    {
+      "texto": "Todo costeño come rondón,",
+      "inicio": 63.7,
+      "fin": 67.6
+    },
+    {
+      "texto": "típico plato de mi nación.",
+      "inicio": 67.6,
+      "fin": 71.5
+    },
+    {
+      "texto": "Rondón, don rondón, don,",
+      "inicio": 71.5,
+      "fin": 75.6
+    },
+    {
+      "texto": "rondón, rondón, don, don...",
+      "inicio": 75.6,
+      "fin": 78.0
+    }
+  ],
+  "palabras": [
+    {
+      "texto": "comer",
+      "es": "comer",
+      "en": "to eat",
+      "inicio": 2.55,
+      "fin": 4.0
+    },
+    {
+      "texto": "plato",
+      "es": "plato",
+      "en": "dish",
+      "inicio": 9.55,
+      "fin": 10.1
+    },
+    {
+      "texto": "rondón",
+      "es": "rondón",
+      "en": "rundown (coconut stew)",
+      "inicio": 10.3,
+      "fin": 11.6
+    },
+    {
+      "texto": "barriga",
+      "es": "barriga",
+      "en": "belly",
+      "inicio": 51.85,
+      "fin": 52.6
+    },
+    {
+      "texto": "corazón",
+      "es": "corazón",
+      "en": "heart",
+      "inicio": 52.85,
+      "fin": 53.35
+    }
+  ],
+  "completar": [
+    {
+      "verso": 0,
+      "en": "texto",
+      "oculta": "comer"
+    },
+    {
+      "verso": 2,
+      "en": "texto",
+      "oculta": "rondón"
+    },
+    {
+      "verso": 6,
+      "en": "texto",
+      "oculta": "corazón"
+    },
+    {
+      "verso": 9,
+      "en": "texto",
+      "oculta": "plato"
+    },
+    {
+      "verso": 6,
+      "en": "texto",
+      "oculta": "barriga"
+    }
+  ],
+  "canta": {
+    "desde": 0,
+    "hasta": 3
+  }
+}

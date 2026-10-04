@@ -1,0 +1,135 @@
+{
+  "id": "sabor-a-rondon-y-a-pinol",
+  "titulo": "Con sabor a rondón y a pinol",
+  "lengua": "spa",
+  "region": "Región Autónoma de la Costa Caribe Sur",
+  "comunidad": "Bluefields",
+  "nivel": "avanzado",
+  "imagen": "marimba",
+  "audio": "sabor-a-rondon-y-a-pinol.m4a",
+  "fuente": {
+    "interpreta": "Dimensión Costeña",
+    "autoria": "Dimensión Costeña",
+    "autoriza": "Titulares de la grabación, confirmado por ruby845",
+    "forma": "Permiso confirmado por ruby845 al equipo de Piko",
+    "fecha": "2026-10-04",
+    "validado_por": "ruby845 (letra entregada por el equipo)",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Una canción de Dimensión Costeña, grupo de Bluefields.",
+    "lengua": "Español.",
+    "region": "Región Autónoma de la Costa Caribe Sur, y toda Nicaragua.",
+    "representa": "El palo de mayo como ritmo de todo el país: tiene el sabor del rondón del Caribe y del pinol del Pacífico, la bebida de maíz tostado."
+  },
+  "letra": [
+    {
+      "texto": "El palo de mayo de mi costa es tan rico y jamás morirá,",
+      "inicio": 37.0,
+      "fin": 45.0
+    },
+    {
+      "texto": "mis amigos lo están disfrutando,",
+      "inicio": 45.0,
+      "fin": 49.1
+    },
+    {
+      "texto": "todo el mundo lo quiere bailar.",
+      "inicio": 49.1,
+      "fin": 52.0
+    },
+    {
+      "texto": "El palo de mayo sabroso,",
+      "inicio": 52.0,
+      "fin": 56.8
+    },
+    {
+      "texto": "el palo de mayo candente,",
+      "inicio": 56.8,
+      "fin": 60.6
+    },
+    {
+      "texto": "el palo de mayo es mi ritmo,",
+      "inicio": 60.6,
+      "fin": 65.2
+    },
+    {
+      "texto": "el palo de mayo caliente.",
+      "inicio": 65.2,
+      "fin": 68.3
+    },
+    {
+      "texto": "A gozar...",
+      "inicio": 69.2,
+      "fin": 71.0
+    }
+  ],
+  "palabras": [
+    {
+      "texto": "costa",
+      "es": "costa",
+      "en": "coast",
+      "inicio": 40.05,
+      "fin": 41.4
+    },
+    {
+      "texto": "amigos",
+      "es": "amigos",
+      "en": "friends",
+      "inicio": 45.75,
+      "fin": 46.6
+    },
+    {
+      "texto": "mundo",
+      "es": "mundo",
+      "en": "world",
+      "inicio": 49.95,
+      "fin": 50.6
+    },
+    {
+      "texto": "bailar",
+      "es": "bailar",
+      "en": "to dance",
+      "inicio": 51.45,
+      "fin": 52.1
+    },
+    {
+      "texto": "ritmo",
+      "es": "ritmo",
+      "en": "rhythm",
+      "inicio": 63.75,
+      "fin": 65.2
+    }
+  ],
+  "completar": [
+    {
+      "verso": 0,
+      "en": "texto",
+      "oculta": "costa"
+    },
+    {
+      "verso": 1,
+      "en": "texto",
+      "oculta": "amigos"
+    },
+    {
+      "verso": 2,
+      "en": "texto",
+      "oculta": "mundo"
+    },
+    {
+      "verso": 5,
+      "en": "texto",
+      "oculta": "ritmo"
+    },
+    {
+      "verso": 2,
+      "en": "texto",
+      "oculta": "bailar"
+    }
+  ],
+  "canta": {
+    "desde": 3,
+    "hasta": 6
+  }
+}
