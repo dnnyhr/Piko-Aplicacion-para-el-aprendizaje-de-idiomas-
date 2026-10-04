@@ -114,13 +114,17 @@ estudiante ya hizo (`src/core/minijuegos/vocabulario.ts`), y sus niveles
 - **El Trompo de Piko**: se lanza el trompo y, mientras gira, salen retos con
   tiempo (traducción, significado, imagen y audio). Acertar le da fuerza y
   fallar se la quita; con seis aciertos antes de que caiga se gana.
-- **Bolas chinas**: en la rueda de tiza hay una chibola por respuesta; se
-  apunta arrastrando el tiro (o tocando la chibola) y la correcta cae al
-  hoyito. Si rebota, Piko da una pista y se vuelve a tirar.
-- **Gallinita Ciega de Piko**: Piko tiene los ojos vendados; suena una palabra
-  o una frase y se elige lo que se escuchó (dibujos, palabras parecidas,
-  opciones que sólo se escuchan). Piko camina hasta lo elegido. Rachas con
-  bonos; en el avanzado, cada audio se escucha dos veces nomás.
+- **Bolas chinas**: en la rueda de tiza hay una chibola por respuesta. Se
+  agarra el tiro, se estira hacia atrás (una línea de puntos marca hacia
+  dónde sale) y se suelta: el tiro vuela hasta la chibola de esa dirección y
+  la correcta cae al hoyito. Si rebota, Piko da una pista y se vuelve a tirar.
+- **Pikito Ciego** (la gallinita ciega, id `gallinita`): el patio está a
+  oscuras y sólo se ve un círculo de luz alrededor de Piko, vendado. Suena
+  una palabra o una frase; las respuestas están escondidas y Piko va a
+  tantearlas de a una, así que hay que guiarse por lo que se escuchó. Con
+  «¡Es esta!» se responde y se prende la luz. Más nivel, menos luz y más
+  respuestas que sólo se escuchan; rachas con bonos; en el avanzado, cada
+  audio se escucha dos veces nomás.
 
 Las pantallas usan `useMinijuego` (lengua, niveles, tope diario y cierre de la
 partida), `ElegirPartida` y `FinPartida`; los retos de elegir respuesta salen
