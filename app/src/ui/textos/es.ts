@@ -270,7 +270,7 @@ export const ES = {
   'musica.region': 'Región o comunidad',
   'musica.representa': 'Qué representa',
   'musica.canta': 'Canta: {quien}',
-  'musica.autoriza': 'Con permiso de {quien}',
+  'musica.autoria': 'Autoría: {quien}',
   'musica.etapa': 'Etapa {n} de 5',
   'musica.etapa_escuchar': 'Escuchar',
   'musica.etapa_descubrir': 'Descubrir palabras',

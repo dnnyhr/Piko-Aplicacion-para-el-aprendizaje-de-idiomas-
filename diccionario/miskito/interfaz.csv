@@ -228,7 +228,7 @@ musica.lengua,Lengua,,
 musica.region,Región o comunidad,,
 musica.representa,Qué representa,,
 musica.canta,Canta: {quien},,Dejar {quien} tal cual: ahí la app pone un valor.
-musica.autoriza,Con permiso de {quien},,Dejar {quien} tal cual: ahí la app pone un valor.
+musica.autoria,Autoría: {quien},,Dejar {quien} tal cual: ahí la app pone un valor.
 musica.etapa,Etapa {n} de 5,,Dejar {n} tal cual: ahí la app pone un valor.
 musica.etapa_escuchar,Escuchar,,
 musica.etapa_descubrir,Descubrir palabras,,
