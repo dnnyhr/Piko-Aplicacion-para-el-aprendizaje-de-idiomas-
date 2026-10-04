@@ -14,15 +14,25 @@ colaborador). Piko no descarga canciones ni escribe letras ni traducciones.
 3. **La letra** tal como se canta, verso por verso, con el segundo en que
    empieza y termina cada verso en la grabación.
 4. **La traducción validada** de cada verso al español (obligatoria si la
-   canción no está en español) y al inglés si la hay, y quién la validó.
-5. **Entre 3 y 5 palabras clave**: en la lengua de la canción, en español y
-   en inglés. Si la canción está en miskito, cada palabra apunta (`lexico`) a
-   su entrada del diccionario de Piko: una palabra que no está en el
-   diccionario entra primero ahí, con su fuente.
-6. **«Conoce nuestra canción»**: de dónde viene, en qué lengua está, de qué
-   región o comunidad es y qué representa.
-7. **Los huecos** de «Completa la canción» (verso y palabra a tapar) y qué
-   versos se cantan en «Canta con Piko».
+   canción no está en español), y quién la validó. Piko no traduce del kriol,
+   el miskito ni ninguna otra lengua: usa la traducción que da una persona
+   competente.
+5. **El inglés de cada verso** (`en`, inglés de Estados Unidos), sacado de ese
+   significado. Si no es literal, `aproximado: true` y una `nota` que explique
+   la idea (una expresión propia, un dicho, un nombre que no se traduce). Lo
+   que no se traduce (un coro de sonidos) lleva sólo la `nota`.
+6. **El ritmo** (`ritmo`): los pulsos por minuto y el segundo de un pulso,
+   para que Piko baile a tiempo. Se pueden medir con `librosa.beat.beat_track`.
+7. **El coro** (`coro`): qué versos son el coro, para marcar «Repite el coro»
+   cuando vuelven. Los demás versos repetidos se marcan solos («Se repite»).
+8. **Entre 2 y 4 lecciones** (`lecciones`), una por frase elegida, con lo que
+   piden sus cuatro actividades: la palabra que se tapa en el inglés del verso
+   y sus opciones; una palabra nueva con una oración de ejemplo (y su
+   traducción) y sus opciones; una oración corta para ordenar; y 2 o 3
+   oraciones parecidas para «¿Qué escuchaste?».
+9. **«Conoce nuestra canción»**: de dónde viene, en qué lengua está, de qué
+   región o comunidad es y qué representa; y qué versos se cantan en «Canta
+   con Piko» (`canta`).
 
 ## Cómo se agrega
 
@@ -43,8 +53,8 @@ colaborador). Piko no descarga canciones ni escribe letras ni traducciones.
    ```
 
 4. `npm test`: la prueba de canciones revisa el permiso, la letra, las
-   traducciones, las palabras clave contra el diccionario y los huecos. Si
-   algo falta, dice qué y en cuál canción.
+   traducciones, el inglés y las lecciones. Si algo falta, dice qué y en cuál
+   canción.
 
 ## Niveles
 
