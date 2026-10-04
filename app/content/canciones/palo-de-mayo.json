@@ -1,0 +1,155 @@
+{
+  "id": "palo-de-mayo",
+  "titulo": "Palo de Mayo",
+  "lengua": "spa",
+  "region": "Región Autónoma de la Costa Caribe Sur",
+  "comunidad": "Bluefields",
+  "nivel": "intermedio",
+  "imagen": "tambor",
+  "audio": "palo-de-mayo.m4a",
+  "fuente": {
+    "interpreta": "Dimensión Costeña",
+    "autoria": "Dimensión Costeña",
+    "autoriza": "Dimensión Costeña",
+    "forma": "verbal",
+    "fecha": "2026-10-04",
+    "validado_por": "ruby845",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Una canción de Dimensión Costeña, grupo de Bluefields, sobre el Palo de Mayo.",
+    "lengua": "Español, con palabras del inglés de la Costa como «rice and beans».",
+    "region": "Región Autónoma de la Costa Caribe Sur, Nicaragua.",
+    "representa": "El Palo de Mayo, la fiesta afrocaribeña de mayo en Bluefields: se baila alrededor de un palo adornado con cintas, con ritmos como el reggae, la soca y el calipso."
+  },
+  "letra": [
+    {
+      "texto": "Si te gusta mover tu cuerpecito,",
+      "inicio": 16.1,
+      "fin": 20.4
+    },
+    {
+      "texto": "este ritmo es de puro movimiento",
+      "inicio": 20.4,
+      "fin": 23.9
+    },
+    {
+      "texto": "el palo de mayo gozarás y para siempre",
+      "inicio": 23.9,
+      "fin": 27.9
+    },
+    {
+      "texto": "cuando escuches sonar este buen ritmo.",
+      "inicio": 27.9,
+      "fin": 32.2
+    },
+    {
+      "texto": "Si visitas un día nuestra tierra",
+      "inicio": 32.2,
+      "fin": 35.7
+    },
+    {
+      "texto": "comerás rice and beans, rondó con coco",
+      "inicio": 35.7,
+      "fin": 39.6
+    },
+    {
+      "texto": "bailarás el reggae, soca y calipso",
+      "inicio": 39.7,
+      "fin": 43.6
+    },
+    {
+      "texto": "y por supuesto el sabroso palo de mayo.",
+      "inicio": 43.6,
+      "fin": 47.0
+    },
+    {
+      "texto": "Palo de Mayo,",
+      "inicio": 47.0,
+      "fin": 49.3
+    },
+    {
+      "texto": "Palo de Mayo,",
+      "inicio": 49.5,
+      "fin": 51.5
+    },
+    {
+      "texto": "Palo de Mayo,",
+      "inicio": 51.7,
+      "fin": 52.9
+    },
+    {
+      "texto": "Sabroso palo de Mayo.",
+      "inicio": 52.9,
+      "fin": 55.4
+    }
+  ],
+  "palabras": [
+    {
+      "texto": "ritmo",
+      "es": "ritmo",
+      "en": "rhythm",
+      "inicio": 21.35,
+      "fin": 22.0
+    },
+    {
+      "texto": "tierra",
+      "es": "tierra",
+      "en": "land",
+      "inicio": 34.7,
+      "fin": 35.75
+    },
+    {
+      "texto": "coco",
+      "es": "coco",
+      "en": "coconut",
+      "inicio": 38.7,
+      "fin": 39.45
+    },
+    {
+      "texto": "mover",
+      "es": "mover",
+      "en": "to move",
+      "inicio": 18.2,
+      "fin": 18.8
+    },
+    {
+      "texto": "sabroso",
+      "es": "sabroso",
+      "en": "tasty",
+      "inicio": 45.15,
+      "fin": 45.95
+    }
+  ],
+  "completar": [
+    {
+      "verso": 1,
+      "en": "texto",
+      "oculta": "ritmo"
+    },
+    {
+      "verso": 4,
+      "en": "texto",
+      "oculta": "tierra"
+    },
+    {
+      "verso": 5,
+      "en": "texto",
+      "oculta": "coco"
+    },
+    {
+      "verso": 0,
+      "en": "texto",
+      "oculta": "mover"
+    },
+    {
+      "verso": 11,
+      "en": "texto",
+      "oculta": "sabroso"
+    }
+  ],
+  "canta": {
+    "desde": 8,
+    "hasta": 11
+  }
+}

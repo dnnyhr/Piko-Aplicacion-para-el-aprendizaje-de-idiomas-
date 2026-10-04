@@ -18,6 +18,7 @@ import { useProgreso } from '../src/features/progreso/store';
 import { useAulaCliente } from '../src/features/aula/cliente';
 import { lugarDePiko, progresoEtapa, progresoNivel } from '../src/core/progress/arbol';
 import { color, espacio, radio, texto } from '../src/ui/tokens';
+import { CANCIONES } from '../content/canciones';
 
 export default function Perfil() {
   const router = useRouter();
@@ -90,6 +91,15 @@ export default function Perfil() {
           <Dato valor={String(estado.xp)} etiqueta="XP total" />
           <Dato valor={String(estado.bestStreak)} etiqueta="Mejor racha" />
         </View>
+
+        {CANCIONES.length > 0 && (
+          <View style={styles.datos}>
+            <Dato
+              valor={`${CANCIONES.filter((c) => estado.cancionesCompletas.includes(c.id)).length}/${CANCIONES.length}`}
+              etiqueta="Canciones completadas"
+            />
+          </View>
+        )}
 
         <View style={styles.acciones}>
           <Boton ancho onPress={() => router.push('/arbol')}>
