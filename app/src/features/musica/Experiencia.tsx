@@ -240,6 +240,8 @@ export function Experiencia({ cancion, audio, premiable, onTerminar, onSalir }: 
           <Sacuanjoche tam={22} />
           <Text style={styles.floresTexto}>{flores}</Text>
           <Animated.Text
+            accessibilityElementsHidden
+            importantForAccessibility="no"
             style={[
               styles.pop,
               {
