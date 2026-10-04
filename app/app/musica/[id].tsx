@@ -152,7 +152,8 @@ export default function CancionPantalla() {
           <Dato etiqueta={t('musica.region')} valor={c.conoce.region} />
           <Dato etiqueta={t('musica.representa')} valor={c.conoce.representa} />
           <Text style={styles.credito}>
-            {t('musica.canta', { quien: c.fuente.interpreta })} · {t('musica.autoriza', { quien: c.fuente.autoriza })}
+            {t('musica.canta', { quien: c.fuente.interpreta })}
+            {c.fuente.autoria !== c.fuente.interpreta ? ` · ${t('musica.autoria', { quien: c.fuente.autoria })}` : ''}
           </Text>
         </View>
 

@@ -8,16 +8,16 @@
   "imagen": "tambor",
   "audio": "mayaya.m4a",
   "fuente": {
-    "interpreta": "Grabación entregada por el equipo de Piko",
-    "autoria": "Tradicional del Palo de Mayo",
-    "autoriza": "Titulares de la grabación, confirmado por ruby845",
-    "forma": "Permiso confirmado por ruby845 al equipo de Piko",
+    "interpreta": "Dimensión Costeña",
+    "autoria": "Tradicional del Palo de Mayo, en versión de Dimensión Costeña",
+    "autoriza": "Dimensión Costeña",
+    "forma": "verbal",
     "fecha": "2026-10-04",
-    "validado_por": "ruby845 (letra entregada por el equipo)",
+    "validado_por": "ruby845",
     "permiso": true
   },
   "conoce": {
-    "origen": "Es una de las canciones más conocidas del Palo de Mayo, la fiesta de mayo de Bluefields.",
+    "origen": "Una canción tradicional del Palo de Mayo de Bluefields, en la versión de Dimensión Costeña.",
     "lengua": "Español, con el coro «Mayaya lasiqui» de la tradición del Palo de Mayo.",
     "region": "Región Autónoma de la Costa Caribe Sur, Nicaragua.",
     "representa": "La alegría de mayo en la Costa Caribe: la gente baila y celebra junta, y la canción lleva a Mayaya de Bluefields a todo el mundo."

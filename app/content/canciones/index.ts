@@ -16,10 +16,12 @@ import mayaya from './mayaya.json';
 import daleSuRondon from './dale-su-rondon.json';
 import paloDeMayo from './palo-de-mayo.json';
 import saborARondonYAPinol from './sabor-a-rondon-y-a-pinol.json';
+import tululu from './tululu.json';
 
 export const CANCIONES: readonly Cancion[] = [
   mayaya as Cancion,
   daleSuRondon as Cancion,
   paloDeMayo as Cancion,
+  tululu as Cancion,
   saborARondonYAPinol as Cancion,
 ];
