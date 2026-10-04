@@ -23,6 +23,7 @@ export const ES = {
   'portada.maestro': 'Soy el maestro',
   'portada.lengua_app': 'La app en',
   'portada.minijuegos': 'Minijuegos',
+  'portada.musica': 'La Música de Piko',
 
   // ── Comunes
   'comun.volver': 'Volver',
@@ -252,6 +253,53 @@ export const ES = {
   'gallinita.jugar_otra_vez': 'Jugar otra vez',
   'gallinita.otra_partida': 'Otra partida',
 
+  // ── La Música de Piko
+  'musica.titulo': 'La Música de Piko',
+  'musica.lema': 'Aprendemos un idioma nuevo sin dejar atrás nuestra propia voz.',
+  'musica.completadas': 'Canciones completadas: {n} de {total}',
+  'musica.vacia_titulo': 'Pronto llegan las canciones',
+  'musica.vacia': 'Las canciones entran a Piko sólo cuando quien las canta da permiso y un hablante valida la letra. ¡Ya vienen!',
+  'musica.comenzar': 'Comenzar',
+  'musica.repetir': 'Cantar otra vez',
+  'musica.completada': 'Completada',
+  'musica.bloqueada': 'Se abre al completar una canción de nivel {nivel}',
+  'musica.lengua_region': '{lengua} · {region}',
+  'musica.conoce': 'Conoce nuestra canción',
+  'musica.de_donde': 'De dónde viene',
+  'musica.lengua': 'Lengua',
+  'musica.region': 'Región o comunidad',
+  'musica.representa': 'Qué representa',
+  'musica.canta': 'Canta: {quien}',
+  'musica.autoriza': 'Con permiso de {quien}',
+  'musica.etapa': 'Etapa {n} de 5',
+  'musica.etapa_escuchar': 'Escuchar',
+  'musica.etapa_descubrir': 'Descubrir palabras',
+  'musica.etapa_completar': 'Completa la canción',
+  'musica.etapa_reconocer': 'Escucha y reconoce',
+  'musica.etapa_cantar': 'Canta con Piko',
+  'musica.escuchar_ayuda': 'Escuchá la canción con Piko. Las palabras clave se iluminan.',
+  'musica.descubrir_ayuda': 'Tocá cada palabra para escucharla.',
+  'musica.completar_ayuda': 'Escuchá el verso y elegí la palabra que falta.',
+  'musica.reconocer_ayuda': 'Escuchá y elegí lo que oíste.',
+  'musica.cantar_ayuda': 'Seguí la letra y cantá con Piko. ¡Repetí las palabras que aprendiste!',
+  'musica.tocar': 'Tocar',
+  'musica.pausa': 'Pausa',
+  'musica.escuchar_verso': 'Escuchar el verso',
+  'musica.escuchar_otra_vez': 'Escuchar otra vez',
+  'musica.seguir': 'Seguir',
+  'musica.terminar': 'Terminar la canción',
+  'musica.salir': 'Salir de la canción',
+  'musica.era': 'Era: {respuesta}',
+  'musica.racha': '¡Racha!',
+  'musica.fin_bien': '¡Qué bonito cantamos!',
+  'musica.fin_sin_flores': '¡Terminamos la canción!',
+  'musica.fin_repetida': '¡Canción terminada!',
+  'musica.sin_flores_explica': 'Con la mitad de las respuestas buenas la canción queda completada y ganás sacuanjoches. ¡Escuchala otra vez!',
+  'musica.aciertos': 'Aciertos',
+  'musica.mejor_racha': 'Mejor racha',
+  'musica.otra_cancion': 'Otra canción',
+  'musica.de_nuevo': 'Cantarla de nuevo',
+
   // ── Nombres de las lenguas
   'lengua.eng': 'Inglés',
   'lengua.miq': 'Miskito',
@@ -259,6 +307,7 @@ export const ES = {
   'lengua.rma': 'Rama',
   'lengua.cab': 'Garífuna',
   'lengua.spa': 'Español',
+  'lengua.bzk': 'Kriol',
 
   // ── Temas de los ejercicios
   'tema.saludos': 'Saludos',
@@ -296,5 +345,7 @@ export const ES = {
   'piko.chibola_rebota': ['¡Uy, rebotó!', '¡Esa se escapó!', '¡Casi le pego!', '¡Ay, mi chibola!'],
   /** Gallinita ciega: cuando Piko llega a otro lugar. */
   'piko.gallinita_choca': ['¡Uy! Por acá no era.', '¡Me fui por otro lado!', '¡Ay, me perdí!'],
+  /** La Música de Piko: para animar a cantar. */
+  'piko.cantar': ['¡Cantemos juntos!', '¡Vos podés! Repetí conmigo.', '¡Qué bonita voz!'],
   'piko.esperando': ['Esperando a la clase…', 'Ya casi empezamos.', 'El maestro está preparando la ronda.'],
 } as const;

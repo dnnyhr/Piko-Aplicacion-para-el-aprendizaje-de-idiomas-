@@ -132,6 +132,20 @@ las da **una sola vez por día** por juego, lengua y nivel: repetir la misma
 partida es práctica, no flores. Como todo el progreso, suman al total, se ven
 en el perfil, hacen crecer el madroño y viajan al maestro.
 
+## La Música de Piko
+
+`app/musica/` es la sección de canciones: cada canción se recorre en cinco
+etapas (escuchar, descubrir palabras, completar la canción, escuchar y
+reconocer, cantar con Piko), con «Conoce nuestra canción» antes de empezar.
+Las canciones se abren por nivel al completar alguna del nivel anterior, dan
+sacuanjoches con el mismo evento `gameDone` (juego `musica`, una vez por día
+por canción) y las completadas se ven en el perfil.
+
+Las canciones viven en `content/canciones/` y **sólo entran con permiso de
+uso** y con letra y traducciones validadas: el formato, el instructivo y la
+prueba que las revisa están ahí (`README.md`) y en
+`src/core/canciones/cancion.ts`.
+
 ## Los sprites de Piko
 
 `src/ui/piko/sprites.ts` tiene siete estados (`idle`, `saludando`, `pensando`,
