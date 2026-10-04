@@ -283,6 +283,31 @@ export function marcasDeRepeticion(letra: readonly Verso[], coro: readonly numbe
   });
 }
 
+/** Las palabras de un verso tal como se ven (con sus signos), para cantarlas de a una. */
+export function palabrasDelVerso(texto: string): string[] {
+  return texto.trim().split(/\s+/).filter(Boolean);
+}
+
+/**
+ * Qué palabra del verso se está cantando en el segundo `t`: el tiempo del
+ * verso se reparte entre sus palabras según lo que dura decirlas (las largas
+ * llevan más). -1 antes de que empiece; la última, después de que termina.
+ */
+export function palabraEn(v: Verso, t: number): number {
+  const palabras = palabrasDelVerso(v.texto);
+  if (palabras.length === 0 || t < v.inicio) return -1;
+  // Cada palabra pesa sus letras y un poco más (el respiro entre palabras).
+  const pesos = palabras.map((w) => w.replace(/[^\p{L}\p{N}]/gu, '').length + 2);
+  const total = pesos.reduce((a, b) => a + b, 0);
+  const avance = ((t - v.inicio) / Math.max(0.001, v.fin - v.inicio)) * total;
+  let suma = 0;
+  for (let i = 0; i < pesos.length; i++) {
+    suma += pesos[i] as number;
+    if (avance < suma) return i;
+  }
+  return palabras.length - 1;
+}
+
 /** El verso que suena en el segundo `t`, o -1. */
 export function versoEn(letra: readonly Verso[], t: number): number {
   return letra.findIndex((v) => t >= v.inicio && t < v.fin);

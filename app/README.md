@@ -144,7 +144,8 @@ cómo decirla en inglés → practico → canto → gano sacuanjoches.
 
 Después de «Conoce nuestra canción», la canción suena con Piko bailando a
 tiempo con el pulso de la grabación (con su falda de sacuanjoches) y una
-sacuanjoche que va marcando la línea que suena: la letra como se canta, qué
+sacuanjoche que salta encima de cada palabra que se canta, rebotando con el
+pulso. Cada línea muestra la letra como se canta, qué
 significa y cómo se dice en inglés; las partes que vuelven dicen «Se repite» o
 «Repite el coro». Después, cada frase elegida es una lección (original →
 español → inglés, con «Significado aproximado» cuando no es literal) con
