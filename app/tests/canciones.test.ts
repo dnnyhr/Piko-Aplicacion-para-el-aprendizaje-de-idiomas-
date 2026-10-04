@@ -11,6 +11,8 @@ import {
   fichasDe,
   ID_MUSICA,
   marcasDeRepeticion,
+  palabraEn,
+  palabrasDelVerso,
   ordenCorrecto,
   repeticiones,
   sacuanjochesPorCancion,
@@ -153,6 +155,22 @@ describe('canciones: la letra', () => {
   it('marca el principio de cada tramo repetido, y si es el coro', () => {
     expect(marcasDeRepeticion(prueba().letra, [0])).toEqual([null, null, 'coro', null, null]);
     expect(marcasDeRepeticion(prueba().letra)).toEqual([null, null, 'repite', null, null]);
+  });
+
+  it('sabe qué palabra del verso se está cantando, para que la flor salte encima', () => {
+    const v = { texto: 'Gyal a boy dem pasanda', inicio: 10, fin: 14 };
+    expect(palabrasDelVerso(v.texto)).toEqual(['Gyal', 'a', 'boy', 'dem', 'pasanda']);
+    expect(palabraEn(v, 9.9)).toBe(-1);
+    expect(palabraEn(v, 10)).toBe(0);
+    expect(palabraEn(v, 13.9)).toBe(4);
+    expect(palabraEn(v, 20)).toBe(4);
+    // Avanza de a una, sin saltarse ninguna ni volver atrás.
+    const vistas: number[] = [];
+    for (let s = 10; s < 14; s += 0.05) {
+      const k = palabraEn(v, s);
+      if (vistas[vistas.length - 1] !== k) vistas.push(k);
+    }
+    expect(vistas).toEqual([0, 1, 2, 3, 4]);
   });
 
   it('sabe qué verso suena en cada segundo', () => {
