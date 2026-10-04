@@ -1,36 +1,50 @@
 /**
- * Una canción, en cinco etapas: escuchar, descubrir palabras, completar la
- * canción, escuchar y reconocer, y cantar con Piko.
+ * Una canción convertida en lección de inglés.
  *
- * Piko acompaña toda la canción: se mueve al ritmo mientras suena, señala
- * las palabras, festeja los aciertos, anima cuando no sale y pide repetir.
+ * Escucho mi canción → entiendo una frase → aprendo cómo decirla en inglés →
+ * practico → canto → gano sacuanjoches.
+ *
+ * 1. Escuchar: suena la grabación, Piko baila con su falda de sacuanjoches y
+ *    una sacuanjoche va marcando, a tiempo con el audio, la línea que suena:
+ *    la letra como se canta, qué significa y cómo se dice en inglés. Las
+ *    partes que vuelven dicen «Se repite» o «Repite el coro».
+ * 2. Cada frase elegida es una lección: original → español → inglés, y
+ *    cuatro actividades (completar, usar la palabra, ordenar, escuchar).
+ * 3. Canta con Piko: el coro, con el inglés de cada línea.
+ *
+ * Las sacuanjoches se ven crecer mientras se juega (una cada tres respuestas
+ * buenas) y al final entran al mismo progreso que todo lo demás.
  */
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View, type LayoutChangeEvent } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Boton } from '../../ui/components/Boton';
 import { Globo } from '../../ui/components/Globo';
 import { Opcion, type EstadoOpcion } from '../../ui/components/Opcion';
+import { Sacuanjoche } from '../../ui/arbol/Sacuanjoche';
+import { Bandera } from '../../ui/minijuegos/Bandera';
 import { Cerrar, Parlante } from '../../ui/minijuegos/Iconos';
 import { Nota } from '../../ui/musica/Instrumento';
-import { PikoMascota } from '../../ui/piko/PikoMascota';
+import { PikoBailarin } from '../../ui/musica/PikoBailarin';
 import type { EstadoPiko } from '../../ui/piko/sprites';
 import { elegir } from '../../ui/piko/frases';
 import { useTextos } from '../../ui/textos/useTextos';
-import { normalizar } from '../../core/content/verificar';
-import { paraVozEspanola } from '../../core/content/voz';
 import {
-  armarCompletar,
-  armarEscucha,
-  RACHA_CANCION,
+  ACTIVIDADES,
+  armarLeccion,
+  armarOracion,
+  marcasDeRepeticion,
+  ordenCorrecto,
+  repeticiones,
+  sacuanjochesPorCancion,
+  versoEn,
+  type Actividad,
   type Cancion,
-  type PalabraClave,
-  type PreguntaCompletar,
-  type PreguntaEscucha,
+  type LeccionArmada,
+  type MarcaRepeticion,
   type Verso,
 } from '../../core/canciones/cancion';
-import type { Voz } from '../../core/minijuegos/vocabulario';
 import { callar, decir, vozDePiko } from '../minijuegos/voz';
 import { useTramo } from './useTramo';
 import { color, espacio, fuente, labio, radio, texto } from '../../ui/tokens';
@@ -44,186 +58,170 @@ export interface ResultadoCancion {
 export interface ExperienciaProps {
   cancion: Cancion;
   audio: number;
+  /** Si hoy esta canción todavía da flores (si no, no se anuncian las que se van ganando). */
+  premiable: boolean;
   onTerminar: (r: ResultadoCancion) => void;
   onSalir: () => void;
 }
 
-type Etapa = 1 | 2 | 3 | 4 | 5;
-const ETAPAS: readonly Etapa[] = [1, 2, 3, 4, 5];
-const NOMBRE = {
-  1: 'musica.etapa_escuchar',
-  2: 'musica.etapa_descubrir',
-  3: 'musica.etapa_completar',
-  4: 'musica.etapa_reconocer',
-  5: 'musica.etapa_cantar',
-} as const;
-const AYUDA = {
-  1: 'musica.escuchar_ayuda',
-  2: 'musica.descubrir_ayuda',
-  3: 'musica.completar_ayuda',
-  4: 'musica.reconocer_ayuda',
-  5: 'musica.cantar_ayuda',
-} as const;
+type Paso = { tipo: 'escuchar' } | { tipo: 'frase'; k: number } | { tipo: 'actividad'; k: number; act: Actividad } | { tipo: 'cantar' };
 
-/**
- * La voz del teléfono para un texto en una lengua. Sólo las lenguas que
- * tienen voz: inglés, español y el miskito con la voz en español. Las demás
- * suenan sólo desde la grabación de la canción.
- */
-function vozPara(lengua: string, t: string): Voz | null {
-  if (lengua === 'eng') return { texto: t, lang: 'en-US' };
-  if (lengua === 'spa') return { texto: t, lang: 'es-US' };
-  if (lengua === 'miq') return { texto: paraVozEspanola(t), lang: 'es-US' };
-  return null;
-}
+const ingles = (t: string) => decir([{ texto: t, lang: 'en-US' }]);
 
-export function Experiencia({ cancion, audio, onTerminar, onSalir }: ExperienciaProps) {
+export function Experiencia({ cancion, audio, premiable, onTerminar, onSalir }: ExperienciaProps) {
   const { t, frases, idioma } = useTextos();
   const tramo = useTramo(audio);
-  const [etapa, setEtapa] = useState<Etapa>(1);
-  const [paso, setPaso] = useState(0);
+  const [i, setI] = useState(0);
   const [elegida, setElegida] = useState<number | null>(null);
   const [aciertos, setAciertos] = useState(0);
   const [respondidas, setRespondidas] = useState(0);
   const [racha, setRacha] = useState(0);
   const [mejorRacha, setMejorRacha] = useState(0);
   const [frase, setFrase] = useState('');
-  const [escucho, setEscucho] = useState(false);
+  const [festejo, setFestejo] = useState(0);
+  const [vioEjemplo, setVioEjemplo] = useState(false);
+  const [puestas, setPuestas] = useState<number[]>([]);
+  const [ordenListo, setOrdenListo] = useState<null | boolean>(null);
+  const [desfase, setDesfase] = useState(0);
 
-  const completar = useMemo<PreguntaCompletar[]>(() => armarCompletar(cancion, Math.random), [cancion]);
-  const escucha = useMemo<PreguntaEscucha[]>(() => armarEscucha(cancion, Math.random), [cancion]);
-  const claves = useMemo(() => new Set(cancion.palabras.map((p) => normalizar(p.texto))), [cancion]);
+  const lecciones = useMemo<LeccionArmada[]>(() => cancion.lecciones.map((l) => armarLeccion(cancion, l, Math.random)), [cancion]);
+  const pasos = useMemo<Paso[]>(
+    () => [
+      { tipo: 'escuchar' },
+      ...cancion.lecciones.flatMap((_, k): Paso[] => [{ tipo: 'frase', k }, ...ACTIVIDADES.map((act): Paso => ({ tipo: 'actividad', k, act }))]),
+      { tipo: 'cantar' },
+    ],
+    [cancion],
+  );
+  const marcas = useMemo(() => marcasDeRepeticion(cancion.letra, cancion.coro), [cancion]);
+  const repetidos = useMemo(() => repeticiones(cancion.letra), [cancion]);
+  const coro = useMemo(() => new Set(cancion.coro ?? []), [cancion]);
 
-  // Piko se mueve al ritmo mientras suena la canción.
-  const ritmo = useRef(new Animated.Value(0)).current;
+  const paso = pasos[i] as Paso;
+  const leccion = paso.tipo === 'frase' || paso.tipo === 'actividad' ? (lecciones[paso.k] as LeccionArmada) : null;
+  const periodo = 60 / cancion.ritmo.bpm;
+  const activo = tramo.sonando ? versoEn(cancion.letra, tramo.tiempo) : -1;
+  const flores = sacuanjochesPorCancion(aciertos, respondidas, mejorRacha);
+
+  // Al empezar el coro, Piko festeja.
+  const ultimoActivo = useRef(-1);
   useEffect(() => {
-    if (!tramo.sonando) {
-      ritmo.setValue(0);
-      return;
+    if (activo === ultimoActivo.current) return;
+    const antes = ultimoActivo.current;
+    ultimoActivo.current = activo;
+    if (activo < 0 || antes === activo) return;
+    const original = (repetidos[activo] as number) >= 0 ? (repetidos[activo] as number) : activo;
+    if (coro.has(original) && !coro.has(antes)) setFestejo((n) => n + 1);
+  }, [activo, coro, repetidos]);
+
+  // Una flor más: aparece con un «+1».
+  const pop = useRef(new Animated.Value(0)).current;
+  const floresAntes = useRef(0);
+  useEffect(() => {
+    if (flores > floresAntes.current && premiable) {
+      pop.setValue(0);
+      Animated.timing(pop, { toValue: 1, duration: 1100, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start();
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
     }
-    const loop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(ritmo, { toValue: 1, duration: 300, easing: Easing.out(Easing.quad), useNativeDriver: true }),
-        Animated.timing(ritmo, { toValue: 0, duration: 300, easing: Easing.in(Easing.quad), useNativeDriver: true }),
-      ]),
-    );
-    loop.start();
-    return () => loop.stop();
-  }, [tramo.sonando, ritmo]);
+    floresAntes.current = flores;
+  }, [flores, premiable, pop]);
 
   useEffect(() => () => callar(), []);
 
-  const versoActual = cancion.letra.findIndex((v) => tramo.tiempo >= v.inicio && tramo.tiempo < v.fin);
-  const traducciones = cancion.nivel !== 'avanzado';
-
-  const tocarPalabra = (p: PalabraClave) => {
-    if (p.inicio !== undefined && p.fin !== undefined) return tramo.tocar(p.inicio, p.fin);
-    const v = vozPara(cancion.lengua, p.texto);
-    if (v) decir([v]);
+  /** Toca de `desde` a `hasta` y avisa a Piko cuándo cae el próximo pulso, para bailar a tiempo. */
+  const tocar = (desde: number, hasta?: number) => {
+    const fase = (((cancion.ritmo.pulso - desde) % periodo) + periodo) % periodo;
+    setDesfase(Math.round(fase * 1000));
+    callar();
+    tramo.tocar(desde, hasta);
   };
+  const tocarVerso = (v: Verso) => tocar(v.inicio, v.fin);
 
-  const tocarVerso = (v: Verso) => tramo.tocar(v.inicio, v.fin);
-
-  /** Lengua de la canción → español → inglés, sin repetir la que ya es una de las dos. */
-  const cadena = (p: PalabraClave) =>
-    cancion.lengua === 'eng'
-      ? `${p.texto} → ${p.es}`
-      : cancion.lengua === 'spa'
-        ? `${p.es} → ${p.en}`
-        : `${p.texto} → ${p.es} → ${p.en}`;
-
-  const pasarEtapa = () => {
+  const irA = (n: number) => {
     tramo.pausar();
     callar();
-    setPaso(0);
     setElegida(null);
-    if (etapa === 5) {
+    setFrase('');
+    setVioEjemplo(false);
+    setPuestas([]);
+    setOrdenListo(null);
+    if (n >= pasos.length) {
       onTerminar({ correct: aciertos, total: respondidas, streak: mejorRacha });
       return;
     }
-    const siguiente = (etapa + 1) as Etapa;
-    setEtapa(siguiente);
-    if (siguiente === 5) setFrase(elegir(frases('piko.cantar')));
+    setI(n);
+    const p = pasos[n] as Paso;
+    const l = p.tipo === 'frase' || p.tipo === 'actividad' ? (lecciones[p.k] as LeccionArmada) : null;
+    if (p.tipo === 'frase' && l) {
+      setFrase(t('musica.frase_ayuda'));
+      // La frase suena primero como en la canción.
+      setTimeout(() => tocarVerso(l.verso), 300);
+    }
+    if (p.tipo === 'actividad' && p.act === 'escucha' && l) setTimeout(() => ingles(l.escucha.frase), 350);
+    if (p.tipo === 'cantar') setFrase(elegir(frases('piko.cantar')));
   };
 
-  /** Responder una pregunta de las etapas 3 o 4. */
-  const responder = (i: number, correcta: number, buena: string) => {
-    if (elegida !== null) return;
-    const acerto = i === correcta;
-    setElegida(i);
+  /** Anota una respuesta (sólo el primer intento de cada actividad). */
+  const anotar = (acerto: boolean, correcta: string) => {
     setRespondidas((n) => n + 1);
-    const nuevaRacha = acerto ? racha + 1 : 0;
-    setRacha(nuevaRacha);
-    setMejorRacha((m) => Math.max(m, nuevaRacha));
+    const nueva = acerto ? racha + 1 : 0;
+    setRacha(nueva);
+    setMejorRacha((m) => Math.max(m, nueva));
     if (acerto) {
       setAciertos((n) => n + 1);
-      const dicho = nuevaRacha === RACHA_CANCION ? t('musica.racha') : elegir(frases('piko.acierto'));
+      setFestejo((n) => n + 1);
+      const dicho = elegir(frases('piko.acierto'));
       setFrase(dicho);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
-      decir([vozDePiko(dicho, idioma)]);
+      decir([vozDePiko(dicho, idioma), { texto: correcta, lang: 'en-US' }]);
     } else {
       const dicho = elegir(frases('piko.intento'));
-      setFrase(`${dicho} ${buena}`);
+      setFrase(`${dicho} ${correcta}`);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => undefined);
-      decir([vozDePiko(dicho, idioma)]);
+      decir([vozDePiko(dicho, idioma), { texto: correcta, lang: 'en-US' }]);
     }
   };
 
-  const siguientePregunta = (cuantas: number) => {
-    setElegida(null);
-    setFrase('');
-    if (paso + 1 >= cuantas) pasarEtapa();
-    else setPaso(paso + 1);
+  const responder = (k: number, correcta: number, opciones: readonly string[], frase: string) => {
+    if (elegida !== null) return;
+    setElegida(k);
+    anotar(k === correcta, frase.replace('___', opciones[correcta] as string));
   };
 
-  // Al llegar a una pregunta, suena sola.
-  useEffect(() => {
-    if (etapa === 3 && completar[paso]) tocarVerso(cancion.letra[completar[paso]!.hueco.verso] as Verso);
-    if (etapa === 4 && escucha[paso]) sonarEscucha(escucha[paso]!);
-  }, [etapa, paso]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  function sonarEscucha(q: PreguntaEscucha) {
-    if (q.verso) return tocarVerso(q.verso);
-    if (q.palabra) tocarPalabra(q.palabra);
-  }
-
-  const estadoOpcion = (i: number, correcta: number): EstadoOpcion => {
+  const estadoOpcion = (k: number, correcta: number): EstadoOpcion => {
     if (elegida === null) return 'normal';
-    if (i === correcta) return 'correcta';
-    return i === elegida ? 'fallada' : 'normal';
+    if (k === correcta) return 'correcta';
+    return k === elegida ? 'fallada' : 'normal';
   };
 
-  const estadoPiko: EstadoPiko =
-    elegida !== null
-      ? frase && elegida >= 0 && (etapa === 3 ? elegida === completar[paso]?.correcta : elegida === escucha[paso]?.correcta)
-        ? 'alegre'
-        : 'animando'
-      : tramo.sonando
-        ? etapa === 5
-          ? 'celebrando'
-          : 'alegre'
-        : etapa === 2
-          ? 'pensando'
-          : 'idle';
-  const salto = ritmo.interpolate({ inputRange: [0, 1], outputRange: [0, -8] });
+  const respondio = elegida !== null || ordenListo !== null;
+  const acerto =
+    paso.tipo === 'actividad' && leccion
+      ? paso.act === 'ordenar'
+        ? ordenListo === true
+        : elegida !== null && elegida === leccion[paso.act].correcta
+      : false;
+  const estadoPiko: EstadoPiko = respondio ? (acerto ? 'celebrando' : 'animando') : tramo.sonando ? 'alegre' : paso.tipo === 'actividad' ? 'pensando' : 'idle';
+  const fuerte = paso.tipo === 'cantar' || (activo >= 0 && (repetidos[activo] as number) >= 0);
 
-  /** Un verso con las palabras clave resaltadas. */
-  const VersoVista = ({ v, activo }: { v: Verso; activo: boolean }) => (
-    <View style={[styles.verso, activo ? styles.versoActivo : null]}>
-      <Text style={styles.versoTexto}>
-        {v.texto.split(/(\s+)/).map((w, k) => {
-          const limpia = normalizar(w.replace(/^[¿¡«"'(]+|[»"'),.;:!?]+$/g, ''));
-          return (
-            <Text key={k} style={claves.has(limpia) ? styles.clave : null}>
-              {w}
-            </Text>
-          );
-        })}
-      </Text>
-      {traducciones && v.es && cancion.lengua !== 'spa' && <Text style={styles.traduccion}>{v.es}</Text>}
-      {traducciones && v.en && cancion.lengua !== 'eng' && <Text style={styles.traduccion}>{v.en}</Text>}
-    </View>
-  );
+  // Los puntos de arriba: Escuchar, una por frase, Cantar.
+  const grupo = paso.tipo === 'escuchar' ? 0 : paso.tipo === 'cantar' ? cancion.lecciones.length + 1 : paso.k + 1;
+  const grupos = cancion.lecciones.length + 2;
+
+  const ayuda =
+    paso.tipo === 'escuchar'
+      ? t('musica.escuchar_ayuda')
+      : paso.tipo === 'cantar'
+        ? t('musica.cantar_ayuda')
+        : paso.tipo === 'frase'
+          ? t('musica.frase_ayuda')
+          : paso.act === 'completar'
+            ? t('musica.completar_ayuda')
+            : paso.act === 'usa'
+              ? t('musica.usa_ayuda')
+              : paso.act === 'ordenar'
+                ? t('musica.ordenar_ayuda')
+                : t('musica.escucha_ayuda');
 
   return (
     <View style={styles.raiz}>
@@ -231,165 +229,371 @@ export function Experiencia({ cancion, audio, onTerminar, onSalir }: Experiencia
         <Pressable onPress={onSalir} accessibilityRole="button" accessibilityLabel={t('musica.salir')} style={styles.redondo}>
           <Cerrar />
         </Pressable>
-        <View style={styles.etapas} accessible accessibilityLabel={`${t('musica.etapa', { n: etapa })}: ${t(NOMBRE[etapa])}`}>
-          {ETAPAS.map((n) => (
-            <View key={n} style={[styles.etapaPunto, n < etapa ? styles.etapaHecha : n === etapa ? styles.etapaActual : null]}>
-              <Text style={[styles.etapaNumero, n <= etapa ? styles.etapaNumeroClaro : null]}>{n}</Text>
+        <View style={styles.grupos} accessible accessibilityLabel={t('musica.progreso', { n: grupo + 1, total: grupos })}>
+          {Array.from({ length: grupos }, (_, n) => (
+            <View key={n} style={[styles.grupo, n < grupo ? styles.grupoHecho : n === grupo ? styles.grupoActual : null]}>
+              {n < grupo && <Sacuanjoche tam={16} />}
             </View>
           ))}
+        </View>
+        <View style={styles.flores} accessible accessibilityLabel={t('musica.flores', { n: flores })}>
+          <Sacuanjoche tam={22} />
+          <Text style={styles.floresTexto}>{flores}</Text>
+          <Animated.Text
+            accessibilityElementsHidden
+            importantForAccessibility="no"
+            style={[
+              styles.pop,
+              {
+                opacity: pop.interpolate({ inputRange: [0, 0.1, 0.7, 1], outputRange: [0, 1, 1, 0] }),
+                transform: [{ translateY: pop.interpolate({ inputRange: [0, 1], outputRange: [6, -26] }) }],
+              },
+            ]}
+          >
+            +1
+          </Animated.Text>
         </View>
       </View>
 
       <View style={styles.escenario}>
-        <View style={[styles.nota, { left: 26, top: 8 }]}>
-          <Nota tam={20} tinte={color.verdeHoja} />
+        <View style={[styles.nota, { left: 18, top: 8 }]}>
+          <Nota tam={18} tinte={color.verdeHoja} />
         </View>
-        <View style={[styles.nota, { right: 34, top: 24 }]}>
-          <Nota tam={16} tinte={color.copete} />
+        <View style={[styles.nota, { left: 96, top: 2 }]}>
+          <Nota tam={14} tinte={color.copete} />
         </View>
-        <Animated.View style={{ transform: [{ translateY: salto }] }}>
-          <PikoMascota estado={estadoPiko} tam={110} />
-        </Animated.View>
+        <PikoBailarin tam={112} bailando={tramo.sonando} periodo={periodo} desfase={desfase} fuerte={fuerte} festejo={festejo} estado={estadoPiko} />
         <View style={styles.globo}>
-          <Globo>{frase || t(AYUDA[etapa])}</Globo>
+          <Globo>{frase || ayuda}</Globo>
         </View>
       </View>
 
-      <Text style={styles.titulo}>
-        {t('musica.etapa', { n: etapa })} · {t(NOMBRE[etapa])}
-      </Text>
-
-      <ScrollView style={styles.cuerpo} contentContainerStyle={styles.cuerpoContenido} showsVerticalScrollIndicator={false}>
-        {etapa === 1 && (
-          <>
-            {cancion.letra.map((v, i) => (
-              <VersoVista key={i} v={v} activo={i === versoActual} />
-            ))}
-          </>
-        )}
-
-        {etapa === 2 &&
-          cancion.palabras.map((p, i) => (
-            <View key={i} style={styles.palabra}>
-              <Pressable
-                onPress={() => {
-                  setFrase(cadena(p));
-                  tocarPalabra(p);
-                }}
-                accessibilityRole="button"
-                accessibilityLabel={`${p.texto}, ${p.es}, ${p.en}`}
-                style={styles.palabraFila}
-              >
-                {cancion.lengua !== 'spa' && cancion.lengua !== 'eng' && (
-                  <>
-                    <Text style={styles.palabraOriginal}>{p.texto}</Text>
-                    <Text style={styles.flecha}>→</Text>
-                  </>
-                )}
-                <Text style={styles.palabraEs}>{p.es}</Text>
-                <Text style={styles.flecha}>→</Text>
-                <Text style={styles.palabraEn}>{p.en.toLocaleUpperCase('en')}</Text>
-              </Pressable>
-              <Pressable
-                onPress={() => decir([{ texto: p.en, lang: 'en-US' }])}
-                accessibilityRole="button"
-                accessibilityLabel={`${t('minijuegos.escuchar')}: ${p.en}`}
-                style={styles.parlanteChico}
-              >
-                <Parlante tam={20} />
-              </Pressable>
-            </View>
-          ))}
-
-        {etapa === 3 && completar[paso] && (
-          <>
-            <View style={styles.hueco}>
-              <Text style={styles.huecoTexto}>{completar[paso]!.conHueco}</Text>
-              <Pressable
-                onPress={() => tocarVerso(cancion.letra[completar[paso]!.hueco.verso] as Verso)}
-                accessibilityRole="button"
-                accessibilityLabel={t('musica.escuchar_verso')}
-                style={styles.parlanteChico}
-              >
-                <Parlante tam={20} />
-              </Pressable>
-            </View>
-            {completar[paso]!.opciones.map((op, i) => (
-              <Opcion
-                key={`${paso}-${i}`}
-                estado={estadoOpcion(i, completar[paso]!.correcta)}
-                disabled={elegida !== null}
-                onPress={() => responder(i, completar[paso]!.correcta, completar[paso]!.hueco.oculta)}
-              >
-                {op}
-              </Opcion>
-            ))}
-          </>
-        )}
-
-        {etapa === 4 && escucha[paso] && (
-          <>
-            <Pressable
-              onPress={() => sonarEscucha(escucha[paso]!)}
-              accessibilityRole="button"
-              accessibilityLabel={t('musica.escuchar_otra_vez')}
-              style={styles.escuchaGrande}
+      {(paso.tipo === 'escuchar' || paso.tipo === 'cantar') && (
+        <>
+          <Text style={styles.titulo}>{paso.tipo === 'escuchar' ? t('musica.paso_escuchar') : t('musica.paso_cantar')}</Text>
+          <Letra
+            cancion={cancion}
+            desde={paso.tipo === 'cantar' ? cancion.canta.desde : 0}
+            hasta={paso.tipo === 'cantar' ? cancion.canta.hasta : cancion.letra.length - 1}
+            activo={activo}
+            marcas={marcas}
+            repetidos={repetidos}
+            sonando={tramo.sonando}
+            periodo={periodo}
+            textos={{ repite: t('musica.se_repite'), coro: t('musica.repite_coro'), aproximado: t('musica.aproximado') }}
+          />
+          {!premiable && paso.tipo === 'escuchar' && <Text style={styles.aviso}>{t('musica.flores_hoy')}</Text>}
+          <View style={styles.pie}>
+            <Boton
+              ancho
+              tono="cielo"
+              onPress={() => {
+                if (tramo.sonando) return tramo.pausar();
+                if (paso.tipo === 'escuchar') tocar(Math.max(0, (cancion.letra[0] as Verso).inicio - 2));
+                else tocar((cancion.letra[cancion.canta.desde] as Verso).inicio, (cancion.letra[cancion.canta.hasta] as Verso).fin);
+              }}
             >
-              <Parlante tam={34} />
-              <Text style={styles.escuchaTexto}>{t('musica.escuchar_otra_vez')}</Text>
-            </Pressable>
-            {escucha[paso]!.opciones.map((op, i) => (
-              <Opcion
-                key={`${paso}-${i}`}
-                estado={estadoOpcion(i, escucha[paso]!.correcta)}
-                disabled={elegida !== null}
-                onPress={() => responder(i, escucha[paso]!.correcta, escucha[paso]!.opciones[escucha[paso]!.correcta] as string)}
+              {tramo.sonando ? t('musica.pausa') : t('musica.tocar')}
+            </Boton>
+            <Boton ancho tono={paso.tipo === 'cantar' ? 'verde' : 'papel'} onPress={() => irA(i + 1)}>
+              {paso.tipo === 'cantar' ? t('musica.terminar') : t('musica.empezar_leccion')}
+            </Boton>
+          </View>
+        </>
+      )}
+
+      {paso.tipo === 'frase' && leccion && (
+        <>
+          <ScrollView style={styles.cuerpo} contentContainerStyle={styles.cuerpoContenido} showsVerticalScrollIndicator={false}>
+            <Text style={styles.titulo}>{t('musica.frase_titulo', { n: paso.k + 1, total: lecciones.length })}</Text>
+            <View style={styles.tarjeta}>
+              <Text style={styles.rotulo}>🎵 {t('musica.frase_original')}</Text>
+              <Text style={styles.original}>{leccion.verso.texto}</Text>
+              {cancion.lengua !== 'spa' && leccion.verso.es && (
+                <>
+                  <Text style={styles.rotulo}>{t('musica.frase_es')}</Text>
+                  <Text style={styles.significado}>{leccion.verso.es}</Text>
+                </>
+              )}
+              <View style={styles.filaIngles}>
+                <Bandera lengua="eng" ancho={26} />
+                <Text style={styles.rotulo}>{t('musica.frase_en')}</Text>
+              </View>
+              <Text style={styles.enGrande}>{leccion.verso.en}</Text>
+              {leccion.verso.aproximado && <Text style={styles.aproximado}>≈ {t('musica.aproximado')}</Text>}
+              {leccion.verso.nota && <Text style={styles.nota_}>{leccion.verso.nota}</Text>}
+            </View>
+            <View style={styles.dosBotones}>
+              <Pressable onPress={() => tocarVerso(leccion.verso)} accessibilityRole="button" style={[styles.chip, styles.chipCancion]}>
+                <Nota tam={18} tinte={color.blanco} />
+                <Text style={styles.chipTexto}>{t('musica.escuchar_cancion')}</Text>
+              </Pressable>
+              <Pressable onPress={() => ingles(leccion.verso.en as string)} accessibilityRole="button" style={styles.chip}>
+                <Parlante tam={20} />
+                <Text style={styles.chipTexto}>{t('musica.escuchar_ingles')}</Text>
+              </Pressable>
+            </View>
+          </ScrollView>
+          <View style={styles.pie}>
+            <Boton ancho onPress={() => irA(i + 1)}>
+              {t('musica.a_practicar')}
+            </Boton>
+          </View>
+        </>
+      )}
+
+      {paso.tipo === 'actividad' && leccion && (
+        <>
+          <ScrollView style={styles.cuerpo} contentContainerStyle={styles.cuerpoContenido} showsVerticalScrollIndicator={false}>
+            <Text style={styles.titulo}>
+              {t(`musica.act_${paso.act}`)} · {t('musica.frase_titulo', { n: paso.k + 1, total: lecciones.length })}
+            </Text>
+
+            {paso.act === 'completar' && (
+              <>
+                <View style={styles.tarjeta}>
+                  <Text style={styles.chico}>{cancion.lengua === 'spa' ? leccion.verso.texto : leccion.verso.es}</Text>
+                  <Text style={styles.hueco}>{leccion.completar.conHueco}</Text>
+                </View>
+                {leccion.completar.opciones.map((op, k) => (
+                  <Opcion
+                    key={k}
+                    estado={estadoOpcion(k, leccion.completar.correcta)}
+                    disabled={elegida !== null}
+                    onPress={() => responder(k, leccion.completar.correcta, leccion.completar.opciones, leccion.completar.conHueco as string)}
+                  >
+                    {op}
+                  </Opcion>
+                ))}
+              </>
+            )}
+
+            {paso.act === 'usa' && (
+              <>
+                <View style={styles.tarjeta}>
+                  <Text style={styles.rotulo}>{t('musica.palabra_nueva')}</Text>
+                  <View style={styles.filaIngles}>
+                    <Text style={styles.palabraNueva}>{leccion.leccion.palabra.en.toLocaleUpperCase('en')}</Text>
+                    <Text style={styles.significado}>= {leccion.leccion.palabra.es}</Text>
+                  </View>
+                  {!vioEjemplo ? (
+                    <>
+                      <Text style={styles.rotulo}>{t('musica.usa_ayuda')}</Text>
+                      <Pressable onPress={() => ingles(leccion.leccion.palabra.ejemplo)} accessibilityRole="button" style={styles.ejemplo}>
+                        <View style={styles.ejemploTextos}>
+                          <Text style={styles.enGrande}>{leccion.leccion.palabra.ejemplo}</Text>
+                          <Text style={styles.chico}>{leccion.leccion.palabra.ejemploEs}</Text>
+                        </View>
+                        <View style={styles.parlanteChico}>
+                          <Parlante tam={20} />
+                        </View>
+                      </Pressable>
+                    </>
+                  ) : (
+                    <>
+                      <Text style={styles.rotulo}>{t('musica.usa_pregunta')}</Text>
+                      <Text style={styles.hueco}>{leccion.usa.conHueco}</Text>
+                    </>
+                  )}
+                </View>
+                {vioEjemplo &&
+                  leccion.usa.opciones.map((op, k) => (
+                    <Opcion
+                      key={k}
+                      estado={estadoOpcion(k, leccion.usa.correcta)}
+                      disabled={elegida !== null}
+                      onPress={() => responder(k, leccion.usa.correcta, leccion.usa.opciones, leccion.usa.conHueco as string)}
+                    >
+                      {op}
+                    </Opcion>
+                  ))}
+              </>
+            )}
+
+            {paso.act === 'ordenar' && (
+              <>
+                <View style={[styles.tarjeta, ordenListo === true ? styles.tarjetaBien : ordenListo === false ? styles.tarjetaMal : null]}>
+                  <Text style={styles.rotulo}>{t('musica.ordenar_ayuda')}</Text>
+                  <View style={styles.renglon}>
+                    {puestas.length === 0 && <Text style={styles.renglonVacio}>…</Text>}
+                    {puestas.map((f, k) => (
+                      <Pressable
+                        key={`${f}-${k}`}
+                        disabled={ordenListo !== null}
+                        onPress={() => setPuestas((p) => p.filter((_, j) => j !== k))}
+                        accessibilityRole="button"
+                        style={[styles.ficha, styles.fichaPuesta]}
+                      >
+                        <Text style={styles.fichaTexto}>{leccion.ordenar.fichas[f]}</Text>
+                      </Pressable>
+                    ))}
+                  </View>
+                  {ordenListo === false && <Text style={styles.chico}>{t('musica.era', { respuesta: armarOracion(leccion.ordenar.solucion) })}</Text>}
+                </View>
+                <View style={styles.fichas}>
+                  {leccion.ordenar.fichas.map((f, k) => {
+                    const usada = puestas.includes(k);
+                    return (
+                      <Pressable
+                        key={`${f}-${k}`}
+                        disabled={usada || ordenListo !== null}
+                        onPress={() => setPuestas((p) => [...p, k])}
+                        accessibilityRole="button"
+                        accessibilityState={{ disabled: usada }}
+                        style={[styles.ficha, usada ? styles.fichaUsada : null]}
+                      >
+                        <Text style={[styles.fichaTexto, usada ? styles.fichaTextoUsada : null]}>{f}</Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              </>
+            )}
+
+            {paso.act === 'escucha' && (
+              <>
+                <Pressable onPress={() => ingles(leccion.escucha.frase)} accessibilityRole="button" accessibilityLabel={t('musica.escuchar_otra_vez')} style={styles.escuchaGrande}>
+                  <Parlante tam={34} />
+                  <Text style={styles.escuchaTexto}>{t('musica.escuchar_otra_vez')}</Text>
+                </Pressable>
+                {leccion.escucha.opciones.map((op, k) => (
+                  <Opcion
+                    key={k}
+                    estado={estadoOpcion(k, leccion.escucha.correcta)}
+                    disabled={elegida !== null}
+                    onPress={() => responder(k, leccion.escucha.correcta, leccion.escucha.opciones, leccion.escucha.frase)}
+                  >
+                    {op}
+                  </Opcion>
+                ))}
+              </>
+            )}
+          </ScrollView>
+
+          <View style={styles.pie}>
+            {paso.act === 'usa' && !vioEjemplo && (
+              <Boton ancho onPress={() => setVioEjemplo(true)}>
+                {t('musica.ya_la_vi')}
+              </Boton>
+            )}
+            {paso.act === 'ordenar' && ordenListo === null && (
+              <Boton
+                ancho
+                disabled={puestas.length !== leccion.ordenar.fichas.length}
+                onPress={() => {
+                  const elegidas = puestas.map((k) => leccion.ordenar.fichas[k] as string);
+                  const bien = ordenCorrecto(elegidas, leccion.ordenar.solucion);
+                  setOrdenListo(bien);
+                  anotar(bien, armarOracion(leccion.ordenar.solucion));
+                }}
               >
-                {op}
-              </Opcion>
-            ))}
-          </>
-        )}
-
-        {etapa === 5 &&
-          cancion.letra.slice(cancion.canta.desde, cancion.canta.hasta + 1).map((v, i) => (
-            <VersoVista key={i} v={v} activo={cancion.canta.desde + i === versoActual} />
-          ))}
-      </ScrollView>
-
-      <View style={styles.pie}>
-        {(etapa === 1 || etapa === 5) && (
-          <Boton
-            ancho
-            tono="cielo"
-            onPress={() => {
-              if (tramo.sonando) return tramo.pausar();
-              setEscucho(true);
-              if (etapa === 1) tramo.tocar(0);
-              else {
-                const desde = cancion.letra[cancion.canta.desde] as Verso;
-                const hasta = cancion.letra[cancion.canta.hasta] as Verso;
-                tramo.tocar(desde.inicio, hasta.fin);
-              }
-            }}
-          >
-            {tramo.sonando ? t('musica.pausa') : etapa === 5 && escucho ? t('musica.repetir') : t('musica.tocar')}
-          </Boton>
-        )}
-        {(etapa === 3 || etapa === 4) && elegida !== null && (
-          <Boton ancho onPress={() => siguientePregunta(etapa === 3 ? completar.length : escucha.length)}>
-            {t('musica.seguir')}
-          </Boton>
-        )}
-        {(etapa === 1 || etapa === 2 || etapa === 5) && (
-          <Boton ancho tono={etapa === 2 ? 'verde' : 'papel'} onPress={pasarEtapa}>
-            {etapa === 5 ? t('musica.terminar') : t('musica.seguir')}
-          </Boton>
-        )}
-      </View>
+                {t('musica.comprobar')}
+              </Boton>
+            )}
+            {respondio && (
+              <Boton ancho onPress={() => irA(i + 1)}>
+                {t('musica.seguir')}
+              </Boton>
+            )}
+          </View>
+        </>
+      )}
     </View>
   );
 }
+
+// -------------------------------------------------------------- la letra
+
+interface LetraProps {
+  cancion: Cancion;
+  desde: number;
+  hasta: number;
+  activo: number;
+  marcas: readonly MarcaRepeticion[];
+  repetidos: readonly number[];
+  sonando: boolean;
+  periodo: number;
+  textos: { repite: string; coro: string; aproximado: string };
+}
+
+/**
+ * La letra con la sacuanjoche que la sigue: la flor baja de línea en línea al
+ * ritmo del audio (va a la línea que suena según el tiempo de la grabación) y
+ * gira mientras suena. La lista se desplaza sola para que la línea se vea.
+ */
+const Letra = memo(function Letra({ cancion, desde, hasta, activo, marcas, repetidos, sonando, periodo, textos }: LetraProps) {
+  const lista = useRef<ScrollView>(null);
+  const lugares = useRef<Record<number, { y: number; h: number }>>({});
+  const y = useRef(new Animated.Value(0)).current;
+  const giro = useRef(new Animated.Value(0)).current;
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const l = lugares.current[activo];
+    if (activo < desde || activo > hasta || !l) return;
+    setVisible(true);
+    Animated.timing(y, { toValue: l.y + l.h / 2 - 14, duration: 260, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
+    lista.current?.scrollTo({ y: Math.max(0, l.y - 90), animated: true });
+  }, [activo, desde, hasta, y]);
+
+  useEffect(() => {
+    if (!sonando) return;
+    const vuelta = Animated.loop(
+      Animated.timing(giro, { toValue: 1, duration: periodo * 4000, easing: Easing.linear, useNativeDriver: true }),
+    );
+    vuelta.start();
+    return () => vuelta.stop();
+  }, [sonando, periodo, giro]);
+
+  return (
+    <ScrollView ref={lista} style={styles.cuerpo} contentContainerStyle={styles.letra} showsVerticalScrollIndicator={false}>
+      {cancion.letra.slice(desde, hasta + 1).map((v, j) => {
+        const n = desde + j;
+        const marca = n > desde ? marcas[n] : null;
+        const repetido = (repetidos[n] as number) >= 0;
+        return (
+          <View
+            key={n}
+            onLayout={(e: LayoutChangeEvent) => {
+              lugares.current[n] = { y: e.nativeEvent.layout.y, h: e.nativeEvent.layout.height };
+            }}
+          >
+            {marca && (
+              <View style={styles.marca}>
+                <Text style={styles.marcaTexto}>{marca === 'coro' ? `🎵 ${textos.coro}` : textos.repite}</Text>
+              </View>
+            )}
+            <View style={[styles.verso, n === activo ? styles.versoActivo : null, repetido ? styles.versoRepetido : null]}>
+              <Text style={styles.versoTexto}>{v.texto}</Text>
+              {!repetido && cancion.lengua !== 'spa' && v.es && <Text style={styles.versoEs}>{v.es}</Text>}
+              {!repetido && v.en && (
+                <View style={styles.versoFilaEn}>
+                  <Bandera lengua="eng" ancho={18} />
+                  <Text style={styles.versoEn}>{v.en}</Text>
+                </View>
+              )}
+              {!repetido && v.aproximado && <Text style={styles.aproximado}>≈ {textos.aproximado}</Text>}
+              {!repetido && !v.en && v.nota && <Text style={styles.nota_}>{v.nota}</Text>}
+            </View>
+          </View>
+        );
+      })}
+      {visible && (
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            styles.florGuia,
+            {
+              transform: [{ translateY: y }, { rotate: giro.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] }) }],
+            },
+          ]}
+        >
+          <Sacuanjoche tam={28} />
+        </Animated.View>
+      )}
+    </ScrollView>
+  );
+});
 
 const styles = StyleSheet.create({
   raiz: { flex: 1 },
@@ -404,66 +608,106 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  etapas: { flex: 1, flexDirection: 'row', justifyContent: 'center', gap: espacio.sm },
-  etapaPunto: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+  grupos: { flex: 1, flexDirection: 'row', justifyContent: 'center', gap: espacio.sm },
+  grupo: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     borderWidth: 2,
     borderColor: color.bordeHondo,
     backgroundColor: color.blanco,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  etapaHecha: { backgroundColor: color.verdePasto, borderColor: '#7BA22C' },
-  etapaActual: { backgroundColor: color.verde, borderColor: color.verde },
-  etapaNumero: { fontFamily: fuente.titulo, fontSize: 13, color: color.tintaSuave },
-  etapaNumeroClaro: { color: color.blanco },
+  grupoHecho: { backgroundColor: color.verdePasto, borderColor: '#7BA22C' },
+  grupoActual: { borderColor: color.verde, borderWidth: 3 },
+  flores: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: color.blanco,
+    borderRadius: radio.redondo,
+    borderWidth: 2,
+    borderColor: color.borde,
+    paddingHorizontal: espacio.md,
+    height: 40,
+  },
+  floresTexto: { fontFamily: fuente.tituloFuerte, fontSize: 18, color: color.verde },
+  pop: { position: 'absolute', left: -30, top: 8, fontFamily: fuente.tituloFuerte, fontSize: 20, color: color.copete },
   escenario: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    marginTop: espacio.md,
+    marginTop: espacio.sm,
     backgroundColor: color.nube,
     borderRadius: radio.xl,
     paddingHorizontal: espacio.md,
-    paddingTop: espacio.md,
-    minHeight: 132,
+    paddingTop: espacio.sm,
+    minHeight: 128,
   },
   nota: { position: 'absolute' },
   globo: { flex: 1, marginLeft: espacio.sm, marginBottom: espacio.lg },
-  titulo: { ...texto.subtitulo, color: color.verde, marginTop: espacio.lg },
+  titulo: { ...texto.subtitulo, color: color.verde, marginTop: espacio.md },
   cuerpo: { flex: 1, marginTop: espacio.sm },
   cuerpoContenido: { gap: espacio.sm, paddingBottom: espacio.lg },
+  letra: { gap: espacio.sm, paddingBottom: espacio.lg, paddingLeft: 34 },
+  florGuia: { position: 'absolute', left: 0, top: 0, width: 28, height: 28 },
+  marca: { alignSelf: 'flex-start', backgroundColor: color.papelHondo, borderRadius: radio.redondo, paddingHorizontal: espacio.md, paddingVertical: 2, marginBottom: 4 },
+  marcaTexto: { ...texto.etiqueta, fontSize: 12, color: color.verdeHondo },
   verso: {
     backgroundColor: color.blanco,
     borderRadius: radio.md,
     borderWidth: 2,
     borderColor: color.borde,
-    paddingHorizontal: espacio.lg,
-    paddingVertical: espacio.sm,
-  },
-  versoActivo: { borderColor: color.cielo, backgroundColor: color.nube },
-  versoTexto: { fontFamily: fuente.titulo, fontSize: 18, lineHeight: 24, color: color.grafito },
-  clave: { color: color.copete, fontFamily: fuente.tituloFuerte },
-  traduccion: { ...texto.chico, color: color.tinta },
-  palabra: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: espacio.sm,
-    backgroundColor: color.blanco,
-    borderRadius: radio.md,
-    borderWidth: 2,
-    borderColor: color.borde,
-    borderBottomWidth: 2 + labio.chico,
-    borderBottomColor: color.bordeHondo,
     paddingHorizontal: espacio.md,
     paddingVertical: espacio.sm,
+    gap: 2,
   },
-  palabraFila: { flex: 1, flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: espacio.xs, minHeight: 44 },
-  palabraOriginal: { fontFamily: fuente.tituloFuerte, fontSize: 18, color: color.copete },
-  palabraEs: { fontFamily: fuente.titulo, fontSize: 17, color: color.grafito },
-  palabraEn: { fontFamily: fuente.tituloFuerte, fontSize: 18, color: color.verde },
-  flecha: { ...texto.cuerpo, color: color.tintaSuave },
+  versoActivo: { borderColor: color.pico, backgroundColor: '#FFF6DE' },
+  versoRepetido: { paddingVertical: 6 },
+  versoTexto: { fontFamily: fuente.titulo, fontSize: 18, lineHeight: 23, color: color.grafito },
+  versoEs: { ...texto.chico, color: color.tinta },
+  versoFilaEn: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  versoEn: { flex: 1, fontFamily: fuente.cuerpoFuerte, fontSize: 15, lineHeight: 20, color: color.verde },
+  aproximado: { ...texto.etiqueta, fontSize: 11, color: color.copete },
+  nota_: { ...texto.chico, color: color.tintaSuave, fontStyle: 'italic' },
+  aviso: { ...texto.chico, color: color.tintaSuave, textAlign: 'center' },
+  tarjeta: {
+    gap: espacio.xs,
+    backgroundColor: color.blanco,
+    borderRadius: radio.lg,
+    borderWidth: 2,
+    borderColor: color.borde,
+    borderBottomWidth: 2 + labio.normal,
+    borderBottomColor: color.bordeHondo,
+    padding: espacio.lg,
+  },
+  tarjetaBien: { borderColor: color.acierto, backgroundColor: color.aciertoFondo },
+  tarjetaMal: { borderColor: color.intento, backgroundColor: color.intentoFondo },
+  rotulo: { ...texto.etiqueta, fontSize: 12, color: color.tintaSuave, marginTop: espacio.xs },
+  original: { fontFamily: fuente.tituloFuerte, fontSize: 22, lineHeight: 28, color: color.copete },
+  significado: { ...texto.cuerpo, color: color.grafito },
+  filaIngles: { flexDirection: 'row', alignItems: 'center', gap: espacio.sm, marginTop: espacio.xs },
+  enGrande: { fontFamily: fuente.tituloFuerte, fontSize: 21, lineHeight: 27, color: color.verde },
+  chico: { ...texto.chico, color: color.tinta },
+  hueco: { fontFamily: fuente.tituloFuerte, fontSize: 22, lineHeight: 29, color: color.grafito },
+  palabraNueva: { fontFamily: fuente.tituloFuerte, fontSize: 26, color: color.verde, letterSpacing: 1 },
+  ejemplo: { flexDirection: 'row', alignItems: 'center', gap: espacio.md, backgroundColor: color.nube, borderRadius: radio.md, padding: espacio.md },
+  ejemploTextos: { flex: 1, gap: 2 },
+  dosBotones: { flexDirection: 'row', gap: espacio.sm },
+  chip: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: espacio.sm,
+    minHeight: 48,
+    backgroundColor: color.cieloHondo,
+    borderRadius: radio.lg,
+    borderBottomWidth: labio.chico,
+    borderBottomColor: '#1F7FB0',
+  },
+  chipCancion: { backgroundColor: color.copete, borderBottomColor: '#B4561B' },
+  chipTexto: { fontFamily: fuente.boton, fontSize: 15, color: color.blanco },
   parlanteChico: {
     width: 44,
     height: 44,
@@ -472,15 +716,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  hueco: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: espacio.md,
-    backgroundColor: color.nube,
+  renglon: { flexDirection: 'row', flexWrap: 'wrap', gap: espacio.sm, minHeight: 52, alignItems: 'center', borderBottomWidth: 2, borderBottomColor: color.borde, paddingBottom: espacio.sm },
+  renglonVacio: { ...texto.cuerpo, color: color.tintaSuave },
+  fichas: { flexDirection: 'row', flexWrap: 'wrap', gap: espacio.sm, justifyContent: 'center' },
+  ficha: {
+    minHeight: 46,
+    justifyContent: 'center',
+    backgroundColor: color.blanco,
     borderRadius: radio.md,
-    padding: espacio.md,
+    borderWidth: 2,
+    borderColor: color.borde,
+    borderBottomWidth: 2 + labio.chico,
+    borderBottomColor: color.bordeHondo,
+    paddingHorizontal: espacio.md,
   },
-  huecoTexto: { flex: 1, fontFamily: fuente.titulo, fontSize: 20, lineHeight: 26, color: color.grafito },
+  fichaPuesta: { backgroundColor: color.nube, borderColor: color.cielo },
+  fichaUsada: { backgroundColor: color.papelHondo, borderBottomWidth: 2 },
+  fichaTexto: { fontFamily: fuente.titulo, fontSize: 18, color: color.grafito },
+  fichaTextoUsada: { color: 'transparent' },
   escuchaGrande: {
     flexDirection: 'row',
     alignItems: 'center',

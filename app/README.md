@@ -114,13 +114,17 @@ estudiante ya hizo (`src/core/minijuegos/vocabulario.ts`), y sus niveles
 - **El Trompo de Piko**: se lanza el trompo y, mientras gira, salen retos con
   tiempo (traducción, significado, imagen y audio). Acertar le da fuerza y
   fallar se la quita; con seis aciertos antes de que caiga se gana.
-- **Bolas chinas**: en la rueda de tiza hay una chibola por respuesta; se
-  apunta arrastrando el tiro (o tocando la chibola) y la correcta cae al
-  hoyito. Si rebota, Piko da una pista y se vuelve a tirar.
-- **Gallinita Ciega de Piko**: Piko tiene los ojos vendados; suena una palabra
-  o una frase y se elige lo que se escuchó (dibujos, palabras parecidas,
-  opciones que sólo se escuchan). Piko camina hasta lo elegido. Rachas con
-  bonos; en el avanzado, cada audio se escucha dos veces nomás.
+- **Bolas chinas**: en la rueda de tiza hay una chibola por respuesta. Se
+  agarra el tiro, se estira hacia atrás (una línea de puntos marca hacia
+  dónde sale) y se suelta: el tiro vuela hasta la chibola de esa dirección y
+  la correcta cae al hoyito. Si rebota, Piko da una pista y se vuelve a tirar.
+- **Pikito Ciego** (la gallinita ciega, id `gallinita`): el patio está a
+  oscuras y sólo se ve un círculo de luz alrededor de Piko, vendado. Suena
+  una palabra o una frase; las respuestas están escondidas y Piko va a
+  tantearlas de a una, así que hay que guiarse por lo que se escuchó. Con
+  «¡Es esta!» se responde y se prende la luz. Más nivel, menos luz y más
+  respuestas que sólo se escuchan; rachas con bonos; en el avanzado, cada
+  audio se escucha dos veces nomás.
 
 Las pantallas usan `useMinijuego` (lengua, niveles, tope diario y cierre de la
 partida), `ElegirPartida` y `FinPartida`; los retos de elegir respuesta salen
@@ -134,12 +138,21 @@ en el perfil, hacen crecer el madroño y viajan al maestro.
 
 ## La Música de Piko
 
-`app/musica/` es la sección de canciones: cada canción se recorre en cinco
-etapas (escuchar, descubrir palabras, completar la canción, escuchar y
-reconocer, cantar con Piko), con «Conoce nuestra canción» antes de empezar.
-Las canciones se abren por nivel al completar alguna del nivel anterior, dan
-sacuanjoches con el mismo evento `gameDone` (juego `musica`, una vez por día
-por canción) y las completadas se ven en el perfil.
+`app/musica/` es la sección de canciones: aprender inglés con canciones de
+Nicaragua que ya conocemos. Escucho mi canción → entiendo una frase → aprendo
+cómo decirla en inglés → practico → canto → gano sacuanjoches.
+
+Después de «Conoce nuestra canción», la canción suena con Piko bailando a
+tiempo con el pulso de la grabación (con su falda de sacuanjoches) y una
+sacuanjoche que va marcando la línea que suena: la letra como se canta, qué
+significa y cómo se dice en inglés; las partes que vuelven dicen «Se repite» o
+«Repite el coro». Después, cada frase elegida es una lección (original →
+español → inglés, con «Significado aproximado» cuando no es literal) con
+cuatro actividades: completar la frase, usar la palabra nueva en otra
+oración, ordenar una frase y reconocer lo que se escucha. Al final se canta
+el coro. Una sacuanjoche cada tres respuestas buenas (se ven crecer mientras
+se juega), con el mismo evento `gameDone` (juego `musica`, una vez por día por
+canción); las completadas se ven en el perfil y abren las del nivel siguiente.
 
 Las canciones viven en `content/canciones/` y **sólo entran con permiso de
 uso** y con letra y traducciones validadas: el formato, el instructivo y la

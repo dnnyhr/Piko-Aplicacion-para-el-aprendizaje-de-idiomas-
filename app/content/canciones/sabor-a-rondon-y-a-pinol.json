@@ -7,6 +7,10 @@
   "nivel": "avanzado",
   "imagen": "marimba",
   "audio": "sabor-a-rondon-y-a-pinol.m4a",
+  "ritmo": {
+    "bpm": 95.7,
+    "pulso": 21.56
+  },
   "fuente": {
     "interpreta": "Dimensión Costeña",
     "autoria": "Dimensión Costeña",
@@ -25,107 +29,157 @@
   "letra": [
     {
       "texto": "El palo de mayo de mi costa es tan rico y jamás morirá,",
+      "en": "The Palo de Mayo from my coast is so great, and it will never die,",
+      "aproximado": true,
+      "nota": "«Rico» acá no habla de comida: quiere decir que es muy bueno.",
       "inicio": 37.0,
       "fin": 45.0
     },
     {
       "texto": "mis amigos lo están disfrutando,",
+      "en": "my friends are enjoying it,",
       "inicio": 45.0,
       "fin": 49.1
     },
     {
       "texto": "todo el mundo lo quiere bailar.",
+      "en": "everybody wants to dance to it.",
       "inicio": 49.1,
       "fin": 52.0
     },
     {
       "texto": "El palo de mayo sabroso,",
+      "en": "The great Palo de Mayo,",
+      "aproximado": true,
+      "nota": "«Sabroso» acá no habla de comida: quiere decir que es muy bueno y alegre.",
       "inicio": 52.0,
       "fin": 56.8
     },
     {
       "texto": "el palo de mayo candente,",
+      "en": "the red-hot Palo de Mayo,",
+      "aproximado": true,
+      "nota": "«Candente» quiere decir que está muy encendido, con mucha energía: «red-hot».",
       "inicio": 56.8,
       "fin": 60.6
     },
     {
       "texto": "el palo de mayo es mi ritmo,",
+      "en": "Palo de Mayo is my rhythm,",
+      "nota": "«Palo de Mayo» es el nombre de la fiesta: no se traduce.",
       "inicio": 60.6,
       "fin": 65.2
     },
     {
       "texto": "el palo de mayo caliente.",
+      "en": "the hot Palo de Mayo.",
+      "aproximado": true,
+      "nota": "«Caliente» acá quiere decir alegre y con mucho ritmo.",
       "inicio": 65.2,
       "fin": 68.3
     },
     {
       "texto": "A gozar...",
+      "en": "Let's have fun!",
+      "aproximado": true,
+      "nota": "«A gozar» es una invitación a disfrutar la fiesta.",
       "inicio": 69.2,
       "fin": 71.0
     }
   ],
-  "palabras": [
-    {
-      "texto": "costa",
-      "es": "costa",
-      "en": "coast",
-      "inicio": 40.05,
-      "fin": 41.4
-    },
-    {
-      "texto": "amigos",
-      "es": "amigos",
-      "en": "friends",
-      "inicio": 45.75,
-      "fin": 46.6
-    },
-    {
-      "texto": "mundo",
-      "es": "mundo",
-      "en": "world",
-      "inicio": 49.95,
-      "fin": 50.6
-    },
-    {
-      "texto": "bailar",
-      "es": "bailar",
-      "en": "to dance",
-      "inicio": 51.45,
-      "fin": 52.1
-    },
-    {
-      "texto": "ritmo",
-      "es": "ritmo",
-      "en": "rhythm",
-      "inicio": 63.75,
-      "fin": 65.2
-    }
+  "coro": [
+    3,
+    4,
+    5,
+    6
   ],
-  "completar": [
-    {
-      "verso": 0,
-      "en": "texto",
-      "oculta": "costa"
-    },
+  "lecciones": [
     {
       "verso": 1,
-      "en": "texto",
-      "oculta": "amigos"
+      "completar": {
+        "oculta": "friends",
+        "opciones": [
+          "friends",
+          "teachers",
+          "cousins",
+          "neighbors"
+        ]
+      },
+      "palabra": {
+        "en": "enjoy",
+        "es": "disfrutar",
+        "ejemplo": "I enjoy music with my family.",
+        "ejemploEs": "Disfruto la música con mi familia.",
+        "opciones": [
+          "enjoy",
+          "under",
+          "yellow",
+          "quickly"
+        ]
+      },
+      "ordenar": "My friends are enjoying it.",
+      "escucha": [
+        "My friends are dancing to it.",
+        "My cousins are enjoying it."
+      ]
     },
     {
       "verso": 2,
-      "en": "texto",
-      "oculta": "mundo"
+      "completar": {
+        "oculta": "wants",
+        "opciones": [
+          "wants",
+          "eats",
+          "sleeps",
+          "opens"
+        ]
+      },
+      "palabra": {
+        "en": "everybody",
+        "es": "todo el mundo",
+        "ejemplo": "Everybody likes the May festival.",
+        "ejemploEs": "A todo el mundo le gusta la fiesta de mayo.",
+        "opciones": [
+          "Everybody",
+          "Nothing",
+          "Tomorrow",
+          "Inside"
+        ]
+      },
+      "ordenar": "Everybody wants to dance.",
+      "escucha": [
+        "Everybody wants to sing it.",
+        "Nobody wants to dance to it."
+      ]
     },
     {
       "verso": 5,
-      "en": "texto",
-      "oculta": "ritmo"
-    },
-    {
-      "verso": 2,
-      "en": "texto",
-      "oculta": "bailar"
+      "completar": {
+        "oculta": "rhythm",
+        "opciones": [
+          "rhythm",
+          "house",
+          "book",
+          "river"
+        ]
+      },
+      "palabra": {
+        "en": "rhythm",
+        "es": "ritmo",
+        "ejemplo": "I can feel the rhythm of the drums.",
+        "ejemploEs": "Siento el ritmo de los tambores.",
+        "opciones": [
+          "rhythm",
+          "pillow",
+          "spoon",
+          "window"
+        ]
+      },
+      "ordenar": "This is my rhythm.",
+      "escucha": [
+        "Palo de Mayo is my favorite.",
+        "Palo de Mayo is your rhythm."
+      ]
     }
   ],
   "canta": {
