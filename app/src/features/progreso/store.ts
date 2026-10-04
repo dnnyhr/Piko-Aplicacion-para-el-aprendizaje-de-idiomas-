@@ -9,7 +9,7 @@
 import { create } from 'zustand';
 import { abrirBase } from '../../db';
 import { uuidv4 } from '../../core/ids';
-import { answerEvent, lessonDoneEvent } from '../../core/progress/events';
+import { answerEvent, gameDoneEvent, lessonDoneEvent, type GameDonePayload } from '../../core/progress/events';
 import { recompensaEntre, type Recompensa } from '../../core/progress/arbol';
 import { emptyState, project, type StudentState } from '../../core/progress/projection';
 import type { Item } from '../../core/content/schema';
@@ -60,6 +60,11 @@ interface ProgresoStore {
    * Devuelve lo que ganó, para la pantalla de recompensa.
    */
   terminarLeccion: (items: readonly Item[], correctas: number) => Recompensa;
+  /**
+   * Cierra una partida de minijuego: queda en el log y, si se jugó bien y es
+   * la primera vez en el día, suma sacuanjoches (ver `projection.ts`).
+   */
+  terminarMinijuego: (partida: GameDonePayload) => Recompensa;
   recomputar: () => void;
 }
 
@@ -112,6 +117,24 @@ export const useProgreso = create<ProgresoStore>((set, get) => ({
         packId: packPrincipal(items),
         correct: correctas,
         total: items.length,
+      }),
+    );
+    get().recomputar();
+    return recompensaEntre(antes, get().estado.sacuanjoches);
+  },
+
+  terminarMinijuego(partida) {
+    const { log, deviceId } = abrirBase();
+    const { studentId } = get();
+    const antes = get().estado.sacuanjoches;
+
+    log.appendLocal(
+      gameDoneEvent({
+        id: uuidv4(),
+        studentId,
+        originDevice: deviceId,
+        createdAt: Date.now(),
+        ...partida,
       }),
     );
     get().recomputar();

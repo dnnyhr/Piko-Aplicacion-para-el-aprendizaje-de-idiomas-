@@ -51,6 +51,18 @@ export function ultimoIdioma(sql: SqlDriver): string | null {
   );
 }
 
+/** La lengua con que se juegan los minijuegos, para no tener que elegirla cada vez. */
+export function recordarLenguaMinijuegos(sql: SqlDriver, lengua: string): void {
+  sql.run('UPDATE device SET lengua_minijuegos = ? WHERE id = 1', [lengua]);
+}
+
+export function ultimaLenguaMinijuegos(sql: SqlDriver): string | null {
+  return (
+    sql.get<{ lengua_minijuegos: string | null }>('SELECT lengua_minijuegos FROM device WHERE id = 1')
+      ?.lengua_minijuegos ?? null
+  );
+}
+
 // --------------------------------------------------------------------- roster
 
 export interface AlumnoGuardado {

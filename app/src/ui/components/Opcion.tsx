@@ -6,7 +6,7 @@
  * estudiante se equivocó, su elección se marca en ámbar, nunca en rojo.
  */
 
-import { useRef } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { color, espacio, labio, radio, texto } from '../tokens';
 
@@ -47,9 +47,11 @@ export interface OpcionProps {
   disabled?: boolean;
   /** Número de atajo que se muestra a la izquierda. */
   indice?: number;
+  /** Un dibujo de apoyo antes del texto (los minijuegos, en el nivel inicial). */
+  icono?: ReactNode;
 }
 
-export function Opcion({ children, estado = 'normal', onPress, disabled, indice }: OpcionProps) {
+export function Opcion({ children, estado = 'normal', onPress, disabled, indice, icono }: OpcionProps) {
   const hundido = useRef(new Animated.Value(0)).current;
   const p = PALETA[estado];
 
@@ -79,6 +81,7 @@ export function Opcion({ children, estado = 'normal', onPress, disabled, indice 
               <Text style={[styles.insigniaTexto, { color: p.texto }]}>{indice}</Text>
             </View>
           )}
+          {icono}
           <Text style={[styles.texto, { color: p.texto }]}>{children}</Text>
         </Animated.View>
       </View>
