@@ -1,45 +1,65 @@
 /**
- * Antes de saltar: en qué lengua y en qué nivel.
+ * Antes de jugar cualquier minijuego: en qué lengua y en qué nivel.
  *
  * Los niveles se abren con las lecciones: el que aparece elegido es el más
  * alto que ya tiene abierto, y los cerrados dicen cuánto falta.
  */
 
+import type { ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import Svg, { Circle, Path } from 'react-native-svg';
-import { Boton } from '../../../ui/components/Boton';
-import { PikoMascota } from '../../../ui/piko/PikoMascota';
-import { ContadorSacuanjoches } from '../../../ui/arbol/ContadorSacuanjoches';
-import { Bandera } from '../../../ui/minijuegos/Bandera';
-import { IconoRayuela } from '../../../ui/minijuegos/IconoRayuela';
-import { useTextos } from '../../../ui/textos/useTextos';
-import { esClave } from '../../../ui/textos/traducir';
+import Svg, { Path } from 'react-native-svg';
+import { Candado, Globito } from '../../ui/minijuegos/Iconos';
+import { Boton } from '../../ui/components/Boton';
+import { PikoMascota } from '../../ui/piko/PikoMascota';
+import { ContadorSacuanjoches } from '../../ui/arbol/ContadorSacuanjoches';
+import { useTextos } from '../../ui/textos/useTextos';
+import { esClave } from '../../ui/textos/traducir';
 import {
-  CASILLAS,
-  LENGUAS_RAYUELA,
+  LENGUAS_MINIJUEGOS,
   type EstadoNivel,
-  type LenguaRayuela,
-  type NivelRayuela,
-} from '../../../core/minijuegos/rayuela';
-import { color, espacio, labio, radio, texto } from '../../../ui/tokens';
+  type LenguaMinijuego,
+  type NivelMinijuego,
+} from '../../core/minijuegos/vocabulario';
+import { color, espacio, labio, radio, texto } from '../../ui/tokens';
 
-export interface ElegirProps {
-  lengua: LenguaRayuela;
-  nivel: NivelRayuela | null;
+export interface ElegirPartidaProps {
+  /** El nombre del juego, arriba. */
+  titulo: string;
+  /** Piko con el juego, en grande. */
+  portada: ReactNode;
+  /** «¿En qué lengua querés…?» */
+  pregunta: string;
+  /** El dibujo de cada lengua en su tarjeta. */
+  iconoLengua: (l: LenguaMinijuego) => ReactNode;
+  /** Lo que trae cada nivel, corto: «3 casillas». */
+  detalleNivel: (n: NivelMinijuego) => string;
+  /** Lo que trae el nivel elegido, en una oración. */
+  descNivel: (n: NivelMinijuego) => string;
+  /** El botón para empezar. */
+  empezar: string;
+  lengua: LenguaMinijuego;
+  nivel: NivelMinijuego | null;
   niveles: readonly EstadoNivel[];
-  sugerido: NivelRayuela | null;
+  sugerido: NivelMinijuego | null;
   /** Temas estudiados en cada lengua, para mostrar de dónde salen las palabras. */
-  temas: Record<LenguaRayuela, readonly string[]>;
+  temas: Record<LenguaMinijuego, readonly string[]>;
   sacuanjoches: number;
-  onLengua: (l: LenguaRayuela) => void;
-  onNivel: (n: NivelRayuela) => void;
+  onLengua: (l: LenguaMinijuego) => void;
+  onNivel: (n: NivelMinijuego) => void;
   onEmpezar: () => void;
   onPracticar: () => void;
   onVolver: () => void;
   onPerfil: () => void;
 }
 
-export function Elegir({
+export function ElegirPartida({
+  titulo,
+  portada,
+  pregunta,
+  iconoLengua,
+  detalleNivel,
+  descNivel,
+  empezar,
   lengua,
   nivel,
   niveles,
@@ -52,7 +72,7 @@ export function Elegir({
   onPracticar,
   onVolver,
   onPerfil,
-}: ElegirProps) {
+}: ElegirPartidaProps) {
   const { t } = useTextos();
   const nombreTema = (tema: string) => {
     const k = `tema.${tema}`;
@@ -69,19 +89,19 @@ export function Elegir({
           </Svg>
         </Pressable>
         <Text style={styles.titulo} accessibilityRole="header">
-          {t('rayuela.nombre')}
+          {titulo}
         </Text>
         <ContadorSacuanjoches total={sacuanjoches} onPress={onPerfil} />
       </View>
 
       <View style={styles.portada} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
         <PikoMascota estado="saludando" tam={120} />
-        <IconoRayuela tam={110} />
+        {portada}
       </View>
 
-      <Text style={styles.pregunta}>{t('rayuela.elegir_lengua')}</Text>
+      <Text style={styles.pregunta}>{pregunta}</Text>
       <View style={styles.lenguas}>
-        {LENGUAS_RAYUELA.map((l) => {
+        {LENGUAS_MINIJUEGOS.map((l) => {
           const elegida = l === lengua;
           const suyos = temas[l];
           return (
@@ -92,11 +112,11 @@ export function Elegir({
               accessibilityState={{ checked: elegida }}
               style={[styles.lengua, elegida ? styles.lenguaElegida : null]}
             >
-              <Bandera lengua={l} />
+              {iconoLengua(l)}
               <View style={styles.lenguaTextos}>
                 <Text style={styles.lenguaNombre}>{t(`lengua.${l}`)}</Text>
                 <Text style={styles.lenguaSub} numberOfLines={1}>
-                  {suyos.length > 0 ? suyos.map(nombreTema).join(', ') : t('rayuela.sin_vocabulario', { lengua: t(`lengua.${l}`) })}
+                  {suyos.length > 0 ? suyos.map(nombreTema).join(', ') : t('minijuegos.sin_vocabulario', { lengua: t(`lengua.${l}`) })}
                 </Text>
               </View>
               <View style={[styles.radio, elegida ? styles.radioElegido : null]}>
@@ -114,8 +134,8 @@ export function Elegir({
       {hayAlgo ? (
         <>
           <View style={styles.nivelCabecera}>
-            <Text style={styles.subtitulo}>{t('rayuela.nivel')}</Text>
-            {sugerido && <Text style={styles.chico}>{t('rayuela.segun_lecciones', { nivel: t(`rayuela.nivel_${sugerido}`) })}</Text>}
+            <Text style={styles.subtitulo}>{t('minijuegos.nivel')}</Text>
+            {sugerido && <Text style={styles.chico}>{t('minijuegos.segun_lecciones', { nivel: t(`minijuegos.nivel_${sugerido}`) })}</Text>}
           </View>
           <View style={styles.niveles} accessibilityRole="radiogroup">
             {niveles.map((n) => {
@@ -131,61 +151,43 @@ export function Elegir({
                 >
                   {n.nivel === sugerido && (
                     <View style={styles.sello}>
-                      <Text style={styles.selloTexto}>{t('rayuela.sugerido')}</Text>
+                      <Text style={styles.selloTexto}>{t('minijuegos.sugerido')}</Text>
                     </View>
                   )}
                   {!n.abierto && <Candado />}
-                  <Text style={styles.nivelNombre}>{t(`rayuela.nivel_${n.nivel}`)}</Text>
+                  <Text style={styles.nivelNombre}>{t(`minijuegos.nivel_${n.nivel}`)}</Text>
                   <Text style={styles.nivelSub}>
                     {n.abierto
-                      ? t('rayuela.casillas', { n: CASILLAS[n.nivel] })
+                      ? detalleNivel(n.nivel)
                       : n.faltanLecciones > 0
-                        ? t('rayuela.bloqueado', { n: n.faltanLecciones })
-                        : t('rayuela.bloqueado_palabras')}
+                        ? t('minijuegos.bloqueado', { n: n.faltanLecciones })
+                        : t('minijuegos.bloqueado_palabras')}
                   </Text>
                 </Pressable>
               );
             })}
           </View>
-          {nivel && <Text style={styles.desc}>{t(`rayuela.desc_${nivel}`)}</Text>}
+          {nivel && <Text style={styles.desc}>{descNivel(nivel)}</Text>}
 
           <View style={styles.pie}>
             <View style={styles.nota}>
               <Globito />
-              <Text style={styles.chico}>{t('rayuela.cambiar_lengua')}</Text>
+              <Text style={styles.chico}>{t('minijuegos.cambiar_lengua')}</Text>
             </View>
             <Boton ancho onPress={onEmpezar} disabled={!nivel}>
-              {t('rayuela.a_saltar')}
+              {empezar}
             </Boton>
           </View>
         </>
       ) : (
         <View style={styles.pie}>
-          <Text style={styles.desc}>{t('rayuela.sin_vocabulario', { lengua: t(`lengua.${lengua}`) })}</Text>
+          <Text style={styles.desc}>{t('minijuegos.sin_vocabulario', { lengua: t(`lengua.${lengua}`) })}</Text>
           <Boton ancho onPress={onPracticar}>
-            {t('rayuela.ir_a_practicar')}
+            {t('minijuegos.ir_a_practicar')}
           </Boton>
         </View>
       )}
     </ScrollView>
-  );
-}
-
-function Candado() {
-  return (
-    <Svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke={color.tintaSuave} strokeWidth={2.2} strokeLinecap="round">
-      <Path d="M7 11 V8 a5 5 0 0 1 10 0 V11" />
-      <Path d="M5 11 H19 V20 H5 Z" />
-    </Svg>
-  );
-}
-
-export function Globito({ tam = 18, tinta = color.tintaSuave }: { tam?: number; tinta?: string }) {
-  return (
-    <Svg width={tam} height={tam} viewBox="0 0 24 24" fill="none" stroke={tinta} strokeWidth={2} strokeLinecap="round">
-      <Circle cx={12} cy={12} r={9} />
-      <Path d="M3 12 H21 M12 3 C15.5 6.5 15.5 17.5 12 21 M12 3 C8.5 6.5 8.5 17.5 12 21" />
-    </Svg>
   );
 }
 
