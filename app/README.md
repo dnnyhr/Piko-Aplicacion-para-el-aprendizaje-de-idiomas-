@@ -138,12 +138,21 @@ en el perfil, hacen crecer el madroño y viajan al maestro.
 
 ## La Música de Piko
 
-`app/musica/` es la sección de canciones: cada canción se recorre en cinco
-etapas (escuchar, descubrir palabras, completar la canción, escuchar y
-reconocer, cantar con Piko), con «Conoce nuestra canción» antes de empezar.
-Las canciones se abren por nivel al completar alguna del nivel anterior, dan
-sacuanjoches con el mismo evento `gameDone` (juego `musica`, una vez por día
-por canción) y las completadas se ven en el perfil.
+`app/musica/` es la sección de canciones: aprender inglés con canciones de
+Nicaragua que ya conocemos. Escucho mi canción → entiendo una frase → aprendo
+cómo decirla en inglés → practico → canto → gano sacuanjoches.
+
+Después de «Conoce nuestra canción», la canción suena con Piko bailando a
+tiempo con el pulso de la grabación (con su falda de sacuanjoches) y una
+sacuanjoche que va marcando la línea que suena: la letra como se canta, qué
+significa y cómo se dice en inglés; las partes que vuelven dicen «Se repite» o
+«Repite el coro». Después, cada frase elegida es una lección (original →
+español → inglés, con «Significado aproximado» cuando no es literal) con
+cuatro actividades: completar la frase, usar la palabra nueva en otra
+oración, ordenar una frase y reconocer lo que se escucha. Al final se canta
+el coro. Una sacuanjoche cada tres respuestas buenas (se ven crecer mientras
+se juega), con el mismo evento `gameDone` (juego `musica`, una vez por día por
+canción); las completadas se ven en el perfil y abren las del nivel siguiente.
 
 Las canciones viven en `content/canciones/` y **sólo entran con permiso de
 uso** y con letra y traducciones validadas: el formato, el instructivo y la

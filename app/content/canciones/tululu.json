@@ -7,6 +7,10 @@
   "nivel": "intermedio",
   "imagen": "concha",
   "audio": "tululu.m4a",
+  "ritmo": {
+    "bpm": 136,
+    "pulso": 10.14
+  },
   "fuente": {
     "interpreta": "Dimensión Costeña",
     "autoria": "Tradicional del Palo de Mayo, en versión de Dimensión Costeña",
@@ -26,186 +30,251 @@
     {
       "texto": "Tulululu pasanda",
       "es": "Tulululu está pasando",
+      "en": "Tulululu is passing.",
+      "aproximado": true,
+      "nota": "«Tulululu» no se traduce: es el sonido alegre del coro. En kriol, «pasanda» quiere decir que van pasando. En inglés lo decimos con «passing».",
       "inicio": 20.4,
       "fin": 21.5
     },
     {
       "texto": "Gyal a boy dem pasanda",
       "es": "Las muchachas y los muchachos están pasando",
+      "en": "The girls and boys are passing.",
+      "nota": "En kriol, «pasanda» quiere decir que van pasando. En inglés lo decimos con «passing».",
       "inicio": 21.5,
       "fin": 23.2
     },
     {
       "texto": "All a dem dey pasanda",
       "es": "Todos ellos están pasando",
+      "en": "All of them are passing.",
       "inicio": 23.2,
       "fin": 24.9
     },
     {
       "texto": "Gyal a boy dem pasanda",
       "es": "Las muchachas y los muchachos están pasando",
+      "en": "The girls and boys are passing.",
+      "nota": "En kriol, «pasanda» quiere decir que van pasando. En inglés lo decimos con «passing».",
       "inicio": 24.9,
       "fin": 26.8
     },
     {
       "texto": "Tulululu pasanda",
       "es": "Tulululu está pasando",
+      "en": "Tulululu is passing.",
+      "aproximado": true,
+      "nota": "«Tulululu» no se traduce: es el sonido alegre del coro. En kriol, «pasanda» quiere decir que van pasando. En inglés lo decimos con «passing».",
       "inicio": 26.8,
       "fin": 28.2
     },
     {
       "texto": "Gyal a boy dem pasanda",
       "es": "Las muchachas y los muchachos están pasando",
+      "en": "The girls and boys are passing.",
+      "nota": "En kriol, «pasanda» quiere decir que van pasando. En inglés lo decimos con «passing».",
       "inicio": 28.2,
       "fin": 29.7
     },
     {
       "texto": "Yes, pass, pass, pasanda",
       "es": "Sí, pasen, pasen, pasanda",
+      "en": "Yes, come through, come through!",
+      "aproximado": true,
+      "nota": "«Pasen, pasen» invita a la gente a pasar: en inglés decimos «come through».",
       "inicio": 29.7,
       "fin": 31.7
     },
     {
       "texto": "Gyal a boy dem pasanda",
       "es": "Las muchachas y los muchachos están pasando",
+      "en": "The girls and boys are passing.",
+      "nota": "En kriol, «pasanda» quiere decir que van pasando. En inglés lo decimos con «passing».",
       "inicio": 31.7,
       "fin": 33.2
     },
     {
       "texto": "Sakie Champa pasanda",
       "es": "Sakie Champa está pasando",
+      "en": "Sakie Champa is passing.",
       "inicio": 33.2,
       "fin": 35.2
     },
     {
       "texto": "Gyal a boy dem pasanda",
       "es": "Las muchachas y los muchachos están pasando",
+      "en": "The girls and boys are passing.",
+      "nota": "En kriol, «pasanda» quiere decir que van pasando. En inglés lo decimos con «passing».",
       "inicio": 35.2,
       "fin": 36.7
     },
     {
       "texto": "All a dem dey pasanda",
       "es": "Todos ellos están pasando",
+      "en": "All of them are passing.",
       "inicio": 36.7,
       "fin": 38.7
     },
     {
       "texto": "Gyal a boy dem pasanda",
       "es": "Las muchachas y los muchachos están pasando",
+      "en": "The girls and boys are passing.",
+      "nota": "En kriol, «pasanda» quiere decir que van pasando. En inglés lo decimos con «passing».",
       "inicio": 38.7,
       "fin": 40.1
     },
     {
       "texto": "Orlando Chamorro pasanda",
       "es": "Orlando Chamorro está pasando",
+      "en": "Orlando Chamorro is passing.",
       "inicio": 40.1,
       "fin": 42.1
     },
     {
       "texto": "Gyal a boy dem pasanda",
       "es": "Las muchachas y los muchachos están pasando",
+      "en": "The girls and boys are passing.",
+      "nota": "En kriol, «pasanda» quiere decir que van pasando. En inglés lo decimos con «passing».",
       "inicio": 42.1,
       "fin": 43.6
     },
     {
       "texto": "All a dem dey pasanda",
       "es": "Todos ellos están pasando",
+      "en": "All of them are passing.",
       "inicio": 43.6,
       "fin": 45.6
     },
     {
       "texto": "Gyal a boy dem pasanda",
       "es": "Las muchachas y los muchachos están pasando",
+      "en": "The girls and boys are passing.",
+      "nota": "En kriol, «pasanda» quiere decir que van pasando. En inglés lo decimos con «passing».",
       "inicio": 45.6,
       "fin": 47.4
     },
     {
       "texto": "Managua girl dey pasanda",
       "es": "La muchacha de Managua está pasando",
+      "en": "The girl from Managua is passing.",
       "inicio": 89.0,
       "fin": 90.8
     },
     {
       "texto": "Gyal a boy dem pasanda",
       "es": "Las muchachas y los muchachos están pasando",
+      "en": "The girls and boys are passing.",
+      "nota": "En kriol, «pasanda» quiere decir que van pasando. En inglés lo decimos con «passing».",
       "inicio": 90.8,
       "fin": 92.5
     },
     {
       "texto": "All a dem dey pasanda",
       "es": "Todos ellos están pasando",
+      "en": "All of them are passing.",
       "inicio": 92.5,
       "fin": 94.2
     },
     {
       "texto": "Gyal a boy dem pasanda",
       "es": "Las muchachas y los muchachos están pasando",
+      "en": "The girls and boys are passing.",
+      "nota": "En kriol, «pasanda» quiere decir que van pasando. En inglés lo decimos con «passing».",
       "inicio": 94.2,
       "fin": 96.0
     }
   ],
-  "palabras": [
-    {
-      "texto": "gyal",
-      "es": "muchachas",
-      "en": "girls",
-      "inicio": 21.4,
-      "fin": 21.95
-    },
-    {
-      "texto": "boy",
-      "es": "muchachos",
-      "en": "boys",
-      "inicio": 32.1,
-      "fin": 32.55
-    },
-    {
-      "texto": "pass",
-      "es": "pasen",
-      "en": "pass",
-      "inicio": 30.1,
-      "fin": 30.65
-    },
-    {
-      "texto": "pasanda",
-      "es": "pasando",
-      "en": "passing",
-      "inicio": 20.75,
-      "fin": 21.45
-    },
-    {
-      "texto": "all a dem",
-      "es": "todos",
-      "en": "all of them",
-      "inicio": 23.15,
-      "fin": 23.85
-    }
+  "coro": [
+    0,
+    1
   ],
-  "completar": [
+  "lecciones": [
     {
       "verso": 1,
-      "en": "texto",
-      "oculta": "gyal"
-    },
-    {
-      "verso": 6,
-      "en": "texto",
-      "oculta": "pass"
-    },
-    {
-      "verso": 3,
-      "en": "texto",
-      "oculta": "boy"
-    },
-    {
-      "verso": 1,
-      "en": "es",
-      "oculta": "muchachas"
+      "completar": {
+        "oculta": "passing",
+        "opciones": [
+          "passing",
+          "playing",
+          "singing",
+          "running"
+        ]
+      },
+      "palabra": {
+        "en": "passing",
+        "es": "pasando",
+        "ejemplo": "The children are passing the ball.",
+        "ejemploEs": "Los niños se están pasando la pelota.",
+        "opciones": [
+          "passing",
+          "sleeping",
+          "drinking",
+          "reading"
+        ]
+      },
+      "ordenar": "The boys are passing.",
+      "escucha": [
+        "The girls and boys are playing.",
+        "The girls are singing."
+      ]
     },
     {
       "verso": 2,
-      "en": "es",
-      "oculta": "todos"
+      "completar": {
+        "oculta": "them",
+        "opciones": [
+          "them",
+          "us",
+          "you",
+          "me"
+        ]
+      },
+      "palabra": {
+        "en": "all",
+        "es": "todos",
+        "ejemplo": "All the kids are happy.",
+        "ejemploEs": "Todos los niños están felices.",
+        "opciones": [
+          "All",
+          "Under",
+          "Into",
+          "Behind"
+        ]
+      },
+      "ordenar": "All of them are passing.",
+      "escucha": [
+        "All of them are dancing.",
+        "Some of them are passing."
+      ]
+    },
+    {
+      "verso": 16,
+      "completar": {
+        "oculta": "girl",
+        "opciones": [
+          "girl",
+          "boy",
+          "man",
+          "dog"
+        ]
+      },
+      "palabra": {
+        "en": "girl",
+        "es": "muchacha",
+        "ejemplo": "The girl is reading a book.",
+        "ejemploEs": "La muchacha está leyendo un libro.",
+        "opciones": [
+          "girl",
+          "spoon",
+          "cloud",
+          "shoe"
+        ]
+      },
+      "ordenar": "The girl is passing.",
+      "escucha": [
+        "The boy from Managua is passing.",
+        "The girl from Miami is passing."
+      ]
     }
   ],
   "canta": {

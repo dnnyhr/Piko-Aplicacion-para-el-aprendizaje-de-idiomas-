@@ -7,6 +7,10 @@
   "nivel": "intermedio",
   "imagen": "tambor",
   "audio": "palo-de-mayo.m4a",
+  "ritmo": {
+    "bpm": 99.4,
+    "pulso": 10.74
+  },
   "fuente": {
     "interpreta": "Dimensión Costeña",
     "autoria": "Dimensión Costeña",
@@ -25,127 +29,177 @@
   "letra": [
     {
       "texto": "Si te gusta mover tu cuerpecito,",
+      "en": "If you like to move your body,",
       "inicio": 16.1,
       "fin": 20.4
     },
     {
       "texto": "este ritmo es de puro movimiento",
+      "en": "this rhythm is all about moving,",
       "inicio": 20.4,
       "fin": 23.9
     },
     {
       "texto": "el palo de mayo gozarás y para siempre",
+      "en": "you'll enjoy Palo de Mayo forever",
+      "nota": "«Palo de Mayo» es el nombre de la fiesta: no se traduce.",
       "inicio": 23.9,
       "fin": 27.9
     },
     {
       "texto": "cuando escuches sonar este buen ritmo.",
+      "en": "when you hear this good rhythm play.",
       "inicio": 27.9,
       "fin": 32.2
     },
     {
       "texto": "Si visitas un día nuestra tierra",
+      "en": "If you visit our land one day,",
       "inicio": 32.2,
       "fin": 35.7
     },
     {
       "texto": "comerás rice and beans, rondó con coco",
+      "en": "you'll eat rice and beans, rondón with coconut,",
+      "nota": "«Rice and beans» ya está en inglés: en la Costa se dice así.",
       "inicio": 35.7,
       "fin": 39.6
     },
     {
       "texto": "bailarás el reggae, soca y calipso",
+      "en": "you'll dance reggae, soca, and calypso,",
       "inicio": 39.7,
       "fin": 43.6
     },
     {
       "texto": "y por supuesto el sabroso palo de mayo.",
+      "en": "and of course, the great Palo de Mayo.",
+      "aproximado": true,
+      "nota": "«Sabroso» acá no habla de comida: quiere decir que es muy bueno y alegre.",
       "inicio": 43.6,
       "fin": 47.0
     },
     {
       "texto": "Palo de Mayo,",
+      "en": "Palo de Mayo,",
+      "nota": "«Palo de Mayo» es el nombre de la fiesta: no se traduce.",
       "inicio": 47.0,
       "fin": 49.3
     },
     {
       "texto": "Palo de Mayo,",
+      "en": "Palo de Mayo,",
+      "nota": "«Palo de Mayo» es el nombre de la fiesta: no se traduce.",
       "inicio": 49.5,
       "fin": 51.5
     },
     {
       "texto": "Palo de Mayo,",
+      "en": "Palo de Mayo,",
+      "nota": "«Palo de Mayo» es el nombre de la fiesta: no se traduce.",
       "inicio": 51.7,
       "fin": 52.9
     },
     {
       "texto": "Sabroso palo de Mayo.",
+      "en": "Great Palo de Mayo!",
+      "aproximado": true,
+      "nota": "«Sabroso» acá no habla de comida: quiere decir que es muy bueno y alegre.",
       "inicio": 52.9,
       "fin": 55.4
     }
   ],
-  "palabras": [
-    {
-      "texto": "ritmo",
-      "es": "ritmo",
-      "en": "rhythm",
-      "inicio": 21.35,
-      "fin": 22.0
-    },
-    {
-      "texto": "tierra",
-      "es": "tierra",
-      "en": "land",
-      "inicio": 34.7,
-      "fin": 35.75
-    },
-    {
-      "texto": "coco",
-      "es": "coco",
-      "en": "coconut",
-      "inicio": 38.7,
-      "fin": 39.45
-    },
-    {
-      "texto": "mover",
-      "es": "mover",
-      "en": "to move",
-      "inicio": 18.2,
-      "fin": 18.8
-    },
-    {
-      "texto": "sabroso",
-      "es": "sabroso",
-      "en": "tasty",
-      "inicio": 45.15,
-      "fin": 45.95
-    }
+  "coro": [
+    8,
+    11
   ],
-  "completar": [
+  "lecciones": [
     {
-      "verso": 1,
-      "en": "texto",
-      "oculta": "ritmo"
+      "verso": 0,
+      "completar": {
+        "oculta": "move",
+        "opciones": [
+          "move",
+          "eat",
+          "read",
+          "wash"
+        ]
+      },
+      "palabra": {
+        "en": "move",
+        "es": "mover",
+        "ejemplo": "Move your arms to the music.",
+        "ejemploEs": "Mové los brazos con la música.",
+        "opciones": [
+          "move",
+          "sleep",
+          "cook",
+          "write"
+        ]
+      },
+      "ordenar": "I like to move.",
+      "escucha": [
+        "If you like to read your book,",
+        "If you like to move your feet,"
+      ]
     },
     {
       "verso": 4,
-      "en": "texto",
-      "oculta": "tierra"
+      "completar": {
+        "oculta": "visit",
+        "opciones": [
+          "visit",
+          "paint",
+          "clean",
+          "open"
+        ]
+      },
+      "palabra": {
+        "en": "visit",
+        "es": "visitar",
+        "ejemplo": "We visit Grandma on Sunday.",
+        "ejemploEs": "Visitamos a la abuela el domingo.",
+        "opciones": [
+          "visit",
+          "paint",
+          "open",
+          "fold"
+        ]
+      },
+      "ordenar": "Visit our land.",
+      "escucha": [
+        "If you paint our land one day,",
+        "If you visit our school one day,"
+      ]
     },
     {
-      "verso": 5,
-      "en": "texto",
-      "oculta": "coco"
-    },
-    {
-      "verso": 0,
-      "en": "texto",
-      "oculta": "mover"
-    },
-    {
-      "verso": 11,
-      "en": "texto",
-      "oculta": "sabroso"
+      "verso": 6,
+      "completar": {
+        "oculta": "dance",
+        "opciones": [
+          "dance",
+          "cook",
+          "write",
+          "draw"
+        ]
+      },
+      "palabra": {
+        "en": "dance",
+        "es": "bailar",
+        "ejemplo": "Let's dance at the party!",
+        "ejemploEs": "¡Bailemos en la fiesta!",
+        "opciones": [
+          "dance",
+          "sleep",
+          "read",
+          "fold"
+        ]
+      },
+      "ordenar": "We dance at the party.",
+      "escucha": [
+        "You'll sing reggae, soca, and calypso.",
+        "You'll dance at school."
+      ]
     }
   ],
   "canta": {

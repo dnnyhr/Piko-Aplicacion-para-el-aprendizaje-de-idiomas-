@@ -1,10 +1,16 @@
 /**
- * La Música de Piko: el formato de una canción y lo que se arma con ella.
+ * La Música de Piko: el formato de una canción y la lección que se arma con ella.
+ *
+ * La idea: aprender inglés con canciones de Nicaragua que ya conocemos.
+ * Escucho mi canción → entiendo una frase → aprendo cómo decirla en inglés →
+ * practico → canto → gano sacuanjoches.
  *
  * Una canción entra a la app sólo con su permiso: quién la canta o la
- * compuso, quién autoriza que Piko la use y cómo lo autorizó. Igual que el
- * diccionario, la letra se guarda tal como se canta y las traducciones son
- * las que validó una persona competente: Piko no traduce ni inventa nada.
+ * compuso, quién autoriza que Piko la use y cómo lo autorizó. La letra se
+ * guarda tal como se canta. La traducción al español de una canción en otra
+ * lengua (kriol, miskito…) es la que validó una persona competente: Piko no la
+ * inventa. El inglés sale de ese significado; cuando no es literal, la línea
+ * lo dice (`aproximado`) y explica por qué (`nota`).
  *
  * Puro y sin React, para poder probarlo en Node.
  */
@@ -13,7 +19,6 @@ import type { Rng } from '../ids';
 import { shuffle } from '../ids';
 import { normalizar } from '../content/verificar';
 import type { NivelMinijuego } from '../minijuegos/vocabulario';
-import { SACUANJOCHES_BASE } from '../progress/arbol';
 
 export const ID_MUSICA = 'musica';
 
@@ -30,43 +35,42 @@ export const NIVELES_CANCION = ['inicial', 'intermedio', 'avanzado'] as const sa
 export const IMAGENES_CANCION = ['tambor', 'marimba', 'guitarra', 'quijada', 'maracas', 'concha'] as const;
 export type ImagenCancion = (typeof IMAGENES_CANCION)[number];
 
-/** Un verso: como se canta, con su traducción validada y cuándo suena. */
+/** Una línea de la letra: como se canta, qué significa, cómo se dice en inglés y cuándo suena. */
 export interface Verso {
   /** Tal como se canta, en la lengua de la canción. */
   texto: string;
   /** Traducción validada al español. Obligatoria si la canción no está en español. */
   es?: string;
-  /** Traducción validada al inglés, si la hay. */
+  /**
+   * Cómo se dice en inglés (de Estados Unidos). Puede faltar sólo en lo que
+   * no se traduce (un coro de sonidos, un nombre), y entonces va una `nota`
+   * que lo explica.
+   */
   en?: string;
+  /** El inglés no es literal: dice la idea, no palabra por palabra. Se muestra «Significado aproximado». */
+  aproximado?: boolean;
+  /** Una explicación corta: una expresión propia, un nombre que no se traduce, el contexto. */
+  nota?: string;
   /** Segundo de la grabación en que empieza y termina. */
   inicio: number;
   fin: number;
 }
 
-/** Una palabra clave: en la lengua de la canción, en español y en inglés. */
-export interface PalabraClave {
-  texto: string;
-  es: string;
-  en: string;
-  /**
-   * El id de la entrada del diccionario de Piko que la respalda, cuando la
-   * canción está en una lengua que tiene diccionario (miskito). Así no entra
-   * ninguna palabra sin validar.
-   */
-  lexico?: string;
-  /** Dónde se escucha en la grabación, si se puede recortar. */
-  inicio?: number;
-  fin?: number;
-}
-
-/** Un hueco para «Completa la canción»: un verso con una palabra tapada. */
-export interface Hueco {
+/**
+ * Una frase de la canción convertida en lección de inglés. Se apoya en el
+ * `en` de su verso y trae lo que hace falta para las cuatro actividades.
+ */
+export interface Leccion {
   /** Índice del verso en `letra`. */
   verso: number;
-  /** En cuál de las versiones del verso va el hueco. */
-  en: 'texto' | 'es' | 'en';
-  /** La palabra tapada, tal como aparece en esa versión. */
-  oculta: string;
+  /** «Completa la frase»: la palabra que se tapa en el inglés del verso y las opciones (ella incluida). */
+  completar: { oculta: string; opciones: string[] };
+  /** «Usa esta palabra»: la palabra nueva y una oración donde se usa, con su traducción. */
+  palabra: { en: string; es: string; ejemplo: string; ejemploEs: string; opciones: string[] };
+  /** «Ordena la frase»: una oración corta para armar palabra por palabra. */
+  ordenar: string;
+  /** «¿Qué escuchaste?»: otras oraciones que suenan parecido al inglés del verso. */
+  escucha: string[];
 }
 
 export interface FuenteCancion {
@@ -94,13 +98,16 @@ export interface Cancion {
   imagen: ImagenCancion;
   /** Nombre del archivo de audio en `content/canciones/audio/`. */
   audio: string;
+  /** El pulso de la grabación, para que Piko baile a tiempo: pulsos por minuto y el segundo de un pulso. */
+  ritmo: { bpm: number; pulso: number };
   fuente: FuenteCancion;
   /** «Conoce nuestra canción». */
   conoce: { origen: string; lengua: string; region: string; representa: string };
   letra: Verso[];
-  /** Entre 3 y 5. */
-  palabras: PalabraClave[];
-  completar: Hueco[];
+  /** Los versos que son el coro (la primera vez que suenan). Cuando vuelven, se marca «Repite el coro». */
+  coro?: number[];
+  /** Entre 2 y 4 frases convertidas en lección. */
+  lecciones: Leccion[];
   /** «Canta con Piko»: los versos de `desde` a `hasta`, incluidos. */
   canta: { desde: number; hasta: number };
 }
@@ -110,12 +117,27 @@ export interface Cancion {
 const esTexto = (v: unknown): v is string => typeof v === 'string' && v.trim().length > 0;
 const esSegundo = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v) && v >= 0;
 
+/** Las palabras de una línea, sin signos, para buscar una palabra en ella. */
+export function palabrasDe(linea: string): string[] {
+  return linea
+    .split(/\s+/)
+    .map((w) => normalizar(w.replace(/^[¿¡«"'(]+|[»"'),.;:!?]+$/g, '')))
+    .filter(Boolean);
+}
+
+const tiene = (linea: string, palabra: string) => palabrasDe(linea).includes(normalizar(palabra));
+
+function opcionesBien(opciones: unknown, correcta: string): boolean {
+  if (!Array.isArray(opciones) || opciones.length < 3 || opciones.length > 4 || !opciones.every(esTexto)) return false;
+  const n = opciones.map((o) => normalizar(o));
+  return new Set(n).size === n.length && n.includes(normalizar(correcta));
+}
+
 /**
- * Lo que una canción tiene que cumplir para entrar a la app. `lexico` es el
- * diccionario de la lengua de la canción (ids que se pueden usar), si existe.
+ * Lo que una canción tiene que cumplir para entrar a la app.
  * Devuelve la lista de errores; vacía si está bien.
  */
-export function validarCancion(raw: unknown, lexico?: ReadonlySet<string>): string[] {
+export function validarCancion(raw: unknown): string[] {
   const errores: string[] = [];
   if (typeof raw !== 'object' || raw === null) return ['la canción no es un objeto'];
   const c = raw as Record<string, unknown>;
@@ -127,6 +149,11 @@ export function validarCancion(raw: unknown, lexico?: ReadonlySet<string>): stri
   if (!(LENGUAS_CANCION as readonly unknown[]).includes(c.lengua)) e(`\`lengua\` tiene que ser una de ${LENGUAS_CANCION.join(', ')}`);
   if (!(NIVELES_CANCION as readonly unknown[]).includes(c.nivel)) e('`nivel` tiene que ser inicial, intermedio o avanzado');
   if (!(IMAGENES_CANCION as readonly unknown[]).includes(c.imagen)) e(`\`imagen\` tiene que ser una de ${IMAGENES_CANCION.join(', ')}`);
+
+  const ritmo = c.ritmo as Record<string, unknown> | undefined;
+  if (!ritmo || typeof ritmo.bpm !== 'number' || ritmo.bpm < 40 || ritmo.bpm > 220 || !esSegundo(ritmo.pulso)) {
+    e('`ritmo` lleva `bpm` (entre 40 y 220) y `pulso` (el segundo de un pulso)');
+  }
 
   // El permiso, primero: sin permiso no hay canción.
   const f = c.fuente as Record<string, unknown> | undefined;
@@ -147,34 +174,43 @@ export function validarCancion(raw: unknown, lexico?: ReadonlySet<string>): stri
   letra.forEach((v, i) => {
     if (!esTexto(v.texto)) e(`verso ${i}: falta \`texto\``);
     if (c.lengua !== 'spa' && !esTexto(v.es)) e(`verso ${i}: falta la traducción validada al español (\`es\`)`);
+    if (!esTexto(v.en) && !esTexto(v.nota)) e(`verso ${i}: falta el inglés (\`en\`) o una \`nota\` que diga por qué no se traduce`);
+    if (v.aproximado !== undefined && typeof v.aproximado !== 'boolean') e(`verso ${i}: \`aproximado\` es true o false`);
+    if (v.aproximado === true && !esTexto(v.nota)) e(`verso ${i}: un inglés aproximado lleva una \`nota\` que explique la idea`);
     if (!esSegundo(v.inicio) || !esSegundo(v.fin) || (v.fin as number) <= (v.inicio as number)) {
       e(`verso ${i}: \`inicio\` y \`fin\` tienen que ser segundos, con fin después de inicio`);
     }
   });
 
-  const palabras = Array.isArray(c.palabras) ? (c.palabras as Record<string, unknown>[]) : [];
-  if (palabras.length < 3 || palabras.length > 5) e('van entre 3 y 5 `palabras` clave');
-  palabras.forEach((p, i) => {
-    for (const x of ['texto', 'es', 'en'] as const) if (!esTexto(p[x])) e(`palabra ${i}: falta \`${x}\``);
-    if (lexico && !(esTexto(p.lexico) && lexico.has(p.lexico))) {
-      e(`palabra ${i} («${String(p.texto)}»): \`lexico\` tiene que ser una entrada validada del diccionario`);
-    }
-    if ((p.inicio !== undefined || p.fin !== undefined) && !(esSegundo(p.inicio) && esSegundo(p.fin) && p.fin > p.inicio)) {
-      e(`palabra ${i}: \`inicio\` y \`fin\` mal puestos`);
-    }
-  });
-  if (new Set(palabras.map((p) => normalizar(String(p.texto ?? '')))).size !== palabras.length) e('hay palabras clave repetidas');
+  if (c.coro !== undefined) {
+    if (!Array.isArray(c.coro) || !c.coro.every((n) => typeof n === 'number' && letra[n] !== undefined)) e('`coro` son índices de versos de la letra');
+  }
 
-  const huecos = Array.isArray(c.completar) ? (c.completar as Record<string, unknown>[]) : [];
-  if (huecos.length === 0) e('falta al menos un hueco en `completar`');
-  huecos.forEach((h, i) => {
-    const v = typeof h.verso === 'number' ? letra[h.verso] : undefined;
-    if (!v) return e(`hueco ${i}: \`verso\` no existe`);
-    if (h.en !== 'texto' && h.en !== 'es' && h.en !== 'en') return e(`hueco ${i}: \`en\` tiene que ser texto, es o en`);
-    const linea = v[h.en];
-    if (!esTexto(linea) || !esTexto(h.oculta) || !palabrasDe(linea).includes(normalizar(h.oculta))) {
-      e(`hueco ${i}: «${String(h.oculta)}» no está en ese verso`);
+  const lecciones = Array.isArray(c.lecciones) ? (c.lecciones as Record<string, unknown>[]) : [];
+  if (lecciones.length < 2 || lecciones.length > 4) e('van entre 2 y 4 `lecciones`');
+  lecciones.forEach((l, i) => {
+    const v = typeof l.verso === 'number' ? letra[l.verso] : undefined;
+    const en = v && esTexto(v.en) ? v.en : null;
+    if (!en) return e(`lección ${i}: el verso no existe o no tiene inglés`);
+
+    const comp = l.completar as Record<string, unknown> | undefined;
+    if (!comp || !esTexto(comp.oculta) || !tiene(en, comp.oculta)) e(`lección ${i}: la palabra a completar no está en «${en}»`);
+    else if (!opcionesBien(comp.opciones, comp.oculta)) e(`lección ${i}: \`completar.opciones\` son 3 o 4, distintas, con la correcta`);
+
+    const p = l.palabra as Record<string, unknown> | undefined;
+    if (!p || !esTexto(p.en) || !esTexto(p.es) || !esTexto(p.ejemplo) || !esTexto(p.ejemploEs)) {
+      e(`lección ${i}: \`palabra\` lleva en, es, ejemplo y ejemploEs`);
+    } else {
+      if (!tiene(p.ejemplo, p.en)) e(`lección ${i}: «${p.en}» no está en el ejemplo «${p.ejemplo}»`);
+      if (!opcionesBien(p.opciones, p.en)) e(`lección ${i}: \`palabra.opciones\` son 3 o 4, distintas, con la palabra`);
     }
+
+    const fichas = esTexto(l.ordenar) ? fichasDe(l.ordenar) : [];
+    if (fichas.length < 3 || fichas.length > 7) e(`lección ${i}: \`ordenar\` es una oración de 3 a 7 palabras`);
+
+    const esc = l.escucha;
+    if (!Array.isArray(esc) || esc.length < 2 || !esc.every(esTexto)) e(`lección ${i}: \`escucha\` lleva al menos 2 oraciones parecidas`);
+    else if (esc.some((x) => normalizar(x) === normalizar(en))) e(`lección ${i}: \`escucha\` no puede repetir la oración del verso`);
   });
 
   const canta = c.canta as Record<string, unknown> | undefined;
@@ -189,14 +225,6 @@ export function validarCancion(raw: unknown, lexico?: ReadonlySet<string>): stri
     e('`canta` tiene que ir de un verso a otro de la letra');
   }
   return errores;
-}
-
-/** Las palabras de un verso, sin signos, para buscar la tapada. */
-function palabrasDe(linea: string): string[] {
-  return linea
-    .split(/\s+/)
-    .map((w) => normalizar(w.replace(/^[¿¡«"'(]+|[»"'),.;:!?]+$/g, '')))
-    .filter(Boolean);
 }
 
 // -------------------------------------------------------------- desbloqueo
@@ -222,20 +250,67 @@ export function cancionesAbiertas(catalogo: readonly Cancion[], completas: reado
   return abiertas;
 }
 
-// ------------------------------------------------------------- actividades
+// ------------------------------------------------------------ la letra
 
-/** Opciones por pregunta, por nivel de la canción. */
-export const OPCIONES_CANCION: Record<NivelMinijuego, number> = { inicial: 3, intermedio: 4, avanzado: 4 };
+/** Para cada verso: el índice de la primera vez que sonó igual, o -1 si es nuevo. */
+export function repeticiones(letra: readonly Verso[]): number[] {
+  const vistos = new Map<string, number>();
+  return letra.map((v, i) => {
+    const k = normalizar(v.texto);
+    const antes = vistos.get(k);
+    if (antes === undefined) {
+      vistos.set(k, i);
+      return -1;
+    }
+    return antes;
+  });
+}
 
-export interface PreguntaCompletar {
-  hueco: Hueco;
-  /** El verso con «___» en lugar de la palabra. */
-  conHueco: string;
+export type MarcaRepeticion = 'coro' | 'repite' | null;
+
+/**
+ * Dónde mostrar «↻ Se repite» o «Repite el coro»: antes de cada tramo de
+ * versos que ya sonaron. Un verso repetido dentro de un tramo repetido no
+ * lleva otra marca: así se ve la forma de la canción, no un error de copia.
+ */
+export function marcasDeRepeticion(letra: readonly Verso[], coro: readonly number[] = []): MarcaRepeticion[] {
+  const rep = repeticiones(letra);
+  const deCoro = new Set(coro);
+  return rep.map((r, i) => {
+    if (r < 0) return null;
+    if (i > 0 && (rep[i - 1] as number) >= 0) return null;
+    return deCoro.has(r) ? 'coro' : 'repite';
+  });
+}
+
+/** El verso que suena en el segundo `t`, o -1. */
+export function versoEn(letra: readonly Verso[], t: number): number {
+  return letra.findIndex((v) => t >= v.inicio && t < v.fin);
+}
+
+// ------------------------------------------------------------- la lección
+
+/** Las cuatro actividades de cada frase, en orden. */
+export const ACTIVIDADES = ['completar', 'usa', 'ordenar', 'escucha'] as const;
+export type Actividad = (typeof ACTIVIDADES)[number];
+
+export interface Eleccion {
+  /** La oración con «___» donde va la palabra, cuando corresponde. */
+  conHueco?: string;
   opciones: string[];
   correcta: number;
 }
 
-/** Tapa la palabra en el verso, respetando los signos de alrededor. */
+export interface LeccionArmada {
+  leccion: Leccion;
+  verso: Verso;
+  completar: Eleccion;
+  usa: Eleccion;
+  ordenar: { fichas: string[]; solucion: string[] };
+  escucha: Eleccion & { frase: string };
+}
+
+/** Tapa la palabra en la oración, respetando los signos de alrededor. */
 export function taparEnVerso(linea: string, oculta: string): string {
   const objetivo = normalizar(oculta);
   let hecho = false;
@@ -253,75 +328,83 @@ export function taparEnVerso(linea: string, oculta: string): string {
     .join('');
 }
 
-/** El texto de una palabra clave en la versión del verso (`texto`, `es` o `en`). */
-function enVersion(p: PalabraClave, version: Hueco['en']): string {
-  return version === 'texto' ? p.texto : version === 'es' ? p.es : p.en;
+/** La palabra tal como aparece en la oración (con su mayúscula), o la dada si no está. */
+function comoAparece(linea: string, palabra: string): string {
+  const w = linea.split(/\s+/).find((x) => normalizar(x.replace(/^[¿¡«"'(]+|[»"'),.;:!?]+$/g, '')) === normalizar(palabra));
+  return w ? w.replace(/^[¿¡«"'(]+|[»"'),.;:!?]+$/g, '') : palabra;
 }
 
 /**
- * «Completa la canción»: un hueco por pregunta; las otras opciones son las
- * demás palabras clave de la canción, en la misma versión del verso.
+ * Las fichas de «Ordena la frase»: las palabras sin el punto final y con la
+ * primera en minúscula (salvo «I»), para que la mayúscula no diga cuál va primero.
  */
-export function armarCompletar(c: Cancion, rng: Rng): PreguntaCompletar[] {
-  const n = OPCIONES_CANCION[c.nivel];
-  return c.completar.map((h) => {
-    const verso = c.letra[h.verso] as Verso;
-    const linea = verso[h.en] ?? verso.texto;
-    const otras = c.palabras
-      .map((p) => enVersion(p, h.en))
-      .filter((t, i, todas) => normalizar(t) !== normalizar(h.oculta) && todas.findIndex((x) => normalizar(x) === normalizar(t)) === i);
-    const opciones = shuffle([h.oculta, ...shuffle(otras, rng).slice(0, n - 1)], rng);
-    return { hueco: h, conHueco: taparEnVerso(linea, h.oculta), opciones, correcta: opciones.indexOf(h.oculta) };
-  });
+export function fichasDe(frase: string): string[] {
+  const palabras = frase
+    .trim()
+    .replace(/[.!?]+$/, '')
+    .split(/\s+/)
+    .filter(Boolean);
+  return palabras.map((w, i) => (i === 0 && w !== 'I' && !w.startsWith("I'") ? w.charAt(0).toLocaleLowerCase('en') + w.slice(1) : w));
 }
 
-export interface PreguntaEscucha {
-  /** Lo que suena: una palabra clave o, en el avanzado, un verso. */
-  palabra?: PalabraClave;
-  verso?: Verso;
-  opciones: string[];
-  correcta: number;
+/** Si las fichas quedaron en el orden de la oración. */
+export function ordenCorrecto(elegidas: readonly string[], solucion: readonly string[]): boolean {
+  return elegidas.length === solucion.length && elegidas.every((w, i) => normalizar(w) === normalizar(solucion[i] as string));
 }
 
-/**
- * «Escucha y reconoce»: suena una palabra clave (o un verso, en el
- * avanzado) y se elige cuál fue, entre las de la canción.
- */
-export function armarEscucha(c: Cancion, rng: Rng): PreguntaEscucha[] {
-  const n = OPCIONES_CANCION[c.nivel];
-  if (c.nivel === 'avanzado' && c.letra.length >= 2) {
-    const versos = shuffle(c.letra, rng).slice(0, Math.min(3, c.letra.length));
-    return versos.map((v) => {
-      const otros = shuffle(c.letra.filter((x) => x !== v), rng).slice(0, n - 1).map((x) => x.texto);
-      const opciones = shuffle([v.texto, ...otros], rng);
-      return { verso: v, opciones, correcta: opciones.indexOf(v.texto) };
-    });
-  }
-  return shuffle(c.palabras, rng)
-    .slice(0, 3)
-    .map((p) => {
-      const otras = shuffle(c.palabras.filter((x) => x !== p), rng).slice(0, n - 1).map((x) => x.texto);
-      const opciones = shuffle([p.texto, ...otras], rng);
-      return { palabra: p, opciones, correcta: opciones.indexOf(p.texto) };
-    });
+/** Arma una oración con las fichas: mayúscula al principio y punto al final. */
+export function armarOracion(fichas: readonly string[]): string {
+  if (fichas.length === 0) return '';
+  const t = fichas.join(' ');
+  return `${t.charAt(0).toLocaleUpperCase('en')}${t.slice(1)}.`;
+}
+
+function eleccion(opciones: readonly string[], correcta: string, rng: Rng): { opciones: string[]; correcta: number } {
+  const mezcladas = shuffle(opciones, rng);
+  return { opciones: mezcladas, correcta: mezcladas.findIndex((o) => normalizar(o) === normalizar(correcta)) };
+}
+
+/** Las cuatro actividades de una frase, con las opciones mezcladas. */
+export function armarLeccion(c: Cancion, l: Leccion, rng: Rng): LeccionArmada {
+  const verso = c.letra[l.verso] as Verso;
+  const en = verso.en as string;
+
+  const oculta = comoAparece(en, l.completar.oculta);
+  const completar = { conHueco: taparEnVerso(en, l.completar.oculta), ...eleccion(l.completar.opciones, oculta, rng) };
+
+  const palabra = comoAparece(l.palabra.ejemplo, l.palabra.en);
+  const usa = { conHueco: taparEnVerso(l.palabra.ejemplo, l.palabra.en), ...eleccion(l.palabra.opciones, palabra, rng) };
+
+  const solucion = fichasDe(l.ordenar);
+  let fichas = shuffle(solucion, rng);
+  // Que no salgan ya ordenadas (con 3 fichas puede pasar).
+  for (let i = 0; i < 6 && ordenCorrecto(fichas, solucion); i++) fichas = shuffle(solucion, rng);
+  if (ordenCorrecto(fichas, solucion)) fichas = [...solucion.slice(1), solucion[0] as string];
+
+  const escucha = { frase: en, ...eleccion([en, ...l.escucha.slice(0, 3)], en, rng) };
+  return { leccion: l, verso, completar, usa, ordenar: { fichas, solucion }, escucha };
 }
 
 // ------------------------------------------------------------------ flores
 
-export const RACHA_CANCION = 3;
+/** Cada cuántas respuestas buenas florece una sacuanjoche. */
+export const ACIERTOS_POR_FLOR = 3;
+/** La racha que da una flor más. */
+export const RACHA_CANCION = 6;
+export const MAX_FLORES_CANCION = 5;
 
 /**
- * Sacuanjoches de una canción: completarla da 3 si al menos la mitad de las
- * respuestas fue buena; una más con 80 % y otra con una racha de 3. Entre 3 y
- * 5, como una lección. Por debajo de la mitad, repasar: sin flores y la
- * canción no cuenta como completada.
+ * Sacuanjoches de una canción: una cada 3 respuestas buenas (al primer
+ * intento) y una más con una racha de 6, hasta 5. Hace falta al menos la
+ * mitad bien: por debajo, repasar, sin flores, y la canción no cuenta como
+ * completada. Con las respuestas que van hasta ahora da las que ya se
+ * ganaron, así se ven crecer mientras se juega.
  */
 export function sacuanjochesPorCancion(correctas: number, total: number, mejorRacha: number): number {
   if (!Number.isFinite(total) || total <= 0) return 0;
   const bien = Math.max(0, Math.min(correctas, total));
   if (bien * 2 < total) return 0;
-  let n = SACUANJOCHES_BASE;
-  if (bien / total >= 0.8) n += 1;
+  let n = Math.floor(bien / ACIERTOS_POR_FLOR);
   if (mejorRacha >= RACHA_CANCION) n += 1;
-  return n;
+  return Math.min(n, MAX_FLORES_CANCION);
 }
