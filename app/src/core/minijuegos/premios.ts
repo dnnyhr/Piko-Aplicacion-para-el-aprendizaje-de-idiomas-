@@ -8,6 +8,7 @@
 
 import { sacuanjochesPorMinijuego } from '../progress/arbol';
 import { ID_TROMPO, sacuanjochesPorTrompo } from './trompo';
+import { ID_GALLINITA, sacuanjochesPorGallinita } from './gallinita';
 
 export interface PartidaMinijuego {
   game: string;
@@ -19,5 +20,7 @@ export interface PartidaMinijuego {
 
 export function floresDeMinijuego(p: PartidaMinijuego): number {
   if (p.game === ID_TROMPO) return sacuanjochesPorTrompo(p.correct, p.total, p.streak ?? 0);
+  if (p.game === ID_GALLINITA) return sacuanjochesPorGallinita(p.correct, p.total, p.streak ?? 0);
+  // La rayuela y las chibolas: la regla común (dos tercios al primer intento).
   return sacuanjochesPorMinijuego(p.correct, p.total);
 }
