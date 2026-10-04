@@ -5,7 +5,17 @@ import { gameDoneEvent, lessonDoneEvent, type ProgressEvent } from '@core/progre
 import { project, type StudentState } from '@core/progress/projection';
 import { vocabularioAprendido, type NivelMinijuego } from '@core/minijuegos/vocabulario';
 import { pistaDe } from '@core/minijuegos/retos';
-import { armarPartida, chibolaAlcanzada, CHIBOLAS, ID_CHIBOLAS, TIROS } from '@core/minijuegos/chibolas';
+import {
+  ARRASTRE_MAXIMO,
+  ARRASTRE_MINIMO,
+  armarPartida,
+  chibolaAlcanzada,
+  CHIBOLAS,
+  ID_CHIBOLAS,
+  leerArrastre,
+  puntoDeImpacto,
+  TIROS,
+} from '@core/minijuegos/chibolas';
 import { PACKS } from '../content';
 
 function conLecciones(ids: string[]): StudentState {
@@ -54,6 +64,31 @@ describe('chibolas: el tiro', () => {
 
   it('da la vuelta bien por los 180 grados', () => {
     expect(chibolaAlcanzada(179, [{ angulo: -179 }, { angulo: 90 }])).toBe(0);
+  });
+
+  it('sale para el lado contrario al arrastre', () => {
+    expect(leerArrastre(0, 60).angulo).toBeCloseTo(0);
+    expect(leerArrastre(-50, 50).angulo).toBeCloseTo(45);
+    expect(leerArrastre(50, 50).angulo).toBeCloseTo(-45);
+  });
+
+  it('un toque no lanza; un arrastre corto sí', () => {
+    expect(leerArrastre(0, ARRASTRE_MINIMO - 1).lanza).toBe(false);
+    expect(leerArrastre(0, ARRASTRE_MINIMO).lanza).toBe(true);
+  });
+
+  it('la chibola estirada no pasa del máximo, en la misma dirección', () => {
+    const a = leerArrastre(300, 400);
+    expect(Math.hypot(a.x, a.y)).toBeCloseTo(ARRASTRE_MAXIMO);
+    expect(a.x / a.y).toBeCloseTo(300 / 400);
+    expect(a.fuerza).toBe(1);
+  });
+
+  it('el tiro se detiene al tocar la chibola, sin atravesarla', () => {
+    const p = puntoDeImpacto({ x: 0, y: 200 }, { x: 0, y: 0 }, 40);
+    expect(p).toEqual({ x: 0, y: 40 });
+    const q = puntoDeImpacto({ x: 0, y: 0 }, { x: 30, y: 40 }, 10);
+    expect(Math.hypot(30 - q.x, 40 - q.y)).toBeCloseTo(10);
   });
 });
 
