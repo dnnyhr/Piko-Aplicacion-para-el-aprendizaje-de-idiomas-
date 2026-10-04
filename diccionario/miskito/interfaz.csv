@@ -142,6 +142,75 @@ trompo.mejor_racha,Mejor racha,,
 trompo.puntos_etiqueta,Puntos,,
 trompo.lanzar_otra_vez,Lanzar otra vez,,
 trompo.otra_partida,Otra partida,,
+chibolas.nombre,Bolas chinas,,
+chibolas.descripcion,Apuntá y tirá tu chibola a la que tiene la respuesta correcta.,,
+chibolas.elegir_lengua,¿En qué idioma querés jugar?,,
+chibolas.detalle_nivel,{n} chibolas,,Dejar {n} tal cual: ahí la app pone un valor.
+chibolas.desc_inicial,"Dibujos y palabras sencillas, con 3 chibolas.",,
+chibolas.desc_intermedio,"4 chibolas y menos ayudas, con audio.",,
+chibolas.desc_avanzado,"Frases y audio, sin dibujos.",,
+chibolas.a_jugar,¡A tirar!,,
+chibolas.como,"Arrastrá tu chibola hacia atrás y soltala, o tocá la chibola que elegís.",,
+chibolas.pregunta_traduccion,¿Cómo se dice en {lengua}?,,Dejar {lengua} tal cual: ahí la app pone un valor.
+chibolas.pregunta_significado,¿Qué significa?,,
+chibolas.pregunta_imagen,¿Cómo se dice en {lengua}?,,Dejar {lengua} tal cual: ahí la app pone un valor.
+chibolas.pregunta_audio,Escuchá a Piko. ¿Qué palabra dijo?,,
+chibolas.pregunta_audio_frase,Escuchá a Piko. ¿Qué significa?,,
+chibolas.etiqueta,{lengua} · {nivel} · {n} de {total},,Dejar {lengua} y {nivel} y {n} y {total} tal cual: ahí la app pone un valor.
+chibolas.al_hoyo,¡Al hoyito!,,
+chibolas.reboto,"¡Uy, rebotó!",,
+chibolas.pista,Pista: empieza con «{inicial}» y tiene {n} letras.,,Dejar {inicial} y {n} tal cual: ahí la app pone un valor.
+chibolas.pista_frase,Pista: empieza con «{inicial}» y tiene {n} palabras.,,Dejar {inicial} y {n} tal cual: ahí la app pone un valor.
+chibolas.tirar_otra_vez,Tirar otra vez,,
+chibolas.seguir,Seguir,,
+chibolas.terminar,Terminar,,
+chibolas.chibola,Chibola: {texto},,Dejar {texto} tal cual: ahí la app pone un valor.
+chibolas.salir,Salir de las chibolas,,
+chibolas.fin_bien,¡Qué buena puntería!,,
+chibolas.fin_sin_flores,¡Terminaste la partida!,,
+chibolas.fin_repetida,¡Partida terminada!,,
+chibolas.sin_flores_explica,Con {n} de {total} al primer tiro ganás sacuanjoches. ¡Afiná la puntería y volvé a jugar!,,Dejar {n} y {total} tal cual: ahí la app pone un valor.
+chibolas.al_primer_tiro,Al primer tiro,,
+chibolas.jugar_otra_vez,Jugar otra vez,,
+chibolas.otra_partida,Otra partida,,
+gallinita.nombre,Gallinita Ciega de Piko,,
+gallinita.descripcion,Piko tiene los ojos vendados: escuchá y guialo hasta la respuesta.,,
+gallinita.elegir_lengua,¿En qué idioma querés jugar?,,
+gallinita.detalle_nivel,{n} opciones,,Dejar {n} tal cual: ahí la app pone un valor.
+gallinita.desc_inicial,Palabras sueltas con dibujos. Podés escuchar las veces que quieras.,,
+gallinita.desc_intermedio,"4 opciones, palabras parecidas y menos dibujos.",,
+gallinita.desc_avanzado,"Frases cortas, sin pistas. Cada audio se escucha dos veces nomás.",,
+gallinita.a_jugar,¡A escuchar!,,
+gallinita.pregunta_oye_dibujo,Escuchá. ¿Qué dijo Piko?,,
+gallinita.pregunta_oye_significado,Escuchá. ¿Qué significa?,,
+gallinita.pregunta_oye_palabra,Escuchá bien. ¿Cuál palabra es?,,
+gallinita.pregunta_dibujo_oye,Escuchá cada opción. ¿Cuál nombra el dibujo?,,
+gallinita.pregunta_oye_frase,Escuchá la frase. ¿Qué significa?,,
+gallinita.escuchar,Escuchar,,
+gallinita.escuchar_opcion,Escuchar la opción {n},,Dejar {n} tal cual: ahí la app pone un valor.
+gallinita.elegir_opcion,Elegir la opción {n},,Dejar {n} tal cual: ahí la app pone un valor.
+gallinita.opcion,Opción {n},,Dejar {n} tal cual: ahí la app pone un valor.
+gallinita.escuchas_quedan,Te quedan {n},,Dejar {n} tal cual: ahí la app pone un valor.
+gallinita.sin_escuchas,Ya no quedan escuchas,,
+gallinita.etiqueta,{lengua} · {nivel} · {n} de {total},,Dejar {lengua} y {nivel} y {n} y {total} tal cual: ahí la app pone un valor.
+gallinita.racha,¡Racha! +{n},,Dejar {n} tal cual: ahí la app pone un valor.
+gallinita.gran_racha,¡Gran racha! +{n},,Dejar {n} tal cual: ahí la app pone un valor.
+gallinita.perfecta,¡Partida perfecta!,,
+gallinita.encontro,¡Piko lo encontró!,,
+gallinita.se_choco,¡Uy! Piko se fue por otro lado.,,
+gallinita.era,Era: {respuesta},,Dejar {respuesta} tal cual: ahí la app pone un valor.
+gallinita.seguir,Seguir,,
+gallinita.terminar,Terminar,,
+gallinita.salir,Salir de la gallinita ciega,,
+gallinita.fin_bien,¡Qué buen oído!,,
+gallinita.fin_sin_flores,¡Terminaste la partida!,,
+gallinita.fin_repetida,¡Partida terminada!,,
+gallinita.sin_flores_explica,Con {n} de {total} respuestas buenas ganás sacuanjoches. ¡Escuchá otra vez y volvé a jugar!,,Dejar {n} y {total} tal cual: ahí la app pone un valor.
+gallinita.aciertos,Aciertos,,
+gallinita.mejor_racha,Mejor racha,,
+gallinita.puntos,Puntos,,
+gallinita.jugar_otra_vez,Jugar otra vez,,
+gallinita.otra_partida,Otra partida,,
 lengua.eng,Inglés,,
 lengua.miq,Miskito,,
 lengua.sum,Mayangna,,
@@ -199,6 +268,13 @@ piko.rayuela_salto#5,¡Bien saltado!,,
 piko.rayuela_casi#1,Casi. Probá otra casilla.,,
 piko.rayuela_casi#2,Buen intento. Elegí otra.,,
 piko.rayuela_casi#3,Ya casi. Probá de nuevo.,,
+piko.chibola_rebota#1,"¡Uy, rebotó!",,
+piko.chibola_rebota#2,¡Esa se escapó!,,
+piko.chibola_rebota#3,¡Casi le pego!,,
+piko.chibola_rebota#4,"¡Ay, mi chibola!",,
+piko.gallinita_choca#1,¡Uy! Por acá no era.,,
+piko.gallinita_choca#2,¡Me fui por otro lado!,,
+piko.gallinita_choca#3,"¡Ay, me perdí!",,
 piko.esperando#1,Esperando a la clase…,,
 piko.esperando#2,Ya casi empezamos.,,
 piko.esperando#3,El maestro está preparando la ronda.,,
