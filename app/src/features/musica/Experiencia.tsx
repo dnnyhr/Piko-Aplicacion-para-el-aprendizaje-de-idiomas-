@@ -5,8 +5,9 @@
  * practico → canto → gano sacuanjoches.
  *
  * 1. Escuchar: suena la grabación, Piko baila con su falda de sacuanjoches y
- *    una sacuanjoche va marcando, a tiempo con el audio, la línea que suena:
- *    la letra como se canta, qué significa y cómo se dice en inglés. Las
+ *    una sacuanjoche salta encima de cada palabra que se canta, a tiempo con
+ *    el audio y rebotando con el pulso. Cada línea trae la letra como se
+ *    canta, qué significa y cómo se dice en inglés. Las
  *    partes que vuelven dicen «Se repite» o «Repite el coro».
  * 2. Cada frase elegida es una lección: original → español → inglés, y
  *    cuatro actividades (completar, usar la palabra, ordenar, escuchar).
@@ -27,6 +28,7 @@ import { Bandera } from '../../ui/minijuegos/Bandera';
 import { Cerrar, Parlante } from '../../ui/minijuegos/Iconos';
 import { Nota } from '../../ui/musica/Instrumento';
 import { PikoBailarin } from '../../ui/musica/PikoBailarin';
+import { VersoCantado } from '../../ui/musica/VersoCantado';
 import type { EstadoPiko } from '../../ui/piko/sprites';
 import { elegir } from '../../ui/piko/frases';
 import { useTextos } from '../../ui/textos/useTextos';
@@ -276,6 +278,7 @@ export function Experiencia({ cancion, audio, premiable, onTerminar, onSalir }: 
             desde={paso.tipo === 'cantar' ? cancion.canta.desde : 0}
             hasta={paso.tipo === 'cantar' ? cancion.canta.hasta : cancion.letra.length - 1}
             activo={activo}
+            tiempo={tramo.tiempo}
             marcas={marcas}
             repetidos={repetidos}
             sonando={tramo.sonando}
@@ -308,7 +311,13 @@ export function Experiencia({ cancion, audio, premiable, onTerminar, onSalir }: 
             <Text style={styles.titulo}>{t('musica.frase_titulo', { n: paso.k + 1, total: lecciones.length })}</Text>
             <View style={styles.tarjeta}>
               <Text style={styles.rotulo}>🎵 {t('musica.frase_original')}</Text>
-              <Text style={styles.original}>{leccion.verso.texto}</Text>
+              <VersoCantado
+                verso={leccion.verso}
+                tiempo={tramo.tiempo}
+                activo={tramo.sonando && activo === leccion.leccion.verso}
+                periodo={periodo}
+                estilo={styles.original}
+              />
               {cancion.lengua !== 'spa' && leccion.verso.es && (
                 <>
                   <Text style={styles.rotulo}>{t('musica.frase_es')}</Text>
@@ -509,6 +518,8 @@ interface LetraProps {
   desde: number;
   hasta: number;
   activo: number;
+  /** Segundo de la grabación, para la flor que salta sobre las palabras. */
+  tiempo: number;
   marcas: readonly MarcaRepeticion[];
   repetidos: readonly number[];
   sonando: boolean;
@@ -517,33 +528,19 @@ interface LetraProps {
 }
 
 /**
- * La letra con la sacuanjoche que la sigue: la flor baja de línea en línea al
- * ritmo del audio (va a la línea que suena según el tiempo de la grabación) y
- * gira mientras suena. La lista se desplaza sola para que la línea se vea.
+ * La letra. En la línea que suena, una sacuanjoche salta encima de cada
+ * palabra que se canta, a tiempo con la grabación y rebotando con el pulso
+ * (`VersoCantado`). La lista se desplaza sola para que la línea se vea.
  */
-const Letra = memo(function Letra({ cancion, desde, hasta, activo, marcas, repetidos, sonando, periodo, textos }: LetraProps) {
+const Letra = memo(function Letra({ cancion, desde, hasta, activo, tiempo, marcas, repetidos, sonando, periodo, textos }: LetraProps) {
   const lista = useRef<ScrollView>(null);
   const lugares = useRef<Record<number, { y: number; h: number }>>({});
-  const y = useRef(new Animated.Value(0)).current;
-  const giro = useRef(new Animated.Value(0)).current;
-  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const l = lugares.current[activo];
     if (activo < desde || activo > hasta || !l) return;
-    setVisible(true);
-    Animated.timing(y, { toValue: l.y + l.h / 2 - 14, duration: 260, easing: Easing.out(Easing.quad), useNativeDriver: true }).start();
     lista.current?.scrollTo({ y: Math.max(0, l.y - 90), animated: true });
-  }, [activo, desde, hasta, y]);
-
-  useEffect(() => {
-    if (!sonando) return;
-    const vuelta = Animated.loop(
-      Animated.timing(giro, { toValue: 1, duration: periodo * 4000, easing: Easing.linear, useNativeDriver: true }),
-    );
-    vuelta.start();
-    return () => vuelta.stop();
-  }, [sonando, periodo, giro]);
+  }, [activo, desde, hasta]);
 
   return (
     <ScrollView ref={lista} style={styles.cuerpo} contentContainerStyle={styles.letra} showsVerticalScrollIndicator={false}>
@@ -564,7 +561,7 @@ const Letra = memo(function Letra({ cancion, desde, hasta, activo, marcas, repet
               </View>
             )}
             <View style={[styles.verso, n === activo ? styles.versoActivo : null, repetido ? styles.versoRepetido : null]}>
-              <Text style={styles.versoTexto}>{v.texto}</Text>
+              <VersoCantado verso={v} tiempo={tiempo} activo={sonando && n === activo} periodo={periodo} estilo={styles.versoTexto} />
               {!repetido && cancion.lengua !== 'spa' && v.es && <Text style={styles.versoEs}>{v.es}</Text>}
               {!repetido && v.en && (
                 <View style={styles.versoFilaEn}>
@@ -578,19 +575,6 @@ const Letra = memo(function Letra({ cancion, desde, hasta, activo, marcas, repet
           </View>
         );
       })}
-      {visible && (
-        <Animated.View
-          pointerEvents="none"
-          style={[
-            styles.florGuia,
-            {
-              transform: [{ translateY: y }, { rotate: giro.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] }) }],
-            },
-          ]}
-        >
-          <Sacuanjoche tam={28} />
-        </Animated.View>
-      )}
     </ScrollView>
   );
 });
@@ -649,8 +633,7 @@ const styles = StyleSheet.create({
   titulo: { ...texto.subtitulo, color: color.verde, marginTop: espacio.md },
   cuerpo: { flex: 1, marginTop: espacio.sm },
   cuerpoContenido: { gap: espacio.sm, paddingBottom: espacio.lg },
-  letra: { gap: espacio.sm, paddingBottom: espacio.lg, paddingLeft: 34 },
-  florGuia: { position: 'absolute', left: 0, top: 0, width: 28, height: 28 },
+  letra: { gap: espacio.sm, paddingBottom: espacio.lg },
   marca: { alignSelf: 'flex-start', backgroundColor: color.papelHondo, borderRadius: radio.redondo, paddingHorizontal: espacio.md, paddingVertical: 2, marginBottom: 4 },
   marcaTexto: { ...texto.etiqueta, fontSize: 12, color: color.verdeHondo },
   verso: {
