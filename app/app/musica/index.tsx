@@ -25,6 +25,7 @@ import { Instrumento, Nota } from '../../src/ui/musica/Instrumento';
 import { useTextos } from '../../src/ui/textos/useTextos';
 import { useProgreso } from '../../src/features/progreso/store';
 import { useNivelMusical } from '../../src/features/musica/useNivelMusical';
+import { MODO_ADMIN } from '../../src/features/musica/admin';
 import { cancionesAbiertas, NIVELES_CANCION, type Cancion } from '../../src/core/canciones/cancion';
 import { CANCIONES } from '../../content/canciones';
 import { color, espacio, labio, radio, texto } from '../../src/ui/tokens';
@@ -43,7 +44,8 @@ export default function Musica() {
   }, []);
 
   const abiertas = useMemo(
-    () => cancionesAbiertas(CANCIONES, estado.cancionesCompletas, nivel),
+    // En modo administrador, todas abiertas para probarlas.
+    () => (MODO_ADMIN ? new Set(CANCIONES.map((c) => c.id)) : cancionesAbiertas(CANCIONES, estado.cancionesCompletas, nivel)),
     [estado.cancionesCompletas, nivel],
   );
   const completas = new Set(estado.cancionesCompletas);
@@ -80,6 +82,12 @@ export default function Musica() {
           </View>
         </View>
         <Globo hacia="abajo">{t('musica.lema')}</Globo>
+
+        {MODO_ADMIN && (
+          <View style={styles.admin}>
+            <Text style={styles.adminTexto}>{t('musica.admin_activo')}</Text>
+          </View>
+        )}
 
         {total > 0 && <Text style={styles.cuenta}>{t('musica.completadas', { n: hechas, total })}</Text>}
         {total > 0 && <Text style={styles.tuNivel}>{t('musica.tu_nivel', { nivel: t(`minijuegos.nivel_${nivel}`) })}</Text>}
@@ -170,6 +178,15 @@ const styles = StyleSheet.create({
   },
   nota: { position: 'absolute' },
   instrumentos: { gap: espacio.xs, marginBottom: espacio.sm },
+  admin: {
+    gap: espacio.sm,
+    backgroundColor: '#FFF1C9',
+    borderRadius: radio.lg,
+    borderWidth: 2,
+    borderColor: color.pico,
+    padding: espacio.md,
+  },
+  adminTexto: { ...texto.chico, color: '#5C3D02' },
   cuenta: { ...texto.cuerpoFuerte, color: color.verde, textAlign: 'center' },
   tuNivel: { ...texto.chico, color: color.tinta, textAlign: 'center', marginTop: -espacio.sm },
   grupo: { gap: espacio.md },
