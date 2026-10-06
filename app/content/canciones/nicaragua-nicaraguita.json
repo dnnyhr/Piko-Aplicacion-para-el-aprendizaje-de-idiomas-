@@ -1,0 +1,267 @@
+{
+  "id": "nicaragua-nicaraguita",
+  "titulo": "Nicaragua, Nicaragüita",
+  "lengua": "spa",
+  "region": "Nicaragua",
+  "comunidad": "Canción de Carlos Mejía Godoy",
+  "nivel": "inicial",
+  "imagen": "guitarra",
+  "audio": "nicaragua-nicaraguita.m4a",
+  "ritmo": {
+    "bpm": 89.3,
+    "pulso": 20.61
+  },
+  "fuente": {
+    "interpreta": "Carlos Mejía Godoy",
+    "autoria": "Carlos Mejía Godoy",
+    "autoriza": "Carlos Mejía Godoy",
+    "forma": "verbal",
+    "fecha": "2026-10-06",
+    "validado_por": "ruby845",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Una canción de Carlos Mejía Godoy, uno de los cantautores más queridos de Nicaragua, nacido en Somoto.",
+    "lengua": "Español de Nicaragua, con palabras de cariño como «sos», «dulcita» y «Nicaragüita».",
+    "region": "Nicaragua entera.",
+    "representa": "El cariño por el país: Nicaragua como la flor más linda y más dulce."
+  },
+  "letra": [
+    {
+      "texto": "Ay, Nicaragua, Nicaragüita,",
+      "en": "Oh, Nicaragua, little Nicaragua,",
+      "aproximado": true,
+      "nota": "«Nicaragüita» es un diminutivo de cariño: en inglés decimos «little Nicaragua».",
+      "inicio": 138.5,
+      "fin": 143.3,
+      "tiempos": [
+        138.5,
+        139.08,
+        140.69
+      ]
+    },
+    {
+      "texto": "la flor más linda de mi querer,",
+      "en": "the prettiest flower of my love,",
+      "inicio": 143.43,
+      "fin": 147.62,
+      "tiempos": [
+        143.43,
+        143.63,
+        143.91,
+        144.27,
+        144.89,
+        145.39,
+        145.85
+      ]
+    },
+    {
+      "texto": "abonada con la bendita, Nicaragüita,",
+      "en": "nourished with the blessed, little Nicaragua,",
+      "aproximado": true,
+      "nota": "«Abonada» es como una planta que crece fuerte porque la cuidan.",
+      "inicio": 147.62,
+      "fin": 156.46,
+      "tiempos": [
+        147.62,
+        149.39,
+        151.16,
+        152.92,
+        154.69
+      ]
+    },
+    {
+      "texto": "sangre de Diriangén.",
+      "en": "blood of Diriangén.",
+      "nota": "Diriangén fue un cacique que defendió su tierra: su nombre no se traduce.",
+      "inicio": 156.46,
+      "fin": 159.16,
+      "tiempos": [
+        156.46,
+        156.84,
+        157.38
+      ]
+    },
+    {
+      "texto": "Ay, Nicaragua, sos más dulcita",
+      "en": "Oh, Nicaragua, you are sweeter",
+      "inicio": 159.16,
+      "fin": 167.97,
+      "tiempos": [
+        159.16,
+        160.93,
+        162.71,
+        163.15,
+        167.67
+      ]
+    },
+    {
+      "texto": "que la mielita de tamagás,",
+      "en": "than the little honey of the tamagás,",
+      "nota": "«Tamagás» es un nombre nicaragüense: no se traduce.",
+      "inicio": 167.89,
+      "fin": 170.56,
+      "tiempos": [
+        167.89,
+        168.12,
+        168.34,
+        168.57,
+        169.07
+      ]
+    },
+    {
+      "texto": "pero ahora que ya sos libre, Nicaragüita,",
+      "en": "but now that you are free, little Nicaragua,",
+      "inicio": 170.56,
+      "fin": 180.16,
+      "tiempos": [
+        170.56,
+        172.06,
+        173.55,
+        175.04,
+        175.26,
+        175.68,
+        177.92
+      ]
+    },
+    {
+      "texto": "yo te quiero mucho más.",
+      "en": "I love you so much more.",
+      "inicio": 180.16,
+      "fin": 183.62,
+      "tiempos": [
+        180.16,
+        180.32,
+        180.76,
+        181.3,
+        182.04
+      ]
+    },
+    {
+      "texto": "Pero ahora que ya sos libre, Nicaragüita,",
+      "en": "But now that you are free, little Nicaragua,",
+      "inicio": 183.62,
+      "fin": 189.03,
+      "tiempos": [
+        183.62,
+        185.2,
+        186.78,
+        186.92,
+        187.24,
+        187.62,
+        188.58
+      ]
+    },
+    {
+      "texto": "yo te quiero mucho más.",
+      "en": "I love you so much more.",
+      "inicio": 190.4,
+      "fin": 197.0,
+      "tiempos": [
+        190.4,
+        191.2,
+        192.0,
+        193.61,
+        195.01
+      ]
+    }
+  ],
+  "coro": [
+    0
+  ],
+  "lecciones": [
+    {
+      "verso": 1,
+      "completar": {
+        "oculta": "flower",
+        "opciones": [
+          "flower",
+          "tree",
+          "river"
+        ]
+      },
+      "palabra": {
+        "en": "flower",
+        "es": "flor",
+        "ejemplo": "The flower is red.",
+        "ejemploEs": "La flor es roja.",
+        "opciones": [
+          "flower",
+          "shoe",
+          "cloud"
+        ]
+      },
+      "ordenar": "This is a pretty flower.",
+      "escucha": [
+        "the prettiest flower of my house,",
+        "the prettiest tree of my love,"
+      ]
+    },
+    {
+      "verso": 4,
+      "completar": {
+        "oculta": "sweeter",
+        "opciones": [
+          "sweeter",
+          "bigger",
+          "older"
+        ]
+      },
+      "palabra": {
+        "en": "sweet",
+        "es": "dulce",
+        "ejemplo": "The mango is sweet.",
+        "ejemploEs": "El mango es dulce.",
+        "opciones": [
+          "sweet",
+          "blue",
+          "fast"
+        ]
+      },
+      "ordenar": "You are so sweet.",
+      "escucha": [
+        "Oh, Nicaragua, you are bigger",
+        "Oh, Nicaragua, you are sweet"
+      ]
+    },
+    {
+      "verso": 7,
+      "completar": {
+        "oculta": "love",
+        "opciones": [
+          "love",
+          "see",
+          "call"
+        ]
+      },
+      "palabra": {
+        "en": "love",
+        "es": "querer",
+        "ejemplo": "I love my family.",
+        "ejemploEs": "Quiero a mi familia.",
+        "opciones": [
+          "love",
+          "jump",
+          "rain"
+        ]
+      },
+      "ordenar": "I love you so much.",
+      "escucha": [
+        "I miss you so much more.",
+        "I love you so much."
+      ]
+    }
+  ],
+  "miskito": [
+    {
+      "en": "flower",
+      "es": "flor",
+      "miq": "tangni",
+      "lexico": "tangni"
+    }
+  ],
+  "canta": {
+    "desde": 0,
+    "hasta": 3
+  }
+}

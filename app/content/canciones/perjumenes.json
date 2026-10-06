@@ -1,0 +1,495 @@
+{
+  "id": "perjumenes",
+  "titulo": "Son tus perjúmenes, mujer",
+  "lengua": "spa",
+  "region": "Nicaragua",
+  "comunidad": "Canción de Carlos Mejía Godoy",
+  "nivel": "avanzado",
+  "imagen": "quijada",
+  "audio": "perjumenes.m4a",
+  "ritmo": {
+    "bpm": 133.9,
+    "pulso": 20.48
+  },
+  "fuente": {
+    "interpreta": "Carlos Mejía Godoy y Los de Palacagüina",
+    "autoria": "Carlos Mejía Godoy",
+    "autoriza": "Carlos Mejía Godoy",
+    "forma": "verbal",
+    "fecha": "2026-10-06",
+    "validado_por": "ruby845",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Una canción de Carlos Mejía Godoy, grabada en vivo con Los de Palacagüina en 1977.",
+    "lengua": "Español del campo nicaragüense, con palabras inventadas como «sulibeyar», «aleteyar» y «soripeyar».",
+    "region": "El campo del norte de Nicaragua.",
+    "representa": "El humor y la forma de hablar del campo nicaragüense, con dichos como «la primera en la frente»."
+  },
+  "letra": [
+    {
+      "texto": "Son tus perjúmenes, mujer,",
+      "en": "It's your perfumes, woman,",
+      "nota": "«Perjúmenes» es «perfumes» dicho como en el campo.",
+      "inicio": 35.69,
+      "fin": 38.83,
+      "tiempos": [
+        35.69,
+        36.63,
+        37.21,
+        38.49
+      ]
+    },
+    {
+      "texto": "los que me sulibeyan,",
+      "en": "that make me «sulibeyar»,",
+      "aproximado": true,
+      "nota": "«Sulibeyar» es una palabra inventada por la canción, al estilo del habla del campo: no se traduce.",
+      "inicio": 38.83,
+      "fin": 43.19,
+      "tiempos": [
+        38.83,
+        39.95,
+        40.19,
+        40.57
+      ]
+    },
+    {
+      "texto": "los que me sulibeyan,",
+      "en": "that make me «sulibeyar»,",
+      "aproximado": true,
+      "nota": "«Sulibeyar» es una palabra inventada por la canción, al estilo del habla del campo: no se traduce.",
+      "inicio": 43.19,
+      "fin": 47.17,
+      "tiempos": [
+        43.19,
+        43.63,
+        43.93,
+        44.17
+      ]
+    },
+    {
+      "texto": "son tus perjúmenes, mujer.",
+      "en": "it's your perfumes, woman.",
+      "nota": "«Perjúmenes» es «perfumes» dicho como en el campo.",
+      "inicio": 47.31,
+      "fin": 50.07,
+      "tiempos": [
+        47.31,
+        47.71,
+        48.23,
+        49.43
+      ]
+    },
+    {
+      "texto": "La primera en la frente,",
+      "en": "The first one, right on target,",
+      "aproximado": true,
+      "nota": "Es un dicho: el primer intento acierta.",
+      "inicio": 50.07,
+      "fin": 52.3,
+      "tiempos": [
+        50.07,
+        50.72,
+        51.36,
+        51.66,
+        52.0
+      ]
+    },
+    {
+      "texto": "dijo Espiridión Pichíncha,",
+      "en": "said Espiridión Pichíncha,",
+      "inicio": 52.3,
+      "fin": 54.56,
+      "tiempos": [
+        52.3,
+        52.6,
+        53.3
+      ]
+    },
+    {
+      "texto": "y aquí está:",
+      "en": "and here it is:",
+      "inicio": 54.56,
+      "fin": 58.64,
+      "tiempos": [
+        54.56,
+        55.97,
+        56.95
+      ]
+    },
+    {
+      "texto": "Tus ojos, tus ojos son de colibrí,",
+      "en": "Your eyes, your eyes are like a hummingbird,",
+      "inicio": 58.64,
+      "fin": 65.05,
+      "tiempos": [
+        58.64,
+        59.34,
+        60.36,
+        62.57,
+        63.43,
+        63.93,
+        64.27
+      ]
+    },
+    {
+      "texto": "¡ay!, cómo me aleteyan,",
+      "en": "oh, how they flutter at me,",
+      "aproximado": true,
+      "nota": "«Aletear» es mover las alas; la canción lo dice a su manera: «aleteyan».",
+      "inicio": 65.05,
+      "fin": 68.29,
+      "tiempos": [
+        65.05,
+        66.01,
+        66.45,
+        66.89
+      ]
+    },
+    {
+      "texto": "¡ay!, cómo me aleteyan,",
+      "en": "oh, how they flutter at me,",
+      "aproximado": true,
+      "nota": "«Aletear» es mover las alas; la canción lo dice a su manera: «aleteyan».",
+      "inicio": 68.29,
+      "fin": 73.24,
+      "tiempos": [
+        68.29,
+        69.59,
+        70.07,
+        70.59
+      ]
+    },
+    {
+      "texto": "tus ojos son de colibrí.",
+      "en": "your eyes are like a hummingbird.",
+      "inicio": 73.24,
+      "fin": 76.88,
+      "tiempos": [
+        73.24,
+        73.84,
+        74.48,
+        75.0,
+        75.32
+      ]
+    },
+    {
+      "texto": "Son tus perjúmenes, mujer,",
+      "en": "It's your perfumes, woman,",
+      "nota": "«Perjúmenes» es «perfumes» dicho como en el campo.",
+      "inicio": 76.88,
+      "fin": 79.88,
+      "tiempos": [
+        76.88,
+        77.38,
+        78.16,
+        79.02
+      ]
+    },
+    {
+      "texto": "los que me sulibeyan,",
+      "en": "that make me «sulibeyar»,",
+      "aproximado": true,
+      "nota": "«Sulibeyar» es una palabra inventada por la canción, al estilo del habla del campo: no se traduce.",
+      "inicio": 79.88,
+      "fin": 83.12,
+      "tiempos": [
+        79.88,
+        80.74,
+        81.06,
+        81.38
+      ]
+    },
+    {
+      "texto": "los que me sulibeyan,",
+      "en": "that make me «sulibeyar»,",
+      "aproximado": true,
+      "nota": "«Sulibeyar» es una palabra inventada por la canción, al estilo del habla del campo: no se traduce.",
+      "inicio": 83.12,
+      "fin": 87.87,
+      "tiempos": [
+        83.12,
+        84.22,
+        84.72,
+        84.92
+      ]
+    },
+    {
+      "texto": "son tus perjúmenes, mujer.",
+      "en": "it's your perfumes, woman.",
+      "nota": "«Perjúmenes» es «perfumes» dicho como en el campo.",
+      "inicio": 87.87,
+      "fin": 90.3,
+      "tiempos": [
+        87.87,
+        88.41,
+        88.99,
+        89.63
+      ]
+    },
+    {
+      "texto": "No hay primera sin segunda,",
+      "en": "There's no first without a second,",
+      "nota": "Es un dicho: después de una, viene otra.",
+      "inicio": 90.3,
+      "fin": 93.05,
+      "tiempos": [
+        90.3,
+        90.98,
+        91.66,
+        92.33,
+        92.63
+      ]
+    },
+    {
+      "texto": "dijo Mincho Calandraca,",
+      "en": "said Mincho Calandraca,",
+      "inicio": 93.05,
+      "fin": 94.71,
+      "tiempos": [
+        93.05,
+        93.33,
+        93.77
+      ]
+    },
+    {
+      "texto": "y aquí está, venga:",
+      "en": "and here it is, come on:",
+      "inicio": 94.71,
+      "fin": 96.77,
+      "tiempos": [
+        94.71,
+        95.01,
+        95.23,
+        96.0
+      ]
+    },
+    {
+      "texto": "Tus labios, tus labios, pétalos en flor,",
+      "en": "Your lips, your lips, petals in bloom,",
+      "inicio": 96.77,
+      "fin": 104.31,
+      "tiempos": [
+        96.77,
+        97.59,
+        100.91,
+        101.51,
+        102.29,
+        103.21,
+        103.47
+      ]
+    },
+    {
+      "texto": "cómo me soripeyan,",
+      "en": "how they «soripeyan» me,",
+      "aproximado": true,
+      "nota": "«Soripeyar» es otra palabra inventada por la canción: no se traduce.",
+      "inicio": 104.31,
+      "fin": 108.05,
+      "tiempos": [
+        104.31,
+        105.56,
+        106.8
+      ]
+    },
+    {
+      "texto": "cómo me soripeyan,",
+      "en": "how they «soripeyan» me,",
+      "aproximado": true,
+      "nota": "«Soripeyar» es otra palabra inventada por la canción: no se traduce.",
+      "inicio": 108.05,
+      "fin": 111.08,
+      "tiempos": [
+        108.05,
+        109.06,
+        110.07
+      ]
+    },
+    {
+      "texto": "tus labios, pétalos en flor.",
+      "en": "your lips, petals in bloom.",
+      "inicio": 111.08,
+      "fin": 114.26,
+      "tiempos": [
+        111.08,
+        112.09,
+        113.1,
+        113.49,
+        113.87
+      ]
+    },
+    {
+      "texto": "Son tus perjúmenes, mujer,",
+      "en": "It's your perfumes, woman,",
+      "nota": "«Perjúmenes» es «perfumes» dicho como en el campo.",
+      "inicio": 114.26,
+      "fin": 120.07,
+      "tiempos": [
+        114.26,
+        115.56,
+        116.7,
+        117.96
+      ]
+    },
+    {
+      "texto": "los que me sulibeyan,",
+      "en": "that make me «sulibeyar»,",
+      "aproximado": true,
+      "nota": "«Sulibeyar» es una palabra inventada por la canción, al estilo del habla del campo: no se traduce.",
+      "inicio": 120.07,
+      "fin": 121.93,
+      "tiempos": [
+        120.07,
+        120.12,
+        120.17,
+        120.27
+      ]
+    },
+    {
+      "texto": "los que me sulibeyan,",
+      "en": "that make me «sulibeyar»,",
+      "aproximado": true,
+      "nota": "«Sulibeyar» es una palabra inventada por la canción, al estilo del habla del campo: no se traduce.",
+      "inicio": 121.93,
+      "fin": 126.69,
+      "tiempos": [
+        121.93,
+        123.07,
+        123.39,
+        123.69
+      ]
+    },
+    {
+      "texto": "son tus perjúmenes, mujer.",
+      "en": "it's your perfumes, woman.",
+      "nota": "«Perjúmenes» es «perfumes» dicho como en el campo.",
+      "inicio": 126.77,
+      "fin": 131.25,
+      "tiempos": [
+        126.77,
+        127.21,
+        127.83,
+        128.99
+      ]
+    }
+  ],
+  "coro": [
+    0,
+    1,
+    3
+  ],
+  "lecciones": [
+    {
+      "verso": 7,
+      "completar": {
+        "oculta": "eyes",
+        "opciones": [
+          "eyes",
+          "ears",
+          "hands",
+          "feet"
+        ]
+      },
+      "palabra": {
+        "en": "hummingbird",
+        "es": "colibrí",
+        "ejemplo": "The hummingbird drinks from the flower.",
+        "ejemploEs": "El colibrí bebe de la flor.",
+        "opciones": [
+          "hummingbird",
+          "sandwich",
+          "pencil",
+          "Tuesday"
+        ]
+      },
+      "ordenar": "Your eyes are pretty.",
+      "escucha": [
+        "Your ears, your ears are like a hummingbird,",
+        "Your eyes, your eyes are like a butterfly,"
+      ]
+    },
+    {
+      "verso": 18,
+      "completar": {
+        "oculta": "petals",
+        "opciones": [
+          "petals",
+          "pencils",
+          "pebbles",
+          "puppies"
+        ]
+      },
+      "palabra": {
+        "en": "petals",
+        "es": "pétalos",
+        "ejemplo": "The rose has red petals.",
+        "ejemploEs": "La rosa tiene pétalos rojos.",
+        "opciones": [
+          "petals",
+          "chairs",
+          "Mondays",
+          "shoes"
+        ]
+      },
+      "ordenar": "The flower has petals.",
+      "escucha": [
+        "Your lips, your lips, pencils in bloom,",
+        "Your eyes, your eyes, petals in bloom,"
+      ]
+    },
+    {
+      "verso": 0,
+      "completar": {
+        "oculta": "perfumes",
+        "opciones": [
+          "perfumes",
+          "pencils",
+          "puppies",
+          "pillows"
+        ]
+      },
+      "palabra": {
+        "en": "perfume",
+        "es": "perfume",
+        "ejemplo": "This flower has a sweet perfume.",
+        "ejemploEs": "Esta flor tiene un perfume dulce.",
+        "opciones": [
+          "perfume",
+          "ladder",
+          "Monday",
+          "purple"
+        ]
+      },
+      "ordenar": "The flower smells sweet.",
+      "escucha": [
+        "It's your pencils, woman,",
+        "It's your perfumes, man,"
+      ]
+    }
+  ],
+  "miskito": [
+    {
+      "en": "eye",
+      "es": "ojo",
+      "miq": "nakra",
+      "lexico": "nakra"
+    },
+    {
+      "en": "woman",
+      "es": "mujer",
+      "miq": "mairin",
+      "lexico": "mairin"
+    },
+    {
+      "en": "flower",
+      "es": "flor",
+      "miq": "tangni",
+      "lexico": "tangni"
+    }
+  ],
+  "canta": {
+    "desde": 0,
+    "hasta": 3
+  }
+}

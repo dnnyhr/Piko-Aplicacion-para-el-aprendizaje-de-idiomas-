@@ -1,0 +1,646 @@
+{
+  "id": "pueblo-sencillo",
+  "titulo": "Yo soy de un pueblo sencillo",
+  "lengua": "spa",
+  "region": "Nicaragua",
+  "comunidad": "Canción de Carlos Mejía Godoy",
+  "nivel": "avanzado",
+  "imagen": "tambor",
+  "audio": "pueblo-sencillo.m4a",
+  "ritmo": {
+    "bpm": 125.0,
+    "pulso": 21.12
+  },
+  "fuente": {
+    "interpreta": "Carlos Mejía Godoy",
+    "autoria": "Carlos Mejía Godoy",
+    "autoriza": "Carlos Mejía Godoy",
+    "forma": "verbal",
+    "fecha": "2026-10-06",
+    "validado_por": "ruby845",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Una canción de Carlos Mejía Godoy, en una grabación en vivo.",
+    "lengua": "Español de Nicaragua.",
+    "region": "Nicaragua entera; nombra a Niquinohomo, en Masaya.",
+    "representa": "Un pueblo pequeño y sencillo que, unido, es fuerte como un volcán. Habla de la historia de Nicaragua en el siglo XX."
+  },
+  "letra": [
+    {
+      "texto": "Yo soy de un pueblo pequeño,",
+      "en": "I come from a small nation,",
+      "aproximado": true,
+      "nota": "«Pueblo» acá quiere decir la gente de un país: en inglés, «nation».",
+      "inicio": 10.51,
+      "fin": 14.69,
+      "tiempos": [
+        10.51,
+        11.03,
+        11.29,
+        11.49,
+        11.69,
+        12.29
+      ]
+    },
+    {
+      "texto": "pequeño como un gorrión,",
+      "en": "small like a sparrow,",
+      "inicio": 14.69,
+      "fin": 18.34,
+      "tiempos": [
+        14.69,
+        14.89,
+        15.31,
+        15.89
+      ]
+    },
+    {
+      "texto": "con medio siglo de sueños,",
+      "en": "with half a century of dreams,",
+      "inicio": 18.34,
+      "fin": 20.98,
+      "tiempos": [
+        18.34,
+        18.44,
+        18.72,
+        19.16,
+        19.5
+      ]
+    },
+    {
+      "texto": "de vergüenza y de valor.",
+      "en": "of dignity and courage.",
+      "aproximado": true,
+      "nota": "Acá «vergüenza» quiere decir dignidad, tener honor.",
+      "inicio": 20.98,
+      "fin": 24.49,
+      "tiempos": [
+        20.98,
+        21.18,
+        22.04,
+        22.5,
+        22.68
+      ]
+    },
+    {
+      "texto": "Yo soy de un pueblo sencillo,",
+      "en": "I come from a simple nation,",
+      "aproximado": true,
+      "nota": "«Pueblo» acá quiere decir la gente de un país: en inglés, «nation».",
+      "inicio": 24.49,
+      "fin": 27.25,
+      "tiempos": [
+        24.49,
+        24.63,
+        24.95,
+        25.11,
+        25.29,
+        25.79
+      ]
+    },
+    {
+      "texto": "como la palabra «Juan»,",
+      "en": "like the word «Juan»,",
+      "inicio": 27.25,
+      "fin": 31.25,
+      "tiempos": [
+        27.25,
+        27.99,
+        29.15,
+        29.73
+      ]
+    },
+    {
+      "texto": "como el amor que te entrego,",
+      "en": "like the love I give you,",
+      "inicio": 31.25,
+      "fin": 34.13,
+      "tiempos": [
+        31.25,
+        31.61,
+        31.89,
+        32.41,
+        32.71,
+        33.01
+      ]
+    },
+    {
+      "texto": "como el amor que me dan.",
+      "en": "like the love they give me.",
+      "inicio": 34.13,
+      "fin": 36.99,
+      "tiempos": [
+        34.13,
+        34.37,
+        34.57,
+        35.43,
+        35.97,
+        36.37
+      ]
+    },
+    {
+      "texto": "Yo soy de un pueblo nacido entre fusil y cantar,",
+      "en": "I come from a nation born between rifles and songs,",
+      "inicio": 36.99,
+      "fin": 42.89,
+      "tiempos": [
+        36.99,
+        37.67,
+        38.01,
+        38.13,
+        38.31,
+        38.95,
+        39.85,
+        40.35,
+        41.25,
+        41.39
+      ]
+    },
+    {
+      "texto": "que de tanto haber sufrido",
+      "en": "that from having suffered so much",
+      "inicio": 42.89,
+      "fin": 46.22,
+      "tiempos": [
+        42.89,
+        43.39,
+        43.77,
+        44.19,
+        44.79
+      ]
+    },
+    {
+      "texto": "tiene mucho que enseñar,",
+      "en": "has a lot to teach,",
+      "inicio": 46.22,
+      "fin": 48.94,
+      "tiempos": [
+        46.22,
+        46.8,
+        47.1,
+        47.62
+      ]
+    },
+    {
+      "texto": "hermano de tantos pueblos que han querido separar,",
+      "en": "a brother to so many nations they have tried to divide,",
+      "inicio": 48.94,
+      "fin": 54.69,
+      "tiempos": [
+        48.94,
+        49.74,
+        50.14,
+        50.82,
+        51.82,
+        52.14,
+        52.48,
+        53.04
+      ]
+    },
+    {
+      "texto": "porque saben que, aun pequeños, juntos somos un volcán.",
+      "en": "because they know that, though small, together we are a volcano.",
+      "inicio": 54.69,
+      "fin": 60.31,
+      "tiempos": [
+        54.69,
+        55.27,
+        55.75,
+        56.21,
+        56.43,
+        57.23,
+        57.89,
+        58.41,
+        58.85
+      ]
+    },
+    {
+      "texto": "Porque saben que, aun pequeños, juntos somos un volcán.",
+      "en": "Because they know that, though small, together we are a volcano.",
+      "inicio": 60.31,
+      "fin": 61.91,
+      "tiempos": [
+        60.31,
+        61.05,
+        61.47,
+        61.49,
+        61.52,
+        61.54,
+        61.57,
+        61.59,
+        61.61
+      ]
+    },
+    {
+      "texto": "Yo soy de un pueblo que es poeta",
+      "en": "I come from a nation that is a poet",
+      "inicio": 61.64,
+      "fin": 84.89,
+      "tiempos": [
+        61.64,
+        61.66,
+        61.69,
+        61.71,
+        72.1,
+        82.49,
+        82.97,
+        83.17
+      ]
+    },
+    {
+      "texto": "y sus versos escribió",
+      "en": "and wrote its verses",
+      "inicio": 84.89,
+      "fin": 87.84,
+      "tiempos": [
+        84.89,
+        85.21,
+        85.41,
+        86.07
+      ]
+    },
+    {
+      "texto": "en los muros y en las puertas",
+      "en": "on the walls and on the doors",
+      "inicio": 87.84,
+      "fin": 90.74,
+      "tiempos": [
+        87.84,
+        88.44,
+        88.7,
+        88.94,
+        89.22,
+        89.34,
+        89.6
+      ]
+    },
+    {
+      "texto": "con sangre, rabia y amor.",
+      "en": "with blood, anger, and love.",
+      "inicio": 90.74,
+      "fin": 93.81,
+      "tiempos": [
+        90.74,
+        91.22,
+        91.82,
+        92.52,
+        92.74
+      ]
+    },
+    {
+      "texto": "Yo soy de un pueblo orgulloso,",
+      "en": "I come from a proud nation,",
+      "inicio": 93.81,
+      "fin": 97.03,
+      "tiempos": [
+        93.81,
+        94.41,
+        94.63,
+        94.79,
+        94.95,
+        95.35
+      ]
+    },
+    {
+      "texto": "con mil batallas perdidas,",
+      "en": "with a thousand lost battles,",
+      "inicio": 97.03,
+      "fin": 100.38,
+      "tiempos": [
+        97.03,
+        97.53,
+        98.01,
+        98.77
+      ]
+    },
+    {
+      "texto": "soy de un pueblo victorioso que aún le duelen las heridas.",
+      "en": "I come from a victorious nation whose wounds still hurt.",
+      "inicio": 100.38,
+      "fin": 105.18,
+      "tiempos": [
+        100.38,
+        100.82,
+        101.02,
+        101.24,
+        101.58,
+        102.82,
+        103.32,
+        103.64,
+        103.96,
+        104.72,
+        104.88
+      ]
+    },
+    {
+      "texto": "Yo soy de un pueblo nacido entre fusil y cantar,",
+      "en": "I come from a nation born between rifles and songs,",
+      "inicio": 105.04,
+      "fin": 111.78,
+      "tiempos": [
+        105.04,
+        106.4,
+        106.84,
+        106.98,
+        107.16,
+        107.8,
+        109.0,
+        109.2,
+        110.04,
+        110.32
+      ]
+    },
+    {
+      "texto": "que de tanto haber sufrido",
+      "en": "that from having suffered so much",
+      "inicio": 111.78,
+      "fin": 115.04,
+      "tiempos": [
+        111.78,
+        112.14,
+        112.48,
+        112.92,
+        113.42
+      ]
+    },
+    {
+      "texto": "tiene mucho que enseñar,",
+      "en": "has a lot to teach,",
+      "inicio": 115.04,
+      "fin": 117.74,
+      "tiempos": [
+        115.04,
+        115.54,
+        115.9,
+        116.48
+      ]
+    },
+    {
+      "texto": "hermano de tantos pueblos que han querido separar,",
+      "en": "a brother to so many nations they have tried to divide,",
+      "inicio": 117.74,
+      "fin": 123.34,
+      "tiempos": [
+        117.74,
+        118.5,
+        118.84,
+        119.48,
+        120.54,
+        120.8,
+        121.14,
+        121.72
+      ]
+    },
+    {
+      "texto": "porque saben que, aun pequeños, juntos somos un volcán.",
+      "en": "because they know that, though small, together we are a volcano.",
+      "inicio": 123.34,
+      "fin": 129.12,
+      "tiempos": [
+        123.34,
+        123.98,
+        124.42,
+        124.66,
+        124.82,
+        125.64,
+        126.68,
+        127.04,
+        127.4
+      ]
+    },
+    {
+      "texto": "Porque saben que, aun pequeños, juntos somos un volcán.",
+      "en": "Because they know that, though small, together we are a volcano.",
+      "inicio": 129.12,
+      "fin": 136.04,
+      "tiempos": [
+        129.12,
+        129.58,
+        130.08,
+        130.28,
+        130.44,
+        131.86,
+        132.02,
+        132.56,
+        133.04
+      ]
+    },
+    {
+      "texto": "Yo soy de un pueblo reciente,",
+      "en": "I come from a young nation,",
+      "inicio": 150.22,
+      "fin": 153.78,
+      "tiempos": [
+        150.22,
+        150.38,
+        150.64,
+        150.82,
+        151.02,
+        151.48
+      ]
+    },
+    {
+      "texto": "pero antiguo su dolor,",
+      "en": "but its pain is old,",
+      "inicio": 153.78,
+      "fin": 156.46,
+      "tiempos": [
+        153.78,
+        153.92,
+        154.6,
+        154.74
+      ]
+    },
+    {
+      "texto": "analfabeta mi gente, medio siglo en rebelión.",
+      "en": "my people unable to read, half a century in rebellion.",
+      "inicio": 156.46,
+      "fin": 161.78,
+      "tiempos": [
+        156.46,
+        157.08,
+        157.7,
+        159.24,
+        159.5,
+        159.98,
+        160.72
+      ]
+    },
+    {
+      "texto": "Yo soy el pueblo que un niño en Niquinohomo soñó,",
+      "en": "I am the nation a boy in Niquinohomo dreamed of,",
+      "nota": "Niquinohomo es el pueblo donde nació Augusto C. Sandino.",
+      "inicio": 161.78,
+      "fin": 167.96,
+      "tiempos": [
+        161.78,
+        162.42,
+        162.78,
+        163.0,
+        163.44,
+        163.74,
+        164.12,
+        164.82,
+        165.62,
+        166.84
+      ]
+    },
+    {
+      "texto": "soy del pueblo de Sandino y Benjamín Zeledón.",
+      "en": "I am from the nation of Sandino and Benjamín Zeledón.",
+      "nota": "Son nombres de personas de la historia de Nicaragua: no se traducen.",
+      "inicio": 167.96,
+      "fin": 173.54,
+      "tiempos": [
+        167.96,
+        168.04,
+        168.32,
+        169.0,
+        169.42,
+        170.52,
+        170.96,
+        172.25
+      ]
+    },
+    {
+      "texto": "Yo soy de un pueblo sencillo, fraterno y amigo, que siembra y defiende",
+      "en": "I come from a simple nation, brotherly and friendly, that plants and defends",
+      "inicio": 173.54,
+      "fin": 179.78,
+      "tiempos": [
+        173.54,
+        173.7,
+        173.96,
+        174.2,
+        174.42,
+        174.82,
+        175.96,
+        176.52,
+        176.76,
+        177.1,
+        177.44,
+        177.88,
+        178.12
+      ]
+    },
+    {
+      "texto": "su revolución.",
+      "en": "its revolution.",
+      "inicio": 179.78,
+      "fin": 181.5,
+      "tiempos": [
+        179.78,
+        180.3
+      ]
+    }
+  ],
+  "coro": [
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "lecciones": [
+    {
+      "verso": 1,
+      "completar": {
+        "oculta": "sparrow",
+        "opciones": [
+          "sparrow",
+          "spider",
+          "sailor",
+          "spoon"
+        ]
+      },
+      "palabra": {
+        "en": "small",
+        "es": "pequeño",
+        "ejemplo": "My puppy is very small.",
+        "ejemploEs": "Mi perrito es muy pequeño.",
+        "opciones": [
+          "small",
+          "angry",
+          "loud",
+          "wet"
+        ]
+      },
+      "ordenar": "My town is small.",
+      "escucha": [
+        "small like a spider,",
+        "tall like a sparrow,"
+      ]
+    },
+    {
+      "verso": 6,
+      "completar": {
+        "oculta": "love",
+        "opciones": [
+          "love",
+          "book",
+          "food",
+          "song"
+        ]
+      },
+      "palabra": {
+        "en": "give",
+        "es": "dar",
+        "ejemplo": "I give my friend a gift.",
+        "ejemploEs": "Le doy un regalo a mi amigo.",
+        "opciones": [
+          "give",
+          "sleep",
+          "rain",
+          "green"
+        ]
+      },
+      "ordenar": "I give you my love.",
+      "escucha": [
+        "like the book I give you,",
+        "like the love you give me,"
+      ]
+    },
+    {
+      "verso": 12,
+      "completar": {
+        "oculta": "volcano",
+        "opciones": [
+          "volcano",
+          "village",
+          "valley",
+          "vegetable"
+        ]
+      },
+      "palabra": {
+        "en": "together",
+        "es": "juntos",
+        "ejemplo": "We play together after school.",
+        "ejemploEs": "Jugamos juntos después de la escuela.",
+        "opciones": [
+          "together",
+          "purple",
+          "nobody",
+          "fast"
+        ]
+      },
+      "ordenar": "Together we are strong.",
+      "escucha": [
+        "because they know that, though small, together we are a village.",
+        "because they know that, though small, alone we are a volcano."
+      ]
+    }
+  ],
+  "miskito": [
+    {
+      "en": "small",
+      "es": "pequeño",
+      "miq": "sirpi",
+      "lexico": "sirpi"
+    }
+  ],
+  "canta": {
+    "desde": 4,
+    "hasta": 7
+  }
+}

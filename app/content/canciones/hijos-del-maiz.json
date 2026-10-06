@@ -1,0 +1,719 @@
+{
+  "id": "hijos-del-maiz",
+  "titulo": "Somos hijos del maíz",
+  "lengua": "spa",
+  "region": "Nicaragua",
+  "comunidad": "Canción de Carlos Mejía Godoy",
+  "nivel": "avanzado",
+  "imagen": "maracas",
+  "audio": "hijos-del-maiz.m4a",
+  "ritmo": {
+    "bpm": 98.7,
+    "pulso": 28.58
+  },
+  "fuente": {
+    "interpreta": "Carlos Mejía Godoy",
+    "autoria": "Carlos Mejía Godoy",
+    "autoriza": "Carlos Mejía Godoy",
+    "forma": "verbal",
+    "fecha": "2026-10-06",
+    "validado_por": "ruby845",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Una canción de Carlos Mejía Godoy.",
+    "lengua": "Español de Nicaragua, con nombres de comidas de maíz como «nacatamal», «pinolillo» y «chilote».",
+    "region": "Nicaragua entera, tierra del maíz.",
+    "representa": "El maíz como raíz de la gente: sembrarlo, cosecharlo y las comidas y bebidas que salen de él."
+  },
+  "letra": [
+    {
+      "texto": "Si nos quitan el pan,",
+      "en": "If they take away our bread,",
+      "inicio": 55.0,
+      "fin": 58.67,
+      "tiempos": [
+        55.0,
+        55.56,
+        56.18,
+        56.74,
+        57.22
+      ]
+    },
+    {
+      "texto": "nos veremos en la obligación",
+      "en": "we will have no choice",
+      "aproximado": true,
+      "nota": "«Vernos en la obligación» quiere decir «no tener otra opción».",
+      "inicio": 58.67,
+      "fin": 62.66,
+      "tiempos": [
+        58.67,
+        58.81,
+        59.83,
+        60.19,
+        60.67
+      ]
+    },
+    {
+      "texto": "de sobrevivir, como lo hicieron nuestros abuelos,",
+      "en": "but to survive, as our grandparents did,",
+      "inicio": 62.66,
+      "fin": 70.43,
+      "tiempos": [
+        62.66,
+        63.7,
+        65.64,
+        66.7,
+        67.0,
+        67.54,
+        68.34
+      ]
+    },
+    {
+      "texto": "con el maíz fermentado",
+      "en": "with fermented corn",
+      "inicio": 70.43,
+      "fin": 73.45,
+      "tiempos": [
+        70.43,
+        70.89,
+        71.23,
+        71.79
+      ]
+    },
+    {
+      "texto": "en la sangre de los héroes,",
+      "en": "in the blood of the heroes,",
+      "inicio": 73.45,
+      "fin": 82.55,
+      "tiempos": [
+        73.45,
+        73.99,
+        74.33,
+        76.41,
+        77.47,
+        79.55
+      ]
+    },
+    {
+      "texto": "con el maíz sembrado desde siempre,",
+      "en": "with corn planted since forever,",
+      "inicio": 84.81,
+      "fin": 91.87,
+      "tiempos": [
+        84.81,
+        84.86,
+        85.01,
+        86.63,
+        88.39,
+        88.87
+      ]
+    },
+    {
+      "texto": "desde antes que ensangrentaran nuestra tierra",
+      "en": "since before they covered our land in blood:",
+      "inicio": 92.07,
+      "fin": 98.95,
+      "tiempos": [
+        92.07,
+        92.25,
+        92.95,
+        93.51,
+        94.87,
+        95.95
+      ]
+    },
+    {
+      "texto": "los cuervos, los piratas, la cruz,",
+      "en": "the crows, the pirates, the cross,",
+      "inicio": 99.37,
+      "fin": 106.36,
+      "tiempos": [
+        99.37,
+        99.51,
+        100.85,
+        101.13,
+        103.09,
+        103.37
+      ]
+    },
+    {
+      "texto": "la espada y el capital.",
+      "en": "the sword and money.",
+      "aproximado": true,
+      "nota": "«El capital» acá quiere decir el dinero de los poderosos.",
+      "inicio": 106.36,
+      "fin": 111.3,
+      "tiempos": [
+        106.36,
+        106.68,
+        109.08,
+        109.24,
+        109.46
+      ]
+    },
+    {
+      "texto": "Somos hijos del maíz,",
+      "en": "We are children of the corn,",
+      "inicio": 111.3,
+      "fin": 114.98,
+      "tiempos": [
+        111.3,
+        111.58,
+        112.42,
+        113.3
+      ]
+    },
+    {
+      "texto": "constructores de surcos y de sueños,",
+      "en": "builders of furrows and of dreams,",
+      "inicio": 114.98,
+      "fin": 118.0,
+      "tiempos": [
+        114.98,
+        115.5,
+        115.72,
+        116.5,
+        116.7,
+        117.0
+      ]
+    },
+    {
+      "texto": "y aunque somos un país pequeño",
+      "en": "and although we are a small country",
+      "inicio": 118.0,
+      "fin": 121.32,
+      "tiempos": [
+        118.0,
+        118.22,
+        118.54,
+        118.98,
+        119.6,
+        120.08
+      ]
+    },
+    {
+      "texto": "ya contamos con más de mil inviernos,",
+      "en": "we already have more than a thousand winters,",
+      "nota": "En Nicaragua, «invierno» es la temporada de lluvias.",
+      "inicio": 121.32,
+      "fin": 125.14,
+      "tiempos": [
+        121.32,
+        121.66,
+        122.44,
+        122.68,
+        123.0,
+        123.16,
+        123.3
+      ]
+    },
+    {
+      "texto": "un millón de manos floreciendo",
+      "en": "a million hands blooming",
+      "inicio": 125.14,
+      "fin": 127.92,
+      "tiempos": [
+        125.14,
+        125.26,
+        126.22,
+        126.5,
+        126.8
+      ]
+    },
+    {
+      "texto": "en la tarea interminable de sembrar.",
+      "en": "in the endless work of planting.",
+      "inicio": 127.92,
+      "fin": 132.22,
+      "tiempos": [
+        127.92,
+        128.4,
+        128.56,
+        128.88,
+        129.94,
+        130.28
+      ]
+    },
+    {
+      "texto": "De abril a mayo, labrando, sembrando,",
+      "en": "From April to May, plowing, planting,",
+      "inicio": 132.22,
+      "fin": 138.62,
+      "tiempos": [
+        132.22,
+        132.3,
+        133.64,
+        134.08,
+        134.86,
+        137.18
+      ]
+    },
+    {
+      "texto": "tapizcando, desgranando,",
+      "en": "harvesting, shelling the corn,",
+      "aproximado": true,
+      "nota": "«Tapizcar» es cosechar el maíz; «desgranar», sacarle los granos.",
+      "inicio": 138.62,
+      "fin": 142.0,
+      "tiempos": [
+        138.62,
+        140.24
+      ]
+    },
+    {
+      "texto": "almacenando para la guerra y la paz.",
+      "en": "storing it for war and for peace.",
+      "inicio": 142.0,
+      "fin": 158.7,
+      "tiempos": [
+        142.0,
+        145.58,
+        150.27,
+        150.49,
+        154.54,
+        155.32,
+        155.7
+      ]
+    },
+    {
+      "texto": "Chicha de maíz, chicha pujagua,",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 184.96,
+      "fin": 188.34,
+      "tiempos": [
+        184.96,
+        185.56,
+        185.92,
+        186.84,
+        187.42
+      ]
+    },
+    {
+      "texto": "chicha raizuda, pelo de maíz,",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 188.34,
+      "fin": 193.69,
+      "tiempos": [
+        188.34,
+        188.96,
+        189.32,
+        190.4,
+        190.94
+      ]
+    },
+    {
+      "texto": "chingue de maíz, nacatamal,",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 193.69,
+      "fin": 198.51,
+      "tiempos": [
+        193.69,
+        195.39,
+        195.75,
+        196.79
+      ]
+    },
+    {
+      "texto": "atolillo,",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 198.51,
+      "fin": 201.51,
+      "tiempos": [
+        198.51
+      ]
+    },
+    {
+      "texto": "tamalpizque, totoposte, marquesote, chocolate,",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 201.71,
+      "fin": 210.67,
+      "tiempos": [
+        201.71,
+        204.92,
+        208.12,
+        209.78
+      ]
+    },
+    {
+      "texto": "pinolillo, pinol, putlisten, pundelo,",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 210.67,
+      "fin": 214.24,
+      "tiempos": [
+        210.67,
+        211.56,
+        212.46,
+        213.35
+      ]
+    },
+    {
+      "texto": "chilote, elote, pozole, tortilla, pirila, empanada.",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 214.24,
+      "fin": 219.8,
+      "tiempos": [
+        214.24,
+        215.64,
+        216.34,
+        217.1,
+        218.0,
+        219.14
+      ]
+    },
+    {
+      "texto": "Es decir, el macizo",
+      "en": "That is to say, the strong",
+      "inicio": 219.8,
+      "fin": 223.66,
+      "tiempos": [
+        219.8,
+        220.88,
+        222.54,
+        222.62
+      ]
+    },
+    {
+      "texto": "e irreversible alimento del pueblo.",
+      "en": "and lasting food of the people.",
+      "aproximado": true,
+      "nota": "«Macizo e irreversible» quiere decir que es la comida firme que nunca va a faltar.",
+      "inicio": 223.66,
+      "fin": 227.22,
+      "tiempos": [
+        223.66,
+        223.86,
+        224.84,
+        225.68,
+        226.08
+      ]
+    },
+    {
+      "texto": "Es decir, el macizo",
+      "en": "That is to say, the strong",
+      "inicio": 227.22,
+      "fin": 229.94,
+      "tiempos": [
+        227.22,
+        227.34,
+        228.9,
+        229.04
+      ]
+    },
+    {
+      "texto": "e irreversible alimento del pueblo.",
+      "en": "and lasting food of the people.",
+      "aproximado": true,
+      "nota": "«Macizo e irreversible» quiere decir que es la comida firme que nunca va a faltar.",
+      "inicio": 229.94,
+      "fin": 235.4,
+      "tiempos": [
+        229.94,
+        230.28,
+        231.2,
+        232.02,
+        232.4
+      ]
+    },
+    {
+      "texto": "Chicha de maíz, con chicha pujagua,",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 260.13,
+      "fin": 264.17,
+      "tiempos": [
+        260.13,
+        261.25,
+        261.63,
+        262.0,
+        262.37,
+        263.03
+      ]
+    },
+    {
+      "texto": "chicha raizuda, pelo de maíz,",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 264.17,
+      "fin": 269.49,
+      "tiempos": [
+        264.17,
+        264.55,
+        265.75,
+        266.01,
+        266.49
+      ]
+    },
+    {
+      "texto": "chingue de maíz, nacatamal,",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 270.29,
+      "fin": 273.87,
+      "tiempos": [
+        270.29,
+        270.87,
+        271.19,
+        272.41
+      ]
+    },
+    {
+      "texto": "atolillo,",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 273.87,
+      "fin": 276.65,
+      "tiempos": [
+        273.87
+      ]
+    },
+    {
+      "texto": "tamalpizque, totoposte, marquesote, chocolate,",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 276.65,
+      "fin": 286.55,
+      "tiempos": [
+        276.65,
+        279.43,
+        282.21,
+        284.99
+      ]
+    },
+    {
+      "texto": "pinolillo, pinol, putlisten, pundelo,",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 286.55,
+      "fin": 289.73,
+      "tiempos": [
+        286.55,
+        287.63,
+        288.33,
+        289.03
+      ]
+    },
+    {
+      "texto": "chilote, elote, pozole, tortilla, pirila, empanada.",
+      "nota": "Son comidas y bebidas de maíz de Nicaragua: sus nombres no se traducen.",
+      "inicio": 289.73,
+      "fin": 295.93,
+      "tiempos": [
+        289.73,
+        290.79,
+        291.45,
+        292.25,
+        293.11,
+        294.55
+      ]
+    },
+    {
+      "texto": "Es decir, el macizo",
+      "en": "That is to say, the strong",
+      "inicio": 295.93,
+      "fin": 298.43,
+      "tiempos": [
+        295.93,
+        296.03,
+        297.45,
+        297.63
+      ]
+    },
+    {
+      "texto": "e irreversible alimento del pueblo.",
+      "en": "and lasting food of the people.",
+      "aproximado": true,
+      "nota": "«Macizo e irreversible» quiere decir que es la comida firme que nunca va a faltar.",
+      "inicio": 298.43,
+      "fin": 301.21,
+      "tiempos": [
+        298.43,
+        298.83,
+        300.05,
+        300.71,
+        300.91
+      ]
+    },
+    {
+      "texto": "De esta manera seremos más nuevos,",
+      "en": "This way we will be renewed,",
+      "inicio": 299.0,
+      "fin": 303.7,
+      "tiempos": [
+        299.0,
+        299.4,
+        300.0,
+        300.8,
+        301.7,
+        302.2
+      ]
+    },
+    {
+      "texto": "de esta manera seremos más nuevos,",
+      "en": "this way we will be renewed,",
+      "inicio": 303.9,
+      "fin": 308.6,
+      "tiempos": [
+        303.9,
+        304.3,
+        304.9,
+        305.7,
+        306.6,
+        307.1
+      ]
+    },
+    {
+      "texto": "de esta manera seremos más nuevos,",
+      "en": "this way we will be renewed,",
+      "inicio": 308.8,
+      "fin": 313.5,
+      "tiempos": [
+        308.8,
+        309.2,
+        309.8,
+        310.6,
+        311.5,
+        312.0
+      ]
+    },
+    {
+      "texto": "de esta manera seremos maíz nuevo.",
+      "en": "this way we will be new corn.",
+      "inicio": 313.7,
+      "fin": 318.4,
+      "tiempos": [
+        313.7,
+        314.1,
+        314.7,
+        315.5,
+        316.4,
+        317.0
+      ]
+    }
+  ],
+  "coro": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ],
+  "lecciones": [
+    {
+      "verso": 9,
+      "completar": {
+        "oculta": "corn",
+        "opciones": [
+          "corn",
+          "rice",
+          "rain",
+          "bread"
+        ]
+      },
+      "palabra": {
+        "en": "corn",
+        "es": "maíz",
+        "ejemplo": "My grandma makes tortillas with corn.",
+        "ejemploEs": "Mi abuela hace tortillas con maíz.",
+        "opciones": [
+          "corn",
+          "window",
+          "tired",
+          "under"
+        ]
+      },
+      "ordenar": "We eat corn.",
+      "escucha": [
+        "We are children of the rain,",
+        "We are children of the sun,"
+      ]
+    },
+    {
+      "verso": 14,
+      "completar": {
+        "oculta": "planting",
+        "opciones": [
+          "planting",
+          "painting",
+          "playing",
+          "singing"
+        ]
+      },
+      "palabra": {
+        "en": "plant",
+        "es": "sembrar",
+        "ejemplo": "We plant beans in May.",
+        "ejemploEs": "Sembramos frijoles en mayo.",
+        "opciones": [
+          "plant",
+          "sleep",
+          "blue",
+          "sing"
+        ]
+      },
+      "ordenar": "We plant corn in May.",
+      "escucha": [
+        "in the endless work of playing.",
+        "in the happy work of planting."
+      ]
+    },
+    {
+      "verso": 15,
+      "completar": {
+        "oculta": "May",
+        "opciones": [
+          "May",
+          "March",
+          "June",
+          "July"
+        ]
+      },
+      "palabra": {
+        "en": "May",
+        "es": "mayo",
+        "ejemplo": "My birthday is in May.",
+        "ejemploEs": "Mi cumpleaños es en mayo.",
+        "opciones": [
+          "May",
+          "Spoon",
+          "Green",
+          "Happy"
+        ]
+      },
+      "ordenar": "From April to May.",
+      "escucha": [
+        "From March to May, plowing, planting,",
+        "From April to June, plowing, planting,"
+      ]
+    }
+  ],
+  "miskito": [
+    {
+      "en": "corn",
+      "es": "maíz",
+      "miq": "haya",
+      "lexico": "haya"
+    },
+    {
+      "en": "bread",
+      "es": "pan",
+      "miq": "bret",
+      "lexico": "bret"
+    },
+    {
+      "en": "land",
+      "es": "tierra",
+      "miq": "tasba",
+      "lexico": "tasba"
+    },
+    {
+      "en": "hand",
+      "es": "mano",
+      "miq": "mihta",
+      "lexico": "mihta"
+    }
+  ],
+  "canta": {
+    "desde": 9,
+    "hasta": 14
+  }
+}
