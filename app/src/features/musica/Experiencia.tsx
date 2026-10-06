@@ -63,6 +63,8 @@ export interface ExperienciaProps {
   audio: number;
   /** Si hoy esta canción todavía da flores (si no, no se anuncian las que se van ganando). */
   premiable: boolean;
+  /** Modo administrador: los puntos de arriba saltan a cualquier parte de la canción. */
+  admin?: boolean;
   onTerminar: (r: ResultadoCancion) => void;
   onSalir: () => void;
 }
@@ -71,7 +73,7 @@ type Paso = { tipo: 'escuchar' } | { tipo: 'frase'; k: number } | { tipo: 'activ
 
 const ingles = (t: string) => decir([{ texto: t, lang: 'en-US' }]);
 
-export function Experiencia({ cancion, audio, premiable, onTerminar, onSalir }: ExperienciaProps) {
+export function Experiencia({ cancion, audio, premiable, admin = false, onTerminar, onSalir }: ExperienciaProps) {
   const { t, frases, idioma } = useTextos();
   const tramo = useTramo(audio);
   const [i, setI] = useState(0);
@@ -234,9 +236,16 @@ export function Experiencia({ cancion, audio, premiable, onTerminar, onSalir }: 
         </Pressable>
         <View style={styles.grupos} accessible accessibilityLabel={t('musica.progreso', { n: grupo + 1, total: grupos })}>
           {Array.from({ length: grupos }, (_, n) => (
-            <View key={n} style={[styles.grupo, n < grupo ? styles.grupoHecho : n === grupo ? styles.grupoActual : null]}>
+            <Pressable
+              key={n}
+              testID={`parte-${n}`}
+              disabled={!admin}
+              // En modo administrador se salta a esa parte: escuchar, cada frase o cantar.
+              onPress={() => irA(n === 0 ? 0 : n === grupos - 1 ? pasos.length - 1 : pasos.findIndex((p) => p.tipo === 'frase' && p.k === n - 1))}
+              style={[styles.grupo, n < grupo ? styles.grupoHecho : n === grupo ? styles.grupoActual : null]}
+            >
               {n < grupo && <Sacuanjoche tam={16} />}
-            </View>
+            </Pressable>
           ))}
         </View>
         <View style={styles.flores} accessible accessibilityLabel={t('musica.flores', { n: flores })}>

@@ -21,11 +21,12 @@ import { useProgreso } from '../../src/features/progreso/store';
 import { decir, vozDePiko } from '../../src/features/minijuegos/voz';
 import { FinPartida } from '../../src/features/minijuegos/FinPartida';
 import { useNivelMusical } from '../../src/features/musica/useNivelMusical';
+import { MODO_ADMIN } from '../../src/features/musica/admin';
 import { Experiencia, type ResultadoCancion } from '../../src/features/musica/Experiencia';
 import { cancionesAbiertas, ID_MUSICA } from '../../src/core/canciones/cancion';
 import { diaLocal } from '../../src/core/minijuegos/vocabulario';
 import { clavePremio, yaPremiado } from '../../src/core/progress/projection';
-import type { Recompensa } from '../../src/core/progress/arbol';
+import { recompensaEntre, type Recompensa } from '../../src/core/progress/arbol';
 import { CANCIONES } from '../../content/canciones';
 import { AUDIOS } from '../../content/canciones/audios';
 import { color, espacio, radio, texto } from '../../src/ui/tokens';
@@ -46,6 +47,7 @@ export default function CancionPantalla() {
   const terminarMinijuego = useProgreso((s) => s.terminarMinijuego);
   const completas = useProgreso((s) => s.estado.cancionesCompletas);
   const nivel = useNivelMusical();
+  const admin = MODO_ADMIN;
   const [fase, setFase] = useState<Fase>('conoce');
   const [intento, setIntento] = useState(0);
   const [final, setFinal] = useState<Final | null>(null);
@@ -57,7 +59,7 @@ export default function CancionPantalla() {
 
   const encontrada = CANCIONES.find((x) => x.id === id);
   const audio = encontrada ? AUDIOS[encontrada.id] : undefined;
-  const abierta = encontrada ? cancionesAbiertas(CANCIONES, completas, nivel).has(encontrada.id) : false;
+  const abierta = encontrada ? admin || cancionesAbiertas(CANCIONES, completas, nivel).has(encontrada.id) : false;
   if (!encontrada || audio === undefined || !abierta) {
     return (
       <Pantalla>
@@ -72,13 +74,20 @@ export default function CancionPantalla() {
 
   const empezar = () => {
     const actual = useProgreso.getState().estado;
-    setPremiable(!yaPremiado(actual, clavePremio(ID_MUSICA, c.lengua, c.id), diaLocal()));
+    setPremiable(!admin && !yaPremiado(actual, clavePremio(ID_MUSICA, c.lengua, c.id), diaLocal()));
     setIntento((n) => n + 1);
     setFinal(null);
     setFase('cancion');
   };
 
   const terminar = (resultado: ResultadoCancion) => {
+    if (admin) {
+      // Modo administrador: la prueba no guarda nada (ni flores ni canciones completas).
+      const total = useProgreso.getState().estado.sacuanjoches;
+      setFinal({ recompensa: recompensaEntre(total, total), resultado, repetida: false, titulo: t('musica.fin_admin') });
+      setFase('fin');
+      return;
+    }
     const recompensa = terminarMinijuego({
       game: ID_MUSICA,
       lang: c.lengua,
@@ -104,7 +113,7 @@ export default function CancionPantalla() {
   if (fase === 'cancion') {
     return (
       <Pantalla>
-        <Experiencia key={intento} cancion={c} audio={audio} premiable={premiable} onTerminar={terminar} onSalir={() => setFase('conoce')} />
+        <Experiencia key={intento} cancion={c} audio={audio} premiable={premiable} admin={admin} onTerminar={terminar} onSalir={() => setFase('conoce')} />
       </Pantalla>
     );
   }
@@ -117,7 +126,7 @@ export default function CancionPantalla() {
           recompensa={final.recompensa}
           repetida={final.repetida}
           titulo={final.titulo}
-          explicacionSinFlores={t('musica.sin_flores_explica')}
+          explicacionSinFlores={admin ? t('musica.admin_sin_flores') : t('musica.sin_flores_explica')}
           datos={[
             { valor: `${r.correct}/${r.total}`, etiqueta: t('musica.aciertos') },
             { valor: String(r.streak), etiqueta: t('musica.mejor_racha') },
