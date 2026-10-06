@@ -47,6 +47,7 @@ import {
   type MarcaRepeticion,
   type Verso,
 } from '../../core/canciones/cancion';
+import { paraVozEspanola } from '../../core/content/voz';
 import { callar, decir, vozDePiko } from '../minijuegos/voz';
 import { useTramo } from './useTramo';
 import { color, espacio, fuente, labio, radio, texto } from '../../ui/tokens';
@@ -324,11 +325,15 @@ export function Experiencia({ cancion, audio, premiable, onTerminar, onSalir }: 
                   <Text style={styles.significado}>{leccion.verso.es}</Text>
                 </>
               )}
-              <View style={styles.filaIngles}>
-                <Bandera lengua="eng" ancho={26} />
-                <Text style={styles.rotulo}>{t('musica.frase_en')}</Text>
-              </View>
-              <Text style={styles.enGrande}>{leccion.verso.en}</Text>
+              {cancion.lengua !== 'eng' && (
+                <>
+                  <View style={styles.filaIngles}>
+                    <Bandera lengua="eng" ancho={26} />
+                    <Text style={styles.rotulo}>{t('musica.frase_en')}</Text>
+                  </View>
+                  <Text style={styles.enGrande}>{leccion.verso.en}</Text>
+                </>
+              )}
               {leccion.verso.aproximado && <Text style={styles.aproximado}>≈ {t('musica.aproximado')}</Text>}
               {leccion.verso.nota && <Text style={styles.nota_}>{leccion.verso.nota}</Text>}
             </View>
@@ -385,6 +390,19 @@ export function Experiencia({ cancion, audio, premiable, onTerminar, onSalir }: 
                     <Text style={styles.palabraNueva}>{leccion.leccion.palabra.en.toLocaleUpperCase('en')}</Text>
                     <Text style={styles.significado}>= {leccion.leccion.palabra.es}</Text>
                   </View>
+                  {(() => {
+                    const miq = cancion.miskito?.find((m) => m.en.toLocaleLowerCase('en') === leccion.leccion.palabra.en.toLocaleLowerCase('en'));
+                    return miq ? (
+                      <Pressable
+                        onPress={() => decir([{ texto: paraVozEspanola(miq.miq), lang: 'es-US' }])}
+                        accessibilityRole="button"
+                        style={styles.miskito}
+                      >
+                        <Text style={styles.chico}>{t('musica.en_miskito_palabra')}</Text>
+                        <Text style={styles.miskitoTexto}>{miq.miq}</Text>
+                      </Pressable>
+                    ) : null;
+                  })()}
                   {!vioEjemplo ? (
                     <>
                       <Text style={styles.rotulo}>{t('musica.usa_ayuda')}</Text>
@@ -563,7 +581,7 @@ const Letra = memo(function Letra({ cancion, desde, hasta, activo, tiempo, marca
             <View style={[styles.verso, n === activo ? styles.versoActivo : null, repetido ? styles.versoRepetido : null]}>
               <VersoCantado verso={v} tiempo={tiempo} activo={sonando && n === activo} periodo={periodo} estilo={styles.versoTexto} />
               {!repetido && cancion.lengua !== 'spa' && v.es && <Text style={styles.versoEs}>{v.es}</Text>}
-              {!repetido && v.en && (
+              {!repetido && v.en && cancion.lengua !== 'eng' && (
                 <View style={styles.versoFilaEn}>
                   <Bandera lengua="eng" ancho={18} />
                   <Text style={styles.versoEn}>{v.en}</Text>
@@ -673,6 +691,8 @@ const styles = StyleSheet.create({
   enGrande: { fontFamily: fuente.tituloFuerte, fontSize: 21, lineHeight: 27, color: color.verde },
   chico: { ...texto.chico, color: color.tinta },
   hueco: { fontFamily: fuente.tituloFuerte, fontSize: 22, lineHeight: 29, color: color.grafito },
+  miskito: { flexDirection: 'row', alignItems: 'baseline', gap: espacio.sm },
+  miskitoTexto: { fontFamily: fuente.tituloFuerte, fontSize: 18, color: color.copete },
   palabraNueva: { fontFamily: fuente.tituloFuerte, fontSize: 26, color: color.verde, letterSpacing: 1 },
   ejemplo: { flexDirection: 'row', alignItems: 'center', gap: espacio.md, backgroundColor: color.nube, borderRadius: radio.md, padding: espacio.md },
   ejemploTextos: { flex: 1, gap: 2 },

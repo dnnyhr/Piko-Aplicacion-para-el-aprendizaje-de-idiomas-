@@ -12,16 +12,27 @@
  */
 
 import type { Cancion } from '../../src/core/canciones/cancion';
+import martinillo from './martinillo.json';
+import twinkleTwinkle from './twinkle-twinkle.json';
 import mayaya from './mayaya.json';
 import daleSuRondon from './dale-su-rondon.json';
+import oldMacdonald from './old-macdonald.json';
+import rowYourBoat from './row-your-boat.json';
 import paloDeMayo from './palo-de-mayo.json';
-import saborARondonYAPinol from './sabor-a-rondon-y-a-pinol.json';
 import tululu from './tululu.json';
+import itsyBitsySpider from './itsy-bitsy-spider.json';
+import saborARondonYAPinol from './sabor-a-rondon-y-a-pinol.json';
 
+/** En orden de dificultad: primero las del nivel inicial. */
 export const CANCIONES: readonly Cancion[] = [
+  martinillo as Cancion,
+  twinkleTwinkle as Cancion,
   mayaya as Cancion,
   daleSuRondon as Cancion,
+  oldMacdonald as Cancion,
+  rowYourBoat as Cancion,
   paloDeMayo as Cancion,
   tululu as Cancion,
+  itsyBitsySpider as Cancion,
   saborARondonYAPinol as Cancion,
 ];

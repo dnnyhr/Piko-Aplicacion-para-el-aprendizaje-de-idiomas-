@@ -1,0 +1,203 @@
+{
+  "id": "martinillo",
+  "titulo": "Martinillo",
+  "lengua": "spa",
+  "region": "Canción infantil",
+  "comunidad": "Tradicional · dominio público",
+  "nivel": "inicial",
+  "imagen": "tambor",
+  "audio": "martinillo.m4a",
+  "ritmo": {
+    "bpm": 104,
+    "pulso": 0.3
+  },
+  "fuente": {
+    "interpreta": "Pista instrumental de Piko (marimba y tambor)",
+    "autoria": "Tradicional, de dominio público",
+    "autoriza": "Dominio público",
+    "forma": "Letra y melodía de dominio público; la pista la arma Piko",
+    "fecha": "2026-10-06",
+    "validado_por": "Equipo de Piko (traducciones por revisar)",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Ronda infantil tradicional, de dominio público: es la versión en español de «Frère Jacques», una canción francesa que se canta en muchos idiomas.",
+    "lengua": "Español.",
+    "region": "Se canta en escuelas de toda Nicaragua y de América Latina.",
+    "representa": "Jugar a cantar en ronda: se puede cantar en canon, un grupo empieza después del otro."
+  },
+  "letra": [
+    {
+      "texto": "Martinillo, Martinillo,",
+      "en": "Martinillo, Martinillo,",
+      "nota": "Es un nombre: no se traduce. En inglés esta ronda se canta «Are you sleeping, Brother John?».",
+      "inicio": 2.608,
+      "fin": 7.223,
+      "tiempos": [
+        2.608,
+        4.915
+      ]
+    },
+    {
+      "texto": "¿dónde estás? ¿dónde estás?",
+      "en": "Where are you? Where are you?",
+      "inicio": 7.223,
+      "fin": 11.838,
+      "tiempos": [
+        7.223,
+        7.8,
+        9.531,
+        10.108
+      ]
+    },
+    {
+      "texto": "Toca la campana, toca la campana,",
+      "en": "Ring the bell, ring the bell,",
+      "inicio": 11.838,
+      "fin": 16.454,
+      "tiempos": [
+        11.838,
+        12.415,
+        12.704,
+        14.146,
+        14.723,
+        15.012
+      ]
+    },
+    {
+      "texto": "din, don, dan, din, don, dan.",
+      "en": "Ding, dang, dong, ding, dang, dong.",
+      "aproximado": true,
+      "nota": "Es el sonido de la campana: en inglés suena «ding, dang, dong».",
+      "inicio": 16.454,
+      "fin": 21.069,
+      "tiempos": [
+        16.454,
+        17.031,
+        17.608,
+        18.762,
+        19.338,
+        19.915
+      ]
+    },
+    {
+      "texto": "Martinillo, Martinillo,",
+      "en": "Martinillo, Martinillo,",
+      "nota": "Es un nombre: no se traduce. En inglés esta ronda se canta «Are you sleeping, Brother John?».",
+      "inicio": 21.069,
+      "fin": 25.685,
+      "tiempos": [
+        21.069,
+        23.377
+      ]
+    },
+    {
+      "texto": "¿dónde estás? ¿dónde estás?",
+      "en": "Where are you? Where are you?",
+      "inicio": 25.685,
+      "fin": 30.3,
+      "tiempos": [
+        25.685,
+        26.262,
+        27.992,
+        28.569
+      ]
+    },
+    {
+      "texto": "Toca la campana, toca la campana,",
+      "en": "Ring the bell, ring the bell,",
+      "inicio": 30.3,
+      "fin": 34.915,
+      "tiempos": [
+        30.3,
+        30.877,
+        31.165,
+        32.608,
+        33.185,
+        33.473
+      ]
+    },
+    {
+      "texto": "din, don, dan, din, don, dan.",
+      "en": "Ding, dang, dong, ding, dang, dong.",
+      "aproximado": true,
+      "nota": "Es el sonido de la campana: en inglés suena «ding, dang, dong».",
+      "inicio": 34.915,
+      "fin": 39.531,
+      "tiempos": [
+        34.915,
+        35.492,
+        36.069,
+        37.223,
+        37.8,
+        38.377
+      ]
+    }
+  ],
+  "coro": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "lecciones": [
+    {
+      "verso": 1,
+      "completar": {
+        "oculta": "Where",
+        "opciones": [
+          "Where",
+          "What",
+          "Who"
+        ]
+      },
+      "palabra": {
+        "en": "where",
+        "es": "dónde",
+        "ejemplo": "Where is my cat?",
+        "ejemploEs": "¿Dónde está mi gato?",
+        "opciones": [
+          "Where",
+          "Blue",
+          "Under"
+        ]
+      },
+      "ordenar": "Where are you?",
+      "escucha": [
+        "Who are you? Who are you?",
+        "Where is he? Where is he?"
+      ]
+    },
+    {
+      "verso": 2,
+      "completar": {
+        "oculta": "bell",
+        "opciones": [
+          "bell",
+          "ball",
+          "book"
+        ]
+      },
+      "palabra": {
+        "en": "ring",
+        "es": "tocar (una campana)",
+        "ejemplo": "Ring the bell at school.",
+        "ejemploEs": "Tocá la campana en la escuela.",
+        "opciones": [
+          "Ring",
+          "Eat",
+          "Sleep"
+        ]
+      },
+      "ordenar": "Ring the bell.",
+      "escucha": [
+        "Ring the ball, ring the ball,",
+        "Read the book, read the book,"
+      ]
+    }
+  ],
+  "canta": {
+    "desde": 0,
+    "hasta": 3
+  }
+}

@@ -20,6 +20,7 @@ import { elegir } from '../../src/ui/piko/frases';
 import { useProgreso } from '../../src/features/progreso/store';
 import { decir, vozDePiko } from '../../src/features/minijuegos/voz';
 import { FinPartida } from '../../src/features/minijuegos/FinPartida';
+import { useNivelMusical } from '../../src/features/musica/useNivelMusical';
 import { Experiencia, type ResultadoCancion } from '../../src/features/musica/Experiencia';
 import { cancionesAbiertas, ID_MUSICA } from '../../src/core/canciones/cancion';
 import { diaLocal } from '../../src/core/minijuegos/vocabulario';
@@ -44,6 +45,7 @@ export default function CancionPantalla() {
   const { t, frases, idioma } = useTextos();
   const terminarMinijuego = useProgreso((s) => s.terminarMinijuego);
   const completas = useProgreso((s) => s.estado.cancionesCompletas);
+  const nivel = useNivelMusical();
   const [fase, setFase] = useState<Fase>('conoce');
   const [intento, setIntento] = useState(0);
   const [final, setFinal] = useState<Final | null>(null);
@@ -55,7 +57,7 @@ export default function CancionPantalla() {
 
   const encontrada = CANCIONES.find((x) => x.id === id);
   const audio = encontrada ? AUDIOS[encontrada.id] : undefined;
-  const abierta = encontrada ? cancionesAbiertas(CANCIONES, completas).has(encontrada.id) : false;
+  const abierta = encontrada ? cancionesAbiertas(CANCIONES, completas, nivel).has(encontrada.id) : false;
   if (!encontrada || audio === undefined || !abierta) {
     return (
       <Pantalla>
@@ -147,11 +149,27 @@ export default function CancionPantalla() {
 
         <View style={styles.conoce}>
           <Text style={styles.subtitulo}>{t('musica.conoce')}</Text>
-          <Text style={styles.cultura}>{t('musica.cultura')}</Text>
+          <Text style={styles.cultura}>{c.lengua === 'eng' ? t('musica.cultura_mundo') : t('musica.cultura')}</Text>
           <Dato etiqueta={t('musica.de_donde')} valor={c.conoce.origen} />
           <Dato etiqueta={t('musica.lengua')} valor={c.conoce.lengua} />
           <Dato etiqueta={t('musica.region')} valor={c.conoce.region} />
           <Dato etiqueta={t('musica.representa')} valor={c.conoce.representa} />
+          {c.miskito && c.miskito.length > 0 && (
+            <View style={styles.miskito}>
+              <Text style={styles.datoEtiqueta}>{t('musica.en_miskito')}</Text>
+              <View style={styles.chips}>
+                {c.miskito.map((m) => (
+                  <View key={m.lexico} style={styles.chip}>
+                    <Text style={styles.chipMiq}>{m.miq}</Text>
+                    <Text style={styles.chipEs}>
+                      {m.en} · {m.es}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+              <Text style={styles.credito}>{t('musica.miskito_validado')}</Text>
+            </View>
+          )}
           <Text style={styles.credito}>
             {t('musica.canta', { quien: c.fuente.interpreta })}
             {c.fuente.autoria !== c.fuente.interpreta ? ` · ${t('musica.autoria', { quien: c.fuente.autoria })}` : ''}
@@ -201,5 +219,10 @@ const styles = StyleSheet.create({
   datoEtiqueta: { ...texto.etiqueta, fontSize: 11, color: color.tintaSuave },
   datoValor: { ...texto.cuerpo, color: color.grafito },
   credito: { ...texto.chico, color: color.tintaSuave },
+  miskito: { gap: espacio.xs },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: espacio.sm },
+  chip: { backgroundColor: color.nube, borderRadius: radio.md, paddingHorizontal: espacio.md, paddingVertical: espacio.xs },
+  chipMiq: { ...texto.cuerpoFuerte, color: color.verde },
+  chipEs: { ...texto.chico, color: color.tinta },
   acciones: { gap: espacio.md, marginTop: 'auto' },
 });

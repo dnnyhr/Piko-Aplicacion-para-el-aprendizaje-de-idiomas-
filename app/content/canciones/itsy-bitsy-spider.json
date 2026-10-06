@@ -1,0 +1,206 @@
+{
+  "id": "itsy-bitsy-spider",
+  "titulo": "The Itsy Bitsy Spider",
+  "lengua": "eng",
+  "region": "Canción infantil",
+  "comunidad": "Tradicional · dominio público",
+  "nivel": "avanzado",
+  "imagen": "quijada",
+  "audio": "itsy-bitsy-spider.m4a",
+  "ritmo": {
+    "bpm": 104,
+    "pulso": 0.3
+  },
+  "fuente": {
+    "interpreta": "Pista instrumental de Piko (marimba y tambor)",
+    "autoria": "Tradicional, de dominio público",
+    "autoriza": "Dominio público",
+    "forma": "Letra y melodía de dominio público; la pista la arma Piko",
+    "fecha": "2026-10-06",
+    "validado_por": "Equipo de Piko (traducciones por revisar)",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Canción infantil tradicional en inglés, de dominio público, que se canta haciendo la araña con las manos.",
+    "lengua": "Inglés.",
+    "region": "Se canta en todo el mundo; en español, «La araña pequeñita».",
+    "representa": "No rendirse: aunque la lluvia la baje, la arañita vuelve a subir."
+  },
+  "letra": [
+    {
+      "texto": "The itsy bitsy spider went up the water spout.",
+      "es": "La pequeña arañita subió por el tubo del agua.",
+      "en": "The itsy bitsy spider went up the water spout.",
+      "inicio": 2.608,
+      "fin": 7.223,
+      "tiempos": [
+        2.608,
+        2.896,
+        3.473,
+        4.05,
+        4.915,
+        5.204,
+        5.492,
+        5.781,
+        6.358
+      ]
+    },
+    {
+      "texto": "Down came the rain and washed the spider out.",
+      "es": "Cayó la lluvia y se llevó a la araña.",
+      "en": "Down came the rain and washed the spider out.",
+      "inicio": 7.223,
+      "fin": 11.55,
+      "tiempos": [
+        7.223,
+        7.8,
+        8.088,
+        8.377,
+        9.242,
+        9.531,
+        9.819,
+        10.108,
+        10.685
+      ]
+    },
+    {
+      "texto": "Out came the sun and dried up all the rain,",
+      "es": "Salió el sol y secó toda la lluvia,",
+      "en": "Out came the sun and dried up all the rain,",
+      "inicio": 11.55,
+      "fin": 15.877,
+      "tiempos": [
+        11.55,
+        12.127,
+        12.415,
+        12.704,
+        13.569,
+        13.858,
+        14.146,
+        14.435,
+        14.723,
+        15.012
+      ]
+    },
+    {
+      "texto": "And the itsy bitsy spider went up the spout again.",
+      "es": "y la pequeña arañita volvió a subir por el tubo.",
+      "en": "And the itsy bitsy spider went up the spout again.",
+      "inicio": 15.877,
+      "fin": 20.781,
+      "tiempos": [
+        15.877,
+        16.165,
+        16.454,
+        17.031,
+        17.608,
+        18.473,
+        18.762,
+        19.05,
+        19.338,
+        19.627
+      ]
+    }
+  ],
+  "lecciones": [
+    {
+      "verso": 0,
+      "completar": {
+        "oculta": "spider",
+        "opciones": [
+          "spider",
+          "spoon",
+          "sister",
+          "singer"
+        ]
+      },
+      "palabra": {
+        "en": "spider",
+        "es": "araña",
+        "ejemplo": "The spider makes a web.",
+        "ejemploEs": "La araña hace una telaraña.",
+        "opciones": [
+          "spider",
+          "river",
+          "pillow",
+          "sandal"
+        ]
+      },
+      "ordenar": "The spider went up.",
+      "escucha": [
+        "The itsy bitsy spider went down the water spout.",
+        "The itsy bitsy spider went up the garden wall."
+      ]
+    },
+    {
+      "verso": 1,
+      "completar": {
+        "oculta": "rain",
+        "opciones": [
+          "rain",
+          "train",
+          "sun",
+          "wind"
+        ]
+      },
+      "palabra": {
+        "en": "rain",
+        "es": "lluvia",
+        "ejemplo": "I like to play in the rain.",
+        "ejemploEs": "Me gusta jugar bajo la lluvia.",
+        "opciones": [
+          "rain",
+          "cup",
+          "chair",
+          "nose"
+        ]
+      },
+      "ordenar": "Down came the rain.",
+      "escucha": [
+        "Down came the snow and washed the spider out.",
+        "Down came the rain and washed the spider in."
+      ]
+    },
+    {
+      "verso": 2,
+      "completar": {
+        "oculta": "sun",
+        "opciones": [
+          "sun",
+          "son",
+          "moon",
+          "fun"
+        ]
+      },
+      "palabra": {
+        "en": "sun",
+        "es": "sol",
+        "ejemplo": "The sun is hot today.",
+        "ejemploEs": "El sol está caliente hoy.",
+        "opciones": [
+          "sun",
+          "door",
+          "shoe",
+          "egg"
+        ]
+      },
+      "ordenar": "Out came the sun.",
+      "escucha": [
+        "Out came the moon and dried up all the rain,",
+        "Out came the sun and dried up all the snow,"
+      ]
+    }
+  ],
+  "miskito": [
+    {
+      "en": "sun",
+      "es": "sol",
+      "miq": "yu",
+      "lexico": "yu"
+    }
+  ],
+  "canta": {
+    "desde": 0,
+    "hasta": 3
+  }
+}
