@@ -1,0 +1,823 @@
+{
+  "id": "nicaragua-mia",
+  "titulo": "Nicaragua Mía",
+  "lengua": "spa",
+  "region": "Nicaragua",
+  "comunidad": "Canción de Tino López Guerra",
+  "nivel": "intermedio",
+  "imagen": "marimba",
+  "audio": "nicaragua-mia.m4a",
+  "ritmo": {
+    "bpm": 125.0,
+    "pulso": 21.34
+  },
+  "fuente": {
+    "interpreta": "Grabación entregada por el equipo de Piko",
+    "autoria": "Tino López Guerra",
+    "autoriza": "Titulares de la canción",
+    "forma": "verbal",
+    "fecha": "2026-10-06",
+    "validado_por": "ruby845",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Una canción de Tino López Guerra, de las más conocidas de la música nicaragüense.",
+    "lengua": "Español de Nicaragua, con palabras como «pinolero».",
+    "region": "Nicaragua entera: sus lagos Cocibolca y Xolotlán.",
+    "representa": "El orgullo de ser pinolero: los lagos, Rubén Darío y Rafaela Herrera."
+  },
+  "letra": [
+    {
+      "texto": "Con un pedazo de cielo",
+      "en": "With a piece of sky",
+      "inicio": 18.4,
+      "fin": 22.0,
+      "tiempos": [
+        18.4,
+        18.95,
+        19.38,
+        20.26,
+        20.7
+      ]
+    },
+    {
+      "texto": "mi Nicaragua se formó,",
+      "en": "my Nicaragua was made,",
+      "inicio": 22.2,
+      "fin": 25.9,
+      "tiempos": [
+        22.2,
+        22.68,
+        24.01,
+        24.5
+      ]
+    },
+    {
+      "texto": "por eso es lindo este suelo,",
+      "en": "that is why this land is beautiful,",
+      "inicio": 26.1,
+      "fin": 29.4,
+      "tiempos": [
+        26.1,
+        26.51,
+        26.93,
+        27.26,
+        27.83,
+        28.33
+      ]
+    },
+    {
+      "texto": "el suelo donde nací yo.",
+      "en": "the land where I was born.",
+      "inicio": 29.6,
+      "fin": 33.6,
+      "tiempos": [
+        29.6,
+        30.09,
+        30.94,
+        31.79,
+        32.51
+      ]
+    },
+    {
+      "texto": "Sus lagos son serenatas,",
+      "en": "Its lakes are serenades,",
+      "inicio": 33.8,
+      "fin": 37.5,
+      "tiempos": [
+        33.8,
+        34.36,
+        35.15,
+        35.71
+      ]
+    },
+    {
+      "texto": "maravilloso talismán,",
+      "en": "a marvelous lucky charm,",
+      "inicio": 37.7,
+      "fin": 41.3,
+      "tiempos": [
+        37.7,
+        39.43
+      ]
+    },
+    {
+      "texto": "son dos leyendas de plata,",
+      "en": "they are two silver legends,",
+      "inicio": 41.5,
+      "fin": 44.9,
+      "tiempos": [
+        41.5,
+        41.97,
+        42.43,
+        43.36,
+        43.74
+      ]
+    },
+    {
+      "texto": "el Cocibolca y Xolotlán.",
+      "en": "Cocibolca and Xolotlán.",
+      "nota": "Son los nombres indígenas del lago de Nicaragua y del lago de Managua.",
+      "inicio": 45.1,
+      "fin": 48.4,
+      "tiempos": [
+        45.1,
+        45.5,
+        46.6,
+        46.9
+      ]
+    },
+    {
+      "texto": "¡Qué linda, linda es Nicaragua!",
+      "en": "How lovely, lovely Nicaragua is!",
+      "inicio": 48.58,
+      "fin": 52.96,
+      "tiempos": [
+        48.58,
+        49.38,
+        50.18,
+        50.6,
+        50.88
+      ]
+    },
+    {
+      "texto": "Bendita de mi corazón.",
+      "en": "Blessed with all my heart.",
+      "aproximado": true,
+      "nota": "Quiere decir que la quiere de todo corazón.",
+      "inicio": 52.96,
+      "fin": 56.18,
+      "tiempos": [
+        52.96,
+        54.02,
+        54.38,
+        54.66
+      ]
+    },
+    {
+      "texto": "Si hay una tierra en todo el continente",
+      "en": "If there is a land on the whole continent",
+      "inicio": 56.18,
+      "fin": 59.94,
+      "tiempos": [
+        56.18,
+        56.44,
+        56.62,
+        57.0,
+        57.68,
+        58.1,
+        58.3,
+        58.76
+      ]
+    },
+    {
+      "texto": "hermosa y valiente,",
+      "en": "beautiful and brave,",
+      "inicio": 59.94,
+      "fin": 61.84,
+      "tiempos": [
+        59.94,
+        60.5,
+        60.74
+      ]
+    },
+    {
+      "texto": "esa es mi nación.",
+      "en": "that is my nation.",
+      "inicio": 61.84,
+      "fin": 65.16,
+      "tiempos": [
+        61.84,
+        62.08,
+        62.4,
+        62.58
+      ]
+    },
+    {
+      "texto": "Soy puro pinolero,",
+      "en": "I'm a true pinolero,",
+      "nota": "«Pinolero» es como nos decimos los nicaragüenses, por el pinol.",
+      "inicio": 65.16,
+      "fin": 67.73,
+      "tiempos": [
+        65.16,
+        65.84,
+        66.28
+      ]
+    },
+    {
+      "texto": "nicaragüense por gracia de Dios.",
+      "en": "Nicaraguan by the grace of God.",
+      "inicio": 67.73,
+      "fin": 75.22,
+      "tiempos": [
+        67.73,
+        69.18,
+        69.6,
+        70.36,
+        72.22
+      ]
+    },
+    {
+      "texto": "Soy puro pinolero,",
+      "en": "I'm a true pinolero,",
+      "nota": "«Pinolero» es como nos decimos los nicaragüenses, por el pinol.",
+      "inicio": 75.37,
+      "fin": 75.92,
+      "tiempos": [
+        75.37,
+        75.5,
+        75.62
+      ]
+    },
+    {
+      "texto": "nicaragüense por gracia de Dios.",
+      "en": "Nicaraguan by the grace of God.",
+      "inicio": 75.75,
+      "fin": 98.6,
+      "tiempos": [
+        75.75,
+        77.13,
+        98.16,
+        98.23,
+        98.3
+      ]
+    },
+    {
+      "texto": "La raza nicaragüense",
+      "en": "The Nicaraguan people",
+      "aproximado": true,
+      "nota": "Acá «raza» quiere decir «el pueblo».",
+      "inicio": 98.38,
+      "fin": 101.43,
+      "tiempos": [
+        98.38,
+        98.45,
+        98.52
+      ]
+    },
+    {
+      "texto": "sabe de luchas y de honor",
+      "en": "know about struggles and honor",
+      "inicio": 101.43,
+      "fin": 105.62,
+      "tiempos": [
+        101.43,
+        102.09,
+        102.49,
+        103.03,
+        103.15,
+        103.33
+      ]
+    },
+    {
+      "texto": "y luce altiva en su frente",
+      "en": "and proudly wear on their foreheads",
+      "inicio": 105.62,
+      "fin": 109.02,
+      "tiempos": [
+        105.62,
+        105.97,
+        106.32,
+        106.86,
+        107.06,
+        107.28
+      ]
+    },
+    {
+      "texto": "los esplendores de su sol.",
+      "en": "the splendor of their sun.",
+      "inicio": 109.02,
+      "fin": 112.33,
+      "tiempos": [
+        109.02,
+        109.26,
+        110.2,
+        110.7,
+        111.14
+      ]
+    },
+    {
+      "texto": "Solo en Darío se explica",
+      "en": "Only in Darío can you understand",
+      "nota": "Rubén Darío, el gran poeta de Nicaragua.",
+      "inicio": 112.33,
+      "fin": 117.01,
+      "tiempos": [
+        112.33,
+        113.11,
+        113.89,
+        114.67,
+        115.07
+      ]
+    },
+    {
+      "texto": "la inmensidad de su creación:",
+      "en": "how vast his work is:",
+      "inicio": 117.01,
+      "fin": 120.49,
+      "tiempos": [
+        117.01,
+        117.23,
+        118.07,
+        118.41,
+        118.55
+      ]
+    },
+    {
+      "texto": "tenía que ser única,",
+      "en": "it had to be unique,",
+      "inicio": 120.49,
+      "fin": 124.51,
+      "tiempos": [
+        120.49,
+        121.71,
+        122.11,
+        122.51
+      ]
+    },
+    {
+      "texto": "del mundo entero admiración.",
+      "en": "admired by the whole world.",
+      "inicio": 124.51,
+      "fin": 127.41,
+      "tiempos": [
+        124.51,
+        124.65,
+        124.97,
+        125.45
+      ]
+    },
+    {
+      "texto": "¡Qué linda, linda es Nicaragua!",
+      "en": "How lovely, lovely Nicaragua is!",
+      "inicio": 127.41,
+      "fin": 131.73,
+      "tiempos": [
+        127.41,
+        128.59,
+        129.43,
+        129.83,
+        130.27
+      ]
+    },
+    {
+      "texto": "Bendita de mi corazón.",
+      "en": "Blessed with all my heart.",
+      "aproximado": true,
+      "nota": "Quiere decir que la quiere de todo corazón.",
+      "inicio": 131.73,
+      "fin": 134.73,
+      "tiempos": [
+        131.73,
+        133.19,
+        133.61,
+        133.79
+      ]
+    },
+    {
+      "texto": "Si hay una tierra en todo el continente",
+      "en": "If there is a land on the whole continent",
+      "inicio": 134.73,
+      "fin": 139.14,
+      "tiempos": [
+        134.73,
+        135.67,
+        135.81,
+        136.13,
+        136.57,
+        137.0,
+        137.44,
+        137.88
+      ]
+    },
+    {
+      "texto": "hermosa y valiente,",
+      "en": "beautiful and brave,",
+      "inicio": 139.14,
+      "fin": 141.14,
+      "tiempos": [
+        139.14,
+        139.7,
+        139.9
+      ]
+    },
+    {
+      "texto": "esa es mi nación.",
+      "en": "that is my nation.",
+      "inicio": 141.14,
+      "fin": 143.99,
+      "tiempos": [
+        141.14,
+        141.21,
+        141.27,
+        141.34
+      ]
+    },
+    {
+      "texto": "Soy puro pinolero,",
+      "en": "I'm a true pinolero,",
+      "nota": "«Pinolero» es como nos decimos los nicaragüenses, por el pinol.",
+      "inicio": 143.99,
+      "fin": 147.15,
+      "tiempos": [
+        143.99,
+        144.95,
+        145.47
+      ]
+    },
+    {
+      "texto": "nicaragüense por gracia de Dios.",
+      "en": "Nicaraguan by the grace of God.",
+      "inicio": 147.15,
+      "fin": 151.4,
+      "tiempos": [
+        147.15,
+        148.43,
+        148.85,
+        149.51,
+        149.95
+      ]
+    },
+    {
+      "texto": "Soy puro pinolero,",
+      "en": "I'm a true pinolero,",
+      "nota": "«Pinolero» es como nos decimos los nicaragüenses, por el pinol.",
+      "inicio": 151.4,
+      "fin": 159.18,
+      "tiempos": [
+        151.4,
+        153.99,
+        156.58
+      ]
+    },
+    {
+      "texto": "nicaragüense por gracia de Dios.",
+      "en": "Nicaraguan by the grace of God.",
+      "inicio": 159.18,
+      "fin": 172.14,
+      "tiempos": [
+        159.18,
+        161.77,
+        164.36,
+        166.95,
+        169.54
+      ]
+    },
+    {
+      "texto": "Bella y valiente de veras",
+      "en": "Truly beautiful and brave",
+      "inicio": 172.14,
+      "fin": 180.88,
+      "tiempos": [
+        172.14,
+        174.73,
+        177.32,
+        178.42,
+        178.82
+      ]
+    },
+    {
+      "texto": "es la mujer que aquí nació,",
+      "en": "is the woman who was born here,",
+      "inicio": 180.88,
+      "fin": 183.72,
+      "tiempos": [
+        180.88,
+        181.1,
+        181.42,
+        181.8,
+        182.08,
+        182.38
+      ]
+    },
+    {
+      "texto": "igual a Rafaela Herrera,",
+      "en": "just like Rafaela Herrera,",
+      "nota": "Rafaela Herrera defendió el Castillo de la Inmaculada Concepción, en el río San Juan, en 1762.",
+      "inicio": 183.72,
+      "fin": 187.38,
+      "tiempos": [
+        183.72,
+        185.05,
+        185.59,
+        186.45
+      ]
+    },
+    {
+      "texto": "que a los piratas derrotó.",
+      "en": "who defeated the pirates.",
+      "inicio": 187.38,
+      "fin": 192.14,
+      "tiempos": [
+        187.38,
+        188.32,
+        188.5,
+        188.78,
+        189.5
+      ]
+    },
+    {
+      "texto": "Con un mantón de acuarelas,",
+      "en": "With a shawl of watercolors,",
+      "inicio": 192.14,
+      "fin": 196.12,
+      "tiempos": [
+        192.14,
+        192.68,
+        193.06,
+        193.44,
+        193.84
+      ]
+    },
+    {
+      "texto": "con los paisajes de un tapiz,",
+      "en": "with the landscapes of a tapestry,",
+      "inicio": 196.12,
+      "fin": 199.49,
+      "tiempos": [
+        196.12,
+        196.54,
+        196.88,
+        197.6,
+        197.8,
+        197.98
+      ]
+    },
+    {
+      "texto": "con noches de lentejuelas,",
+      "en": "with nights of sequins,",
+      "inicio": 199.49,
+      "fin": 203.65,
+      "tiempos": [
+        199.49,
+        200.29,
+        201.01,
+        201.37
+      ]
+    },
+    {
+      "texto": "así se viste mi país.",
+      "en": "that is how my country dresses.",
+      "inicio": 203.65,
+      "fin": 207.32,
+      "tiempos": [
+        203.65,
+        203.99,
+        204.37,
+        204.75,
+        205.31
+      ]
+    },
+    {
+      "texto": "¡Qué linda, linda es Nicaragua!",
+      "en": "How lovely, lovely Nicaragua is!",
+      "inicio": 207.32,
+      "fin": 211.38,
+      "tiempos": [
+        207.32,
+        207.76,
+        208.7,
+        209.06,
+        209.26
+      ]
+    },
+    {
+      "texto": "Bendita de mi corazón.",
+      "en": "Blessed with all my heart.",
+      "aproximado": true,
+      "nota": "Quiere decir que la quiere de todo corazón.",
+      "inicio": 211.38,
+      "fin": 214.76,
+      "tiempos": [
+        211.38,
+        212.46,
+        212.84,
+        213.08
+      ]
+    },
+    {
+      "texto": "Si hay una tierra en todo el continente",
+      "en": "If there is a land on the whole continent",
+      "inicio": 214.76,
+      "fin": 218.3,
+      "tiempos": [
+        214.76,
+        214.9,
+        215.02,
+        215.34,
+        216.1,
+        216.5,
+        216.74,
+        217.2
+      ]
+    },
+    {
+      "texto": "hermosa y valiente,",
+      "en": "beautiful and brave,",
+      "inicio": 218.3,
+      "fin": 220.22,
+      "tiempos": [
+        218.3,
+        218.9,
+        219.1
+      ]
+    },
+    {
+      "texto": "esa es mi nación.",
+      "en": "that is my nation.",
+      "inicio": 220.22,
+      "fin": 222.83,
+      "tiempos": [
+        220.22,
+        220.44,
+        220.76,
+        221.0
+      ]
+    },
+    {
+      "texto": "Soy puro pinolero,",
+      "en": "I'm a true pinolero,",
+      "nota": "«Pinolero» es como nos decimos los nicaragüenses, por el pinol.",
+      "inicio": 222.83,
+      "fin": 226.87,
+      "tiempos": [
+        222.83,
+        224.07,
+        224.73
+      ]
+    },
+    {
+      "texto": "nicaragüense por gracia de Dios.",
+      "en": "Nicaraguan by the grace of God.",
+      "inicio": 226.87,
+      "fin": 230.91,
+      "tiempos": [
+        226.87,
+        227.65,
+        228.05,
+        228.71,
+        229.05
+      ]
+    },
+    {
+      "texto": "Soy puro pinolero,",
+      "en": "I'm a true pinolero,",
+      "nota": "«Pinolero» es como nos decimos los nicaragüenses, por el pinol.",
+      "inicio": 230.91,
+      "fin": 234.4,
+      "tiempos": [
+        230.91,
+        232.07,
+        233.24
+      ]
+    },
+    {
+      "texto": "nicaragüense por gracia de Dios.",
+      "en": "Nicaraguan by the grace of God.",
+      "inicio": 234.4,
+      "fin": 237.82,
+      "tiempos": [
+        234.4,
+        235.38,
+        235.72,
+        236.17,
+        236.62
+      ]
+    }
+  ],
+  "coro": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "lecciones": [
+    {
+      "verso": 0,
+      "completar": {
+        "oculta": "sky",
+        "opciones": [
+          "sky",
+          "cake",
+          "sea",
+          "land"
+        ]
+      },
+      "palabra": {
+        "en": "piece",
+        "es": "pedazo",
+        "ejemplo": "Can I have a piece of bread?",
+        "ejemploEs": "¿Me das un pedazo de pan?",
+        "opciones": [
+          "piece",
+          "river",
+          "happy",
+          "slow"
+        ]
+      },
+      "ordenar": "A piece of sky.",
+      "escucha": [
+        "With a piece of cake",
+        "With a bit of sky"
+      ]
+    },
+    {
+      "verso": 4,
+      "completar": {
+        "oculta": "lakes",
+        "opciones": [
+          "lakes",
+          "cakes",
+          "lanes",
+          "lamps"
+        ]
+      },
+      "palabra": {
+        "en": "lake",
+        "es": "lago",
+        "ejemplo": "We swim in the lake.",
+        "ejemploEs": "Nadamos en el lago.",
+        "opciones": [
+          "lake",
+          "chair",
+          "pencil",
+          "angry"
+        ]
+      },
+      "ordenar": "Nicaragua has two lakes.",
+      "escucha": [
+        "Its lakes are beautiful,",
+        "Its lands are serenades,"
+      ]
+    },
+    {
+      "verso": 11,
+      "completar": {
+        "oculta": "brave",
+        "opciones": [
+          "brave",
+          "blue",
+          "busy",
+          "bored"
+        ]
+      },
+      "palabra": {
+        "en": "brave",
+        "es": "valiente",
+        "ejemplo": "The firefighter is very brave.",
+        "ejemploEs": "El bombero es muy valiente.",
+        "opciones": [
+          "brave",
+          "sweet",
+          "green",
+          "empty"
+        ]
+      },
+      "ordenar": "She is beautiful and brave.",
+      "escucha": [
+        "beautiful and busy,",
+        "wonderful and brave,"
+      ]
+    }
+  ],
+  "miskito": [
+    {
+      "en": "land",
+      "es": "tierra",
+      "miq": "tasba",
+      "lexico": "tasba"
+    },
+    {
+      "en": "sun",
+      "es": "sol",
+      "miq": "yu",
+      "lexico": "yu"
+    },
+    {
+      "en": "heart",
+      "es": "corazón",
+      "miq": "kupia",
+      "lexico": "kupia"
+    },
+    {
+      "en": "woman",
+      "es": "mujer",
+      "miq": "mairin",
+      "lexico": "mairin"
+    },
+    {
+      "en": "night",
+      "es": "noche",
+      "miq": "tihmia",
+      "lexico": "tihmia"
+    }
+  ],
+  "canta": {
+    "desde": 8,
+    "hasta": 14
+  }
+}

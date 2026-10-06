@@ -1,0 +1,474 @@
+{
+  "id": "el-rapto",
+  "titulo": "El rapto",
+  "lengua": "spa",
+  "region": "Nicaragua",
+  "comunidad": "Canción de Carlos Mejía Godoy",
+  "nivel": "intermedio",
+  "imagen": "guitarra",
+  "audio": "el-rapto.m4a",
+  "ritmo": {
+    "bpm": 117.2,
+    "pulso": 20.19
+  },
+  "fuente": {
+    "interpreta": "Carlos Mejía Godoy",
+    "autoria": "Carlos Mejía Godoy",
+    "autoriza": "Carlos Mejía Godoy",
+    "forma": "verbal",
+    "fecha": "2026-10-06",
+    "validado_por": "ruby845",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Una canción de Carlos Mejía Godoy.",
+    "lengua": "Español de Nicaragua, con palabras como «chavala», «cipota» y «gongolona».",
+    "region": "El campo y las montañas del norte de Nicaragua.",
+    "representa": "Nicaragua imaginada como una muchacha alegre: le responden los valles, los ríos y los pajaritos de la montaña."
+  },
+  "letra": [
+    {
+      "texto": "¿Quién es esa muchacha que lleva el guerrillero",
+      "en": "Who is that girl the guerrilla fighter is carrying",
+      "inicio": 19.31,
+      "fin": 23.63,
+      "tiempos": [
+        19.31,
+        19.85,
+        20.03,
+        20.27,
+        21.31,
+        21.47,
+        21.77,
+        22.13
+      ]
+    },
+    {
+      "texto": "en el anca segura de su caballo prieto?",
+      "en": "on the safe back of his dark horse?",
+      "inicio": 23.63,
+      "fin": 27.77,
+      "tiempos": [
+        23.63,
+        23.95,
+        24.13,
+        24.55,
+        25.41,
+        25.63,
+        25.93,
+        26.43
+      ]
+    },
+    {
+      "texto": "¿Quién es esa chavala alegre y querendona,",
+      "en": "Who is that happy and loving girl,",
+      "nota": "«Chavala» es como decimos «muchacha» en Nicaragua.",
+      "inicio": 27.77,
+      "fin": 31.65,
+      "tiempos": [
+        27.77,
+        28.09,
+        28.25,
+        28.53,
+        29.69,
+        30.07,
+        30.35
+      ]
+    },
+    {
+      "texto": "como una palomita, como una gongolona?",
+      "en": "like a little dove, like a gongolona?",
+      "nota": "La gongolona es una paloma de Nicaragua: su nombre no se traduce.",
+      "inicio": 31.65,
+      "fin": 36.96,
+      "tiempos": [
+        31.65,
+        32.11,
+        32.45,
+        33.37,
+        33.85,
+        34.29
+      ]
+    },
+    {
+      "texto": "Respondieron los valles, los ríos, las cañadas,",
+      "en": "The valleys, the rivers, the ravines answered,",
+      "inicio": 36.96,
+      "fin": 40.9,
+      "tiempos": [
+        36.96,
+        37.64,
+        38.0,
+        38.56,
+        38.86,
+        39.44,
+        39.78
+      ]
+    },
+    {
+      "texto": "junto a los pajaritos de toda la montaña:",
+      "en": "together with the little birds of the whole mountain:",
+      "inicio": 40.9,
+      "fin": 45.26,
+      "tiempos": [
+        40.9,
+        41.38,
+        41.5,
+        41.7,
+        42.64,
+        43.08,
+        43.46,
+        43.82
+      ]
+    },
+    {
+      "texto": "Ella es la más galana, ella es la más bonita,",
+      "en": "She is the most elegant, she is the prettiest,",
+      "inicio": 45.26,
+      "fin": 49.12,
+      "tiempos": [
+        45.26,
+        45.48,
+        45.66,
+        45.8,
+        45.94,
+        47.08,
+        47.52,
+        47.72,
+        47.86,
+        48.08
+      ]
+    },
+    {
+      "texto": "ella es la Nicaragua, la Nicaragüita.",
+      "en": "she is Nicaragua, little Nicaragua.",
+      "aproximado": true,
+      "nota": "«Nicaragüita» es un diminutivo de cariño: en inglés decimos «little Nicaragua».",
+      "inicio": 49.12,
+      "fin": 54.64,
+      "tiempos": [
+        49.12,
+        49.64,
+        49.86,
+        50.0,
+        51.02,
+        51.64
+      ]
+    },
+    {
+      "texto": "¿Quién es esa morena de pelo suelto al viento,",
+      "en": "Who is that brown-skinned girl with her hair loose in the wind,",
+      "inicio": 73.13,
+      "fin": 77.33,
+      "tiempos": [
+        73.13,
+        73.63,
+        73.81,
+        74.09,
+        75.11,
+        75.23,
+        75.53,
+        76.05,
+        76.29
+      ]
+    },
+    {
+      "texto": "espiga de mozote pegada al guerrillero?",
+      "en": "a mozote burr stuck to the guerrilla fighter?",
+      "aproximado": true,
+      "nota": "El mozote es una planta cuyas semillas se pegan a la ropa: así va ella, pegadita.",
+      "inicio": 77.33,
+      "fin": 81.21,
+      "tiempos": [
+        77.33,
+        77.95,
+        78.15,
+        79.11,
+        79.69,
+        80.01
+      ]
+    },
+    {
+      "texto": "¿Quién es esa cipota fragante y transparente,",
+      "en": "Who is that sweet-smelling, clear-hearted girl,",
+      "aproximado": true,
+      "nota": "«Cipota» es «niña» o «muchacha» en el norte de Nicaragua.",
+      "inicio": 81.21,
+      "fin": 84.92,
+      "tiempos": [
+        81.21,
+        81.85,
+        82.03,
+        82.27,
+        83.43,
+        83.89,
+        84.31
+      ]
+    },
+    {
+      "texto": "como un chorrito de agua clarito de vertiente?",
+      "en": "like a little stream of clear spring water?",
+      "inicio": 84.92,
+      "fin": 90.25,
+      "tiempos": [
+        84.92,
+        85.54,
+        86.15,
+        86.51,
+        86.85,
+        87.17,
+        88.05,
+        88.31
+      ]
+    },
+    {
+      "texto": "Respondieron los valles, los ríos, las cañadas,",
+      "en": "The valleys, the rivers, the ravines answered,",
+      "inicio": 90.25,
+      "fin": 94.69,
+      "tiempos": [
+        90.25,
+        91.47,
+        91.85,
+        92.41,
+        92.77,
+        93.29,
+        93.59
+      ]
+    },
+    {
+      "texto": "junto a los pajaritos de toda la montaña:",
+      "en": "together with the little birds of the whole mountain:",
+      "inicio": 94.69,
+      "fin": 98.26,
+      "tiempos": [
+        94.69,
+        95.21,
+        95.33,
+        95.57,
+        96.49,
+        96.93,
+        97.33,
+        97.81
+      ]
+    },
+    {
+      "texto": "Ella es la más galana, ella es la más bonita,",
+      "en": "She is the most elegant, she is the prettiest,",
+      "inicio": 98.26,
+      "fin": 103.44,
+      "tiempos": [
+        98.26,
+        99.3,
+        99.5,
+        99.6,
+        99.82,
+        101.3,
+        101.38,
+        101.56,
+        101.7,
+        101.92
+      ]
+    },
+    {
+      "texto": "ella es la Nicaragua, la Nicaragüita.",
+      "en": "she is Nicaragua, little Nicaragua.",
+      "aproximado": true,
+      "nota": "«Nicaragüita» es un diminutivo de cariño: en inglés decimos «little Nicaragua».",
+      "inicio": 103.44,
+      "fin": 108.32,
+      "tiempos": [
+        103.44,
+        103.54,
+        103.68,
+        103.84,
+        105.0,
+        105.32
+      ]
+    },
+    {
+      "texto": "Respondieron los valles, los ríos, las cañadas,",
+      "en": "The valleys, the rivers, the ravines answered,",
+      "inicio": 108.41,
+      "fin": 112.14,
+      "tiempos": [
+        108.41,
+        109.15,
+        109.47,
+        110.33,
+        110.45,
+        111.29,
+        111.34
+      ]
+    },
+    {
+      "texto": "junto a los pajaritos de toda la montaña:",
+      "en": "together with the little birds of the whole mountain:",
+      "inicio": 112.14,
+      "fin": 116.73,
+      "tiempos": [
+        112.14,
+        112.98,
+        113.08,
+        113.24,
+        114.3,
+        114.6,
+        115.0,
+        115.87
+      ]
+    },
+    {
+      "texto": "Ella es la más galana, ella es la más bonita,",
+      "en": "She is the most elegant, she is the prettiest,",
+      "inicio": 116.73,
+      "fin": 122.63,
+      "tiempos": [
+        116.73,
+        117.05,
+        117.19,
+        117.29,
+        117.47,
+        118.99,
+        119.07,
+        119.27,
+        119.41,
+        119.67
+      ]
+    },
+    {
+      "texto": "ella es la Nicaragua, la Nicaragüita.",
+      "en": "she is Nicaragua, little Nicaragua.",
+      "aproximado": true,
+      "nota": "«Nicaragüita» es un diminutivo de cariño: en inglés decimos «little Nicaragua».",
+      "inicio": 122.63,
+      "fin": 125.55,
+      "tiempos": [
+        122.63,
+        122.81,
+        123.15,
+        123.45,
+        123.9,
+        124.35
+      ]
+    }
+  ],
+  "coro": [
+    4,
+    5,
+    6,
+    7
+  ],
+  "lecciones": [
+    {
+      "verso": 4,
+      "completar": {
+        "oculta": "rivers",
+        "opciones": [
+          "rivers",
+          "roads",
+          "rocks",
+          "roofs"
+        ]
+      },
+      "palabra": {
+        "en": "river",
+        "es": "río",
+        "ejemplo": "We swim in the river.",
+        "ejemploEs": "Nadamos en el río.",
+        "opciones": [
+          "river",
+          "spoon",
+          "pencil",
+          "shirt"
+        ]
+      },
+      "ordenar": "The rivers answered.",
+      "escucha": [
+        "The valleys, the roads, the ravines answered,",
+        "The valleys, the rivers, the mountains answered,"
+      ]
+    },
+    {
+      "verso": 5,
+      "completar": {
+        "oculta": "birds",
+        "opciones": [
+          "birds",
+          "bees",
+          "boats",
+          "bells"
+        ]
+      },
+      "palabra": {
+        "en": "mountain",
+        "es": "montaña",
+        "ejemplo": "The mountain is very high.",
+        "ejemploEs": "La montaña es muy alta.",
+        "opciones": [
+          "mountain",
+          "sandwich",
+          "window",
+          "button"
+        ]
+      },
+      "ordenar": "The birds sing on the mountain.",
+      "escucha": [
+        "together with the little bees of the whole mountain:",
+        "together with the little birds of the whole river:"
+      ]
+    },
+    {
+      "verso": 6,
+      "completar": {
+        "oculta": "prettiest",
+        "opciones": [
+          "prettiest",
+          "tallest",
+          "oldest",
+          "smallest"
+        ]
+      },
+      "palabra": {
+        "en": "pretty",
+        "es": "bonita",
+        "ejemplo": "Your dress is very pretty.",
+        "ejemploEs": "Tu vestido es muy bonito.",
+        "opciones": [
+          "pretty",
+          "under",
+          "slowly",
+          "seven"
+        ]
+      },
+      "ordenar": "She is very pretty.",
+      "escucha": [
+        "She is the most elegant, she is the tallest,",
+        "She is the most beautiful, she is the prettiest,"
+      ]
+    }
+  ],
+  "miskito": [
+    {
+      "en": "river",
+      "es": "río",
+      "miq": "tikni",
+      "lexico": "tikni"
+    },
+    {
+      "en": "horse",
+      "es": "caballo",
+      "miq": "aras",
+      "lexico": "aras"
+    },
+    {
+      "en": "bird",
+      "es": "pájaro",
+      "miq": "daiwan nawira",
+      "lexico": "daiwan_nawira"
+    }
+  ],
+  "canta": {
+    "desde": 4,
+    "hasta": 7
+  }
+}
