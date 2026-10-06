@@ -153,7 +153,14 @@ cuatro actividades: completar la frase, usar la palabra nueva en otra
 oración, ordenar una frase y reconocer lo que se escucha. Al final se canta
 el coro. Una sacuanjoche cada tres respuestas buenas (se ven crecer mientras
 se juega), con el mismo evento `gameDone` (juego `musica`, una vez por día por
-canción); las completadas se ven en el perfil y abren las del nivel siguiente.
+canción); las completadas se ven en el perfil.
+
+La dificultad va con el nivel del estudiante: la lista agrupa las canciones
+por nivel y abre las de su nivel (el que le dan sus lecciones de inglés) y las
+de abajo; completar una canción también abre las del nivel siguiente. Hay
+canciones de la Costa Caribe (con grabación y permiso) y canciones infantiles
+de dominio público con pistas que arma Piko (`tools/pistas/`). De cada una se
+muestran las palabras que ya están validadas en el diccionario miskito.
 
 Las canciones viven en `content/canciones/` y **sólo entran con permiso de
 uso** y con letra y traducciones validadas: el formato, el instructivo y la

@@ -1,0 +1,496 @@
+{
+  "id": "old-macdonald",
+  "titulo": "Old MacDonald Had a Farm",
+  "lengua": "eng",
+  "region": "Canción infantil",
+  "comunidad": "Tradicional · dominio público",
+  "nivel": "intermedio",
+  "imagen": "maracas",
+  "audio": "old-macdonald.m4a",
+  "ritmo": {
+    "bpm": 112,
+    "pulso": 0.3
+  },
+  "fuente": {
+    "interpreta": "Pista instrumental de Piko (marimba y tambor)",
+    "autoria": "Tradicional, de dominio público",
+    "autoriza": "Dominio público",
+    "forma": "Letra y melodía de dominio público; la pista la arma Piko",
+    "fecha": "2026-10-06",
+    "validado_por": "Equipo de Piko (traducciones por revisar)",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Canción infantil tradicional en inglés, de dominio público.",
+    "lengua": "Inglés.",
+    "region": "Se canta en todo el mundo; en español se conoce como «En la granja de mi tío».",
+    "representa": "Los animales de la granja y los sonidos que hacen: cada animal suena distinto en cada idioma."
+  },
+  "letra": [
+    {
+      "texto": "Old MacDonald had a farm,",
+      "es": "El viejo MacDonald tenía una granja,",
+      "en": "Old MacDonald had a farm,",
+      "inicio": 2.443,
+      "fin": 6.729,
+      "tiempos": [
+        2.443,
+        2.979,
+        4.586,
+        5.121,
+        5.657
+      ]
+    },
+    {
+      "texto": "E-I-E-I-O!",
+      "es": "¡I-A-I-A-O!",
+      "en": "E-I-E-I-O!",
+      "nota": "Es un estribillo de sonidos: se canta así en inglés.",
+      "inicio": 6.729,
+      "fin": 10.479,
+      "tiempos": [
+        6.729
+      ]
+    },
+    {
+      "texto": "And on that farm he had a cow,",
+      "es": "Y en esa granja tenía una vaca,",
+      "en": "And on that farm he had a cow,",
+      "inicio": 10.479,
+      "fin": 15.3,
+      "tiempos": [
+        10.479,
+        11.014,
+        11.55,
+        12.086,
+        12.621,
+        13.157,
+        13.693,
+        14.229
+      ]
+    },
+    {
+      "texto": "E-I-E-I-O!",
+      "es": "¡I-A-I-A-O!",
+      "en": "E-I-E-I-O!",
+      "nota": "Es un estribillo de sonidos: se canta así en inglés.",
+      "inicio": 15.3,
+      "fin": 19.05,
+      "tiempos": [
+        15.3
+      ]
+    },
+    {
+      "texto": "With a moo moo here, and a moo moo there,",
+      "es": "con un mu mu aquí y un mu mu allá,",
+      "en": "With a moo moo here, and a moo moo there,",
+      "inicio": 19.05,
+      "fin": 23.336,
+      "tiempos": [
+        19.05,
+        19.318,
+        19.586,
+        20.121,
+        20.657,
+        21.193,
+        21.461,
+        21.729,
+        22.264,
+        22.8
+      ]
+    },
+    {
+      "texto": "here a moo, there a moo, everywhere a moo moo.",
+      "es": "aquí un mu, allá un mu, por todos lados mu mu.",
+      "en": "here a moo, there a moo, everywhere a moo moo.",
+      "inicio": 23.336,
+      "fin": 27.621,
+      "tiempos": [
+        23.336,
+        23.604,
+        23.871,
+        24.407,
+        24.675,
+        24.943,
+        25.479,
+        26.282,
+        26.55,
+        27.086
+      ]
+    },
+    {
+      "texto": "Old MacDonald had a farm,",
+      "es": "El viejo MacDonald tenía una granja,",
+      "en": "Old MacDonald had a farm,",
+      "inicio": 27.621,
+      "fin": 31.907,
+      "tiempos": [
+        27.621,
+        28.157,
+        29.764,
+        30.3,
+        30.836
+      ]
+    },
+    {
+      "texto": "E-I-E-I-O!",
+      "es": "¡I-A-I-A-O!",
+      "en": "E-I-E-I-O!",
+      "nota": "Es un estribillo de sonidos: se canta así en inglés.",
+      "inicio": 31.907,
+      "fin": 35.657,
+      "tiempos": [
+        31.907
+      ]
+    },
+    {
+      "texto": "Old MacDonald had a farm,",
+      "es": "El viejo MacDonald tenía una granja,",
+      "en": "Old MacDonald had a farm,",
+      "inicio": 35.657,
+      "fin": 39.943,
+      "tiempos": [
+        35.657,
+        36.193,
+        37.8,
+        38.336,
+        38.871
+      ]
+    },
+    {
+      "texto": "E-I-E-I-O!",
+      "es": "¡I-A-I-A-O!",
+      "en": "E-I-E-I-O!",
+      "nota": "Es un estribillo de sonidos: se canta así en inglés.",
+      "inicio": 39.943,
+      "fin": 43.693,
+      "tiempos": [
+        39.943
+      ]
+    },
+    {
+      "texto": "And on that farm he had a duck,",
+      "es": "Y en esa granja tenía un pato,",
+      "en": "And on that farm he had a duck,",
+      "inicio": 43.693,
+      "fin": 48.514,
+      "tiempos": [
+        43.693,
+        44.229,
+        44.764,
+        45.3,
+        45.836,
+        46.371,
+        46.907,
+        47.443
+      ]
+    },
+    {
+      "texto": "E-I-E-I-O!",
+      "es": "¡I-A-I-A-O!",
+      "en": "E-I-E-I-O!",
+      "nota": "Es un estribillo de sonidos: se canta así en inglés.",
+      "inicio": 48.514,
+      "fin": 52.264,
+      "tiempos": [
+        48.514
+      ]
+    },
+    {
+      "texto": "With a quack quack here, and a quack quack there,",
+      "es": "con un cuac cuac aquí y un cuac cuac allá,",
+      "en": "With a quack quack here, and a quack quack there,",
+      "inicio": 52.264,
+      "fin": 56.55,
+      "tiempos": [
+        52.264,
+        52.532,
+        52.8,
+        53.336,
+        53.871,
+        54.407,
+        54.675,
+        54.943,
+        55.479,
+        56.014
+      ]
+    },
+    {
+      "texto": "here a quack, there a quack, everywhere a quack quack.",
+      "es": "aquí un cuac, allá un cuac, por todos lados cuac cuac.",
+      "en": "here a quack, there a quack, everywhere a quack quack.",
+      "inicio": 56.55,
+      "fin": 60.836,
+      "tiempos": [
+        56.55,
+        56.818,
+        57.086,
+        57.621,
+        57.889,
+        58.157,
+        58.693,
+        59.496,
+        59.764,
+        60.3
+      ]
+    },
+    {
+      "texto": "Old MacDonald had a farm,",
+      "es": "El viejo MacDonald tenía una granja,",
+      "en": "Old MacDonald had a farm,",
+      "inicio": 60.836,
+      "fin": 65.121,
+      "tiempos": [
+        60.836,
+        61.371,
+        62.979,
+        63.514,
+        64.05
+      ]
+    },
+    {
+      "texto": "E-I-E-I-O!",
+      "es": "¡I-A-I-A-O!",
+      "en": "E-I-E-I-O!",
+      "nota": "Es un estribillo de sonidos: se canta así en inglés.",
+      "inicio": 65.121,
+      "fin": 68.871,
+      "tiempos": [
+        65.121
+      ]
+    },
+    {
+      "texto": "Old MacDonald had a farm,",
+      "es": "El viejo MacDonald tenía una granja,",
+      "en": "Old MacDonald had a farm,",
+      "inicio": 68.871,
+      "fin": 73.157,
+      "tiempos": [
+        68.871,
+        69.407,
+        71.014,
+        71.55,
+        72.086
+      ]
+    },
+    {
+      "texto": "E-I-E-I-O!",
+      "es": "¡I-A-I-A-O!",
+      "en": "E-I-E-I-O!",
+      "nota": "Es un estribillo de sonidos: se canta así en inglés.",
+      "inicio": 73.157,
+      "fin": 76.907,
+      "tiempos": [
+        73.157
+      ]
+    },
+    {
+      "texto": "And on that farm he had a dog,",
+      "es": "Y en esa granja tenía un perro,",
+      "en": "And on that farm he had a dog,",
+      "inicio": 76.907,
+      "fin": 81.729,
+      "tiempos": [
+        76.907,
+        77.443,
+        77.979,
+        78.514,
+        79.05,
+        79.586,
+        80.121,
+        80.657
+      ]
+    },
+    {
+      "texto": "E-I-E-I-O!",
+      "es": "¡I-A-I-A-O!",
+      "en": "E-I-E-I-O!",
+      "nota": "Es un estribillo de sonidos: se canta así en inglés.",
+      "inicio": 81.729,
+      "fin": 85.479,
+      "tiempos": [
+        81.729
+      ]
+    },
+    {
+      "texto": "With a woof woof here, and a woof woof there,",
+      "es": "con un guau guau aquí y un guau guau allá,",
+      "en": "With a woof woof here, and a woof woof there,",
+      "inicio": 85.479,
+      "fin": 89.764,
+      "tiempos": [
+        85.479,
+        85.746,
+        86.014,
+        86.55,
+        87.086,
+        87.621,
+        87.889,
+        88.157,
+        88.693,
+        89.229
+      ]
+    },
+    {
+      "texto": "here a woof, there a woof, everywhere a woof woof.",
+      "es": "aquí un guau, allá un guau, por todos lados guau guau.",
+      "en": "here a woof, there a woof, everywhere a woof woof.",
+      "inicio": 89.764,
+      "fin": 94.05,
+      "tiempos": [
+        89.764,
+        90.032,
+        90.3,
+        90.836,
+        91.104,
+        91.371,
+        91.907,
+        92.711,
+        92.979,
+        93.514
+      ]
+    },
+    {
+      "texto": "Old MacDonald had a farm,",
+      "es": "El viejo MacDonald tenía una granja,",
+      "en": "Old MacDonald had a farm,",
+      "inicio": 94.05,
+      "fin": 98.336,
+      "tiempos": [
+        94.05,
+        94.586,
+        96.193,
+        96.729,
+        97.264
+      ]
+    },
+    {
+      "texto": "E-I-E-I-O!",
+      "es": "¡I-A-I-A-O!",
+      "en": "E-I-E-I-O!",
+      "nota": "Es un estribillo de sonidos: se canta así en inglés.",
+      "inicio": 98.336,
+      "fin": 102.086,
+      "tiempos": [
+        98.336
+      ]
+    }
+  ],
+  "coro": [
+    0,
+    1
+  ],
+  "lecciones": [
+    {
+      "verso": 0,
+      "completar": {
+        "oculta": "farm",
+        "opciones": [
+          "farm",
+          "car",
+          "school",
+          "house"
+        ]
+      },
+      "palabra": {
+        "en": "farm",
+        "es": "granja",
+        "ejemplo": "My grandpa has a farm.",
+        "ejemploEs": "Mi abuelo tiene una granja.",
+        "opciones": [
+          "farm",
+          "song",
+          "cloud",
+          "shirt"
+        ]
+      },
+      "ordenar": "He had a farm.",
+      "escucha": [
+        "Old MacDonald had a car,",
+        "Old MacDonald had a cow,"
+      ]
+    },
+    {
+      "verso": 2,
+      "completar": {
+        "oculta": "cow",
+        "opciones": [
+          "cow",
+          "cat",
+          "cup",
+          "car"
+        ]
+      },
+      "palabra": {
+        "en": "cow",
+        "es": "vaca",
+        "ejemplo": "The cow gives us milk.",
+        "ejemploEs": "La vaca nos da leche.",
+        "opciones": [
+          "cow",
+          "chair",
+          "rain",
+          "book"
+        ]
+      },
+      "ordenar": "He had a cow.",
+      "escucha": [
+        "And on that farm he had a duck,",
+        "And on that farm she had a cow,"
+      ]
+    },
+    {
+      "verso": 10,
+      "completar": {
+        "oculta": "duck",
+        "opciones": [
+          "duck",
+          "dog",
+          "desk",
+          "door"
+        ]
+      },
+      "palabra": {
+        "en": "duck",
+        "es": "pato",
+        "ejemplo": "The duck swims in the river.",
+        "ejemploEs": "El pato nada en el río.",
+        "opciones": [
+          "duck",
+          "spoon",
+          "hat",
+          "bed"
+        ]
+      },
+      "ordenar": "The duck can swim.",
+      "escucha": [
+        "And on that farm he had a dog,",
+        "And on that farm he had a truck,"
+      ]
+    }
+  ],
+  "miskito": [
+    {
+      "en": "cow",
+      "es": "vaca",
+      "miq": "bip",
+      "lexico": "bip"
+    },
+    {
+      "en": "duck",
+      "es": "pato",
+      "miq": "klukum",
+      "lexico": "klukum"
+    },
+    {
+      "en": "dog",
+      "es": "perro",
+      "miq": "yul",
+      "lexico": "yul"
+    }
+  ],
+  "canta": {
+    "desde": 0,
+    "hasta": 5
+  }
+}

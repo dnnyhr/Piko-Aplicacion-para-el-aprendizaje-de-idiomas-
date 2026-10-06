@@ -225,8 +225,13 @@ musica.vacia,Las canciones entran a Piko sólo cuando quien las canta da permiso
 musica.comenzar,Comenzar,,
 musica.repetir,Cantar otra vez,,
 musica.completada,Completada,,
-musica.bloqueada,Se abre al completar una canción de nivel {nivel},,Dejar {nivel} tal cual: ahí la app pone un valor.
 musica.lengua_region,{lengua} · {region},,Dejar {lengua} y {region} tal cual: ahí la app pone un valor.
+musica.tu_nivel,Tu nivel según tus lecciones de inglés: {nivel},,Dejar {nivel} tal cual: ahí la app pone un valor.
+musica.para_tu_nivel,Para tu nivel,,
+musica.bloqueada_nivel,"Se abre cuando tus lecciones de inglés lleguen al nivel {nivel}, o al completar una canción de nivel {anterior}",,Dejar {nivel} y {anterior} tal cual: ahí la app pone un valor.
+musica.en_miskito,Palabras de esta canción en miskito,,
+musica.en_miskito_palabra,En miskito:,,
+musica.miskito_validado,Sólo las que ya están validadas en el diccionario de Piko.,,
 musica.conoce,Conoce nuestra canción,,
 musica.de_donde,De dónde viene,,
 musica.lengua,Lengua,,
@@ -235,6 +240,7 @@ musica.representa,Qué representa,,
 musica.canta,Canta: {quien},,Dejar {quien} tal cual: ahí la app pone un valor.
 musica.autoria,Autoría: {quien},,Dejar {quien} tal cual: ahí la app pone un valor.
 musica.cultura,Esta canción es parte de nuestra cultura. ¡Con ella vamos a aprender inglés!,,
+musica.cultura_mundo,Una canción que cantan niños de todo el mundo. ¡Con ella vamos a aprender inglés!,,
 musica.progreso,Parte {n} de {total},,Dejar {n} y {total} tal cual: ahí la app pone un valor.
 musica.flores,{n} sacuanjoches ganadas en esta canción,,Dejar {n} tal cual: ahí la app pone un valor.
 musica.flores_hoy,Hoy ya ganaste las flores de esta canción. ¡Igual practicá!,,

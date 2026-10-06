@@ -34,6 +34,24 @@ colaborador). Piko no descarga canciones ni escribe letras ni traducciones.
    región o comunidad es y qué representa; y qué versos se cantan en «Canta
    con Piko» (`canta`).
 
+10. **Las palabras en miskito** (`miskito`, opcional): sólo las que ya están
+    validadas en el diccionario de Piko, con el id de su entrada (`lexico`) y
+    escritas igual que ahí. Piko no traduce canciones al miskito: una línea
+    entera en miskito necesita que la traduzca y valide un hablante.
+
+## Canciones de dominio público
+
+Una canción infantil tradicional (letra y melodía de dominio público) puede
+entrar sin grabación: Piko arma la pista con `tools/pistas/` y sabe el segundo
+de cada palabra (`tiempos`). En `fuente` va «Dominio público» y quién revisó
+las traducciones.
+
+## La dificultad
+
+`nivel` dice a quién está dirigida y va con el nivel del estudiante: se abren
+las canciones de su nivel (el que le dan sus lecciones de inglés) y las de
+abajo. Completar una canción también abre las del nivel siguiente.
+
 ## Cómo se agrega
 
 1. Copiar la grabación a `audio/<id>.m4a`.
@@ -55,10 +73,3 @@ colaborador). Piko no descarga canciones ni escribe letras ni traducciones.
 4. `npm test`: la prueba de canciones revisa el permiso, la letra, las
    traducciones, el inglés y las lecciones. Si algo falta, dice qué y en cuál
    canción.
-
-## Niveles
-
-`nivel` dice a quién está dirigida: **inicial** (palabras sueltas, mucho
-apoyo), **intermedio** (completar frases, escuchar) o **avanzado** (frases
-completas, comprensión). Las de un nivel se abren al completar alguna del
-nivel anterior.

@@ -1,0 +1,238 @@
+{
+  "id": "row-your-boat",
+  "titulo": "Row, Row, Row Your Boat",
+  "lengua": "eng",
+  "region": "Canción infantil",
+  "comunidad": "Tradicional · dominio público",
+  "nivel": "intermedio",
+  "imagen": "guitarra",
+  "audio": "row-your-boat.m4a",
+  "ritmo": {
+    "bpm": 96,
+    "pulso": 0.3
+  },
+  "fuente": {
+    "interpreta": "Pista instrumental de Piko (marimba y tambor)",
+    "autoria": "Tradicional, de dominio público",
+    "autoriza": "Dominio público",
+    "forma": "Letra y melodía de dominio público; la pista la arma Piko",
+    "fecha": "2026-10-06",
+    "validado_por": "Equipo de Piko (traducciones por revisar)",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Ronda tradicional en inglés del siglo XIX, de dominio público.",
+    "lengua": "Inglés.",
+    "region": "Se canta en todo el mundo.",
+    "representa": "Remar tranquilos por el río. También se canta en canon: un grupo empieza cuando el otro va por la segunda línea."
+  },
+  "letra": [
+    {
+      "texto": "Row, row, row your boat",
+      "es": "Rema, rema, rema tu bote",
+      "en": "Row, row, row your boat",
+      "inicio": 2.8,
+      "fin": 5.3,
+      "tiempos": [
+        2.8,
+        3.425,
+        4.05,
+        4.519,
+        4.675
+      ]
+    },
+    {
+      "texto": "gently down the stream.",
+      "es": "suavecito río abajo.",
+      "en": "gently down the stream.",
+      "inicio": 5.3,
+      "fin": 7.8,
+      "tiempos": [
+        5.3,
+        5.925,
+        6.394,
+        6.55
+      ]
+    },
+    {
+      "texto": "Merrily, merrily, merrily, merrily,",
+      "es": "alegremente, alegremente, alegremente, alegremente,",
+      "en": "Merrily, merrily, merrily, merrily,",
+      "inicio": 7.8,
+      "fin": 10.3,
+      "tiempos": [
+        7.8,
+        8.425,
+        9.05,
+        9.675
+      ]
+    },
+    {
+      "texto": "Life is but a dream.",
+      "es": "la vida es solo un sueño.",
+      "en": "Life is but a dream.",
+      "inicio": 10.3,
+      "fin": 12.8,
+      "tiempos": [
+        10.3,
+        10.769,
+        10.925,
+        11.394,
+        11.55
+      ]
+    },
+    {
+      "texto": "Row, row, row your boat",
+      "es": "Rema, rema, rema tu bote",
+      "en": "Row, row, row your boat",
+      "inicio": 12.8,
+      "fin": 15.3,
+      "tiempos": [
+        12.8,
+        13.425,
+        14.05,
+        14.519,
+        14.675
+      ]
+    },
+    {
+      "texto": "gently down the stream.",
+      "es": "suavecito río abajo.",
+      "en": "gently down the stream.",
+      "inicio": 15.3,
+      "fin": 17.8,
+      "tiempos": [
+        15.3,
+        15.925,
+        16.394,
+        16.55
+      ]
+    },
+    {
+      "texto": "Merrily, merrily, merrily, merrily,",
+      "es": "alegremente, alegremente, alegremente, alegremente,",
+      "en": "Merrily, merrily, merrily, merrily,",
+      "inicio": 17.8,
+      "fin": 20.3,
+      "tiempos": [
+        17.8,
+        18.425,
+        19.05,
+        19.675
+      ]
+    },
+    {
+      "texto": "Life is but a dream.",
+      "es": "la vida es solo un sueño.",
+      "en": "Life is but a dream.",
+      "inicio": 20.3,
+      "fin": 22.8,
+      "tiempos": [
+        20.3,
+        20.769,
+        20.925,
+        21.394,
+        21.55
+      ]
+    }
+  ],
+  "coro": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "lecciones": [
+    {
+      "verso": 0,
+      "completar": {
+        "oculta": "boat",
+        "opciones": [
+          "boat",
+          "coat",
+          "goat",
+          "bike"
+        ]
+      },
+      "palabra": {
+        "en": "boat",
+        "es": "bote",
+        "ejemplo": "We go to the island by boat.",
+        "ejemploEs": "Vamos a la isla en bote.",
+        "opciones": [
+          "boat",
+          "apple",
+          "pencil",
+          "cloud"
+        ]
+      },
+      "ordenar": "Row your boat.",
+      "escucha": [
+        "Row, row, row your goat",
+        "Row, row, row my boat"
+      ]
+    },
+    {
+      "verso": 1,
+      "completar": {
+        "oculta": "stream",
+        "opciones": [
+          "stream",
+          "street",
+          "tree",
+          "cream"
+        ]
+      },
+      "palabra": {
+        "en": "gently",
+        "es": "suavecito",
+        "ejemplo": "Hold the baby gently.",
+        "ejemploEs": "Cargá al bebé suavecito.",
+        "opciones": [
+          "gently",
+          "purple",
+          "under",
+          "seven"
+        ]
+      },
+      "ordenar": "Go gently down the river.",
+      "escucha": [
+        "gently down the street.",
+        "quickly down the stream."
+      ]
+    },
+    {
+      "verso": 3,
+      "completar": {
+        "oculta": "dream",
+        "opciones": [
+          "dream",
+          "game",
+          "team",
+          "cream"
+        ]
+      },
+      "palabra": {
+        "en": "dream",
+        "es": "sueño",
+        "ejemplo": "I had a happy dream.",
+        "ejemploEs": "Tuve un sueño feliz.",
+        "opciones": [
+          "dream",
+          "fork",
+          "window",
+          "rice"
+        ]
+      },
+      "ordenar": "Life is a dream.",
+      "escucha": [
+        "Life is but a game.",
+        "Life is like a dream."
+      ]
+    }
+  ],
+  "canta": {
+    "desde": 0,
+    "hasta": 3
+  }
+}

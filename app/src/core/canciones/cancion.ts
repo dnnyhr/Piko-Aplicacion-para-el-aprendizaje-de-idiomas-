@@ -54,6 +54,22 @@ export interface Verso {
   /** Segundo de la grabación en que empieza y termina. */
   inicio: number;
   fin: number;
+  /**
+   * El segundo en que empieza cada palabra, si se sabe (las pistas que arma
+   * Piko lo saben nota por nota). Sin esto, el tiempo del verso se reparte
+   * entre las palabras.
+   */
+  tiempos?: number[];
+}
+
+/** Una palabra de la canción que está en el diccionario miskito de Piko (validada). */
+export interface PalabraMiskito {
+  en: string;
+  es: string;
+  /** Como se escribe en miskito: la `forma` de la entrada del diccionario. */
+  miq: string;
+  /** El id de la entrada del diccionario que la respalda. */
+  lexico: string;
 }
 
 /**
@@ -108,6 +124,12 @@ export interface Cancion {
   coro?: number[];
   /** Entre 2 y 4 frases convertidas en lección. */
   lecciones: Leccion[];
+  /**
+   * Palabras de la canción que ya están validadas en el diccionario miskito.
+   * Piko no traduce canciones al miskito: sólo muestra lo que una persona
+   * competente ya validó.
+   */
+  miskito?: PalabraMiskito[];
   /** «Canta con Piko»: los versos de `desde` a `hasta`, incluidos. */
   canta: { desde: number; hasta: number };
 }
@@ -134,10 +156,12 @@ function opcionesBien(opciones: unknown, correcta: string): boolean {
 }
 
 /**
- * Lo que una canción tiene que cumplir para entrar a la app.
+ * Lo que una canción tiene que cumplir para entrar a la app. `lexico`, si se
+ * pasa, son las formas validadas del diccionario miskito por id: las palabras
+ * en miskito de la canción tienen que estar ahí, escritas igual.
  * Devuelve la lista de errores; vacía si está bien.
  */
-export function validarCancion(raw: unknown): string[] {
+export function validarCancion(raw: unknown, lexico?: ReadonlyMap<string, string>): string[] {
   const errores: string[] = [];
   if (typeof raw !== 'object' || raw === null) return ['la canción no es un objeto'];
   const c = raw as Record<string, unknown>;
@@ -180,6 +204,15 @@ export function validarCancion(raw: unknown): string[] {
     if (!esSegundo(v.inicio) || !esSegundo(v.fin) || (v.fin as number) <= (v.inicio as number)) {
       e(`verso ${i}: \`inicio\` y \`fin\` tienen que ser segundos, con fin después de inicio`);
     }
+    if (v.tiempos !== undefined) {
+      const ts = v.tiempos as unknown[];
+      const n = esTexto(v.texto) ? palabrasDelVerso(v.texto).length : -1;
+      const ok =
+        Array.isArray(ts) &&
+        ts.length === n &&
+        ts.every((x, k) => esSegundo(x) && (x as number) >= (v.inicio as number) && (x as number) < (v.fin as number) && (k === 0 || (x as number) > (ts[k - 1] as number)));
+      if (!ok) e(`verso ${i}: \`tiempos\` lleva un segundo por palabra, en orden, dentro del verso`);
+    }
   });
 
   if (c.coro !== undefined) {
@@ -213,6 +246,15 @@ export function validarCancion(raw: unknown): string[] {
     else if (esc.some((x) => normalizar(x) === normalizar(en))) e(`lección ${i}: \`escucha\` no puede repetir la oración del verso`);
   });
 
+  if (c.miskito !== undefined) {
+    if (!Array.isArray(c.miskito)) e('`miskito` es una lista de palabras');
+    else
+      (c.miskito as Record<string, unknown>[]).forEach((m, i) => {
+        if (!esTexto(m.en) || !esTexto(m.es) || !esTexto(m.miq) || !esTexto(m.lexico)) return e(`miskito ${i}: lleva en, es, miq y lexico`);
+        if (lexico && lexico.get(m.lexico) !== m.miq) e(`miskito ${i} («${m.miq}»): tiene que ser una entrada validada del diccionario, escrita igual`);
+      });
+  }
+
   const canta = c.canta as Record<string, unknown> | undefined;
   if (
     !canta ||
@@ -232,11 +274,17 @@ export function validarCancion(raw: unknown): string[] {
 const ORDEN: Record<NivelMinijuego, number> = { inicial: 0, intermedio: 1, avanzado: 2 };
 
 /**
- * Qué canciones están abiertas: las del nivel inicial siempre; las de un
- * nivel, cuando ya completó alguna del nivel anterior (o si no hay ninguna
- * de ese nivel para completar).
+ * Qué canciones están abiertas. La dificultad va con el nivel del estudiante:
+ * se abren las canciones de su nivel (el que le dan sus lecciones, `nivel`) y
+ * las de abajo. Además, completar una canción de un nivel abre las del
+ * siguiente. Las del inicial están siempre abiertas.
  */
-export function cancionesAbiertas(catalogo: readonly Cancion[], completas: readonly string[]): Set<string> {
+export function cancionesAbiertas(
+  catalogo: readonly Cancion[],
+  completas: readonly string[],
+  nivel: NivelMinijuego | null = null,
+): Set<string> {
+  const tope = nivel ? ORDEN[nivel] : 0;
   const hechas = new Set(completas);
   const completoNivel = (n: number) => catalogo.some((c) => ORDEN[c.nivel] === n && hechas.has(c.id));
   const hayNivel = (n: number) => catalogo.some((c) => ORDEN[c.nivel] === n);
@@ -245,7 +293,7 @@ export function cancionesAbiertas(catalogo: readonly Cancion[], completas: reado
     const n = ORDEN[c.nivel];
     let ok = true;
     for (let previo = 0; previo < n; previo++) if (hayNivel(previo) && !completoNivel(previo)) ok = false;
-    if (ok) abiertas.add(c.id);
+    if (ok || n <= tope) abiertas.add(c.id);
   }
   return abiertas;
 }
@@ -296,6 +344,12 @@ export function palabrasDelVerso(texto: string): string[] {
 export function palabraEn(v: Verso, t: number): number {
   const palabras = palabrasDelVerso(v.texto);
   if (palabras.length === 0 || t < v.inicio) return -1;
+  // Si se sabe cuándo empieza cada palabra, eso manda.
+  if (v.tiempos && v.tiempos.length === palabras.length) {
+    let k = 0;
+    while (k + 1 < v.tiempos.length && t >= (v.tiempos[k + 1] as number)) k++;
+    return k;
+  }
   // Cada palabra pesa sus letras y un poco más (el respiro entre palabras).
   const pesos = palabras.map((w) => w.replace(/[^\p{L}\p{N}]/gu, '').length + 2);
   const total = pesos.reduce((a, b) => a + b, 0);

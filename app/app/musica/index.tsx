@@ -4,8 +4,10 @@
  *
  * «Aprendemos un idioma nuevo sin dejar atrás nuestra propia voz.»
  *
- * Cada canción es una tarjeta; las de un nivel se abren al completar alguna
- * del nivel anterior. Las canciones salen de `content/canciones/` y sólo
+ * Cada canción es una tarjeta, agrupadas por dificultad. La dificultad va
+ * con el nivel del estudiante: se abren las canciones de su nivel (el que le
+ * dan sus lecciones de inglés) y las de abajo; completar una canción también
+ * abre las del nivel siguiente. Las canciones salen de `content/canciones/` y sólo
  * están las que tienen permiso de uso.
  */
 
@@ -22,7 +24,8 @@ import { Candado } from '../../src/ui/minijuegos/Iconos';
 import { Instrumento, Nota } from '../../src/ui/musica/Instrumento';
 import { useTextos } from '../../src/ui/textos/useTextos';
 import { useProgreso } from '../../src/features/progreso/store';
-import { cancionesAbiertas, type Cancion } from '../../src/core/canciones/cancion';
+import { useNivelMusical } from '../../src/features/musica/useNivelMusical';
+import { cancionesAbiertas, NIVELES_CANCION, type Cancion } from '../../src/core/canciones/cancion';
 import { CANCIONES } from '../../content/canciones';
 import { color, espacio, labio, radio, texto } from '../../src/ui/tokens';
 
@@ -33,14 +36,15 @@ export default function Musica() {
   const router = useRouter();
   const { t } = useTextos();
   const estado = useProgreso((s) => s.estado);
+  const nivel = useNivelMusical();
 
   useEffect(() => {
     useProgreso.getState().recomputar();
   }, []);
 
   const abiertas = useMemo(
-    () => cancionesAbiertas(CANCIONES, estado.cancionesCompletas),
-    [estado.cancionesCompletas],
+    () => cancionesAbiertas(CANCIONES, estado.cancionesCompletas, nivel),
+    [estado.cancionesCompletas, nivel],
   );
   const completas = new Set(estado.cancionesCompletas);
   const total = CANCIONES.length;
@@ -78,6 +82,7 @@ export default function Musica() {
         <Globo hacia="abajo">{t('musica.lema')}</Globo>
 
         {total > 0 && <Text style={styles.cuenta}>{t('musica.completadas', { n: hechas, total })}</Text>}
+        {total > 0 && <Text style={styles.tuNivel}>{t('musica.tu_nivel', { nivel: t(`minijuegos.nivel_${nivel}`) })}</Text>}
 
         {total === 0 ? (
           <View style={styles.vacia}>
@@ -86,7 +91,20 @@ export default function Musica() {
             <Text style={styles.vaciaTexto}>{t('musica.vacia')}</Text>
           </View>
         ) : (
-          CANCIONES.map((c) => {
+          NIVELES_CANCION.map((n) => {
+            const delNivel = CANCIONES.filter((c) => c.nivel === n);
+            if (delNivel.length === 0) return null;
+            return (
+              <View key={n} style={styles.grupo}>
+                <View style={styles.grupoCabecera}>
+                  <Text style={styles.grupoTitulo}>{t(`minijuegos.nivel_${n}`)}</Text>
+                  {n === nivel && (
+                    <View style={styles.sello}>
+                      <Text style={styles.selloTexto}>{t('musica.para_tu_nivel')}</Text>
+                    </View>
+                  )}
+                </View>
+                {delNivel.map((c) => {
             const abierta = abiertas.has(c.id);
             const hecha = completas.has(c.id);
             return (
@@ -96,9 +114,7 @@ export default function Musica() {
                   <View style={styles.textos}>
                     <Text style={styles.nombre}>{c.titulo}</Text>
                     <Text style={styles.detalle}>{t('musica.lengua_region', { lengua: nombreLengua(c), region: c.region })}</Text>
-                    <Text style={styles.detalle}>
-                      {c.comunidad} · {t(`minijuegos.nivel_${c.nivel}`)}
-                    </Text>
+                    <Text style={styles.detalle}>{c.comunidad}</Text>
                     {hecha && <Text style={styles.hecha}>{t('musica.completada')}</Text>}
                   </View>
                 </View>
@@ -109,9 +125,14 @@ export default function Musica() {
                 ) : (
                   <View style={styles.cerrada}>
                     <Candado />
-                    <Text style={styles.detalle}>{t('musica.bloqueada', { nivel: t(`minijuegos.nivel_${ANTERIOR[c.nivel]}`) })}</Text>
+                    <Text style={styles.detalle}>
+                      {t('musica.bloqueada_nivel', { nivel: t(`minijuegos.nivel_${c.nivel}`), anterior: t(`minijuegos.nivel_${ANTERIOR[c.nivel]}`) })}
+                    </Text>
                   </View>
                 )}
+              </View>
+            );
+                })}
               </View>
             );
           })
@@ -150,6 +171,12 @@ const styles = StyleSheet.create({
   nota: { position: 'absolute' },
   instrumentos: { gap: espacio.xs, marginBottom: espacio.sm },
   cuenta: { ...texto.cuerpoFuerte, color: color.verde, textAlign: 'center' },
+  tuNivel: { ...texto.chico, color: color.tinta, textAlign: 'center', marginTop: -espacio.sm },
+  grupo: { gap: espacio.md },
+  grupoCabecera: { flexDirection: 'row', alignItems: 'center', gap: espacio.sm, marginTop: espacio.sm },
+  grupoTitulo: { ...texto.subtitulo, color: color.grafito },
+  sello: { backgroundColor: color.verdePasto, borderRadius: radio.redondo, paddingHorizontal: espacio.sm, paddingVertical: 2 },
+  selloTexto: { ...texto.etiqueta, fontSize: 11, color: color.verdeHondo },
   vacia: {
     alignItems: 'center',
     gap: espacio.sm,

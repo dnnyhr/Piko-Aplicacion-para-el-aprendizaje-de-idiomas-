@@ -1,0 +1,228 @@
+{
+  "id": "twinkle-twinkle",
+  "titulo": "Twinkle, Twinkle, Little Star",
+  "lengua": "eng",
+  "region": "Canción infantil",
+  "comunidad": "Tradicional · dominio público",
+  "nivel": "inicial",
+  "imagen": "marimba",
+  "audio": "twinkle-twinkle.m4a",
+  "ritmo": {
+    "bpm": 100,
+    "pulso": 0.3
+  },
+  "fuente": {
+    "interpreta": "Pista instrumental de Piko (marimba y tambor)",
+    "autoria": "Tradicional, de dominio público",
+    "autoriza": "Dominio público",
+    "forma": "Letra y melodía de dominio público; la pista la arma Piko",
+    "fecha": "2026-10-06",
+    "validado_por": "Equipo de Piko (traducciones por revisar)",
+    "permiso": true
+  },
+  "conoce": {
+    "origen": "Una canción de cuna en inglés, de dominio público: la letra es un poema de Jane Taylor (1806) y la melodía, una tonada francesa del siglo XVIII.",
+    "lengua": "Inglés.",
+    "region": "Se canta en todo el mundo, también en muchas escuelas de Nicaragua.",
+    "representa": "La curiosidad de mirar el cielo de noche y preguntarse qué son las estrellas."
+  },
+  "letra": [
+    {
+      "texto": "Twinkle, twinkle, little star,",
+      "es": "Brilla, brilla, estrellita,",
+      "en": "Twinkle, twinkle, little star,",
+      "inicio": 2.7,
+      "fin": 7.5,
+      "tiempos": [
+        2.7,
+        3.9,
+        5.1,
+        6.3
+      ]
+    },
+    {
+      "texto": "How I wonder what you are!",
+      "es": "¡cómo me pregunto qué serás!",
+      "en": "How I wonder what you are!",
+      "inicio": 7.5,
+      "fin": 12.3,
+      "tiempos": [
+        7.5,
+        8.1,
+        8.7,
+        9.9,
+        10.5,
+        11.1
+      ]
+    },
+    {
+      "texto": "Up above the world so high,",
+      "es": "Allá arriba, sobre el mundo, tan alto,",
+      "en": "Up above the world so high,",
+      "inicio": 12.3,
+      "fin": 17.1,
+      "tiempos": [
+        12.3,
+        12.9,
+        14.1,
+        14.7,
+        15.3,
+        15.9
+      ]
+    },
+    {
+      "texto": "Like a diamond in the sky.",
+      "es": "como un diamante en el cielo.",
+      "en": "Like a diamond in the sky.",
+      "inicio": 17.1,
+      "fin": 21.9,
+      "tiempos": [
+        17.1,
+        17.7,
+        18.3,
+        19.5,
+        20.1,
+        20.7
+      ]
+    },
+    {
+      "texto": "Twinkle, twinkle, little star,",
+      "es": "Brilla, brilla, estrellita,",
+      "en": "Twinkle, twinkle, little star,",
+      "inicio": 21.9,
+      "fin": 26.7,
+      "tiempos": [
+        21.9,
+        23.1,
+        24.3,
+        25.5
+      ]
+    },
+    {
+      "texto": "How I wonder what you are!",
+      "es": "¡cómo me pregunto qué serás!",
+      "en": "How I wonder what you are!",
+      "inicio": 26.7,
+      "fin": 31.5,
+      "tiempos": [
+        26.7,
+        27.3,
+        27.9,
+        29.1,
+        29.7,
+        30.3
+      ]
+    }
+  ],
+  "coro": [
+    0,
+    1
+  ],
+  "lecciones": [
+    {
+      "verso": 0,
+      "completar": {
+        "oculta": "star",
+        "opciones": [
+          "star",
+          "car",
+          "cat"
+        ]
+      },
+      "palabra": {
+        "en": "star",
+        "es": "estrella",
+        "ejemplo": "I can see a star at night.",
+        "ejemploEs": "Puedo ver una estrella de noche.",
+        "opciones": [
+          "star",
+          "spoon",
+          "shoe"
+        ]
+      },
+      "ordenar": "I see a little star.",
+      "escucha": [
+        "Twinkle, twinkle, little car,",
+        "Twinkle, twinkle, big star,"
+      ]
+    },
+    {
+      "verso": 2,
+      "completar": {
+        "oculta": "high",
+        "opciones": [
+          "high",
+          "low",
+          "slow"
+        ]
+      },
+      "palabra": {
+        "en": "high",
+        "es": "alto",
+        "ejemplo": "The bird flies high.",
+        "ejemploEs": "El pájaro vuela alto.",
+        "opciones": [
+          "high",
+          "sad",
+          "green"
+        ]
+      },
+      "ordenar": "The star is so high.",
+      "escucha": [
+        "Up above the world so low,",
+        "Up above the tree so high,"
+      ]
+    },
+    {
+      "verso": 3,
+      "completar": {
+        "oculta": "sky",
+        "opciones": [
+          "sky",
+          "sea",
+          "sand"
+        ]
+      },
+      "palabra": {
+        "en": "sky",
+        "es": "cielo",
+        "ejemplo": "The sky is blue today.",
+        "ejemploEs": "El cielo está azul hoy.",
+        "opciones": [
+          "sky",
+          "chair",
+          "bread"
+        ]
+      },
+      "ordenar": "The sky is blue.",
+      "escucha": [
+        "Like a diamond in the sea.",
+        "Like a flower in the sky."
+      ]
+    }
+  ],
+  "miskito": [
+    {
+      "en": "star",
+      "es": "estrella",
+      "miq": "slisma",
+      "lexico": "slisma"
+    },
+    {
+      "en": "little",
+      "es": "pequeño",
+      "miq": "sirpi",
+      "lexico": "sirpi"
+    },
+    {
+      "en": "night",
+      "es": "noche",
+      "miq": "tihmia",
+      "lexico": "tihmia"
+    }
+  ],
+  "canta": {
+    "desde": 0,
+    "hasta": 1
+  }
+}
