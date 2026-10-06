@@ -23,6 +23,14 @@ import {
 } from '@core/canciones/cancion';
 import { CANCIONES } from '../content/canciones';
 
+/** Las formas validadas del diccionario miskito (sin «revisar»), por id. */
+function lexicoMiskito(): Map<string, string> {
+  const lexico = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, '../../diccionario/miskito/lexico.json'), 'utf8'),
+  ) as { entradas: { id: string; forma: string; revisar?: string }[] };
+  return new Map(lexico.entradas.filter((e) => !e.revisar).map((e) => [e.id, e.forma]));
+}
+
 /**
  * Una canción SÓLO PARA PROBAR el formato. No es una canción real ni va a la
  * app: la letra son frases del corpus de Piko.
@@ -79,8 +87,9 @@ function prueba(extra: Partial<Cancion> = {}): Cancion {
 
 describe('canciones de la app', () => {
   it('cada canción cumple el formato, con permiso y traducciones validadas', () => {
+    const lexico = lexicoMiskito();
     for (const cancion of CANCIONES) {
-      expect(validarCancion(cancion)).toEqual([]);
+      expect(validarCancion(cancion, lexico)).toEqual([]);
     }
   });
 
@@ -142,6 +151,22 @@ describe('canciones: validación', () => {
     expect(validarCancion(mal).join(' ')).toMatch(/ejemplo/);
   });
 
+  it('las palabras en miskito tienen que estar validadas en el diccionario, escritas igual', () => {
+    const lexico = new Map([['yul', 'yul']]);
+    const bien = prueba({ miskito: [{ en: 'dog', es: 'perro', miq: 'yul', lexico: 'yul' }] });
+    expect(validarCancion(bien, lexico)).toEqual([]);
+    const inventada = prueba({ miskito: [{ en: 'spider', es: 'araña', miq: 'inventada', lexico: 'no-existe' }] });
+    expect(validarCancion(inventada, lexico).join(' ')).toMatch(/validada/);
+  });
+
+  it('los tiempos de las palabras van uno por palabra, en orden, dentro del verso', () => {
+    const letra = prueba().letra.slice();
+    letra[0] = { ...letra[0]!, tiempos: [0, 1, 2, 2.5] };
+    expect(validarCancion(prueba({ letra }))).toEqual([]);
+    letra[0] = { ...letra[0]!, tiempos: [0, 1] };
+    expect(validarCancion(prueba({ letra })).join(' ')).toMatch(/tiempos/);
+  });
+
   it('pide entre 2 y 4 lecciones', () => {
     expect(validarCancion(prueba({ lecciones: prueba().lecciones.slice(0, 1) })).join(' ')).toMatch(/entre 2 y 4/);
   });
@@ -171,6 +196,13 @@ describe('canciones: la letra', () => {
       if (vistas[vistas.length - 1] !== k) vistas.push(k);
     }
     expect(vistas).toEqual([0, 1, 2, 3, 4]);
+  });
+
+  it('si se sabe cuándo empieza cada palabra, la flor sigue esos tiempos', () => {
+    const v = { texto: 'Twinkle, twinkle, little star,', inicio: 2.7, fin: 7.5, tiempos: [2.7, 3.9, 5.1, 6.3] };
+    expect(palabraEn(v, 3.8)).toBe(0);
+    expect(palabraEn(v, 3.9)).toBe(1);
+    expect(palabraEn(v, 7)).toBe(3);
   });
 
   it('sabe qué verso suena en cada segundo', () => {
@@ -218,6 +250,12 @@ describe('canciones: desbloqueo', () => {
   it('completar una del nivel abre el siguiente', () => {
     expect([...cancionesAbiertas(catalogo, ['a'])].sort()).toEqual(['a', 'b', 'm']);
     expect([...cancionesAbiertas(catalogo, ['a', 'm'])].sort()).toEqual(['a', 'b', 'm', 'z']);
+  });
+
+  it('la dificultad va con el nivel del estudiante: se abren las de su nivel y las de abajo', () => {
+    expect([...cancionesAbiertas(catalogo, [], 'intermedio')].sort()).toEqual(['a', 'b', 'm']);
+    expect([...cancionesAbiertas(catalogo, [], 'avanzado')].sort()).toEqual(['a', 'b', 'm', 'z']);
+    expect([...cancionesAbiertas(catalogo, [], 'inicial')].sort()).toEqual(['a', 'b']);
   });
 
   it('si no hay canciones de un nivel, no lo pide', () => {
