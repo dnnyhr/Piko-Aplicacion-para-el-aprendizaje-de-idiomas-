@@ -51,6 +51,7 @@ import { paraVozEspanola } from '../../core/content/voz';
 import { callar, decir, vozDePiko } from '../minijuegos/voz';
 import { useTramo } from './useTramo';
 import { color, espacio, fuente, labio, radio, texto } from '../../ui/tokens';
+import { usePausaLogros } from '../logros/store';
 
 export interface ResultadoCancion {
   correct: number;
@@ -74,6 +75,8 @@ type Paso = { tipo: 'escuchar' } | { tipo: 'frase'; k: number } | { tipo: 'activ
 const ingles = (t: string) => decir([{ texto: t, lang: 'en-US' }]);
 
 export function Experiencia({ cancion, audio, premiable, admin = false, onTerminar, onSalir }: ExperienciaProps) {
+  // Un logro ganado a mitad de la ronda se festeja al terminarla.
+  usePausaLogros();
   const { t, frases, idioma } = useTextos();
   const tramo = useTramo(audio);
   const [i, setI] = useState(0);

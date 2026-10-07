@@ -12,6 +12,8 @@ import { compareEvents, type AnswerPayload, type ProgressEvent } from './events'
 import { sacuanjochesPorLeccion } from './arbol';
 import { floresDeMinijuego } from '../minijuegos/premios';
 import { ID_MUSICA } from '../canciones/cancion';
+import { LOGROS } from '../logros/catalogo';
+import { cumple } from '../logros/evaluar';
 
 export const XP_ACIERTO = 10;
 export const XP_INTENTO = 2;
@@ -57,6 +59,35 @@ export interface StudentState {
    * abrir las canciones del nivel siguiente.
    */
   cancionesCompletas: string[];
+
+  // --- Lo que cuentan los logros (ver `core/logros/`).
+
+  /** El último día con alguna respuesta, lección o partida, en hora de Nicaragua (`AAAA-MM-DD`). */
+  ultimoDia: string;
+  /** Días seguidos con estudio hasta `ultimoDia`. */
+  rachaDias: number;
+  /** La racha más larga de días seguidos con estudio. */
+  mejorRachaDias: number;
+  /**
+   * Por lengua, las palabras aprendidas (ítems acertados al menos una vez),
+   * como huellas cortas de su id y sólo hasta lo que pide el logro más alto
+   * de esa lengua: el snapshot que viaja por el wifi del aula tiene que
+   * seguir siendo chico (ver `topePalabras`).
+   */
+  aprendidas: Record<string, string[]>;
+  /** Las lenguas practicadas, ordenadas. */
+  lenguas: string[];
+  /** Partidas terminadas por minijuego (incluye la música, `musica`). */
+  partidas: Record<string, number>;
+  /** Veces que se unió a una clase en vivo. */
+  clases: number;
+  /** Las claves de los hitos hechos (p. ej. `piko`), ordenadas. */
+  hitos: string[];
+  /** Los logros que trajo un código canjeado: id → código. */
+  canjes: Record<string, string>;
+  /** Los logros desbloqueados: id → cuándo (el `createdAt` del evento que lo logró). */
+  logros: Record<string, number>;
+
   lastActiveAt: number;
   /** Mayor `seq` aplicado. Los eventos locales sin sincronizar no lo mueven. */
   throughSeq: number;
@@ -76,9 +107,63 @@ export function emptyState(studentId: string): StudentState {
     sacuanjoches: 0,
     premiosJuegos: {},
     cancionesCompletas: [],
+    ultimoDia: '',
+    rachaDias: 0,
+    mejorRachaDias: 0,
+    aprendidas: {},
+    lenguas: [],
+    partidas: {},
+    clases: 0,
+    hitos: [],
+    canjes: {},
+    logros: {},
     lastActiveAt: 0,
     throughSeq: 0,
   };
+}
+
+/**
+ * El día de un instante en hora de Nicaragua (UTC−6 todo el año, sin horario
+ * de verano). Fijo y no el del teléfono: así la racha da igual en todos los
+ * teléfonos que tengan los mismos eventos.
+ */
+export function diaNicaragua(ms: number): string {
+  return new Date(ms - 6 * 3_600_000).toISOString().slice(0, 10);
+}
+
+const numeroDeDia = (d: string): number => Date.parse(`${d}T00:00:00Z`) / 86_400_000;
+
+/**
+ * Cuántas palabras de cada lengua vale la pena recordar: las que pide el
+ * logro de palabras más alto de esa lengua. Más allá no cambia ningún logro.
+ */
+const TOPE_PALABRAS: Record<string, number> = {};
+for (const l of LOGROS) {
+  if (l.condicion.tipo === 'palabras') {
+    TOPE_PALABRAS[l.condicion.lengua] = Math.max(TOPE_PALABRAS[l.condicion.lengua] ?? 0, l.condicion.n);
+  }
+}
+
+export function topePalabras(lengua: string): number {
+  return TOPE_PALABRAS[lengua] ?? 0;
+}
+
+/** Huella corta y estable de un id (FNV-1a de 32 bits, en base 36). */
+export function huella(id: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < id.length; i++) {
+    h ^= id.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return (h >>> 0).toString(36);
+}
+
+/** Agrega `v` a una lista ordenada sin repetidos. Devuelve si era nuevo. */
+function sumar(lista: string[], v: string): boolean {
+  if (lista.includes(v)) return false;
+  lista.push(v);
+  lista.sort();
+  return true;
 }
 
 /** Con qué se identifica un minijuego para el tope diario de flores. */
@@ -104,6 +189,16 @@ export function cloneState(s: StudentState): StudentState {
     sacuanjoches: s.sacuanjoches ?? 0,
     premiosJuegos: { ...(s.premiosJuegos ?? {}) },
     cancionesCompletas: (s.cancionesCompletas ?? []).slice(),
+    ultimoDia: s.ultimoDia ?? '',
+    rachaDias: s.rachaDias ?? 0,
+    mejorRachaDias: s.mejorRachaDias ?? 0,
+    aprendidas: Object.fromEntries(Object.entries(s.aprendidas ?? {}).map(([k, v]) => [k, v.slice()])),
+    lenguas: (s.lenguas ?? []).slice(),
+    partidas: { ...(s.partidas ?? {}) },
+    clases: s.clases ?? 0,
+    hitos: (s.hitos ?? []).slice(),
+    canjes: { ...(s.canjes ?? {}) },
+    logros: { ...(s.logros ?? {}) },
   };
 }
 
@@ -122,8 +217,32 @@ function readAnswer(payload: Record<string, unknown>): AnswerPayload | null {
   return { itemId, packId, skill, correct, ms: typeof ms === 'number' ? ms : 0 };
 }
 
-/** Aplica un evento sobre el estado *in situ*. Uso interno de `project`. */
+/** Aplica un evento y anota los logros que ese evento desbloqueó, con su fecha. */
 function step(state: StudentState, ev: ProgressEvent): void {
+  aplicar(state, ev);
+  for (const l of LOGROS) {
+    if (state.logros[l.id] !== undefined) continue;
+    if (cumple(l, state) || state.canjes[l.id] !== undefined) state.logros[l.id] = ev.createdAt;
+  }
+}
+
+/**
+ * Anota un día de estudio. Los eventos llegan en orden, así que alcanza con
+ * mirar el último día: el mismo, nada; el siguiente, la racha sigue; más
+ * adelante, empieza otra. Uno anterior (un evento viejo que llegó tarde por
+ * la red) no la cambia.
+ */
+function estudio(state: StudentState, ev: ProgressEvent): void {
+  const dia = diaNicaragua(ev.createdAt);
+  if (state.ultimoDia && dia <= state.ultimoDia) return;
+  const seguido = state.ultimoDia !== '' && numeroDeDia(dia) === numeroDeDia(state.ultimoDia) + 1;
+  state.rachaDias = seguido ? state.rachaDias + 1 : 1;
+  state.ultimoDia = dia;
+  if (state.rachaDias > state.mejorRachaDias) state.mejorRachaDias = state.rachaDias;
+}
+
+/** Aplica un evento sobre el estado *in situ*. */
+function aplicar(state: StudentState, ev: ProgressEvent): void {
   if (typeof ev.seq === 'number' && ev.seq > state.throughSeq) state.throughSeq = ev.seq;
   if (ev.createdAt > state.lastActiveAt) state.lastActiveAt = ev.createdAt;
 
@@ -131,6 +250,15 @@ function step(state: StudentState, ev: ProgressEvent): void {
     case 'answer': {
       const a = readAnswer(ev.payload);
       if (!a) return;
+      estudio(state, ev);
+      // La lengua es el comienzo de la habilidad: `eng.saludos` → `eng`.
+      const lengua = a.skill.split('.')[0] as string;
+      sumar(state.lenguas, lengua);
+      const tope = topePalabras(lengua);
+      if (a.correct && tope > 0) {
+        const lista = (state.aprendidas[lengua] ??= []);
+        if (lista.length < tope) sumar(lista, huella(a.itemId));
+      }
 
       const skill = state.skills[a.skill] ?? emptySkill();
       skill.seen += 1;
@@ -158,6 +286,7 @@ function step(state: StudentState, ev: ProgressEvent): void {
     case 'lessonDone': {
       const packId = ev.payload.packId;
       if (typeof packId !== 'string') return;
+      estudio(state, ev);
       if (!state.packsDone.includes(packId)) {
         state.packsDone.push(packId);
         state.packsDone.sort();
@@ -174,6 +303,9 @@ function step(state: StudentState, ev: ProgressEvent): void {
       const { game, lang, level, correct, total, day, streak } = ev.payload;
       if (typeof game !== 'string' || typeof lang !== 'string' || typeof level !== 'string') return;
       if (typeof correct !== 'number' || typeof total !== 'number' || typeof day !== 'string') return;
+      estudio(state, ev);
+      state.partidas[game] = (state.partidas[game] ?? 0) + 1;
+      if (game !== ID_MUSICA) sumar(state.lenguas, lang);
       const clave = clavePremio(game, lang, level);
       const flores = floresDeMinijuego({
         game,
@@ -195,7 +327,24 @@ function step(state: StudentState, ev: ProgressEvent): void {
     }
 
     case 'joinedSession':
+      state.clases += 1;
       return;
+
+    case 'hito': {
+      const clave = ev.payload.clave;
+      if (typeof clave === 'string' && clave.length > 0 && clave.length <= 64) sumar(state.hitos, clave);
+      return;
+    }
+
+    case 'canje': {
+      // El logro tiene que existir y pedir código: un canje no desbloquea un
+      // logro que se gana jugando.
+      const { codigo, logro } = ev.payload;
+      if (typeof codigo !== 'string' || typeof logro !== 'string') return;
+      const l = LOGROS.find((x) => x.id === logro);
+      if (l?.condicion.tipo === 'codigo' && state.canjes[logro] === undefined) state.canjes[logro] = codigo;
+      return;
+    }
   }
 }
 

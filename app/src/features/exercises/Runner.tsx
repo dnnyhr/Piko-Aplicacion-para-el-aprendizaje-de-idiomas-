@@ -27,6 +27,7 @@ import {
   type Respuesta,
 } from '../../core/content/verificar';
 import type { BuildItem, ChoiceItem, Item, ListenItem } from '../../core/content/schema';
+import { usePausaLogros } from '../logros/store';
 
 export interface ResultadoRonda {
   respondidas: number;
@@ -42,6 +43,8 @@ export interface RunnerProps {
 }
 
 export function Runner({ items, onResponder, onTerminar, onSalir }: RunnerProps) {
+  // Un logro ganado a mitad de la ronda se festeja al terminarla.
+  usePausaLogros();
   const [indice, setIndice] = useState(0);
   const [seleccion, setSeleccion] = useState<string | null>(null);
   const [armado, setArmado] = useState<number[]>([]);

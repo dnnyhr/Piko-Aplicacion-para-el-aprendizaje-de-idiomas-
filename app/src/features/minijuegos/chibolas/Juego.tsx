@@ -45,6 +45,7 @@ import { pistaDe, type Reto } from '../../../core/minijuegos/retos';
 import { ARRASTRE_MAXIMO, chibolaAlcanzada, leerArrastre, puntoDeImpacto, TIROS } from '../../../core/minijuegos/chibolas';
 import { callar, decir, vozDePiko } from '../voz';
 import { color, espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
+import { usePausaLogros } from '../../logros/store';
 
 const HORIZONTE = 236;
 const TAM_CHIBOLA = 46;
@@ -110,6 +111,8 @@ const FLORES = [
 ];
 
 export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoChibolasProps) {
+  // Un logro ganado a mitad de la ronda se festeja al terminarla.
+  usePausaLogros();
   const { t, frases, idioma } = useTextos();
   const [paso, setPaso] = useState(0);
   const [probadas, setProbadas] = useState<number[]>([]);

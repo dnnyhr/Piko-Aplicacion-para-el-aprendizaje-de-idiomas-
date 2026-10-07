@@ -24,6 +24,7 @@ export const ES = {
   'portada.lengua_app': 'La app en',
   'portada.minijuegos': 'Minijuegos',
   'portada.musica': 'La Música de Piko',
+  'portada.logros': 'Mis logros',
 
   // ── Comunes
   'comun.volver': 'Volver',
@@ -333,6 +334,44 @@ export const ES = {
   'musica.otra_cancion': 'Otra canción',
   'musica.de_nuevo': 'Cantarla de nuevo',
 
+  // ── Logros
+  'logros.titulo': 'Mis logros',
+  'logros.desbloqueados': '{n} / {total} desbloqueados',
+  'logros.empezar': '¡Tu primer logro está a una lección de distancia!',
+  'logros.canjear': 'Canjear código',
+  'logros.exclusivo': 'Exclusivo',
+  'logros.proximamente': 'Próximamente',
+  'logros.como': 'Cómo se obtiene',
+  'logros.desbloqueado_el': 'Lo desbloqueaste el {fecha}',
+  'logros.llevas': 'Llevás {actual} de {meta}',
+  'logros.animo': 'Todavía no es tuyo. ¡Vos podés!',
+  'logros.animo_codigo': 'Se consigue sólo con el código de una tarjeta especial.',
+  'logros.proximamente_ayuda': 'Este logro llega pronto, con los ejercicios de pronunciación.',
+  'logros.cerrar': 'Cerrar',
+  'logros.nuevo': '¡Nuevo logro desbloqueado!',
+  'logros.nuevo_especial': '¡Lo lograste!',
+  'logros.continuar': '¡Continuar aprendiendo!',
+  'logros.especial_desbloqueado': 'Logro especial desbloqueado',
+  'logros.ver': 'Ver mis logros',
+  'logros.ultimos': 'Tus últimos logros',
+
+  // ── Canjear un código (logros especiales)
+  'canje.titulo': '¿Tenés un código especial?',
+  'canje.ayuda': 'Si te dieron una tarjeta de Piko en un evento, escribí el código que trae. Para canjearlo necesitás internet.',
+  'canje.placeholder': 'Ingresá tu código',
+  'canje.boton': 'Canjear',
+  'canje.revisando': 'Revisando tu código…',
+  'canje.invalido': 'Este código no es válido. Revisá que lo hayas escrito correctamente.',
+  'canje.usado': 'Este código ya fue canjeado.',
+  'canje.ya_lo_tenes': 'Ya tenés este logro. ¡Guardá la tarjeta de recuerdo!',
+  'canje.sin_internet': 'Para canjear necesitás internet. Probá otra vez cuando tengas conexión.',
+  'canje.bloqueado': 'Probaste muchos códigos seguidos. Esperá {minutos} minutos y probá otra vez.',
+  'canje.actualizar': 'Este código es de una versión más nueva de Piko. Actualizá la app y probá otra vez.',
+  'canje.error': 'Algo falló de nuestro lado. Probá otra vez en un ratito.',
+  'canje.lo_lograste': '¡Lo lograste!',
+  'canje.obtenido': 'Obtenido el {fecha}',
+  'canje.otro': 'Canjear otro código',
+
   // ── Nombres de las lenguas
   'lengua.eng': 'Inglés',
   'lengua.miq': 'Miskito',
@@ -364,6 +403,10 @@ export const ES = {
   /** Para cuando se equivoca. Sin "no", sin "mal", sin aspas rojas. */
   'piko.intento': ['Casi. Mirá cómo es:', 'Buen intento. Es así:', 'Ya casi. Se dice:', 'Tranquilo, mirá:', 'La próxima sale. Es:'],
   'piko.bienvenida': ['¡Hola! Soy Piko.', '¿Jugamos un rato?', '¡Qué bueno verte!'],
+  /** Cuando tocan a Piko en la portada. */
+  'piko.tocado': ['¡Jiji, me hacés cosquillas!', '¡Hola, amigo!', '¡Choque esos cinco!', '¿Aprendemos algo nuevo hoy?', '¡Qué alegre estoy de verte!'],
+  /** Al ver un logro desbloqueado. */
+  'piko.logro': ['¡Mirá lo que ganaste!', '¡Sos una estrella!', '¡Qué orgullo!', '¡Lo hiciste!'],
   'piko.fin_bien': ['¡Terminaste! Estuviste muy bien.', '¡Qué ronda! Seguí así.', '¡Excelente trabajo!'],
   'piko.fin_normal': ['¡Terminamos! Cada vez sale mejor.', 'Buen trabajo. Practicando se aprende.', '¡Listo! Lo importante es seguir.'],
   /** Al subir de nivel: Piko trepa una rama más del madroño. */

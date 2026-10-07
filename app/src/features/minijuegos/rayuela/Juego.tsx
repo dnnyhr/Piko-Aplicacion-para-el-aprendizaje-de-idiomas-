@@ -29,6 +29,7 @@ import { callar, decir, vozDePiko } from '../voz';
 import { Tablero, type Casilla } from './Tablero';
 import { Globito } from '../../../ui/minijuegos/Iconos';
 import { color, espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
+import { usePausaLogros } from '../../logros/store';
 
 /** Dónde termina el cielo y empieza el patio. */
 const HORIZONTE = 236;
@@ -47,6 +48,8 @@ export interface JuegoProps {
 type Resultado = null | 'acierto' | 'intento';
 
 export function Juego({ preguntas, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoProps) {
+  // Un logro ganado a mitad de la ronda se festeja al terminarla.
+  usePausaLogros();
   const { t, frases, idioma } = useTextos();
   const [paso, setPaso] = useState(0);
   const [pikoEn, setPikoEn] = useState<number | 'inicio'>('inicio');

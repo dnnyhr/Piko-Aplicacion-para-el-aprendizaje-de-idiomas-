@@ -513,6 +513,32 @@ en [SECURITY.md](../SECURITY.md) y en «Seguridad» y «Privacidad» de
 [encuestas/README.md](../encuestas/README.md). Las palabras nunca pasan
 directo a la app: siempre las confirma alguien que habla la lengua.
 
+## 25. Los logros salen del log; sólo el canje de códigos usa el servidor
+
+**Contexto.** Los logros tienen que motivar sin ser una lista de tareas, poder
+crecer (eventos, concursos, escuelas) sin tocar toda la app, y el logro de
+Hackathon Nicaragua 2026 sólo se consigue con el código de una tarjeta que
+sirve una vez.
+
+**Decisión.** Cada logro es una entrada de datos en
+`app/src/core/logros/catalogo.ts` (qué es, cómo se ve, qué condición lo
+desbloquea). Si está desbloqueado y desde cuándo lo calcula la proyección, a
+partir del mismo log de eventos que el XP y las sacuanjoches. Saludar a Piko es
+un evento `hito` y un código canjeado es un evento `canje`. Validar que un
+código existe y que nadie lo usó lo hace el Worker de las encuestas, con la
+tabla `codigos` en D1.
+
+**Por qué.** Desde el log, los logros viajan con el estudiante de teléfono en
+teléfono y dan lo mismo en cualquiera, sin servidor. Un código de un solo uso
+entre todos los teléfonos, en cambio, no se puede comprobar sin alguien que
+recuerde cuáles se usaron. El Worker ya existe y tiene D1, pruebas y panel:
+sumarle una tabla es más simple y seguro que montar otro servidor.
+
+**Costo.** Canjear necesita internet en ese momento (la app lo dice si no
+hay). El servidor guarda qué estudiante (un id anónimo de la app, el teléfono
+y, si está en una clase, su nombre) canjeó cada código. La racha se cuenta en
+hora de Nicaragua (UTC−6) y no en la del teléfono, para que dé igual en todos.
+
 ---
 
 ## Pendientes conocidos

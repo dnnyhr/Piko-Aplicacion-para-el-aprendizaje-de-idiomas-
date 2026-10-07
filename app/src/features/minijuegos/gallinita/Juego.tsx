@@ -55,6 +55,7 @@ import {
 } from '../../../core/minijuegos/gallinita';
 import { callar, decir, vozDePiko } from '../voz';
 import { color, espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
+import { usePausaLogros } from '../../logros/store';
 
 const HORIZONTE = 226;
 const PIKO = 92;
@@ -104,6 +105,8 @@ function Oscuridad({ r }: { r: number }) {
 }
 
 export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoGallinitaProps) {
+  // Un logro ganado a mitad de la ronda se festeja al terminarla.
+  usePausaLogros();
   const { t, frases, idioma } = useTextos();
   const [indice, setIndice] = useState(0);
   const [partida, setPartida] = useState<EstadoGallinita>(partidaNueva);

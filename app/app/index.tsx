@@ -5,7 +5,7 @@
  * haya nadie más cerca, y es lo que un niño puede abrir en su casa.
  */
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SvgXml } from 'react-native-svg';
@@ -23,14 +23,31 @@ import { MiniaturaArbol } from '../src/ui/arbol/MiniaturaArbol';
 import { ContadorSacuanjoches } from '../src/ui/arbol/ContadorSacuanjoches';
 import { useProgreso } from '../src/features/progreso/store';
 import { etapaDe, nivelDe } from '../src/core/progress/arbol';
+import { resumenLogros } from '../src/core/logros/evaluar';
 import { color, espacio, radio, texto } from '../src/ui/tokens';
 
 export default function Portada() {
   const router = useRouter();
   const { t, frases, idioma } = useTextos();
   const cambiarIdioma = useIdioma((s) => s.cambiar);
-  const saludo = useMemo(() => elegir(frases('piko.bienvenida')), [frases]);
+  const bienvenida = useMemo(() => elegir(frases('piko.bienvenida')), [frases]);
   const sacuanjoches = useProgreso((s) => s.estado.sacuanjoches);
+  const estado = useProgreso((s) => s.estado);
+  const logros = useMemo(() => resumenLogros(estado), [estado]);
+  // Tocar a Piko: dice otra cosa, salta, y la primera vez cuenta para «Conoce a Piko».
+  const [tocado, setTocado] = useState<string | null>(null);
+  const [festeja, setFesteja] = useState(false);
+  const reloj = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tocarPiko = () => {
+    setTocado(elegir(frases('piko.tocado')));
+    setFesteja(true);
+    if (reloj.current) clearTimeout(reloj.current);
+    reloj.current = setTimeout(() => setFesteja(false), 1200);
+    useProgreso.getState().registrarHito('piko');
+  };
+  useEffect(() => () => {
+    if (reloj.current) clearTimeout(reloj.current);
+  }, []);
 
   // Lo guardado de otras veces, para que el madroño aparezca como quedó.
   useEffect(() => {
@@ -45,8 +62,10 @@ export default function Portada() {
         </View>
 
         <View style={styles.saludo}>
-          <PikoMascota estado="saludando" tam={168} />
-          <Globo style={styles.globo}>{saludo}</Globo>
+          <Pressable onPress={tocarPiko} accessibilityRole="button" accessibilityLabel="Saludar a Piko" hitSlop={8}>
+            <PikoMascota key={festeja ? 'salta' : 'quieto'} estado={festeja ? 'celebrando' : 'saludando'} tam={168} />
+          </Pressable>
+          <Globo style={styles.globo}>{tocado ?? bienvenida}</Globo>
         </View>
 
         <Text style={styles.lema}>{t('portada.lema')}</Text>
@@ -102,6 +121,20 @@ export default function Portada() {
           <ContadorSacuanjoches total={sacuanjoches} />
         </Pressable>
 
+        <Pressable
+          onPress={() => router.push('/logros')}
+          accessibilityRole="button"
+          accessibilityLabel={t('portada.logros')}
+          style={styles.madrono}
+        >
+          <Text style={styles.trofeo}>🏆</Text>
+          <View style={styles.madronoTexto}>
+            <Text style={styles.madronoTitulo}>{t('portada.logros')}</Text>
+            <Text style={styles.madronoSub}>{t('logros.desbloqueados', { n: logros.desbloqueados, total: logros.total })}</Text>
+          </View>
+          {logros.especiales.length > 0 && <Text style={styles.estrella}>⭐</Text>}
+        </Pressable>
+
         <View style={styles.lenguas}>
           {LANGS.map((l) => (
             <View key={l} style={styles.lengua}>
@@ -139,6 +172,8 @@ const styles = StyleSheet.create({
     paddingVertical: espacio.sm,
     paddingHorizontal: espacio.md,
   },
+  trofeo: { fontSize: 36, width: 64, textAlign: 'center' },
+  estrella: { fontSize: 24 },
   madronoCielo: { backgroundColor: color.nube, borderRadius: radio.md, padding: espacio.xs },
   madronoTexto: { flex: 1 },
   madronoTitulo: { ...texto.subtitulo, color: color.verde },
