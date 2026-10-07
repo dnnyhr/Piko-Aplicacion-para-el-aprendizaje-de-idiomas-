@@ -45,11 +45,14 @@ export const ESTADOS_PIKO: readonly EstadoPiko[] = [
   'dormido',
 ];
 
+// Hoy hay dos: Piko pensando (mano en el pico) y Piko feliz con los pulgares
+// arriba, que también cubre el festejo y el ánimo tras un error. El dibujo
+// enojado de la misma hoja no se usa: Piko nunca se enoja.
 export const SPRITES: Partial<Record<EstadoPiko, ImageSourcePropType>> = {
   // idle:       require('../../../assets/piko/idle.png'),
   // saludando:  require('../../../assets/piko/saludando.png'),
-  // pensando:   require('../../../assets/piko/pensando.png'),
-  // alegre:     require('../../../assets/piko/alegre.png'),
+  pensando: require('../../../assets/piko/pensando.png'),
+  alegre: require('../../../assets/piko/alegre.png'),
   // animando:   require('../../../assets/piko/animando.png'),
   // celebrando: require('../../../assets/piko/celebrando.png'),
   // dormido:    require('../../../assets/piko/dormido.png'),
@@ -62,7 +65,8 @@ export const SPRITES: Partial<Record<EstadoPiko, ImageSourcePropType>> = {
  */
 export const PARECIDOS: Record<EstadoPiko, readonly EstadoPiko[]> = {
   idle: [],
-  saludando: ['idle', 'alegre'],
+  // El saludo se queda con el Piko de la landing: es la cara de la marca.
+  saludando: ['idle'],
   pensando: ['idle'],
   alegre: ['celebrando', 'idle'],
   animando: ['idle', 'alegre'],

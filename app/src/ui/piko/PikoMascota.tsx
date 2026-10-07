@@ -43,7 +43,9 @@ export function PikoMascota({
 }: PikoMascotaProps) {
   const respira = useRef(new Animated.Value(0)).current;
   const salta = useRef(new Animated.Value(0)).current;
-  const sprite = spriteDe(estado);
+  // Un accesorio va en las coordenadas del vector, así que con accesorio se
+  // dibuja siempre el vector, aunque el estado tenga imagen.
+  const sprite = accesorio ? null : spriteDe(estado);
 
   // Respiración: apenas perceptible, pero hace que no parezca una calcomanía.
   useEffect(() => {
