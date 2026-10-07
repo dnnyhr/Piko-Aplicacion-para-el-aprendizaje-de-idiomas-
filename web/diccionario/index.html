@@ -228,12 +228,46 @@
   .forma-chip small{color:var(--tinta-suave)}
   .regla{margin:0 .3rem .3rem 0; white-space:normal}
   .revision{background:#FDF0D5; border-radius:14px; padding:.65rem .8rem; font-size:.9rem; color:#5C3D02; margin:.8rem 0 0}
-  .copiar-enlace{font-size:.82rem; display:inline-flex; align-items:center; gap:.3rem; margin-top:.7rem}
+  .compartir{
+    margin-top:.9rem; display:inline-flex; align-items:center; gap:.4rem; cursor:pointer;
+    font:500 .88rem Fredoka,sans-serif; color:var(--verde-bosque); background:var(--papel);
+    border:none; border-radius:999px; padding:.45rem .9rem; min-height:40px;
+  }
+  .compartir svg{width:18px; height:18px; fill:currentColor}
+  .compartir:hover{background:var(--acento-suave)}
+  .ver-mas{
+    grid-column:1/-1; justify-self:center; margin:.6rem 0 0; cursor:pointer;
+    font:600 1rem Fredoka,sans-serif; color:var(--papel); background:var(--verde-piko);
+    border:none; border-radius:999px; padding:.85rem 1.6rem; min-height:48px; box-shadow:0 10px 22px rgba(15,93,61,.22);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .ver-mas small{font-weight:500; opacity:.8}
+  .ver-mas:hover{transform:translateY(-2px); box-shadow:0 14px 28px rgba(15,93,61,.28)}
   .vacio{grid-column:1/-1; text-align:center; color:var(--tinta-suave); padding:3rem 1rem}
   .vacio img{width:110px; margin:0 auto 1rem; display:block; opacity:.9}
   .estatico{grid-column:1/-1; columns:3 240px; list-style:none; padding:0; margin:0}
   .estatico li{break-inside:avoid; padding:.2rem 0}
   .estatico b{font-family:Fredoka,sans-serif; font-weight:600; color:var(--verde-piko)}
+
+  /* En el teléfono: tarjetas compactas, una franja de color en vez del encabezado */
+  @media (max-width:620px){
+    .palabras{gap:.6rem; margin-top:1rem}
+    .palabra{padding:.7rem .85rem .7rem 1.1rem; border-radius:18px; contain-intrinsic-size:auto 120px; scroll-margin-top:200px}
+    .palabra::before{top:0; bottom:0; right:auto; width:5px; height:auto}
+    .palabra:hover{transform:none}
+    .palabra__tope{display:none}
+    .palabra__fila{align-items:center; gap:.6rem}
+    .palabra__forma{font-size:1.3rem}
+    .palabra__es{font-size:.98rem; margin:.1rem 0 .35rem}
+    .palabra .escuchar{width:42px; height:42px}
+    .palabra .escuchar svg{width:20px; height:20px}
+    .palabra .insignia{font-size:.72rem; padding:.16rem .5rem}
+    .palabra details{margin-top:.1rem; padding-top:0; border-top:none}
+    .palabra summary{font-size:.84rem; min-height:30px; color:var(--tinta-suave)}
+    .palabra details[open]{border-top:1px dashed rgba(15,93,61,.18); padding-top:.35rem}
+    .detalle{font-size:.9rem}
+    .estatico{columns:1}
+  }
 
   /* Leyenda de las etiquetas */
   .leyenda{display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr))}

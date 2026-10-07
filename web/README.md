@@ -43,7 +43,7 @@ web/
 | Cambiar un texto de una página | su `index.html` |
 | Agregar una página | una carpeta con su `index.html` (copiar el `<head>` de otra), sumarla a `PAGINAS` en `assets/js/nav.js`, a `PAGINAS_DEL_SITIO` en `diccionario/herramientas/web.ts` y a `herramientas/og.mjs` |
 | Corregir una palabra del diccionario | `diccionario/miskito/lexico.json` y `cd app && npm run contenido` (nunca `web/datos/`) |
-| Corregir o agregar una regla | `diccionario/miskito/gramatica.md` y `cd app && npm run contenido` (nunca la lista de `reglas/index.html`) |
+| Corregir el texto de una regla | `diccionario/miskito/reglas-sitio.md` y `cd app && npm run contenido` (nunca la lista de `reglas/index.html`) |
 | Actualizar Piko en el navegador | `cd app && npm run web:sitio` (y subir todo `web/probar/app/`) |
 | Rehacer las imágenes para compartir | `npx -y -p playwright-core node web/herramientas/og.mjs` (con `app/node_modules` instalado) |
 
@@ -124,10 +124,17 @@ Bilwi, varía entre hablantes, varias escrituras, otra palabra) no se escriben
 a mano: las calcula `diccionario/herramientas/web.ts` a partir del léxico y
 del corpus, que dice quién escribió cada forma.
 
-Las reglas tampoco: `diccionario/herramientas/reglas.ts` lee
-`gramatica.md` y escribe en `reglas/index.html` sólo las reglas de confianza A
-(3 ejemplos o más, ninguno en contra), sin las glosas, las predicciones ni las
-hipótesis. Las probables y las hipótesis se quedan en el repositorio.
+Las reglas tampoco: `diccionario/herramientas/reglas.ts` escribe en
+`reglas/index.html` las reglas que en `gramatica.md` tienen confianza A (3
+ejemplos o más, ninguno en contra), con el texto de `reglas-sitio.md`: formal,
+sin nombrar a quienes contestaron las encuestas («según datos proporcionados
+por hablantes») y sin la historia del trabajo. Las probables y las hipótesis
+se quedan en el repositorio.
+
+En el teléfono, el diccionario muestra tarjetas compactas y dibuja las
+palabras de a 48 («Ver más»); un enlace a una palabra (`#yul`) la dibuja y la
+abre aunque esté más abajo. «Compartir esta palabra» abre el menú de
+compartir del teléfono o copia el enlace.
 
 El diccionario y el estado salen de `diccionario/` y nada más. El sitio
 muestra sólo lo confirmado: las palabras en revisión no aparecen, igual que en
