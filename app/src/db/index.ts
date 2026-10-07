@@ -63,6 +63,25 @@ export function ultimaLenguaMinijuegos(sql: SqlDriver): string | null {
   );
 }
 
+/** Los logros ya celebrados en este teléfono, por estudiante. */
+export function recordarLogrosVistos(sql: SqlDriver, vistos: Record<string, string[]>): void {
+  sql.run('UPDATE device SET logros_vistos = ? WHERE id = 1', [JSON.stringify(vistos)]);
+}
+
+export function logrosVistos(sql: SqlDriver): Record<string, string[]> {
+  const crudo = sql.get<{ logros_vistos: string | null }>('SELECT logros_vistos FROM device WHERE id = 1')?.logros_vistos;
+  if (!crudo) return {};
+  try {
+    const v: unknown = JSON.parse(crudo);
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return {};
+    const out: Record<string, string[]> = {};
+    for (const [k, ids] of Object.entries(v)) if (Array.isArray(ids)) out[k] = ids.filter((x): x is string => typeof x === 'string');
+    return out;
+  } catch {
+    return {};
+  }
+}
+
 // --------------------------------------------------------------------- roster
 
 export interface AlumnoGuardado {

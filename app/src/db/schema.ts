@@ -8,7 +8,7 @@
  * batería.
  */
 
-export const VERSION_ESQUEMA = 3;
+export const VERSION_ESQUEMA = 4;
 
 /**
  * Notas de diseño de las tablas:
@@ -88,6 +88,10 @@ export const MIGRACIONES: readonly string[][] = [
   ['ALTER TABLE device ADD COLUMN idioma_app TEXT'],
   // v3: la lengua elegida para los minijuegos (`eng` o `miq`). NULL = sin elegir.
   ['ALTER TABLE device ADD COLUMN lengua_minijuegos TEXT'],
+  // v4: los logros que ya se celebraron en este teléfono, por estudiante
+  // (JSON `{ studentId: [ids] }`). NULL = nunca se miró: lo ya ganado no se
+  // vuelve a festejar.
+  ['ALTER TABLE device ADD COLUMN logros_vistos TEXT'],
 ];
 
 export const SQL_INICIAL = [

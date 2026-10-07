@@ -12,7 +12,8 @@
     "validar": "node herramientas/publicar.mjs --validar",
     "publicar": "node herramientas/publicar.mjs",
     "deploy": "wrangler deploy",
-    "prueba": "node --test \"test/*.test.mjs\""
+    "prueba": "node --test \"test/*.test.mjs\"",
+    "codigos": "node herramientas/codigos.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.138.0"

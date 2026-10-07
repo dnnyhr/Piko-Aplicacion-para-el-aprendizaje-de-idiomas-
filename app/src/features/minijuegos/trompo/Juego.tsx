@@ -36,6 +36,7 @@ import {
 } from '../../../core/minijuegos/trompo';
 import { callar, decir, vozDePiko } from '../voz';
 import { color, espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
+import { usePausaLogros } from '../../logros/store';
 
 /** Segundos de más en los retos de audio: lo que tarda Piko en decirlo. */
 const EXTRA_AUDIO = 2;
@@ -55,6 +56,8 @@ export interface JuegoTrompoProps {
 type Fase = 'listo' | 'lanzando' | 'reto' | 'respuesta' | 'final';
 
 export function JuegoTrompo({ retos, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoTrompoProps) {
+  // Un logro ganado a mitad de la ronda se festeja al terminarla.
+  usePausaLogros();
   const { t, frases, idioma } = useTextos();
   const [fase, setFase] = useState<Fase>('listo');
   const [partida, setPartida] = useState<EstadoTrompo>(partidaNueva);

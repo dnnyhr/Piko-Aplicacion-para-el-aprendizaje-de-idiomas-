@@ -167,6 +167,28 @@ uso** y con letra y traducciones validadas: el formato, el instructivo y la
 prueba que las revisa están ahí (`README.md`) y en
 `src/core/canciones/cancion.ts`.
 
+## Logros
+
+«Mis logros» (desde la portada y el perfil) muestra cuántos lleva el
+estudiante y todas las insignias por categoría: progreso, racha, palabras, con
+Piko, exploración (canciones, minijuegos, lenguas) y especiales. Las ganadas
+van a color; las que faltan, en gris con candado y cuánto falta. Al ganar uno
+aparece «¡Nuevo logro desbloqueado!», pero nunca en medio de una ronda: se
+guarda para cuando termina (`usePausaLogros`).
+
+Cada logro es una entrada de datos en `src/core/logros/catalogo.ts`: agregar
+uno es sumar una entrada, y la pantalla, el perfil y la celebración lo toman
+solos. Si está desbloqueado y desde cuándo sale del log de eventos, como el XP
+(`src/core/logros/evaluar.ts`), así que viaja con el estudiante. La racha se
+cuenta en hora de Nicaragua.
+
+Los **logros especiales** (eventos, concursos, escuelas) se consiguen sólo con
+el código de una tarjeta, en «Canjear código». Es lo único de la app que usa
+internet: el servidor de las encuestas confirma que el código existe y que
+nadie lo usó (ver «Códigos de logros especiales» en
+[`../encuestas/README.md`](../encuestas/README.md)). Para probarlo contra un
+servidor local: `EXPO_PUBLIC_PIKO_CANJES=http://localhost:8787/api/canjes`.
+
 ## Los sprites de Piko
 
 `src/ui/piko/sprites.ts` tiene siete estados (`idle`, `saludando`, `pensando`,

@@ -6,8 +6,8 @@
  * en la clase.
  */
 
-import { useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useMemo } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Boton } from '../src/ui/components/Boton';
 import { BarraProgreso } from '../src/ui/components/BarraProgreso';
@@ -19,6 +19,10 @@ import { useAulaCliente } from '../src/features/aula/cliente';
 import { lugarDePiko, progresoEtapa, progresoNivel } from '../src/core/progress/arbol';
 import { color, espacio, radio, texto } from '../src/ui/tokens';
 import { CANCIONES } from '../content/canciones';
+import { logroPorId } from '../src/core/logros/catalogo';
+import { resumenLogros } from '../src/core/logros/evaluar';
+import { Insignia } from '../src/ui/logros/Insignia';
+import { useTextos } from '../src/ui/textos/useTextos';
 
 export default function Perfil() {
   const router = useRouter();
@@ -29,6 +33,19 @@ export default function Perfil() {
   useEffect(() => {
     useProgreso.getState().recomputar();
   }, []);
+
+  const { t } = useTextos();
+  const logros = useMemo(() => resumenLogros(estado), [estado]);
+  // Los tres últimos que ganó, sin repetir los especiales (que van aparte).
+  const ultimos = useMemo(
+    () =>
+      Object.entries(estado.logros)
+        .sort(([, a], [, b]) => b - a)
+        .map(([id]) => logroPorId(id))
+        .filter((l) => l !== undefined && l.tipo !== 'especial')
+        .slice(0, 3),
+    [estado.logros],
+  );
 
   const total = estado.sacuanjoches;
   const nivel = progresoNivel(total);
@@ -55,6 +72,36 @@ export default function Perfil() {
             <Text style={styles.lugar}>{lugarDePiko(nivel.nivel)}</Text>
           </View>
         </View>
+
+        <Pressable
+          onPress={() => router.push('/logros')}
+          accessibilityRole="button"
+          accessibilityLabel={t('logros.titulo')}
+          style={({ pressed }) => [styles.logros, pressed && styles.apretado]}
+        >
+          <View style={styles.filaEtiqueta}>
+            <Text style={styles.etiqueta}>{t('logros.titulo')}</Text>
+            <Text style={styles.cuenta}>›</Text>
+          </View>
+          <Text style={styles.trofeo}>🏆 {t('logros.desbloqueados', { n: logros.desbloqueados, total: logros.total })}</Text>
+          {logros.especiales.length > 0 && (
+            <View style={styles.especial}>
+              {logros.especiales.map((l) => (
+                <Insignia key={l.id} logro={l} desbloqueado tam={56} />
+              ))}
+              <View style={styles.especialTexto}>
+                <Text style={styles.especialTitulo}>⭐ {t('logros.especial_desbloqueado')}</Text>
+                <Text style={styles.especialNombre}>{logros.especiales.map((l) => l.nombre).join(' · ')}</Text>
+              </View>
+            </View>
+          )}
+          {ultimos.length > 0 && (
+            <View style={styles.ultimos}>
+              {ultimos.map((l) => l && <Insignia key={l.id} logro={l} desbloqueado tam={52} />)}
+              <Text style={styles.ayuda}>{t('logros.ultimos')}</Text>
+            </View>
+          )}
+        </Pressable>
 
         <View style={styles.bloque}>
           <View style={styles.filaEtiqueta}>
@@ -150,6 +197,32 @@ const styles = StyleSheet.create({
   etiqueta: { ...texto.etiqueta, color: color.tintaSuave, flexShrink: 1 },
   cuenta: { ...texto.cuerpoFuerte, color: color.verde },
   ayuda: { ...texto.chico, color: color.tintaSuave },
+
+  logros: {
+    backgroundColor: color.blanco,
+    borderWidth: 2,
+    borderBottomWidth: 4,
+    borderColor: color.borde,
+    borderRadius: radio.lg,
+    padding: espacio.md,
+    gap: espacio.sm,
+  },
+  apretado: { transform: [{ translateY: 2 }], borderBottomWidth: 2 },
+  trofeo: { ...texto.subtitulo, color: color.verde },
+  especial: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: espacio.md,
+    backgroundColor: '#0B3D6E',
+    borderRadius: radio.md,
+    borderWidth: 2,
+    borderColor: '#F4C542',
+    padding: espacio.sm,
+  },
+  especialTexto: { flex: 1 },
+  especialTitulo: { ...texto.cuerpoFuerte, color: '#F4C542' },
+  especialNombre: { ...texto.chico, color: '#FFFFFF' },
+  ultimos: { flexDirection: 'row', alignItems: 'center', gap: espacio.sm },
 
   datos: { flexDirection: 'row', gap: espacio.md },
   dato: {
