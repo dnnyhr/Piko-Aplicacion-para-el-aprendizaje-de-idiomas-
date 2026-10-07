@@ -44,3 +44,6 @@ Thumbs.db
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+
+# Códigos de logros especiales: quien tenga uno disponible puede canjearlo
+encuestas/codigos-*.csv

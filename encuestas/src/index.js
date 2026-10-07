@@ -13,6 +13,7 @@
  *   GET  /api/encuestas                        las abiertas
  *   GET  /api/encuestas/:slug                  definición vigente
  *   POST /api/encuestas/:slug/respuestas       guardar una respuesta
+ *   POST /api/canjes                           canjear un código de logro especial (lo llama la app)
  *
  *   PUT  /api/admin/encuestas/:slug            publicar / actualizar (token)
  *   GET  /api/admin/encuestas                  todas, con conteo (token)
@@ -30,12 +31,15 @@
  *   GET  /api/admin/encuestas/:slug/palabras   traducciones agrupadas por palabra, lengua y zona (token)
  *   POST /api/admin/encuestas/:slug/palabras/confirmar  confirmar o quitar una traducción (token)
  *   GET  /api/admin/encuestas/:slug/palabras/exportar?grupo=  lo confirmado, y los paquetes de la app (token)
+ *   POST /api/admin/codigos                    crear o cargar una tanda de códigos de logros (token)
+ *   GET  /api/admin/codigos?lote=              los códigos, con estado, quién y cuándo (token)
  */
 
 import { aFilas, preguntasDe, revisar, validarDefinicion } from '../public/js/reglas.js';
 import { detalleAmigable, enviarBienvenida, limpiarNombre, mandarDescarga, nombreDesdeCorreo } from './correo.js';
 import { leerContactos, MAX_LINEAS } from './contactos.js';
 import { agrupar, armarPaquetes, clavePalabra, REGLA } from './palabras.js';
+import { canjear, cargarCodigos, listarCodigos } from './canjes.js';
 
 /** Intentos fallidos de token por IP antes de bloquearla, y por cuánto tiempo. */
 const INTENTOS_ADMIN = 10;
@@ -74,6 +78,13 @@ function conSeguridad(res) {
   for (const [k, v] of Object.entries(SEGURIDAD)) r.headers.set(k, v);
   return r;
 }
+
+const CORS = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'POST, OPTIONS',
+  'access-control-allow-headers': 'content-type',
+  'access-control-max-age': '86400',
+};
 
 /** Respuestas por huella y por día antes de responder 429. Un aula comparte IP. */
 const LIMITE_DIARIO = 60;
@@ -117,8 +128,27 @@ async function enrutar(request, env, ctx) {
     if (b && c === 'respuestas' && !d && m === 'POST') return guardarRespuesta(request, env, b, url, ctx);
   }
 
+  // La app llama desde otro dominio (piko.mugiware.com en el navegador), así
+  // que el canje acepta pedidos de cualquier origen. No usa cookies ni token.
+  if (a === 'canjes' && !b) {
+    if (m === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
+    if (m === 'POST') {
+      const huella = await sha256(`canje|${request.headers.get('cf-connecting-ip') ?? ''}`);
+      const r = await canjear(env, await leerJson(request), huella);
+      return json(r.cuerpo, r.status, CORS);
+    }
+  }
+
   if (a === 'admin') {
     await exigirAdmin(request, env);
+    if (b === 'codigos' && !c && m === 'POST') {
+      const r = await cargarCodigos(env, await leerJson(request));
+      return json(r.cuerpo, r.status);
+    }
+    if (b === 'codigos' && !c && m === 'GET') {
+      const r = await listarCodigos(env, url.searchParams.get('lote'));
+      return json(r.cuerpo, r.status);
+    }
     if (b === 'encuestas' && !c && m === 'GET') return listarTodas(env);
     if (b === 'encuestas' && c && d === 'estado' && !e && m === 'POST') return cambiarEstado(request, env, c);
     if (b === 'encuestas' && c && !d && m === 'PUT') return publicar(request, env, c);

@@ -4,7 +4,9 @@ Una página, muchas encuestas, en
 [encuestas.piko.mugiware.com](https://encuestas.piko.mugiware.com). Corre en
 **Cloudflare Workers** y guarda las respuestas en **D1**. Es la única parte de
 Piko que corre en un servidor, y vive fuera del aula: ni la app ni el robot la
-necesitan. Hay dos:
+necesitan para funcionar (la app sólo la usa para canjear los códigos de
+logros especiales, ver [Códigos de logros especiales](#códigos-de-logros-especiales)).
+Hay dos encuestas:
 
 - [`¿Qué le falta a Piko?`](definiciones/que-le-falta-a-piko.json): qué quiere
   la gente en la app y en el robot, el acompañante de aula que **guía, escucha
@@ -194,8 +196,52 @@ queda quieto mirando de frente.
 | `GET` · `POST /api/admin/encuestas/<slug>/contactos` | Contactos agregados a mano |
 | `GET /api/admin/encuestas/<slug>/palabras` | Traducciones agrupadas por palabra, lengua y zona |
 | `POST …/palabras/confirmar` · `GET …/palabras/exportar?grupo=` | Confirmar una traducción; descargar lo confirmado y los paquetes |
+| `POST /api/canjes` | Canjear el código de una tarjeta de logro especial (lo llama la app; ver [Códigos de logros especiales](#códigos-de-logros-especiales)) |
+| `POST` · `GET /api/admin/codigos` | Crear una tanda de códigos; verlos con su estado, quién los canjeó y cuándo |
 
 Todas las de `/api/admin/` piden `Authorization: Bearer <ADMIN_TOKEN>`.
+
+## Códigos de logros especiales
+
+Los logros especiales de la app (el de Hackathon Nicaragua 2026, y los que
+vengan de concursos, escuelas o colaboraciones) no se ganan jugando: se
+canjean con el código de una tarjeta impresa. Cada tarjeta trae un código
+distinto, y cada código sirve **una sola vez en todos los teléfonos**. Eso es
+lo único que la app no puede saber sola, y por eso vive acá, en la tabla
+`codigos` de D1 (migración 0007): el código, su estado (`disponible` o
+`utilizado`), el logro que desbloquea, la tanda, quién lo canjeó (el id del
+estudiante en la app, el teléfono y el nombre si está en una clase) y cuándo.
+
+Los códigos tienen la forma `PIKO-HK26-7KQ2-M9XA`: `PIKO`, el evento (4
+caracteres) y 8 al azar. Sin I, L, O ni U, para que no se confundan al
+copiarlos; si alguien escribe O o I igual se leen como 0 y 1. Probar códigos
+al azar no sirve: son 40 bits, y después de 10 códigos que no existen en 15
+minutos esa IP queda bloqueada un rato.
+
+```bash
+cd encuestas
+npm run db:remoto            # la primera vez: crea la tabla codigos
+
+# Una tanda de 300 tarjetas para Hackathon Nicaragua 2026.
+# --logro es el id del logro en app/src/core/logros/catalogo.ts.
+PIKO_ENCUESTAS_URL=https://encuestas.piko.mugiware.com PIKO_ENCUESTAS_TOKEN=... \
+  npm run codigos -- crear --lote hackathon-2026 --logro piko-hackathon-2026 --evento HK26 --cantidad 300
+# → codigos-hackathon-2026.csv, uno por línea, para mandar a imprimir
+
+# Cuántos se canjearon, y un CSV con cada código, su estado, quién y cuándo
+PIKO_ENCUESTAS_URL=... PIKO_ENCUESTAS_TOKEN=... npm run codigos -- ver --lote hackathon-2026
+```
+
+Los CSV no se suben al repositorio (están en `.gitignore`): quien tenga un
+código disponible puede canjearlo. Cargar dos veces la misma tanda no libera
+los ya canjeados.
+
+Un logro especial nuevo: se agrega en `app/src/core/logros/catalogo.ts` con
+`tipo: 'especial'` y `condicion: { tipo: 'codigo' }`, se publica la app, y
+recién entonces se crea su tanda con ese mismo `--logro`. Una app vieja que
+recibe un logro que no conoce le pide al niño que la actualice, y el código
+**ya queda canjeado a su nombre**: conviene repartir las tarjetas después de
+que la versión nueva esté en los teléfonos.
 
 ## El panel
 
