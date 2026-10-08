@@ -183,10 +183,16 @@ solos. Si está desbloqueado y desde cuándo sale del log de eventos, como el XP
 cuenta en hora de Nicaragua.
 
 Los **logros especiales** (eventos, concursos, escuelas) se consiguen sólo con
-el código de una tarjeta, en «Canjear código». Es lo único de la app que usa
-internet: el servidor de las encuestas confirma que el código existe y que
-nadie lo usó (ver «Códigos de logros especiales» en
-[`../encuestas/README.md`](../encuestas/README.md)). Para probarlo contra un
+un código, en «Canjear código». Hay dos clases:
+
+- **Códigos de evento**, que la app reconoce sola, sin internet ni servidor
+  (`src/core/logros/codigosLocales.ts`). En el repositorio sólo está su
+  huella SHA-256, nunca el código. Uno sirve para todo el evento; cada
+  estudiante lo canjea una vez. El de Hackathon Nicaragua 2026 es de estos.
+- **Códigos por tarjeta**, de un solo uso entre todos los teléfonos: los
+  confirma el servidor de las encuestas y necesitan internet al canjear (ver
+  «Códigos de logros especiales» en [`../encuestas/README.md`](../encuestas/README.md)).
+ Para probarlo contra un
 servidor local: `EXPO_PUBLIC_PIKO_CANJES=http://localhost:8787/api/canjes`.
 
 ## Los sprites de Piko

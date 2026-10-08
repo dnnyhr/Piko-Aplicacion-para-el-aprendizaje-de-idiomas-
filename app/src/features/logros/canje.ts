@@ -1,16 +1,23 @@
 /**
  * Canjear el código de una tarjeta (logros especiales).
  *
- * Es lo único de la app que necesita internet, y sólo en el momento de
- * canjear: el servidor (`encuestas/src/canjes.js`) es el que sabe si el código
- * existe y si alguien ya lo usó. Lo que confirma queda en el log de progreso
- * como un evento `canje`, y desde ahí el logro es del estudiante para siempre,
- * con o sin internet.
+ * Hay dos clases de código:
+ *
+ * - Los **locales** (`core/logros/codigosLocales.ts`): la app los reconoce
+ *   sola, sin internet ni servidor. Sirven para un evento entero (el de
+ *   Hackathon Nicaragua 2026 es uno de estos).
+ * - Los **del servidor** (`encuestas/src/canjes.js`): uno distinto por
+ *   tarjeta, de un solo uso entre todos los teléfonos. Necesitan internet en
+ *   el momento de canjear.
+ *
+ * Lo canjeado queda en el log de progreso como un evento `canje`, y desde ahí
+ * el logro es del estudiante para siempre, con o sin internet.
  */
 
 import { abrirBase } from '../../db';
 import { normalizarCodigo } from '../../core/logros/codigo';
 import { logroPorId } from '../../core/logros/catalogo';
+import { logroDeCodigoLocal } from '../../core/logros/codigosLocales';
 import { useProgreso } from '../progreso/store';
 
 /** Se puede apuntar a un servidor local con EXPO_PUBLIC_PIKO_CANJES (p. ej. http://localhost:8787/api/canjes). */
@@ -37,6 +44,14 @@ export async function canjearCodigo(texto: string, nombre: string | null): Promi
   const progreso = useProgreso.getState();
   const yaCanjeado = Object.entries(progreso.estado.canjes).find(([, c]) => c === codigo);
   if (yaCanjeado) return { tipo: 'ya_lo_tenes', logro: yaCanjeado[0] };
+
+  // Un código que la app conoce: no hace falta internet.
+  const local = logroDeCodigoLocal(codigo);
+  if (local) {
+    if (progreso.estado.canjes[local] !== undefined) return { tipo: 'ya_lo_tenes', logro: local };
+    progreso.registrarCanje({ codigo, logro: local, canjeadoEn: new Date().toISOString() });
+    return { tipo: 'ok', logro: local, codigo };
+  }
 
   const control = new AbortController();
   const reloj = setTimeout(() => control.abort(), ESPERA_MS);

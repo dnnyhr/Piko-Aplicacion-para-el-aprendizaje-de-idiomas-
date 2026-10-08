@@ -202,3 +202,26 @@ describe('los códigos de las tarjetas', () => {
     expect(formatearMientrasEscribe('PIKO-HK26-7KQ2-M9XA-EXTRA')).toBe('PIKO-HK26-7KQ2-M9XA');
   });
 });
+
+describe('los códigos que la app reconoce sin internet', () => {
+  it('el SHA-256 da lo mismo que el de siempre', async () => {
+    const { createHash } = await import('node:crypto');
+    const { sha256 } = await import('@core/logros/sha256');
+    for (const t of ['', 'abc', 'PIKO-HK26-7KQ2-M9XA', 'ñandú 🦜', 'x'.repeat(200)]) {
+      expect(sha256(t)).toBe(createHash('sha256').update(t).digest('hex'));
+    }
+  });
+
+  it('un código que no está en la lista no desbloquea nada', async () => {
+    const { logroDeCodigoLocal } = await import('@core/logros/codigosLocales');
+    expect(logroDeCodigoLocal('PIKO-HK26-0000-0000')).toBeNull();
+  });
+
+  it('cada huella apunta a un logro especial que existe', async () => {
+    const fs = await import('node:fs');
+    const texto = fs.readFileSync(new URL('../src/core/logros/codigosLocales.ts', import.meta.url), 'utf8');
+    const huellas = [...texto.matchAll(/'([0-9a-f]{64})': (\w+)/g)];
+    expect(huellas.length).toBeGreaterThan(0);
+    for (const [, , nombre] of huellas) expect(nombre).toBe('LOGRO_HACKATHON');
+  });
+});

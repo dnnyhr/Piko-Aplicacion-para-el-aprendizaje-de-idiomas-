@@ -534,8 +534,14 @@ entre todos los teléfonos, en cambio, no se puede comprobar sin alguien que
 recuerde cuáles se usaron. El Worker ya existe y tiene D1, pruebas y panel:
 sumarle una tabla es más simple y seguro que montar otro servidor.
 
-**Costo.** Canjear necesita internet en ese momento (la app lo dice si no
-hay). El servidor guarda qué estudiante (un id anónimo de la app, el teléfono
+**Después.** Para que el logro de Hackathon Nicaragua 2026 funcione ya en la
+app, sin esperar el servidor ni internet, la app también reconoce **códigos de
+evento**: compara la huella SHA-256 del código escrito con las de
+`codigosLocales.ts`. Uno así lo puede usar todo el evento (no es de un solo
+uso entre teléfonos); cada estudiante lo canjea una vez.
+
+**Costo.** Canjear un código por tarjeta necesita internet en ese momento (la
+app lo dice si no hay). El servidor guarda qué estudiante (un id anónimo de la app, el teléfono
 y, si está en una clase, su nombre) canjeó cada código. La racha se cuenta en
 hora de Nicaragua (UTC−6) y no en la del teléfono, para que dé igual en todos.
 
