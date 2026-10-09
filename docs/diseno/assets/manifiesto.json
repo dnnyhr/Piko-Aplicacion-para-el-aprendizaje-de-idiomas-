@@ -1,0 +1,417 @@
+[
+ {
+  "nombre": "Piko · idle",
+  "archivo": "svg/piko-idle.svg",
+  "png": "png/piko-idle.png",
+  "ancho": 178,
+  "alto": 292,
+  "usos": [
+   "Practicar · Elegir tema",
+   "Ejercicio · Respuesta correcta",
+   "Ejercicio · Seguí intentando",
+   "Inicio",
+   "Perfil",
+   "Mi madroño",
+   "Minijuegos",
+   "La Música de Piko",
+   "Mi clase (maestro)"
+  ]
+ },
+ {
+  "nombre": "Sacuanjoche",
+  "archivo": "svg/sacuanjoche.svg",
+  "png": "png/sacuanjoche.png",
+  "ancho": 40,
+  "alto": 40,
+  "usos": [
+   "Practicar · Elegir tema",
+   "Logro desbloqueado",
+   "Resultado de la lección",
+   "Inicio",
+   "Perfil",
+   "Mi madroño",
+   "Mis logros",
+   "Minijuegos",
+   "La Música de Piko"
+  ]
+ },
+ {
+  "nombre": "Parlante · escuchar",
+  "archivo": "svg/parlante-escuchar.svg",
+  "png": "png/parlante-escuchar.png",
+  "ancho": 24,
+  "alto": 24,
+  "usos": [
+   "Ejercicio · Escuchar"
+  ]
+ },
+ {
+  "nombre": "Madroño · cielo y montañas",
+  "archivo": "svg/madrono-cielo-y-montanas.svg",
+  "png": "png/madrono-cielo-y-montanas.png",
+  "ancho": 200,
+  "alto": 308,
+  "usos": [
+   "Logro desbloqueado",
+   "Resultado de la lección",
+   "Perfil",
+   "Mi madroño"
+  ]
+ },
+ {
+  "nombre": "Madroño · árbol y Piko",
+  "archivo": "svg/madrono-arbol-y-piko.svg",
+  "png": "png/madrono-arbol-y-piko.png",
+  "ancho": 200,
+  "alto": 308,
+  "usos": [
+   "Logro desbloqueado",
+   "Resultado de la lección",
+   "Perfil",
+   "Mi madroño"
+  ]
+ },
+ {
+  "nombre": "Rayos de festejo",
+  "archivo": "svg/rayos-de-festejo.svg",
+  "png": "png/rayos-de-festejo.png",
+  "ancho": 100,
+  "alto": 100,
+  "usos": [
+   "Logro desbloqueado"
+  ]
+ },
+ {
+  "nombre": "Insignia de logro · primera-palabra · ganada",
+  "archivo": "svg/insignia-de-logro-primera-palabra-ganada.svg",
+  "png": "png/insignia-de-logro-primera-palabra-ganada.png",
+  "ancho": 100,
+  "alto": 112,
+  "usos": [
+   "Logro desbloqueado",
+   "Perfil",
+   "Mis logros"
+  ]
+ },
+ {
+  "nombre": "Marca · Piko",
+  "archivo": "svg/marca-piko.svg",
+  "png": "png/marca-piko.png",
+  "ancho": 770,
+  "alto": 410,
+  "usos": [
+   "Inicio"
+  ]
+ },
+ {
+  "nombre": "Madroño miniatura · brote",
+  "archivo": "svg/madrono-miniatura-brote.svg",
+  "png": "png/madrono-miniatura-brote.png",
+  "ancho": 84,
+  "alto": 82,
+  "usos": [
+   "Inicio",
+   "Mi madroño"
+  ]
+ },
+ {
+  "nombre": "Insignia de logro · primer-paso · ganada",
+  "archivo": "svg/insignia-de-logro-primer-paso-ganada.svg",
+  "png": "png/insignia-de-logro-primer-paso-ganada.png",
+  "ancho": 100,
+  "alto": 112,
+  "usos": [
+   "Perfil",
+   "Mis logros"
+  ]
+ },
+ {
+  "nombre": "Madroño miniatura · semilla",
+  "archivo": "svg/madrono-miniatura-semilla.svg",
+  "png": "png/madrono-miniatura-semilla.png",
+  "ancho": 76,
+  "alto": 68,
+  "usos": [
+   "Mi madroño"
+  ]
+ },
+ {
+  "nombre": "Madroño miniatura · arbolito",
+  "archivo": "svg/madrono-miniatura-arbolito.svg",
+  "png": "png/madrono-miniatura-arbolito.png",
+  "ancho": 108,
+  "alto": 138,
+  "usos": [
+   "Mi madroño"
+  ]
+ },
+ {
+  "nombre": "Madroño miniatura · hojas",
+  "archivo": "svg/madrono-miniatura-hojas.svg",
+  "png": "png/madrono-miniatura-hojas.png",
+  "ancho": 160,
+  "alto": 216,
+  "usos": [
+   "Mi madroño"
+  ]
+ },
+ {
+  "nombre": "Madroño miniatura · flores",
+  "archivo": "svg/madrono-miniatura-flores.svg",
+  "png": "png/madrono-miniatura-flores.png",
+  "ancho": 180,
+  "alto": 256,
+  "usos": [
+   "Mi madroño"
+  ]
+ },
+ {
+  "nombre": "Madroño miniatura · florecido",
+  "archivo": "svg/madrono-miniatura-florecido.svg",
+  "png": "png/madrono-miniatura-florecido.png",
+  "ancho": 180,
+  "alto": 262,
+  "usos": [
+   "Mi madroño"
+  ]
+ },
+ {
+  "nombre": "Insignia · Piko Hackathon · bloqueada",
+  "archivo": "svg/insignia-piko-hackathon-bloqueada.svg",
+  "png": "png/insignia-piko-hackathon-bloqueada.png",
+  "ancho": 100,
+  "alto": 112,
+  "usos": [
+   "Mis logros"
+  ]
+ },
+ {
+  "nombre": "Candado",
+  "archivo": "svg/candado.svg",
+  "png": "png/candado.png",
+  "ancho": 30,
+  "alto": 30,
+  "usos": [
+   "Mis logros"
+  ]
+ },
+ {
+  "nombre": "Insignia · bloqueada",
+  "archivo": "svg/insignia-bloqueada.svg",
+  "png": "png/insignia-bloqueada.png",
+  "ancho": 100,
+  "alto": 112,
+  "usos": [
+   "Mis logros"
+  ]
+ },
+ {
+  "nombre": "Reloj · próximamente",
+  "archivo": "svg/reloj-proximamente.svg",
+  "png": "png/reloj-proximamente.png",
+  "ancho": 30,
+  "alto": 30,
+  "usos": [
+   "Mis logros"
+  ]
+ },
+ {
+  "nombre": "Flecha · volver",
+  "archivo": "svg/flecha-volver.svg",
+  "png": "png/flecha-volver.png",
+  "ancho": 24,
+  "alto": 24,
+  "usos": [
+   "Minijuegos",
+   "La Música de Piko"
+  ]
+ },
+ {
+  "nombre": "Ícono · Rayuela",
+  "archivo": "svg/icono-rayuela.svg",
+  "png": "png/icono-rayuela.png",
+  "ancho": 64,
+  "alto": 64,
+  "usos": [
+   "Minijuegos"
+  ]
+ },
+ {
+  "nombre": "Ícono · Trompo",
+  "archivo": "svg/icono-trompo.svg",
+  "png": "png/icono-trompo.png",
+  "ancho": 120,
+  "alto": 150,
+  "usos": [
+   "Minijuegos"
+  ]
+ },
+ {
+  "nombre": "Ícono · Chibolas",
+  "archivo": "svg/icono-chibolas.svg",
+  "png": "png/icono-chibolas.png",
+  "ancho": 64,
+  "alto": 64,
+  "usos": [
+   "Minijuegos"
+  ]
+ },
+ {
+  "nombre": "Chibola · celeste",
+  "archivo": "svg/chibola-celeste.svg",
+  "png": "png/chibola-celeste.png",
+  "ancho": 40,
+  "alto": 40,
+  "usos": [
+   "Minijuegos"
+  ]
+ },
+ {
+  "nombre": "Chibola · naranja",
+  "archivo": "svg/chibola-naranja.svg",
+  "png": "png/chibola-naranja.png",
+  "ancho": 40,
+  "alto": 40,
+  "usos": [
+   "Minijuegos"
+  ]
+ },
+ {
+  "nombre": "Chibola · roja",
+  "archivo": "svg/chibola-roja.svg",
+  "png": "png/chibola-roja.png",
+  "ancho": 40,
+  "alto": 40,
+  "usos": [
+   "Minijuegos"
+  ]
+ },
+ {
+  "nombre": "Chibola · verde",
+  "archivo": "svg/chibola-verde.svg",
+  "png": "png/chibola-verde.png",
+  "ancho": 40,
+  "alto": 40,
+  "usos": [
+   "Minijuegos"
+  ]
+ },
+ {
+  "nombre": "Venda de Pikito Ciego",
+  "archivo": "svg/venda-de-pikito-ciego.svg",
+  "png": "png/venda-de-pikito-ciego.png",
+  "ancho": 178,
+  "alto": 292,
+  "usos": [
+   "Minijuegos"
+  ]
+ },
+ {
+  "nombre": "Nota musical · verde",
+  "archivo": "svg/nota-musical-verde.svg",
+  "png": "png/nota-musical-verde.png",
+  "ancho": 24,
+  "alto": 24,
+  "usos": [
+   "La Música de Piko"
+  ]
+ },
+ {
+  "nombre": "Nota musical · naranja",
+  "archivo": "svg/nota-musical-naranja.svg",
+  "png": "png/nota-musical-naranja.png",
+  "ancho": 24,
+  "alto": 24,
+  "usos": [
+   "La Música de Piko"
+  ]
+ },
+ {
+  "nombre": "Instrumento · tambor",
+  "archivo": "svg/instrumento-tambor.svg",
+  "png": "png/instrumento-tambor.png",
+  "ancho": 64,
+  "alto": 64,
+  "usos": [
+   "La Música de Piko"
+  ]
+ },
+ {
+  "nombre": "Instrumento · marimba",
+  "archivo": "svg/instrumento-marimba.svg",
+  "png": "png/instrumento-marimba.png",
+  "ancho": 64,
+  "alto": 64,
+  "usos": [
+   "La Música de Piko"
+  ]
+ },
+ {
+  "nombre": "Instrumento · guitarra",
+  "archivo": "svg/instrumento-guitarra.svg",
+  "png": "png/instrumento-guitarra.png",
+  "ancho": 64,
+  "alto": 64,
+  "usos": [
+   "La Música de Piko"
+  ]
+ },
+ {
+  "nombre": "Instrumento · maracas",
+  "archivo": "svg/instrumento-maracas.svg",
+  "png": "png/instrumento-maracas.png",
+  "ancho": 64,
+  "alto": 64,
+  "usos": [
+   "La Música de Piko"
+  ]
+ },
+ {
+  "nombre": "Instrumento · concha",
+  "archivo": "svg/instrumento-concha.svg",
+  "png": "png/instrumento-concha.png",
+  "ancho": 64,
+  "alto": 64,
+  "usos": [
+   "La Música de Piko"
+  ]
+ },
+ {
+  "nombre": "Instrumento · quijada",
+  "archivo": "svg/instrumento-quijada.svg",
+  "png": "png/instrumento-quijada.png",
+  "ancho": 64,
+  "alto": 64,
+  "usos": [
+   "La Música de Piko"
+  ]
+ },
+ {
+  "nombre": "Piko · pensando",
+  "archivo": null,
+  "png": "png/piko-pensando.png",
+  "ancho": 416,
+  "alto": 720,
+  "usos": [
+   "Ejercicio · Opción múltiple",
+   "Ejercicio · Armar oración",
+   "Ejercicio · Escuchar",
+   "Canjear código",
+   "Unirme a la clase"
+  ]
+ },
+ {
+  "nombre": "Piko · alegre",
+  "archivo": null,
+  "png": "png/piko-alegre.png",
+  "ancho": 475,
+  "alto": 720,
+  "usos": [
+   "Ejercicio · Respuesta correcta",
+   "Ejercicio · Seguí intentando",
+   "Logro desbloqueado",
+   "Resultado de la lección",
+   "Mis logros"
+  ]
+ }
+]

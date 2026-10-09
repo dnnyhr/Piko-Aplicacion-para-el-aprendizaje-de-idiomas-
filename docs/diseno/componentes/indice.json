@@ -1,0 +1,1085 @@
+[
+ {
+  "id": "PikoMascota",
+  "nombre": "Piko",
+  "variante": {
+   "Estado": "idle"
+  },
+  "archivo": "componentes/pikomascota-estado-idle.png",
+  "w": 59,
+  "h": 96,
+  "pantalla": "practicar"
+ },
+ {
+  "id": "ContadorSacuanjoches",
+  "nombre": "Contador de sacuanjoches",
+  "variante": {},
+  "archivo": "componentes/contadorsacuanjoches-base.png",
+  "w": 59.61,
+  "h": 34,
+  "pantalla": "practicar"
+ },
+ {
+  "id": "Sacuanjoche",
+  "nombre": "Sacuanjoche",
+  "variante": {},
+  "archivo": "componentes/sacuanjoche-base.png",
+  "w": 22,
+  "h": 22,
+  "pantalla": "practicar"
+ },
+ {
+  "id": "Opcion",
+  "nombre": "Opción",
+  "variante": {
+   "Estado": "elegida",
+   "Atajo": "sin número"
+  },
+  "archivo": "componentes/opcion-estado-elegida-atajo-sin-numero.png",
+  "w": 150,
+  "h": 68,
+  "pantalla": "practicar"
+ },
+ {
+  "id": "Opcion",
+  "nombre": "Opción",
+  "variante": {
+   "Estado": "normal",
+   "Atajo": "sin número"
+  },
+  "archivo": "componentes/opcion-estado-normal-atajo-sin-numero.png",
+  "w": 150,
+  "h": 68,
+  "pantalla": "practicar"
+ },
+ {
+  "id": "Boton",
+  "nombre": "Botón",
+  "variante": {
+   "Tono": "fantasma",
+   "Tamaño": "normal",
+   "Estado": "activo"
+  },
+  "archivo": "componentes/boton-tono-fantasma-tamano-normal-estado-activo.png",
+  "w": 312,
+  "h": 52,
+  "pantalla": "practicar"
+ },
+ {
+  "id": "BarraProgreso",
+  "nombre": "Barra de progreso",
+  "variante": {
+   "Tono": "verdePasto",
+   "Avance": "0%"
+  },
+  "archivo": "componentes/barraprogreso-tono-verdepasto-avance-0.png",
+  "w": 284.08,
+  "h": 16,
+  "pantalla": "ejercicio-opcion"
+ },
+ {
+  "id": "PikoMascota",
+  "nombre": "Piko",
+  "variante": {
+   "Estado": "pensando"
+  },
+  "archivo": "componentes/pikomascota-estado-pensando.png",
+  "w": 56,
+  "h": 92,
+  "pantalla": "ejercicio-opcion"
+ },
+ {
+  "id": "Opcion",
+  "nombre": "Opción",
+  "variante": {
+   "Estado": "normal",
+   "Atajo": "con número"
+  },
+  "archivo": "componentes/opcion-estado-normal-atajo-con-numero.png",
+  "w": 312,
+  "h": 68,
+  "pantalla": "ejercicio-opcion"
+ },
+ {
+  "id": "Boton",
+  "nombre": "Botón",
+  "variante": {
+   "Tono": "verde",
+   "Tamaño": "normal",
+   "Estado": "deshabilitado"
+  },
+  "archivo": "componentes/boton-tono-verde-tamano-normal-estado-deshabilitado.png",
+  "w": 312,
+  "h": 52,
+  "pantalla": "ejercicio-opcion"
+ },
+ {
+  "id": "Opcion",
+  "nombre": "Opción",
+  "variante": {
+   "Estado": "correcta",
+   "Atajo": "con número"
+  },
+  "archivo": "componentes/opcion-estado-correcta-atajo-con-numero.png",
+  "w": 312,
+  "h": 68,
+  "pantalla": "ejercicio-acierto"
+ },
+ {
+  "id": "BarraFeedback",
+  "nombre": "Barra de respuesta",
+  "variante": {
+   "Resultado": "acierto"
+  },
+  "archivo": "componentes/barrafeedback-resultado-acierto.png",
+  "w": 360,
+  "h": 186,
+  "pantalla": "ejercicio-acierto"
+ },
+ {
+  "id": "PikoMascota",
+  "nombre": "Piko",
+  "variante": {
+   "Estado": "alegre"
+  },
+  "archivo": "componentes/pikomascota-estado-alegre.png",
+  "w": 48,
+  "h": 78,
+  "pantalla": "ejercicio-acierto"
+ },
+ {
+  "id": "Boton",
+  "nombre": "Botón",
+  "variante": {
+   "Tono": "verde",
+   "Tamaño": "normal",
+   "Estado": "activo"
+  },
+  "archivo": "componentes/boton-tono-verde-tamano-normal-estado-activo.png",
+  "w": 312,
+  "h": 52,
+  "pantalla": "ejercicio-acierto"
+ },
+ {
+  "id": "BarraProgreso",
+  "nombre": "Barra de progreso",
+  "variante": {
+   "Tono": "verdePasto",
+   "Avance": "13%"
+  },
+  "archivo": "componentes/barraprogreso-tono-verdepasto-avance-13.png",
+  "w": 284.08,
+  "h": 16,
+  "pantalla": "ejercicio-bloques"
+ },
+ {
+  "id": "PikoMascota",
+  "nombre": "Piko",
+  "variante": {
+   "Estado": "pensando",
+   "Forma": "B"
+  },
+  "archivo": "componentes/pikomascota-estado-pensando-forma-b.png",
+  "w": 56,
+  "h": 92.31,
+  "pantalla": "ejercicio-bloques"
+ },
+ {
+  "id": "Bloque",
+  "nombre": "Ficha de palabra",
+  "variante": {
+   "Estado": "normal"
+  },
+  "archivo": "componentes/bloque-estado-normal.png",
+  "w": 59.97,
+  "h": 51,
+  "pantalla": "ejercicio-bloques"
+ },
+ {
+  "id": "Bloque",
+  "nombre": "Ficha de palabra",
+  "variante": {
+   "Estado": "hueco"
+  },
+  "archivo": "componentes/bloque-estado-hueco.png",
+  "w": 43.89,
+  "h": 51,
+  "pantalla": "ejercicio-bloques"
+ },
+ {
+  "id": "PikoMascota",
+  "nombre": "Piko",
+  "variante": {
+   "Estado": "idle",
+   "Forma": "B"
+  },
+  "archivo": "componentes/pikomascota-estado-idle-forma-b.png",
+  "w": 55.95,
+  "h": 91.78,
+  "pantalla": "ejercicio-intento"
+ },
+ {
+  "id": "BarraFeedback",
+  "nombre": "Barra de respuesta",
+  "variante": {
+   "Resultado": "intento"
+  },
+  "archivo": "componentes/barrafeedback-resultado-intento.png",
+  "w": 360,
+  "h": 186,
+  "pantalla": "ejercicio-intento"
+ },
+ {
+  "id": "PikoMascota",
+  "nombre": "Piko",
+  "variante": {
+   "Estado": "animando"
+  },
+  "archivo": "componentes/pikomascota-estado-animando.png",
+  "w": 48,
+  "h": 78,
+  "pantalla": "ejercicio-intento"
+ },
+ {
+  "id": "Boton",
+  "nombre": "Botón",
+  "variante": {
+   "Tono": "pico",
+   "Tamaño": "normal",
+   "Estado": "activo"
+  },
+  "archivo": "componentes/boton-tono-pico-tamano-normal-estado-activo.png",
+  "w": 312,
+  "h": 52,
+  "pantalla": "ejercicio-intento"
+ },
+ {
+  "id": "BarraProgreso",
+  "nombre": "Barra de progreso",
+  "variante": {
+   "Tono": "verdePasto",
+   "Avance": "50%"
+  },
+  "archivo": "componentes/barraprogreso-tono-verdepasto-avance-50.png",
+  "w": 238.17,
+  "h": 16,
+  "pantalla": "ejercicio-escucha"
+ },
+ {
+  "id": "Globo",
+  "nombre": "Globo de diálogo",
+  "variante": {
+   "Cola": "abajo"
+  },
+  "archivo": "componentes/globo-cola-abajo.png",
+  "w": 258.94,
+  "h": 52,
+  "pantalla": "logro-nuevo"
+ },
+ {
+  "id": "ArbolMadrono",
+  "nombre": "Madroño",
+  "variante": {
+   "Sacuanjoches": "4"
+  },
+  "archivo": "componentes/arbolmadrono-sacuanjoches-4.png",
+  "w": 200,
+  "h": 308,
+  "pantalla": "logro-nuevo"
+ },
+ {
+  "id": "PikoMascota",
+  "nombre": "Piko",
+  "variante": {
+   "Estado": "celebrando"
+  },
+  "archivo": "componentes/pikomascota-estado-celebrando.png",
+  "w": 35,
+  "h": 58,
+  "pantalla": "logro-nuevo"
+ },
+ {
+  "id": "Dato",
+  "nombre": "Tarjeta de dato",
+  "variante": {},
+  "archivo": "componentes/dato-base.png",
+  "w": 92,
+  "h": 75,
+  "pantalla": "logro-nuevo"
+ },
+ {
+  "id": "Boton",
+  "nombre": "Botón",
+  "variante": {
+   "Tono": "papel",
+   "Tamaño": "normal",
+   "Estado": "activo"
+  },
+  "archivo": "componentes/boton-tono-papel-tamano-normal-estado-activo.png",
+  "w": 312,
+  "h": 56,
+  "pantalla": "logro-nuevo"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "primera-palabra",
+   "Estado": "ganada"
+  },
+  "archivo": "componentes/insignia-logro-primera-palabra-estado-ganada.png",
+  "w": 129.29,
+  "h": 144.81,
+  "pantalla": "logro-nuevo"
+ },
+ {
+  "id": "PikoMascota",
+  "nombre": "Piko",
+  "variante": {
+   "Estado": "saludando"
+  },
+  "archivo": "componentes/pikomascota-estado-saludando.png",
+  "w": 102.37,
+  "h": 167.93,
+  "pantalla": "inicio"
+ },
+ {
+  "id": "Globo",
+  "nombre": "Globo de diálogo",
+  "variante": {
+   "Cola": "izquierda"
+  },
+  "archivo": "componentes/globo-cola-izquierda.png",
+  "w": 201.59,
+  "h": 52,
+  "pantalla": "inicio"
+ },
+ {
+  "id": "ChipIdioma",
+  "nombre": "Chip de idioma",
+  "variante": {
+   "Estado": "elegido"
+  },
+  "archivo": "componentes/chipidioma-estado-elegido.png",
+  "w": 87.31,
+  "h": 36,
+  "pantalla": "inicio"
+ },
+ {
+  "id": "ChipIdioma",
+  "nombre": "Chip de idioma",
+  "variante": {
+   "Estado": "normal"
+  },
+  "archivo": "componentes/chipidioma-estado-normal.png",
+  "w": 81.84,
+  "h": 36,
+  "pantalla": "inicio"
+ },
+ {
+  "id": "Boton",
+  "nombre": "Botón",
+  "variante": {
+   "Tono": "cielo",
+   "Tamaño": "normal",
+   "Estado": "activo"
+  },
+  "archivo": "componentes/boton-tono-cielo-tamano-normal-estado-activo.png",
+  "w": 312,
+  "h": 52,
+  "pantalla": "inicio"
+ },
+ {
+  "id": "TarjetaAcceso",
+  "nombre": "Tarjeta de acceso",
+  "variante": {},
+  "archivo": "componentes/tarjetaacceso-base.png",
+  "w": 312,
+  "h": 84,
+  "pantalla": "inicio"
+ },
+ {
+  "id": "MiniaturaArbol",
+  "nombre": "Madroño miniatura",
+  "variante": {
+   "Etapa": "brote"
+  },
+  "archivo": "componentes/miniaturaarbol-etapa-brote.png",
+  "w": 56,
+  "h": 54.67,
+  "pantalla": "inicio"
+ },
+ {
+  "id": "TarjetaAcceso",
+  "nombre": "Tarjeta de acceso",
+  "variante": {
+   "Forma": "B"
+  },
+  "archivo": "componentes/tarjetaacceso-forma-b.png",
+  "w": 312,
+  "h": 64,
+  "pantalla": "inicio"
+ },
+ {
+  "id": "EtiquetaLengua",
+  "nombre": "Etiqueta de lengua",
+  "variante": {},
+  "archivo": "componentes/etiquetalengua-base.png",
+  "w": 61.97,
+  "h": 30,
+  "pantalla": "inicio"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "primer-paso",
+   "Estado": "ganada"
+  },
+  "archivo": "componentes/insignia-logro-primer-paso-estado-ganada.png",
+  "w": 52,
+  "h": 58.23,
+  "pantalla": "perfil"
+ },
+ {
+  "id": "BarraProgreso",
+  "nombre": "Barra de progreso",
+  "variante": {
+   "Tono": "verdeHoja",
+   "Avance": "0%"
+  },
+  "archivo": "componentes/barraprogreso-tono-verdehoja-avance-0.png",
+  "w": 312,
+  "h": 16,
+  "pantalla": "perfil"
+ },
+ {
+  "id": "Paso",
+  "nombre": "Paso del ciclo",
+  "variante": {},
+  "archivo": "componentes/paso-base.png",
+  "w": 75,
+  "h": 68,
+  "pantalla": "arbol"
+ },
+ {
+  "id": "TarjetaEtapa",
+  "nombre": "Etapa del madroño",
+  "variante": {
+   "Estado": "normal"
+  },
+  "archivo": "componentes/tarjetaetapa-estado-normal.png",
+  "w": 312,
+  "h": 80,
+  "pantalla": "arbol"
+ },
+ {
+  "id": "MiniaturaArbol",
+  "nombre": "Madroño miniatura",
+  "variante": {
+   "Etapa": "semilla"
+  },
+  "archivo": "componentes/miniaturaarbol-etapa-semilla.png",
+  "w": 52,
+  "h": 46.53,
+  "pantalla": "arbol"
+ },
+ {
+  "id": "TarjetaEtapa",
+  "nombre": "Etapa del madroño",
+  "variante": {
+   "Estado": "actual"
+  },
+  "archivo": "componentes/tarjetaetapa-estado-actual.png",
+  "w": 312,
+  "h": 80,
+  "pantalla": "arbol"
+ },
+ {
+  "id": "MiniaturaArbol",
+  "nombre": "Madroño miniatura",
+  "variante": {
+   "Etapa": "arbolito"
+  },
+  "archivo": "componentes/miniaturaarbol-etapa-arbolito.png",
+  "w": 40.7,
+  "h": 52,
+  "pantalla": "arbol"
+ },
+ {
+  "id": "MiniaturaArbol",
+  "nombre": "Madroño miniatura",
+  "variante": {
+   "Etapa": "hojas"
+  },
+  "archivo": "componentes/miniaturaarbol-etapa-hojas.png",
+  "w": 38.52,
+  "h": 52,
+  "pantalla": "arbol"
+ },
+ {
+  "id": "MiniaturaArbol",
+  "nombre": "Madroño miniatura",
+  "variante": {
+   "Etapa": "flores"
+  },
+  "archivo": "componentes/miniaturaarbol-etapa-flores.png",
+  "w": 36.56,
+  "h": 52,
+  "pantalla": "arbol"
+ },
+ {
+  "id": "MiniaturaArbol",
+  "nombre": "Madroño miniatura",
+  "variante": {
+   "Etapa": "florecido"
+  },
+  "archivo": "componentes/miniaturaarbol-etapa-florecido.png",
+  "w": 35.73,
+  "h": 52,
+  "pantalla": "arbol"
+ },
+ {
+  "id": "BarraProgreso",
+  "nombre": "Barra de progreso",
+  "variante": {
+   "Tono": "pico",
+   "Avance": "10%"
+  },
+  "archivo": "componentes/barraprogreso-tono-pico-avance-10.png",
+  "w": 213.48,
+  "h": 16,
+  "pantalla": "logros"
+ },
+ {
+  "id": "CeldaLogro",
+  "nombre": "Celda de logro",
+  "variante": {
+   "Estado": "especial"
+  },
+  "archivo": "componentes/celdalogro-estado-especial.png",
+  "w": 98,
+  "h": 161.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "piko-hackathon-2026",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-piko-hackathon-2026-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "CeldaLogro",
+  "nombre": "Celda de logro",
+  "variante": {
+   "Estado": "ganada"
+  },
+  "archivo": "componentes/celdalogro-estado-ganada.png",
+  "w": 98,
+  "h": 167.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "CeldaLogro",
+  "nombre": "Celda de logro",
+  "variante": {
+   "Estado": "pendiente"
+  },
+  "archivo": "componentes/celdalogro-estado-pendiente.png",
+  "w": 98,
+  "h": 167.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "ya-arrancamos",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-ya-arrancamos-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "aprendiz-constante",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-aprendiz-constante-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "dominando-el-camino",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-dominando-el-camino-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "no-te-detengas",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-no-te-detengas-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "constancia",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-constancia-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "imparable",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-imparable-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "coleccionista-de-palabras",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-coleccionista-de-palabras-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "diccionario-humano",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-diccionario-humano-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "CeldaLogro",
+  "nombre": "Celda de logro",
+  "variante": {
+   "Estado": "pendiente",
+   "Forma": "B"
+  },
+  "archivo": "componentes/celdalogro-estado-pendiente-forma-b.png",
+  "w": 98,
+  "h": 167.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "conoce-a-piko",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-conoce-a-piko-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "companeros-de-aula",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-companeros-de-aula-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "buen-oido",
+   "Estado": "próximamente"
+  },
+  "archivo": "componentes/insignia-logro-buen-oido-estado-proximamente.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "lo-dijiste",
+   "Estado": "próximamente"
+  },
+  "archivo": "componentes/insignia-logro-lo-dijiste-estado-proximamente.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "primera-cancion",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-primera-cancion-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "cantor-de-mi-tierra",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-cantor-de-mi-tierra-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "a-jugar",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-a-jugar-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "recreo-completo",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-recreo-completo-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "trompo-bailarin",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-trompo-bailarin-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "desde-la-costa-caribe",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-desde-la-costa-caribe-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "dos-lenguas",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-dos-lenguas-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "Insignia",
+  "nombre": "Insignia de logro",
+  "variante": {
+   "Logro": "ramo-de-sacuanjoches",
+   "Estado": "bloqueada"
+  },
+  "archivo": "componentes/insignia-logro-ramo-de-sacuanjoches-estado-bloqueada.png",
+  "w": 78,
+  "h": 87.36,
+  "pantalla": "logros"
+ },
+ {
+  "id": "CampoCodigo",
+  "nombre": "Campo de código",
+  "variante": {},
+  "archivo": "componentes/campocodigo-base.png",
+  "w": 312,
+  "h": 136,
+  "pantalla": "canjear"
+ },
+ {
+  "id": "Campo",
+  "nombre": "Campo de texto",
+  "variante": {},
+  "archivo": "componentes/campo-base.png",
+  "w": 274,
+  "h": 48,
+  "pantalla": "canjear"
+ },
+ {
+  "id": "Boton",
+  "nombre": "Botón",
+  "variante": {
+   "Tono": "pico",
+   "Tamaño": "normal",
+   "Estado": "deshabilitado"
+  },
+  "archivo": "componentes/boton-tono-pico-tamano-normal-estado-deshabilitado.png",
+  "w": 312,
+  "h": 52,
+  "pantalla": "canjear"
+ },
+ {
+  "id": "Encabezado",
+  "nombre": "Encabezado de pantalla",
+  "variante": {},
+  "archivo": "componentes/encabezado-base.png",
+  "w": 312,
+  "h": 44,
+  "pantalla": "minijuegos"
+ },
+ {
+  "id": "BotonCircular",
+  "nombre": "Botón circular",
+  "variante": {},
+  "archivo": "componentes/botoncircular-base.png",
+  "w": 44,
+  "h": 44,
+  "pantalla": "minijuegos"
+ },
+ {
+  "id": "TarjetaMinijuego",
+  "nombre": "Tarjeta de minijuego",
+  "variante": {},
+  "archivo": "componentes/tarjetaminijuego-base.png",
+  "w": 312,
+  "h": 208,
+  "pantalla": "minijuegos"
+ },
+ {
+  "id": "IconoRayuela",
+  "nombre": "Ícono · Rayuela",
+  "variante": {},
+  "archivo": "componentes/iconorayuela-base.png",
+  "w": 72,
+  "h": 72,
+  "pantalla": "minijuegos"
+ },
+ {
+  "id": "TarjetaMinijuego",
+  "nombre": "Tarjeta de minijuego",
+  "variante": {
+   "Forma": "B"
+  },
+  "archivo": "componentes/tarjetaminijuego-forma-b.png",
+  "w": 312,
+  "h": 208,
+  "pantalla": "minijuegos"
+ },
+ {
+  "id": "IconoTrompo",
+  "nombre": "Ícono · Trompo",
+  "variante": {},
+  "archivo": "componentes/iconotrompo-base.png",
+  "w": 72,
+  "h": 72,
+  "pantalla": "minijuegos"
+ },
+ {
+  "id": "TarjetaMinijuego",
+  "nombre": "Tarjeta de minijuego",
+  "variante": {
+   "Forma": "C"
+  },
+  "archivo": "componentes/tarjetaminijuego-forma-c.png",
+  "w": 312,
+  "h": 208,
+  "pantalla": "minijuegos"
+ },
+ {
+  "id": "IconoChibolas",
+  "nombre": "Ícono · Chibolas",
+  "variante": {},
+  "archivo": "componentes/iconochibolas-base.png",
+  "w": 72,
+  "h": 72,
+  "pantalla": "minijuegos"
+ },
+ {
+  "id": "TarjetaMinijuego",
+  "nombre": "Tarjeta de minijuego",
+  "variante": {
+   "Forma": "D"
+  },
+  "archivo": "componentes/tarjetaminijuego-forma-d.png",
+  "w": 312,
+  "h": 208,
+  "pantalla": "minijuegos"
+ },
+ {
+  "id": "IconoGallinita",
+  "nombre": "Ícono · Gallinita ciega",
+  "variante": {},
+  "archivo": "componentes/iconogallinita-base.png",
+  "w": 72,
+  "h": 72,
+  "pantalla": "minijuegos"
+ },
+ {
+  "id": "PikoMascota",
+  "nombre": "Piko",
+  "variante": {
+   "Estado": "idle",
+   "Forma": "C"
+  },
+  "archivo": "componentes/pikomascota-estado-idle-forma-c.png",
+  "w": 42,
+  "h": 68,
+  "pantalla": "minijuegos"
+ },
+ {
+  "id": "Instrumento",
+  "nombre": "Instrumento",
+  "variante": {
+   "Dibujo": "tambor"
+  },
+  "archivo": "componentes/instrumento-dibujo-tambor.png",
+  "w": 56,
+  "h": 56,
+  "pantalla": "musica"
+ },
+ {
+  "id": "Instrumento",
+  "nombre": "Instrumento",
+  "variante": {
+   "Dibujo": "marimba"
+  },
+  "archivo": "componentes/instrumento-dibujo-marimba.png",
+  "w": 56,
+  "h": 56,
+  "pantalla": "musica"
+ },
+ {
+  "id": "TarjetaCancion",
+  "nombre": "Tarjeta de canción",
+  "variante": {},
+  "archivo": "componentes/tarjetacancion-base.png",
+  "w": 312,
+  "h": 180,
+  "pantalla": "musica"
+ },
+ {
+  "id": "Instrumento",
+  "nombre": "Instrumento",
+  "variante": {
+   "Dibujo": "guitarra"
+  },
+  "archivo": "componentes/instrumento-dibujo-guitarra.png",
+  "w": 72,
+  "h": 72,
+  "pantalla": "musica"
+ },
+ {
+  "id": "Instrumento",
+  "nombre": "Instrumento",
+  "variante": {
+   "Dibujo": "maracas"
+  },
+  "archivo": "componentes/instrumento-dibujo-maracas.png",
+  "w": 72,
+  "h": 72,
+  "pantalla": "musica"
+ },
+ {
+  "id": "Instrumento",
+  "nombre": "Instrumento",
+  "variante": {
+   "Dibujo": "concha"
+  },
+  "archivo": "componentes/instrumento-dibujo-concha.png",
+  "w": 72,
+  "h": 72,
+  "pantalla": "musica"
+ },
+ {
+  "id": "Instrumento",
+  "nombre": "Instrumento",
+  "variante": {
+   "Dibujo": "quijada"
+  },
+  "archivo": "componentes/instrumento-dibujo-quijada.png",
+  "w": 72,
+  "h": 72,
+  "pantalla": "musica"
+ },
+ {
+  "id": "PikoMascota",
+  "nombre": "Piko",
+  "variante": {
+   "Estado": "dormido"
+  },
+  "archivo": "componentes/pikomascota-estado-dormido.png",
+  "w": 49,
+  "h": 80,
+  "pantalla": "maestro"
+ },
+ {
+  "id": "Aviso",
+  "nombre": "Aviso informativo",
+  "variante": {},
+  "archivo": "componentes/aviso-base.png",
+  "w": 312,
+  "h": 180,
+  "pantalla": "maestro"
+ }
+]

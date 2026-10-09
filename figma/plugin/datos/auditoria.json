@@ -1,0 +1,714 @@
+{
+ "resumen": {
+  "pantallas": 17,
+  "textos": 384,
+  "pares": 31,
+  "tocables": 122,
+  "fallan": 2,
+  "soloGrande": 4,
+  "toquesChicos": 7,
+  "toques48": 104
+ },
+ "contraste": [
+  {
+   "texto": "#9D6C12",
+   "fondo": "#D2921F",
+   "nombreTexto": null,
+   "nombreFondo": null,
+   "ratio": 1.72,
+   "nivel": "Inactivo",
+   "inactivo": true,
+   "grande": false,
+   "usos": 1,
+   "tamMin": 16,
+   "tamMax": 16,
+   "ejemplo": "Canjear",
+   "pantallas": [
+    "Canjear código"
+   ]
+  },
+  {
+   "texto": "#4F8031",
+   "fondo": "#88B031",
+   "nombreTexto": null,
+   "nombreFondo": null,
+   "ratio": 1.86,
+   "nivel": "Inactivo",
+   "inactivo": true,
+   "grande": false,
+   "usos": 3,
+   "tamMin": 16,
+   "tamMax": 16,
+   "ejemplo": "Abrir la sala",
+   "pantallas": [
+    "Ejercicio · Armar oración",
+    "Ejercicio · Escuchar",
+    "Mi clase (maestro)"
+   ]
+  },
+  {
+   "texto": "#FFFFFF",
+   "fondo": "#60C5FA",
+   "nombreTexto": "blanco",
+   "nombreFondo": "cielo",
+   "ratio": 1.93,
+   "nivel": "No cumple",
+   "inactivo": false,
+   "grande": false,
+   "usos": 1,
+   "tamMin": 13,
+   "tamMax": 13,
+   "ejemplo": "Tocá para escuchar",
+   "pantallas": [
+    "Ejercicio · Escuchar"
+   ]
+  },
+  {
+   "texto": "#E97927",
+   "fondo": "#F7F0E4",
+   "nombreTexto": "copete",
+   "nombreFondo": "papel",
+   "ratio": 2.56,
+   "nivel": "No cumple",
+   "inactivo": false,
+   "grande": false,
+   "usos": 2,
+   "tamMin": 15,
+   "tamMax": 16,
+   "ejemplo": "¡Nuevo logro desbloqueado!",
+   "pantallas": [
+    "Ejercicio · Escuchar",
+    "Logro desbloqueado"
+   ]
+  },
+  {
+   "texto": "#A17832",
+   "fondo": "#FDF2DC",
+   "nombreTexto": null,
+   "nombreFondo": "intentoFondo",
+   "ratio": 3.6,
+   "nivel": "Sólo grande",
+   "inactivo": false,
+   "grande": false,
+   "usos": 1,
+   "tamMin": 13,
+   "tamMax": 13,
+   "ejemplo": "El maestro está leyendo un libro",
+   "pantallas": [
+    "Ejercicio · Seguí intentando"
+   ]
+  },
+  {
+   "texto": "#6B7A70",
+   "fondo": "#F3EEE6",
+   "nombreTexto": "tintaSuave",
+   "nombreFondo": null,
+   "ratio": 3.92,
+   "nivel": "Sólo grande",
+   "inactivo": false,
+   "grande": false,
+   "usos": 33,
+   "tamMin": 13,
+   "tamMax": 13,
+   "ejemplo": "Coleccionista de palabras",
+   "pantallas": [
+    "Mis logros"
+   ]
+  },
+  {
+   "texto": "#6B7A70",
+   "fondo": "#F7F0E4",
+   "nombreTexto": "tintaSuave",
+   "nombreFondo": "papel",
+   "ratio": 3.99,
+   "nivel": "Sólo grande",
+   "inactivo": false,
+   "grande": false,
+   "usos": 35,
+   "tamMin": 13,
+   "tamMax": 16,
+   "ejemplo": "Un poquito cada día rinde mucho.",
+   "pantallas": [
+    "Practicar · Elegir tema",
+    "Ejercicio · Opción múltiple",
+    "Ejercicio · Respuesta correcta",
+    "Ejercicio · Armar oración",
+    "Ejercicio · Seguí intentando",
+    "Ejercicio · Escuchar",
+    "Inicio",
+    "Perfil",
+    "Mi madroño",
+    "Mis logros",
+    "Canjear código",
+    "Minijuegos",
+    "Unirme a la clase",
+    "Mi clase (maestro)"
+   ]
+  },
+  {
+   "texto": "#6B7A70",
+   "fondo": "#EDF8D9",
+   "nombreTexto": "tintaSuave",
+   "nombreFondo": "aciertoFondo",
+   "ratio": 4.1,
+   "nivel": "Sólo grande",
+   "inactivo": false,
+   "grande": false,
+   "usos": 1,
+   "tamMin": 13,
+   "tamMax": 13,
+   "ejemplo": "¡Salió el primer brote!",
+   "pantallas": [
+    "Mi madroño"
+   ]
+  },
+  {
+   "texto": "#6B7A70",
+   "fondo": "#FFFFFF",
+   "nombreTexto": "tintaSuave",
+   "nombreFondo": "blanco",
+   "ratio": 4.52,
+   "nivel": "AA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 29,
+   "tamMin": 13,
+   "tamMax": 20,
+   "ejemplo": "Tu madroño está por nacer.",
+   "pantallas": [
+    "Logro desbloqueado",
+    "Resultado de la lección",
+    "Inicio",
+    "Perfil",
+    "Mi madroño",
+    "Canjear código"
+   ]
+  },
+  {
+   "texto": "#5C3D02",
+   "fondo": "#E8A429",
+   "nombreTexto": null,
+   "nombreFondo": "intento",
+   "ratio": 4.6,
+   "nivel": "AA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 3,
+   "tamMin": 16,
+   "tamMax": 16,
+   "ejemplo": "🎟️  Canjear código",
+   "pantallas": [
+    "Ejercicio · Seguí intentando",
+    "Inicio",
+    "Mis logros"
+   ]
+  },
+  {
+   "texto": "#8A5A08",
+   "fondo": "#F3EEE6",
+   "nombreTexto": "intentoTinta",
+   "nombreFondo": null,
+   "ratio": 5.13,
+   "nivel": "AA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 2,
+   "tamMin": 11,
+   "tamMax": 11,
+   "ejemplo": "Próximamente",
+   "pantallas": [
+    "Mis logros"
+   ]
+  },
+  {
+   "texto": "#0A4530",
+   "fondo": "#97C137",
+   "nombreTexto": "verdeHondo",
+   "nombreFondo": "acierto",
+   "ratio": 5.24,
+   "nivel": "Inactivo",
+   "inactivo": true,
+   "grande": false,
+   "usos": 1,
+   "tamMin": 16,
+   "tamMax": 16,
+   "ejemplo": "Comprobar",
+   "pantallas": [
+    "Ejercicio · Opción múltiple"
+   ]
+  },
+  {
+   "texto": "#0A4530",
+   "fondo": "#97C137",
+   "nombreTexto": "verdeHondo",
+   "nombreFondo": "acierto",
+   "ratio": 5.24,
+   "nivel": "AA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 34,
+   "tamMin": 11,
+   "tamMax": 16,
+   "ejemplo": "¡Continuar aprendiendo!",
+   "pantallas": [
+    "Ejercicio · Respuesta correcta",
+    "Logro desbloqueado",
+    "Resultado de la lección",
+    "Inicio",
+    "Perfil",
+    "Mi madroño",
+    "Minijuegos",
+    "La Música de Piko",
+    "Unirme a la clase"
+   ]
+  },
+  {
+   "texto": "#8A5A08",
+   "fondo": "#FDF2DC",
+   "nombreTexto": "intentoTinta",
+   "nombreFondo": "intentoFondo",
+   "ratio": 5.33,
+   "nivel": "AA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 2,
+   "tamMin": 18,
+   "tamMax": 19,
+   "ejemplo": "The teacher is reading a book",
+   "pantallas": [
+    "Ejercicio · Seguí intentando"
+   ]
+  },
+  {
+   "texto": "#3F6B0E",
+   "fondo": "#EDF8D9",
+   "nombreTexto": "aciertoTinta",
+   "nombreFondo": "aciertoFondo",
+   "ratio": 5.73,
+   "nivel": "AA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 3,
+   "tamMin": 13,
+   "tamMax": 19,
+   "ejemplo": "¡Correcto!",
+   "pantallas": [
+    "Ejercicio · Respuesta correcta"
+   ]
+  },
+  {
+   "texto": "#197249",
+   "fondo": "#FFFFFF",
+   "nombreTexto": "verdeBosque",
+   "nombreFondo": "blanco",
+   "ratio": 5.92,
+   "nivel": "AA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 3,
+   "tamMin": 16,
+   "tamMax": 24,
+   "ejemplo": "Tu madroño ahora es: Brote",
+   "pantallas": [
+    "Logro desbloqueado",
+    "Resultado de la lección",
+    "Perfil"
+   ]
+  },
+  {
+   "texto": "#0B3D57",
+   "fondo": "#60C5FA",
+   "nombreTexto": null,
+   "nombreFondo": "cielo",
+   "ratio": 5.97,
+   "nivel": "AA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 1,
+   "tamMin": 16,
+   "tamMax": 16,
+   "ejemplo": "Unirme a la clase",
+   "pantallas": [
+    "Inicio"
+   ]
+  },
+  {
+   "texto": "#5C3D02",
+   "fondo": "#F4C542",
+   "nombreTexto": null,
+   "nombreFondo": null,
+   "ratio": 6.08,
+   "nivel": "AA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 1,
+   "tamMin": 10,
+   "tamMax": 10,
+   "ejemplo": "Exclusivo",
+   "pantallas": [
+    "Mis logros"
+   ]
+  },
+  {
+   "texto": "#F4C542",
+   "fondo": "#0B3D6E",
+   "nombreTexto": null,
+   "nombreFondo": null,
+   "ratio": 6.77,
+   "nivel": "AA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 2,
+   "tamMin": 13,
+   "tamMax": 19,
+   "ejemplo": "Logros especiales",
+   "pantallas": [
+    "Mis logros",
+    "Canjear código"
+   ]
+  },
+  {
+   "texto": "#0F5D3D",
+   "fondo": "#F7F0E4",
+   "nombreTexto": "verde",
+   "nombreFondo": "papel",
+   "ratio": 6.99,
+   "nivel": "AA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 17,
+   "tamMin": 16,
+   "tamMax": 32,
+   "ejemplo": "Aprendé jugando, sin internet.",
+   "pantallas": [
+    "Practicar · Elegir tema",
+    "Logro desbloqueado",
+    "Inicio",
+    "Perfil",
+    "Mi madroño",
+    "Mis logros",
+    "Minijuegos",
+    "La Música de Piko",
+    "Mi clase (maestro)"
+   ]
+  },
+  {
+   "texto": "#0F5D3D",
+   "fondo": "#EDF8D9",
+   "nombreTexto": "verde",
+   "nombreFondo": "aciertoFondo",
+   "ratio": 7.17,
+   "nivel": "AAA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 2,
+   "tamMin": 15,
+   "tamMax": 16,
+   "ejemplo": "Brote",
+   "pantallas": [
+    "Mi madroño"
+   ]
+  },
+  {
+   "texto": "#BFD9F2",
+   "fondo": "#0B3D6E",
+   "nombreTexto": null,
+   "nombreFondo": null,
+   "ratio": 7.56,
+   "nivel": "AAA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 1,
+   "tamMin": 13,
+   "tamMax": 13,
+   "ejemplo": "PIKO-HK26-XXXX-XXXX",
+   "pantallas": [
+    "Canjear código"
+   ]
+  },
+  {
+   "texto": "#0F5D3D",
+   "fondo": "#FFFFFF",
+   "nombreTexto": "verde",
+   "nombreFondo": "blanco",
+   "ratio": 7.91,
+   "nivel": "AAA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 48,
+   "tamMin": 13,
+   "tamMax": 32,
+   "ejemplo": "Usar una lista de ejemplo",
+   "pantallas": [
+    "Practicar · Elegir tema",
+    "Logro desbloqueado",
+    "Resultado de la lección",
+    "Inicio",
+    "Perfil",
+    "Mi madroño",
+    "Mis logros",
+    "Minijuegos",
+    "La Música de Piko",
+    "Mi clase (maestro)"
+   ]
+  },
+  {
+   "texto": "#FFFFFF",
+   "fondo": "#0F5D3D",
+   "nombreTexto": "blanco",
+   "nombreFondo": "verde",
+   "ratio": 7.91,
+   "nivel": "AAA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 1,
+   "tamMin": 16,
+   "tamMax": 16,
+   "ejemplo": "Español",
+   "pantallas": [
+    "Inicio"
+   ]
+  },
+  {
+   "texto": "#FFFFFF",
+   "fondo": "#14528F",
+   "nombreTexto": "blanco",
+   "nombreFondo": null,
+   "ratio": 7.97,
+   "nivel": "AAA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 1,
+   "tamMin": 13,
+   "tamMax": 13,
+   "ejemplo": "Piko Hackathon 2026",
+   "pantallas": [
+    "Mis logros"
+   ]
+  },
+  {
+   "texto": "#33453B",
+   "fondo": "#F7F0E4",
+   "nombreTexto": "tinta",
+   "nombreFondo": "papel",
+   "ratio": 9.02,
+   "nivel": "AAA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 7,
+   "tamMin": 13,
+   "tamMax": 16,
+   "ejemplo": "«Aprendiste tu primera palabra en inglés.»",
+   "pantallas": [
+    "Logro desbloqueado",
+    "Mi madroño",
+    "Canjear código",
+    "La Música de Piko"
+   ]
+  },
+  {
+   "texto": "#DDF1FC",
+   "fondo": "#0B3D6E",
+   "nombreTexto": "nube",
+   "nombreFondo": null,
+   "ratio": 9.47,
+   "nivel": "AAA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 2,
+   "tamMin": 13,
+   "tamMax": 16,
+   "ejemplo": "0/1",
+   "pantallas": [
+    "Mis logros"
+   ]
+  },
+  {
+   "texto": "#0B3D57",
+   "fondo": "#DDF1FC",
+   "nombreTexto": null,
+   "nombreFondo": "nube",
+   "ratio": 9.93,
+   "nivel": "AAA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 7,
+   "tamMin": 13,
+   "tamMax": 19,
+   "ejemplo": "Antes de abrir la sala",
+   "pantallas": [
+    "Practicar · Elegir tema",
+    "Ejercicio · Opción múltiple",
+    "Mi clase (maestro)"
+   ]
+  },
+  {
+   "texto": "#33453B",
+   "fondo": "#FFFFFF",
+   "nombreTexto": "tinta",
+   "nombreFondo": "blanco",
+   "ratio": 10.22,
+   "nivel": "AAA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 45,
+   "tamMin": 13,
+   "tamMax": 16,
+   "ejemplo": "Has recolectado 4 sacuanjoches",
+   "pantallas": [
+    "Logro desbloqueado",
+    "Resultado de la lección",
+    "Inicio",
+    "Perfil",
+    "Mi madroño",
+    "Canjear código",
+    "Minijuegos",
+    "La Música de Piko",
+    "Unirme a la clase"
+   ]
+  },
+  {
+   "texto": "#16241D",
+   "fondo": "#F7F0E4",
+   "nombreTexto": "grafito",
+   "nombreFondo": "papel",
+   "ratio": 14.21,
+   "nivel": "AAA",
+   "inactivo": false,
+   "grande": true,
+   "usos": 7,
+   "tamMin": 19,
+   "tamMax": 27,
+   "ejemplo": "El maestro está leyendo un libro",
+   "pantallas": [
+    "Ejercicio · Opción múltiple",
+    "Ejercicio · Respuesta correcta",
+    "Ejercicio · Armar oración",
+    "Ejercicio · Seguí intentando",
+    "La Música de Piko"
+   ]
+  },
+  {
+   "texto": "#16241D",
+   "fondo": "#FFFFFF",
+   "nombreTexto": "grafito",
+   "nombreFondo": "blanco",
+   "ratio": 16.1,
+   "nivel": "AAA",
+   "inactivo": false,
+   "grande": false,
+   "usos": 58,
+   "tamMin": 13,
+   "tamMax": 19,
+   "ejemplo": "Twinkle, Twinkle, Little Star",
+   "pantallas": [
+    "Practicar · Elegir tema",
+    "Ejercicio · Opción múltiple",
+    "Ejercicio · Respuesta correcta",
+    "Ejercicio · Armar oración",
+    "Ejercicio · Seguí intentando",
+    "Ejercicio · Escuchar",
+    "Minijuegos",
+    "La Música de Piko"
+   ]
+  }
+ ],
+ "toquesChicos": [
+  {
+   "pantalla": "Practicar · Elegir tema",
+   "etiqueta": "Tenés 0 sacuanjoches. Ver mi árbol",
+   "w": 60,
+   "h": 34
+  },
+  {
+   "pantalla": "Ejercicio · Opción múltiple",
+   "etiqueta": "✕",
+   "w": 16,
+   "h": 24
+  },
+  {
+   "pantalla": "Ejercicio · Armar oración",
+   "etiqueta": "a",
+   "w": 41,
+   "h": 51
+  },
+  {
+   "pantalla": "Logro desbloqueado",
+   "etiqueta": "Ver mi árbol",
+   "w": 91,
+   "h": 32
+  },
+  {
+   "pantalla": "Inicio",
+   "etiqueta": "Español",
+   "w": 87,
+   "h": 36
+  },
+  {
+   "pantalla": "Inicio",
+   "etiqueta": "Miskitu",
+   "w": 82,
+   "h": 36
+  },
+  {
+   "pantalla": "Minijuegos",
+   "etiqueta": "Tenés 4 sacuanjoches. Ver mi árbol",
+   "w": 59,
+   "h": 34
+  }
+ ],
+ "tamanos": [
+  {
+   "tam": 10,
+   "usos": 1
+  },
+  {
+   "tam": 11,
+   "usos": 3
+  },
+  {
+   "tam": 13,
+   "usos": 135
+  },
+  {
+   "tam": 14,
+   "usos": 4
+  },
+  {
+   "tam": 15,
+   "usos": 8
+  },
+  {
+   "tam": 16,
+   "usos": 112
+  },
+  {
+   "tam": 17,
+   "usos": 5
+  },
+  {
+   "tam": 18,
+   "usos": 1
+  },
+  {
+   "tam": 19,
+   "usos": 57
+  },
+  {
+   "tam": 20,
+   "usos": 1
+  },
+  {
+   "tam": 24,
+   "usos": 17
+  },
+  {
+   "tam": 27,
+   "usos": 2
+  },
+  {
+   "tam": 32,
+   "usos": 8
+  }
+ ]
+}

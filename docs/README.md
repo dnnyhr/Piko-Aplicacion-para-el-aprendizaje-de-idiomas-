@@ -22,6 +22,7 @@ Más la landing estática en [`web/`](../web/) (piko.mugiware.com).
 | [tecnologias.md](tecnologias.md) | Qué se usa y por qué se eligió sobre las alternativas |
 | [decisiones.md](decisiones.md) | Registro de decisiones con su contexto y sus consecuencias |
 | [desarrollo.md](desarrollo.md) | Correr, probar y compilar: la app, el panel del robot y las encuestas |
+| [diseno/](diseno/README.md) | Los entregables de diseño: pantallas, componentes, flujo UX, assets y accesibilidad (con el plugin de Figma en [`figma/`](../figma/)) |
 | [../app/README.md](../app/README.md) | La app en resumen |
 | [../app/content/README.md](../app/content/README.md) | Formato de los paquetes de contenido |
 | [../diccionario/metodologia.md](../diccionario/metodologia.md) | Cómo se descubren las reglas de cada lengua con modelos de razonamiento y hablantes nativos |

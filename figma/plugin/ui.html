@@ -1,0 +1,119 @@
+<style>
+  :root {
+    --verde: #0f5d3d;
+    --pasto: #97c137;
+    --labio: #7ba22c;
+    --papel: #f7f0e4;
+    --borde: #e3daca;
+    --tinta: #33453b;
+    --suave: #6b7a70;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 13px/1.45 Inter, system-ui, sans-serif;
+    color: var(--figma-color-text, var(--tinta));
+    background: var(--figma-color-bg, #fff);
+  }
+  header { background: var(--verde); color: #fff; padding: 16px; }
+  header h1 { margin: 0; font-size: 17px; }
+  header p { margin: 4px 0 0; opacity: 0.85; font-size: 12px; }
+  main { padding: 12px 16px 16px; }
+  h2 { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--figma-color-text-secondary, var(--suave)); margin: 14px 0 6px; }
+  .seccion { font-weight: 600; margin: 8px 0 2px; }
+  label { display: flex; gap: 8px; align-items: center; padding: 3px 0; cursor: pointer; }
+  .lista { max-height: 210px; overflow: auto; border: 1px solid var(--figma-color-border, var(--borde)); border-radius: 8px; padding: 4px 10px; }
+  .acciones { display: flex; gap: 8px; margin-top: 14px; }
+  button {
+    flex: 1;
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font: 600 13px Inter, system-ui, sans-serif;
+    cursor: pointer;
+  }
+  #importar { background: var(--pasto); color: #0a4530; box-shadow: 0 3px 0 var(--labio); text-transform: uppercase; letter-spacing: 0.5px; }
+  #importar:disabled { opacity: 0.5; }
+  #cerrar { background: transparent; color: var(--figma-color-text-secondary, var(--suave)); flex: 0 0 auto; }
+  #estado { margin-top: 12px; min-height: 36px; font-size: 12px; color: var(--figma-color-text-secondary, var(--suave)); white-space: pre-wrap; }
+  .mini { font-size: 11px; color: var(--figma-color-text-tertiary, var(--suave)); }
+  a { color: inherit; }
+</style>
+
+<header>
+  <h1>Piko · Importar pantallas</h1>
+  <p>Las pantallas reales de la app, con componentes, variables y estilos.</p>
+</header>
+<main>
+  <h2>Pantallas</h2>
+  <label><input type="checkbox" id="todas" checked /> <b>Todas</b></label>
+  <div class="lista" id="lista"></div>
+
+  <h2>Además</h2>
+  <label><input type="checkbox" id="prototipo" checked /> Enlazar el prototipo (botones → pantallas)</label>
+  <label><input type="checkbox" id="flujo" checked /> Flujo UX con wireframes</label>
+  <label><input type="checkbox" id="accesibilidad" checked /> Página de accesibilidad</label>
+  <p class="mini">Siempre se crean: 🎨 Fundamentos, 🧩 Componentes y 📦 Assets. Las páginas del plugin se rehacen en cada importación.</p>
+
+  <div class="acciones">
+    <button id="importar">Importar</button>
+    <button id="cerrar">Cerrar</button>
+  </div>
+  <div id="estado"></div>
+  <p class="mini" id="generado"></p>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  let pantallas = [];
+
+  onmessage = (e) => {
+    const m = e.data.pluginMessage;
+    if (!m) return;
+    if (m.tipo === 'datos') {
+      pantallas = m.pantallas;
+      const porSeccion = {};
+      for (const p of pantallas) (porSeccion[p.seccion] = porSeccion[p.seccion] || []).push(p);
+      $('lista').innerHTML = Object.entries(porSeccion)
+        .map(
+          ([s, ps]) =>
+            `<div class="seccion">${s}</div>` +
+            ps.map((p) => `<label><input type="checkbox" class="pantalla" value="${p.id}" checked /> ${p.nombre}</label>`).join(''),
+        )
+        .join('');
+      $('generado').textContent = 'Captura del ' + new Date(m.generado).toLocaleString('es-NI');
+    } else if (m.tipo === 'progreso') {
+      $('estado').textContent = m.texto;
+    } else if (m.tipo === 'listo') {
+      const r = m.resultado;
+      $('estado').textContent =
+        `Listo: ${r.pantallas} pantallas, ${r.sets} componentes (${r.componentes} variantes), ${r.assets} assets.` +
+        (r.errores.length ? `\n\nAvisos:\n· ${r.errores.join('\n· ')}` : '');
+      $('importar').disabled = false;
+    } else if (m.tipo === 'error') {
+      $('estado').textContent = 'Error: ' + m.texto;
+      $('importar').disabled = false;
+    }
+  };
+
+  $('todas').onchange = (e) => document.querySelectorAll('.pantalla').forEach((c) => (c.checked = e.target.checked));
+  $('cerrar').onclick = () => parent.postMessage({ pluginMessage: { tipo: 'cerrar' } }, '*');
+  $('importar').onclick = () => {
+    const elegidas = [...document.querySelectorAll('.pantalla:checked')].map((c) => c.value);
+    if (!elegidas.length) return;
+    $('importar').disabled = true;
+    $('estado').textContent = 'Empezando…';
+    parent.postMessage(
+      {
+        pluginMessage: {
+          tipo: 'importar',
+          pantallas: elegidas,
+          prototipo: $('prototipo').checked,
+          flujo: $('flujo').checked,
+          accesibilidad: $('accesibilidad').checked,
+        },
+      },
+      '*',
+    );
+  };
+</script>

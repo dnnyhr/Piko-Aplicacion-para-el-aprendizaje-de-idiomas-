@@ -1,0 +1,16 @@
+{
+  "name": "piko-figma-captura",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "capturar": "node capturar.mjs",
+    "plugin": "node construir-plugin.mjs",
+    "verificar": "node verificar/verificar.mjs",
+    "exportar": "node exportar.mjs",
+    "documentar": "node documentar.mjs",
+    "todo": "node capturar.mjs && node construir-plugin.mjs && node verificar/verificar.mjs && node exportar.mjs && node documentar.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}
