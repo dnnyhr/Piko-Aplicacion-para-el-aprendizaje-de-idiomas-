@@ -89,3 +89,55 @@ jobs:
 
       - name: Definiciones de encuestas
         run: npm run validar
+
+  despliegue:
+    name: Despliegue — contenedores y Nginx
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: despliegue
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Un .env de prueba (el de verdad vive solo en el servidor)
+        run: |
+          cp .env.example .env
+          sed -i "s/^ADMIN_TOKEN=.*/ADMIN_TOKEN=token-de-prueba-de-la-ci-123/" .env
+          sed -i "s#^CORS_ORIGINS=.*#CORS_ORIGINS=https://piko.mugiware.com#" .env
+
+      - name: docker-compose.yml es válido
+        run: docker compose config --quiet
+
+      - name: La API y la base levantan juntas (libSQL + migraciones)
+        run: |
+          docker compose up -d --build --wait --wait-timeout 120 api
+          docker compose logs api
+          docker compose exec -T api wget -qO- http://127.0.0.1:8787/api/salud
+
+      - name: CORS solo para el sitio
+        run: |
+          docker compose exec -T api node --input-type=module -e '
+            const pedir = (o) => fetch("http://127.0.0.1:8787/api/publico/contador", { headers: { origin: o } });
+            const bien = await pedir("https://piko.mugiware.com");
+            const mal = await pedir("https://malo.example");
+            console.log(bien.status, await bien.text());
+            if (bien.headers.get("access-control-allow-origin") !== "https://piko.mugiware.com") process.exit(1);
+            if (mal.headers.get("access-control-allow-origin") !== null) process.exit(1);
+          '
+
+      - name: nginx -t con un certificado de mentira
+        run: |
+          mkdir -p /tmp/le/live/certificado-piko
+          openssl req -x509 -nodes -newkey rsa:2048 -days 1 -subj /CN=prueba \
+            -keyout /tmp/le/live/certificado-piko/privkey.pem -out /tmp/le/live/certificado-piko/fullchain.pem
+          docker run --rm --add-host api:127.0.0.1 \
+            -e DOMINIO_WEB=azure.piko.mugiware.com -e DOMINIO_API=api.piko.mugiware.com \
+            -v "$PWD/nginx/piko.conf.template:/etc/nginx/templates/default.conf.template:ro" \
+            -v "$PWD/nginx/snippets:/etc/nginx/snippets:ro" \
+            -v /tmp/le:/etc/letsencrypt:ro \
+            nginx:1.27-alpine sh -c '/docker-entrypoint.d/20-envsubst-on-templates.sh && nginx -t'
+
+      - name: Apagar
+        if: always()
+        run: docker compose down -v

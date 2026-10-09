@@ -2,11 +2,12 @@
   "name": "piko-encuestas",
   "private": true,
   "version": "0.1.0",
-  "description": "Encuestas de Piko: Cloudflare Worker + D1, una sola página para muchas encuestas.",
+  "description": "Encuestas de Piko: Cloudflare Worker + D1, o Node + libSQL en el servidor de Azure. Una sola página para muchas encuestas.",
   "type": "module",
   "license": "MIT",
   "scripts": {
     "dev": "wrangler dev",
+    "servir": "node servidor/node.mjs",
     "db:local": "wrangler d1 migrations apply piko-encuestas --local",
     "db:remoto": "wrangler d1 migrations apply piko-encuestas --remote",
     "validar": "node herramientas/publicar.mjs --validar",
@@ -20,5 +21,8 @@
   },
   "engines": {
     "node": ">=22"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.15.15"
   }
 }
