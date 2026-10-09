@@ -1,0 +1,76 @@
+# Piko en Azure: tres contenedores en una red interna, y solo Nginx da a internet.
+#
+#   nginx  :80 :443  →  web/ (el sitio y la app web)  y  api → encuestas
+#   api    :8787     solo en la red interna
+#   db     :8080     solo en la red interna (libSQL = SQLite por red)
+#
+#   cd despliegue && docker compose up -d --build
+#
+# Los secretos salen de despliegue/.env, que NO va en git (ver .env.example).
+
+name: piko
+
+services:
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMINIO_WEB: ${DOMINIO_WEB}
+      DOMINIO_API: ${DOMINIO_API}
+    volumes:
+      # La plantilla se completa con DOMINIO_WEB y DOMINIO_API al arrancar.
+      - ./nginx/piko.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ./nginx/snippets:/etc/nginx/snippets:ro
+      - ../web:/srv/web:ro
+      - certbot-www:/var/www/certbot:ro
+      - certificados:/etc/letsencrypt:ro
+    # Recarga cada 12 h para tomar los certificados que renueva certbot.
+    command: /bin/sh -c 'while :; do sleep 12h; nginx -s reload; done & exec /docker-entrypoint.sh nginx -g "daemon off;"'
+    depends_on:
+      api:
+        condition: service_healthy
+    networks: [piko]
+
+  api:
+    build: ../encuestas
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DB_URL: http://db:8080
+    read_only: true
+    tmpfs: [/tmp]
+    security_opt: ["no-new-privileges:true"]
+    depends_on:
+      db:
+        condition: service_started
+    networks: [piko]
+
+  db:
+    image: ghcr.io/tursodatabase/libsql-server:v0.24.32
+    restart: unless-stopped
+    environment:
+      SQLD_NODE: primary
+    volumes:
+      - db-datos:/var/lib/sqld
+    security_opt: ["no-new-privileges:true"]
+    networks: [piko]
+
+  # Pide y renueva los certificados de Let's Encrypt. Ver despliegue/README.md.
+  certbot:
+    image: certbot/certbot:v3.1.0
+    volumes:
+      - certbot-www:/var/www/certbot
+      - certificados:/etc/letsencrypt
+    entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done"
+    networks: [piko]
+
+volumes:
+  db-datos:
+  certbot-www:
+  certificados:
+
+networks:
+  piko:

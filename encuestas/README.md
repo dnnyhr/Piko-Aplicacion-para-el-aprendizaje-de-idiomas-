@@ -98,6 +98,23 @@ npm run dev                         # http://localhost:8787
 PIKO_ENCUESTAS_URL=http://localhost:8787 PIKO_ENCUESTAS_TOKEN=cambiame-en-local npm run publicar
 ```
 
+### En un servidor propio (Azure)
+
+Las mismas encuestas corren también en Node, detrás de Nginx y con la base en
+un contenedor de libSQL: `servidor/node.mjs` le arma al Worker lo que
+Cloudflare le daba hecho (`env.DB` sobre libSQL, `env.ASSETS` sobre `public/`
+y las variables desde el `.env`), sin cambiar `src/index.js`. La guía completa
+está en [`despliegue/`](../despliegue/README.md). Para probarlo en local, con un
+SQLite en un archivo:
+
+```bash
+DB_URL=file:encuestas.db ADMIN_TOKEN=cambiame-en-local-123 npm run servir
+```
+
+`GET /api/publico/contador` devuelve solo conteos (`{ personas, palabras }`)
+y es la única ruta con CORS: lo da exactamente a los orígenes de
+`CORS_ORIGINS`, para que la portada del sitio muestre el contador en vivo.
+
 ## Correo con el enlace de descarga
 
 Si la persona deja su correo al final de la encuesta, el Worker le manda al
