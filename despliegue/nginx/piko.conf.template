@@ -1,9 +1,9 @@
-# Piko en Azure. Nginx es lo único que da a internet: el sitio sale de web/
-# (montado de solo lectura) y la API se reenvía al contenedor "api", que no
-# tiene ningún puerto abierto hacia afuera.
+# Piko en Azure: las encuestas. Nginx es lo único que da a internet; la API
+# se reenvía al contenedor "api", que no tiene ningún puerto abierto hacia
+# afuera. El sitio (web/) sigue en Netlify.
 #
-# Es una plantilla: al arrancar, la imagen de Nginx reemplaza ${DOMINIO_WEB} y
-# ${DOMINIO_API} con lo que diga despliegue/.env. Las variables propias de
+# Es una plantilla: al arrancar, la imagen de Nginx reemplaza ${DOMINIO_API}
+# con lo que diga despliegue/.env. Las variables propias de
 # Nginx ($host, $uri, …) no se tocan.
 
 server_tokens off;
@@ -42,45 +42,6 @@ server {
     return 444;
 }
 
-# ── El sitio y la app web: ${DOMINIO_WEB} ──
-server {
-    listen 443 ssl;
-    http2 on;
-    server_name ${DOMINIO_WEB};
-    include /etc/nginx/snippets/tls.conf;
-
-    root /srv/web;
-    index index.html;
-
-    # Las herramientas del sitio no son páginas.
-    location /herramientas/ { return 404; }
-
-    # La app del navegador: sus archivos llevan una huella en el nombre y
-    # nunca cambian, así que el navegador los guarda un año (como en netlify.toml).
-    location /probar/app/_expo/ {
-        include /etc/nginx/snippets/cabeceras.conf;
-        add_header Cache-Control "public, max-age=31536000, immutable" always;
-        try_files $uri =404;
-    }
-    location /probar/app/assets/ {
-        include /etc/nginx/snippets/cabeceras.conf;
-        add_header Cache-Control "public, max-age=31536000, immutable" always;
-        try_files $uri =404;
-    }
-    # Cualquier ruta de la app (/probar/app/practicar, …) abre la app.
-    location /probar/app/ {
-        try_files $uri $uri/ /probar/app/index.html;
-    }
-
-    location = /site.webmanifest {
-        default_type application/manifest+json;
-    }
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-}
-
 # ── La API y las encuestas: ${DOMINIO_API} → contenedor api ──
 server {
     listen 443 ssl;
@@ -95,9 +56,32 @@ server {
         limit_req zone=api burst=20 nodelay;
         proxy_pass http://api:8787;
         include /etc/nginx/snippets/proxy.conf;
+        # Si la API no responde o se pide demasiado, igual sale JSON con un
+        # mensaje para la persona, como los errores de la propia API.
+        error_page 502 503 504 = @api_caida;
+        error_page 429 = @api_espera;
+    }
+    location @api_caida {
+        default_type application/json;
+        include /etc/nginx/snippets/cabeceras.conf;
+        add_header Cache-Control "no-store" always;
+        return 503 '{"error":"El servicio no está disponible en este momento. Probá de nuevo en un rato."}';
+    }
+    location @api_espera {
+        default_type application/json;
+        include /etc/nginx/snippets/cabeceras.conf;
+        add_header Retry-After "10" always;
+        return 429 '{"error":"Muchos pedidos seguidos. Esperá unos segundos y probá de nuevo."}';
     }
     location / {
         proxy_pass http://api:8787;
         include /etc/nginx/snippets/proxy.conf;
+        # Si la API se cae, la página de "volvemos enseguida" (encuestas/public/50x.html).
+        error_page 502 503 504 /50x.html;
     }
+    location = /50x.html { root /srv/encuestas; internal; }
+    # Los estilos y los dibujos salen directo de Nginx: más rápido, y la
+    # página de arriba se ve bien aunque la API esté caída.
+    location /css/ { root /srv/encuestas; }
+    location /img/ { root /srv/encuestas; }
 }

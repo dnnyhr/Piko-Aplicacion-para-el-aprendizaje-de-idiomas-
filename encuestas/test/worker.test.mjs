@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import worker, { celda } from '../src/index.js';
 import { d1Falso } from './d1-falso.mjs';
+import { entrar } from './sesion.mjs';
 
 const real = JSON.parse(readFileSync(new URL('../definiciones/que-le-falta-a-piko.json', import.meta.url), 'utf8'));
 const TOKEN = 'secreto-de-prueba';
@@ -12,10 +13,14 @@ beforeEach(() => {
   env = { DB: d1Falso(), ADMIN_TOKEN: TOKEN };
 });
 
-function llamar(ruta, { method = 'GET', body, token, headers = {} } = {}) {
+async function llamar(ruta, { method = 'GET', body, token, headers = {} } = {}) {
   const h = { ...headers };
   if (body !== undefined) h['content-type'] = 'application/json';
-  if (token) h.authorization = `Bearer ${token}`;
+  if (token) {
+    const s = await entrar(env, token, h['cf-connecting-ip']);
+    if (!s.jwt) return s.res;
+    h.authorization = `Bearer ${s.jwt}`;
+  }
   return worker.fetch(new Request(`https://encuestas.test${ruta}`, { method, headers: h, body: body === undefined ? undefined : JSON.stringify(body) }), env);
 }
 
@@ -284,4 +289,10 @@ test('sin CORS_ORIGINS nadie de afuera tiene CORS, y admin nunca lo tiene', asyn
   const admin = await llamar('/api/admin/encuestas', { token: TOKEN, headers: { origin: SITIO } });
   assert.equal(admin.status, 200);
   assert.equal(admin.headers.get('access-control-allow-origin'), null);
+});
+
+test('/api/salud dice qué commit corre, si el servidor lo sabe', async () => {
+  assert.deepEqual(await (await llamar('/api/salud')).json(), { ok: true });
+  env.VERSION = 'a1b2c3d';
+  assert.deepEqual(await (await llamar('/api/salud')).json(), { ok: true, version: 'a1b2c3d' });
 });

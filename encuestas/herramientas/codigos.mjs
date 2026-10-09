@@ -20,6 +20,7 @@
 
 import { writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
+import { pedirJwt } from './sesion.mjs';
 
 const { positionals, values } = parseArgs({
   allowPositionals: true,
@@ -39,7 +40,7 @@ if (!url || !token) {
   process.exit(1);
 }
 const base = `${url.replace(/\/$/, '')}/api/admin/codigos`;
-const cabeceras = { 'content-type': 'application/json', authorization: `Bearer ${token}` };
+const cabeceras = { 'content-type': 'application/json', authorization: `Bearer ${await pedirJwt(url, token)}` };
 const celda = (v) => (v == null ? '' : /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v));
 
 if (accion === 'crear') {

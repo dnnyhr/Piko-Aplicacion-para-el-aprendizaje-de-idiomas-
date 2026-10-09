@@ -18,13 +18,13 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      DOMINIO_WEB: ${DOMINIO_WEB}
       DOMINIO_API: ${DOMINIO_API}
     volumes:
-      # La plantilla se completa con DOMINIO_WEB y DOMINIO_API al arrancar.
+      # La plantilla se completa con DOMINIO_API al arrancar.
       - ./nginx/piko.conf.template:/etc/nginx/templates/default.conf.template:ro
       - ./nginx/snippets:/etc/nginx/snippets:ro
-      - ../web:/srv/web:ro
+      # Estilos, dibujos y la página de "volvemos enseguida" de las encuestas.
+      - ../encuestas/public:/srv/encuestas:ro
       - certbot-www:/var/www/certbot:ro
       - certificados:/etc/letsencrypt:ro
     # Recarga cada 12 h para tomar los certificados que renueva certbot.
@@ -40,6 +40,8 @@ services:
     env_file: .env
     environment:
       DB_URL: http://db:8080
+      # El commit de main que corre (lo pone actualizar.sh); sale en /api/salud.
+      VERSION: ${VERSION:-sin-version}
     read_only: true
     tmpfs: [/tmp]
     security_opt: ["no-new-privileges:true"]

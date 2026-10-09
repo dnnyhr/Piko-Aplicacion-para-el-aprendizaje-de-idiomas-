@@ -216,7 +216,7 @@ queda quieto mirando de frente.
 | `POST /api/canjes` | Canjear el código de una tarjeta de logro especial (lo llama la app; ver [Códigos de logros especiales](#códigos-de-logros-especiales)) |
 | `POST` · `GET /api/admin/codigos` | Crear una tanda de códigos; verlos con su estado, quién los canjeó y cuándo |
 
-Todas las de `/api/admin/` piden `Authorization: Bearer <ADMIN_TOKEN>`.
+El panel y las herramientas entran con `POST /api/admin/sesion` y `{ "clave": "<ADMIN_TOKEN>" }`: a cambio reciben un **JWT** (HS256, 8 horas, ver `src/jwt.js`). Todas las de `/api/admin/` piden `Authorization: Bearer <JWT>`; la contraseña sola no abre nada. Los JWT se firman con `JWT_SECRET` (secreto opcional, 32 caracteres o más) o, si no está, con uno que sale de `ADMIN_TOKEN`: cambiar la contraseña cierra todas las sesiones. Las contraseñas y los JWT equivocados cuentan para el bloqueo por IP.
 
 ## Códigos de logros especiales
 

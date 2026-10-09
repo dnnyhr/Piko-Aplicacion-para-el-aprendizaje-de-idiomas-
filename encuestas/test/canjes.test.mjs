@@ -4,6 +4,7 @@ import worker from '../src/index.js';
 import { codigoNuevo, normalizarCodigo } from '../src/codigos.js';
 import { INTENTOS_CANJE } from '../src/canjes.js';
 import { d1Falso } from './d1-falso.mjs';
+import { entrar } from './sesion.mjs';
 
 const TOKEN = 'secreto-de-prueba-largo';
 
@@ -12,10 +13,14 @@ beforeEach(() => {
   env = { DB: d1Falso(), ADMIN_TOKEN: TOKEN };
 });
 
-function llamar(ruta, { method = 'GET', body, token, ip = '10.0.0.1' } = {}) {
+async function llamar(ruta, { method = 'GET', body, token, ip = '10.0.0.1' } = {}) {
   const h = { 'cf-connecting-ip': ip };
   if (body !== undefined) h['content-type'] = 'application/json';
-  if (token) h.authorization = `Bearer ${token}`;
+  if (token) {
+    const s = await entrar(env, token, h['cf-connecting-ip']);
+    if (!s.jwt) return s.res;
+    h.authorization = `Bearer ${s.jwt}`;
+  }
   return worker.fetch(new Request(`https://encuestas.test${ruta}`, { method, headers: h, body: body === undefined ? undefined : JSON.stringify(body) }), env);
 }
 

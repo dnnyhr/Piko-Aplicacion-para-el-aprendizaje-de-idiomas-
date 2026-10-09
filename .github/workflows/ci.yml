@@ -132,12 +132,14 @@ jobs:
           openssl req -x509 -nodes -newkey rsa:2048 -days 1 -subj /CN=prueba \
             -keyout /tmp/le/live/certificado-piko/privkey.pem -out /tmp/le/live/certificado-piko/fullchain.pem
           docker run --rm --add-host api:127.0.0.1 \
-            -e DOMINIO_WEB=azure.piko.mugiware.com -e DOMINIO_API=api.piko.mugiware.com \
+            -e DOMINIO_API=api.piko.mugiware.com \
             -v "$PWD/nginx/piko.conf.template:/etc/nginx/templates/default.conf.template:ro" \
             -v "$PWD/nginx/snippets:/etc/nginx/snippets:ro" \
+            -v "$PWD/../encuestas/public:/srv/encuestas:ro" \
             -v /tmp/le:/etc/letsencrypt:ro \
             nginx:1.27-alpine sh -c '/docker-entrypoint.d/20-envsubst-on-templates.sh && nginx -t'
 
       - name: Apagar
         if: always()
         run: docker compose down -v
+

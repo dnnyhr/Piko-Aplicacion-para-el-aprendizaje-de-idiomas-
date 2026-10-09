@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import worker from '../src/index.js';
 import { d1Falso } from './d1-falso.mjs';
+import { entrar } from './sesion.mjs';
 
 const real = JSON.parse(readFileSync(new URL('../definiciones/que-le-falta-a-piko.json', import.meta.url), 'utf8'));
 const TOKEN = 'secreto-de-prueba';
@@ -12,10 +13,15 @@ beforeEach(() => {
   env = { DB: d1Falso(), ADMIN_TOKEN: TOKEN };
 });
 
-function llamar(ruta, { method = 'GET', body, token, ip = '203.0.113.7' } = {}) {
+async function llamar(ruta, { method = 'GET', body, token, jwt, ip = '203.0.113.7' } = {}) {
   const h = { 'cf-connecting-ip': ip };
   if (body !== undefined) h['content-type'] = 'application/json';
-  if (token) h.authorization = `Bearer ${token}`;
+  if (token) {
+    const s = await entrar(env, token, h['cf-connecting-ip']);
+    if (!s.jwt) return s.res;
+    h.authorization = `Bearer ${s.jwt}`;
+  }
+  if (jwt) h.authorization = `Bearer ${jwt}`;
   return worker.fetch(new Request(`https://encuestas.test${ruta}`, { method, headers: h, body: body === undefined ? undefined : JSON.stringify(body) }), env);
 }
 
@@ -48,8 +54,39 @@ test('probar tokens al azar bloquea la IP, aunque después acierte', async () =>
 
 test('los intentos por la ruta pública de la encuesta también cuentan', async () => {
   await llamar(`/api/admin/encuestas/${real.slug}`, { method: 'PUT', body: { ...real, estado: 'borrador' }, token: TOKEN });
-  for (let i = 0; i < 10; i++) assert.equal((await llamar(`/api/encuestas/${real.slug}`, { token: `malo-${i}` })).status, 404);
+  for (let i = 0; i < 10; i++) assert.equal((await llamar(`/api/encuestas/${real.slug}`, { jwt: `malo-${i}` })).status, 404);
   assert.equal((await llamar(`/api/encuestas/${real.slug}`, { token: TOKEN })).status, 429);
+});
+
+test('el panel pide un JWT: la contraseña sola no abre /api/admin', async () => {
+  assert.equal((await llamar('/api/admin/encuestas', { jwt: TOKEN })).status, 401);
+  const { jwt } = await entrar(env, TOKEN, '203.0.113.7');
+  assert.match(jwt, /^[\w-]+\.[\w-]+\.[\w-]+$/);
+  assert.equal((await llamar('/api/admin/encuestas', { jwt })).status, 200);
+});
+
+test('un JWT alterado, sin firma (alg none), de otro secreto o vencido no entra', async () => {
+  const { firmarJwt } = await import('../src/jwt.js');
+  const { jwt } = await entrar(env, TOKEN);
+  const [cab, cuerpo] = jwt.split('.');
+  const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64url');
+  const datos = JSON.parse(Buffer.from(cuerpo, 'base64url').toString());
+  const malos = [
+    `${cab}.${b64({ ...datos, exp: datos.exp + 99999 })}.${jwt.split('.')[2]}`,
+    `${b64({ alg: 'none', typ: 'JWT' })}.${cuerpo}.`,
+    await firmarJwt({ sub: 'admin' }, 'otro-secreto-cualquiera', 3600),
+    await firmarJwt({ sub: 'admin' }, `jwt|${TOKEN}`, -1),
+  ];
+  for (const m of malos) assert.equal((await llamar('/api/admin/encuestas', { jwt: m, ip: '198.51.100.9' })).status, 401);
+  // Un JWT bien firmado y vigente sí.
+  assert.equal((await llamar('/api/admin/encuestas', { jwt: await firmarJwt({ sub: 'admin' }, `jwt|${TOKEN}`, 60), ip: '198.51.100.9' })).status, 200);
+});
+
+test('con JWT_SECRET, los JWT se firman con él y cambiar la contraseña no los corta', async () => {
+  env.JWT_SECRET = 'x'.repeat(40);
+  const { jwt } = await entrar(env, TOKEN);
+  env.ADMIN_TOKEN = 'otra-contraseña-larga-de-prueba';
+  assert.equal((await llamar('/api/admin/encuestas', { jwt })).status, 200);
 });
 
 test('sin token no cuenta como intento: quien contesta la encuesta no se bloquea', async () => {

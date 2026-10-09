@@ -589,7 +589,7 @@ async function abrirEncuesta(slug, siNoExiste = null) {
       // Cualquier otro rechazo: no se guardó. Se dice, y lo contestado sigue en el teléfono.
       if (status >= 400) {
         console.error('La respuesta no se guardó', status, r);
-        return noSeGuardo(r.error ?? `Error ${status}`);
+        return noSeGuardo(r.error ?? 'No pudimos guardar tu respuesta. Probá de nuevo.');
       }
     } catch {
       const cola = leer(CLAVE_PENDIENTES, []);
