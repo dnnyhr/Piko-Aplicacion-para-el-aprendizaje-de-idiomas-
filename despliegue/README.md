@@ -18,6 +18,8 @@ VM Ubuntu 24.04 en Azure · usuario piko (no root) · SSH solo con llave · ufw 
 
 ## Qué cubre cada entregable
 
+Los del sprint 3 (errores amigables, JWT, despliegue automático y Azure igual a main) están en [docs/entregables-sprint-3.md](../docs/entregables-sprint-3.md).
+
 | Entregable | Dónde está |
 |---|---|
 | **1. Compilación final** | La app web sale minificada de `npm run web:sitio`. Nginx la comprime con gzip, usa HTTP/2 y deja guardar en caché por un año los archivos que llevan huella en el nombre. El APK sale de `eas build --profile production`, con ProGuard y shrink ([paso 9](#9-compilación-final)). |
@@ -272,8 +274,36 @@ Si sacás ese origen de `CORS_ORIGINS` y reiniciás la API (`docker compose up -
 
 ## 11. Actualizar
 
+Azure corre **exactamente main de GitHub**. `actualizar.sh` hace `git reset --hard origin/main`, reconstruye y deja anotado el commit:
+
+- `https://azure.piko.mugiware.com/version.json` → `{"commit": "<sha de main>", ...}`
+- `https://api.piko.mugiware.com/api/salud` → `{"ok": true, "version": "<sha de main>"}`
+
+### Automático, en cada merge a main
+
+[`.github/workflows/desplegar.yml`](../.github/workflows/desplegar.yml) corre cuando CI pasa en main: entra por SSH, corre `actualizar.sh` y comprueba en vivo que el sitio y la API digan el mismo commit que GitHub, que HTTP lleve a HTTPS y que el 404 sea el amigable. Para prenderlo, una sola vez:
+
 ```bash
-~/piko/despliegue/actualizar.sh     # git pull + docker compose up -d --build
+# En tu compu: una llave solo para desplegar
+ssh-keygen -t ed25519 -N '' -C deploy-github -f piko-deploy
+ssh-copy-id -i piko-deploy.pub -o IdentityFile=~/Descargas/piko-vm_key.pem piko@<IP>
+ssh-keyscan -H <IP>            # la salida va en AZURE_VM_KNOWN_HOSTS
+```
+
+En GitHub, **Settings → Secrets and variables → Actions → New repository secret**:
+
+| Secreto | Valor |
+|---|---|
+| `AZURE_VM_HOST` | la IP de la VM |
+| `AZURE_VM_SSH_KEY` | el contenido de `piko-deploy` (la privada) |
+| `AZURE_VM_KNOWN_HOSTS` | lo que imprimió `ssh-keyscan` |
+
+Después, **Actions → Desplegar en Azure → Run workflow** para probarlo. Sin `AZURE_VM_HOST` el workflow solo avisa y no falla.
+
+### A mano
+
+```bash
+~/piko/despliegue/actualizar.sh     # igual a origin/main + docker compose up -d --build
 ```
 
 Respaldo de la base:
@@ -290,4 +320,5 @@ docker compose exec db sh -c 'tar czf - /var/lib/sqld' > respaldo-$(date +%F).tg
 | nginx se reinicia en bucle | Falta el certificado (paso 5) o el `.env` no tiene `DOMINIO_WEB`/`DOMINIO_API`. Mirá `docker compose logs nginx`. |
 | api *unhealthy* | `docker compose logs api`. Si dice *la base todavía no responde*, revisá `docker compose logs db`. |
 | La portada no muestra el contador | Abrí la consola del navegador. Si dice *CORS*, falta el origen en `CORS_ORIGINS`. Si dice *ERR_NAME_NOT_RESOLVED*, falta el DNS de `api.piko`. |
+| El panel dice *La sesión venció* | El JWT dura 8 horas, o cambió `ADMIN_TOKEN`/`JWT_SECRET`. Volvé a entrar con la contraseña. |
 | `ADMIN_TOKEN` rechazado | Tiene que tener 16 caracteres o más. Usá `openssl rand -hex 24`. |

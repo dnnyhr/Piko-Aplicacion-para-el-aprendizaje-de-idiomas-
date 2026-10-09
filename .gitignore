@@ -47,3 +47,4 @@ yarn-error.*
 
 # Códigos de logros especiales: quien tenga uno disponible puede canjearlo
 encuestas/codigos-*.csv
+web/version.json

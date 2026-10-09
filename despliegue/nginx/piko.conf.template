@@ -52,6 +52,12 @@ server {
     root /srv/web;
     index index.html;
 
+    # Páginas de error amigables, sin códigos a la vista (web/404.html y web/50x.html).
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+    location = /404.html { internal; }
+    location = /50x.html { internal; }
+
     # Las herramientas del sitio no son páginas.
     location /herramientas/ { return 404; }
 
@@ -67,9 +73,20 @@ server {
         add_header Cache-Control "public, max-age=31536000, immutable" always;
         try_files $uri =404;
     }
-    # Cualquier ruta de la app (/probar/app/practicar, …) abre la app.
+    # Las rutas de la app (app/app/*.tsx) abren la app; cualquier otra cosa
+    # es la página 404 del sitio, no la pantalla en inglés de Expo.
+    # Si se agrega una pantalla nueva a la app, va también acá.
+    location ~ ^/probar/app/(arbol|perfil|practicar|maestro|estudiante/(jugar|unirse)|logros(/canjear)?|minijuegos(/(chibolas|gallinita|rayuela|trompo))?|musica(/[\w-]+)?)/?$ {
+        try_files /probar/app/index.html =404;
+    }
     location /probar/app/ {
-        try_files $uri $uri/ /probar/app/index.html;
+        try_files $uri $uri/ =404;
+    }
+
+    # El commit de main que está corriendo (lo escribe actualizar.sh).
+    location = /version.json {
+        include /etc/nginx/snippets/cabeceras.conf;
+        add_header Cache-Control "no-store" always;
     }
 
     location = /site.webmanifest {
@@ -95,9 +112,30 @@ server {
         limit_req zone=api burst=20 nodelay;
         proxy_pass http://api:8787;
         include /etc/nginx/snippets/proxy.conf;
+        # Si la API no responde o se pide demasiado, igual sale JSON con un
+        # mensaje para la persona, como los errores de la propia API.
+        error_page 502 503 504 = @api_caida;
+        error_page 429 = @api_espera;
+    }
+    location @api_caida {
+        default_type application/json;
+        include /etc/nginx/snippets/cabeceras.conf;
+        add_header Cache-Control "no-store" always;
+        return 503 '{"error":"El servicio no está disponible en este momento. Probá de nuevo en un rato."}';
+    }
+    location @api_espera {
+        default_type application/json;
+        include /etc/nginx/snippets/cabeceras.conf;
+        add_header Retry-After "10" always;
+        return 429 '{"error":"Muchos pedidos seguidos. Esperá unos segundos y probá de nuevo."}';
     }
     location / {
         proxy_pass http://api:8787;
         include /etc/nginx/snippets/proxy.conf;
+        # Si la API se cae, la página de "volvemos enseguida" del sitio.
+        error_page 502 503 504 /50x.html;
     }
+    location = /50x.html { root /srv/web; internal; }
+    # Los estilos y el dibujo que usa esa página (encuestas no tiene /assets/).
+    location /assets/ { root /srv/web; }
 }

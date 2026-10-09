@@ -35,8 +35,14 @@ async function api(ruta, opciones = {}) {
     ...opciones,
     headers: { authorization: `Bearer ${token}`, ...(opciones.body ? { 'content-type': 'application/json' } : {}) },
   });
-  if (res.status === 401) throw new Error('Contraseña incorrecta.');
-  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? `Error ${res.status}`);
+  if (res.status === 401) {
+    // El JWT venció o no sirve: se borra y se vuelve a pedir la contraseña.
+    sessionStorage.removeItem(CLAVE);
+    $('acceso').hidden = false;
+    $('panel').hidden = true;
+    throw new Error((await res.json().catch(() => ({}))).error ?? 'La sesión venció. Entrá de nuevo.');
+  }
+  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? 'Algo no salió bien. Probá de nuevo en un momento.');
   return res;
 }
 
@@ -1359,10 +1365,24 @@ function filaContacto(c, recargar) {
 const inicial = location.hash.slice(1);
 if (PESTANAS.some(([id]) => id === inicial)) estado.pestana = inicial;
 
-$('acceso').addEventListener('submit', (e) => {
+/** La contraseña viaja una sola vez: a cambio llega un JWT, que es lo único que se guarda. */
+$('acceso').addEventListener('submit', async (e) => {
   e.preventDefault();
-  token = $('token').value.trim();
-  entrar();
+  $('acceso-error').textContent = '';
+  try {
+    const res = await fetch('/api/admin/sesion', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ clave: $('token').value.trim() }),
+    });
+    const datos = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(datos.error ?? 'No pudimos entrar. Probá de nuevo.');
+    token = datos.token;
+    $('token').value = '';
+    entrar();
+  } catch (err) {
+    $('acceso-error').textContent = err instanceof TypeError ? 'No hay conexión. Probá de nuevo.' : err.message;
+  }
 });
 $('salir').addEventListener('click', () => {
   sessionStorage.removeItem(CLAVE);

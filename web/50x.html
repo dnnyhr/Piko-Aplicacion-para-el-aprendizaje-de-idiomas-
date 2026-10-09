@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volvemos enseguida · Piko</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F5D3D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" href="/assets/favicon.png" sizes="192x192">
+<link rel="stylesheet" href="/assets/css/nav.css">
+<link rel="stylesheet" href="/assets/css/sitio.css">
+<!-- Página para cuando algo falla del lado del servidor (Nginx la usa sola). Rutas absolutas: esta página se muestra en cualquier dirección. -->
+<style>
+  .aviso{min-height:72vh; display:grid; place-items:center; padding:7rem 1.2rem 3rem}
+  .aviso__caja{max-width:34rem; text-align:center}
+  .aviso__piko{width:min(190px,48vw); height:auto; animation:flotar 3.2s ease-in-out infinite}
+  .aviso h1{font-size:clamp(1.9rem,5vw,2.7rem); color:var(--verde-piko); margin:1rem 0 .6rem}
+  .aviso p{color:var(--tinta); font-size:1.08rem; margin:0 0 1.6rem}
+  .aviso__acciones{display:flex; gap:.8rem; justify-content:center; flex-wrap:wrap}
+  @media (prefers-reduced-motion:reduce){.aviso__piko{animation:none}}
+</style>
+</head>
+<body class="pagina" data-raiz="/">
+<div id="nav" data-raiz="/"></div>
+<main class="aviso">
+  <div class="aviso__caja">
+    <img class="aviso__piko" src="/assets/img/piko.svg" alt="Piko, el chocoyo" width="190" height="190">
+    <h1>Piko se tomó un descanso</h1>
+    <p>Algo no salió bien de nuestro lado. Ya estamos en eso: esperá un momento y probá de nuevo.</p>
+    <div class="aviso__acciones">
+      <a class="btn btn--solido" href="">Probar de nuevo</a>
+      <a class="btn btn--linea" href="/">Volver al inicio</a>
+    </div>
+  </div>
+</main>
+<div id="pie"></div>
+<script src="/assets/js/nav.js"></script>
+</body>
+</html>

@@ -256,6 +256,22 @@ simulador juega una clase entera sin un solo teléfono.</sub></p>
 &nbsp;Probarlo
 </h2>
 
+### En línea
+
+| Dirección | Qué es |
+|---|---|
+| [azure.piko.mugiware.com](https://azure.piko.mugiware.com) | El sitio y la app web ([`/probar/app`](https://azure.piko.mugiware.com/probar/app/)), en **Azure** |
+| [api.piko.mugiware.com](https://api.piko.mugiware.com) | Las encuestas y su API, en **Azure** (panel con sesiones JWT) |
+| [piko.mugiware.com](https://piko.mugiware.com) | El mismo sitio, en Netlify |
+
+Lo que corre en Azure es exactamente `main`: cada merge se despliega solo y se
+comprueba en vivo ([`/version.json`](https://azure.piko.mugiware.com/version.json)
+y [`/api/salud`](https://api.piko.mugiware.com/api/salud) dicen el commit). Cómo
+está armado el servidor: [despliegue/README.md](despliegue/README.md). Entregables
+del sprint 3: [docs/entregables-sprint-3.md](docs/entregables-sprint-3.md).
+
+### En tu compu
+
 Hace falta **Node 22 o más nuevo** (las pruebas usan `node:sqlite`). Cada parte
 se instala y se prueba por separado:
 

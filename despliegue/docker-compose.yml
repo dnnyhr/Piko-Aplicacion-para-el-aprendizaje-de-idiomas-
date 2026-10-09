@@ -40,6 +40,8 @@ services:
     env_file: .env
     environment:
       DB_URL: http://db:8080
+      # El commit de main que corre (lo pone actualizar.sh); sale en /api/salud.
+      VERSION: ${VERSION:-sin-version}
     read_only: true
     tmpfs: [/tmp]
     security_opt: ["no-new-privileges:true"]

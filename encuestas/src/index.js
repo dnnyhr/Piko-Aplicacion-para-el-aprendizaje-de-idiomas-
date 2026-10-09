@@ -14,6 +14,7 @@
  *   GET  /api/encuestas/:slug                  definición vigente
  *   POST /api/encuestas/:slug/respuestas       guardar una respuesta
  *   POST /api/canjes                           canjear un código de logro especial (lo llama la app)
+ *   POST /api/admin/sesion                     la contraseña (ADMIN_TOKEN) a cambio de un JWT de 8 horas
  *   GET  /api/publico/contador                 cuántas personas y palabras van (con CORS,
  *                                              para la portada de piko.mugiware.com)
  *
@@ -42,12 +43,16 @@ import { detalleAmigable, enviarBienvenida, limpiarNombre, mandarDescarga, nombr
 import { leerContactos, MAX_LINEAS } from './contactos.js';
 import { agrupar, armarPaquetes, clavePalabra, REGLA } from './palabras.js';
 import { canjear, cargarCodigos, listarCodigos } from './canjes.js';
+import { firmarJwt, verificarJwt } from './jwt.js';
 
 /** Intentos fallidos de token por IP antes de bloquearla, y por cuánto tiempo. */
 const INTENTOS_ADMIN = 10;
 const BLOQUEO_MIN = 15;
 /** Largo mínimo de ADMIN_TOKEN: uno corto se adivina probando. */
 const TOKEN_MIN = 16;
+/** Cuánto dura una sesión del panel (el JWT), y el largo mínimo de JWT_SECRET. */
+const SESION_HORAS = 8;
+const SECRETO_MIN = 32;
 
 /**
  * Cabeceras de seguridad para todo lo que sale del Worker (las páginas que
@@ -122,7 +127,8 @@ async function enrutar(request, env, ctx) {
 
   const [, a, b, c, d, e] = partes;
 
-  if (a === 'salud' && m === 'GET') return json({ ok: true });
+  // version: el commit de main que corre en Azure (ver despliegue/actualizar.sh).
+  if (a === 'salud' && m === 'GET') return json({ ok: true, ...(env.VERSION ? { version: env.VERSION } : {}) });
 
   if (a === 'publico') {
     const cors = cabecerasCors(request, env);
@@ -148,6 +154,7 @@ async function enrutar(request, env, ctx) {
   }
 
   if (a === 'admin') {
+    if (b === 'sesion' && !c && m === 'POST') return iniciarSesion(request, env);
     await exigirAdmin(request, env);
     if (b === 'codigos' && !c && m === 'POST') {
       const r = await cargarCodigos(env, await leerJson(request));
@@ -427,17 +434,12 @@ async function huellaDe(request, slug) {
 /* ------------------------------------------------------------------ admin */
 
 /**
- * ¿Trae el token correcto? Si trae uno equivocado, cuenta como intento
- * fallido de esa IP; con INTENTOS_ADMIN fallidos en BLOQUEO_MIN minutos, la
- * IP queda bloqueada (429) aunque después acierte, así probar tokens al azar
- * no sirve. Sin token no cuenta: es una persona contestando la encuesta.
+ * Las contraseñas y los JWT equivocados cuentan como intentos fallidos de esa
+ * IP; con INTENTOS_ADMIN fallidos en BLOQUEO_MIN minutos, la IP queda
+ * bloqueada (429) aunque después acierte, así probar al azar no sirve.
+ * Devuelve la huella de la IP para anotar el fallo.
  */
-async function tokenValido(request, env) {
-  const dado = (request.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
-  if (!dado) return false;
-  const token = env.ADMIN_TOKEN;
-  if (!token || token.length < TOKEN_MIN) return false;
-
+async function frenarIntentos(request, env) {
   const huella = await sha256(`admin|${request.headers.get('cf-connecting-ip') ?? ''}`);
   const desde = `strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-${BLOQUEO_MIN} minutes')`;
   let fallidos = 0;
@@ -452,8 +454,10 @@ async function tokenValido(request, env) {
   if (fallidos >= INTENTOS_ADMIN) {
     throw new ErrorHttp(429, `Demasiados intentos con una contraseña equivocada. Esperá ${BLOQUEO_MIN} minutos.`, {}, { 'retry-after': String(BLOQUEO_MIN * 60) });
   }
+  return huella;
+}
 
-  if (igualSeguro(dado, token)) return true;
+async function anotarFallo(env, huella) {
   try {
     await env.DB.batch([
       env.DB.prepare('INSERT INTO intentos_admin (huella) VALUES (?)').bind(huella),
@@ -461,18 +465,53 @@ async function tokenValido(request, env) {
       env.DB.prepare(`DELETE FROM intentos_admin WHERE creado_en < strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-1 day')`),
     ]);
   } catch {
-    /* sin la migración 0005: ya quedó avisado arriba */
+    /* sin la migración 0005: ya quedó avisado en frenarIntentos */
   }
+}
+
+const panelListo = (env) => Boolean(env.ADMIN_TOKEN && env.ADMIN_TOKEN.length >= TOKEN_MIN);
+
+/**
+ * Con qué se firman los JWT. JWT_SECRET si está; si no, uno que sale de
+ * ADMIN_TOKEN, así cambiar la contraseña cierra todas las sesiones abiertas.
+ */
+const secretoJwt = (env) => (env.JWT_SECRET?.length >= SECRETO_MIN ? env.JWT_SECRET : `jwt|${env.ADMIN_TOKEN}`);
+
+function avisarPanelNoListo() {
+  // El detalle técnico va al registro (wrangler tail / docker logs), no a la pantalla.
+  console.error(`ADMIN_TOKEN falta o tiene menos de ${TOKEN_MIN} caracteres: npx wrangler secret put ADMIN_TOKEN`);
+  return new ErrorHttp(503, 'El panel todavía no está listo para usarse.');
+}
+
+/** POST /api/admin/sesion { clave } → { token: <JWT>, expira } */
+async function iniciarSesion(request, env) {
+  if (!panelListo(env)) throw avisarPanelNoListo();
+  const { clave } = await leerJson(request);
+  const huella = await frenarIntentos(request, env);
+  if (typeof clave !== 'string' || !igualSeguro(clave, env.ADMIN_TOKEN)) {
+    await anotarFallo(env, huella);
+    throw new ErrorHttp(401, 'Contraseña incorrecta.');
+  }
+  const token = await firmarJwt({ sub: 'admin' }, secretoJwt(env), SESION_HORAS * 3600);
+  return json({ token, expira: new Date(Date.now() + SESION_HORAS * 3600_000).toISOString() });
+}
+
+/**
+ * ¿Trae un JWT válido del panel? Sin JWT no cuenta como intento: es una
+ * persona contestando la encuesta.
+ */
+async function tokenValido(request, env) {
+  const dado = (request.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
+  if (!dado || !panelListo(env)) return false;
+  const huella = await frenarIntentos(request, env);
+  if ((await verificarJwt(dado, secretoJwt(env)))?.sub === 'admin') return true;
+  await anotarFallo(env, huella);
   return false;
 }
 
 async function exigirAdmin(request, env) {
-  // El detalle técnico va al registro del Worker (wrangler tail), no a la pantalla.
-  if (!env.ADMIN_TOKEN || env.ADMIN_TOKEN.length < TOKEN_MIN) {
-    console.error(`ADMIN_TOKEN falta o tiene menos de ${TOKEN_MIN} caracteres: npx wrangler secret put ADMIN_TOKEN`);
-    throw new ErrorHttp(503, 'El panel todavía no está listo para usarse.');
-  }
-  if (!(await tokenValido(request, env))) throw new ErrorHttp(401, 'Contraseña incorrecta.');
+  if (!panelListo(env)) throw avisarPanelNoListo();
+  if (!(await tokenValido(request, env))) throw new ErrorHttp(401, 'La sesión venció o no es válida. Entrá de nuevo.');
 }
 
 function igualSeguro(a, b) {

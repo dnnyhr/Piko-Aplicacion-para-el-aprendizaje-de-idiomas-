@@ -18,6 +18,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validarDefinicion } from '../public/js/reglas.js';
+import { pedirJwt } from './sesion.mjs';
 
 const carpeta = fileURLToPath(new URL('../definiciones/', import.meta.url));
 const args = process.argv.slice(2);
@@ -52,12 +53,13 @@ if (!url || !token) {
   console.error('\nFaltan PIKO_ENCUESTAS_URL y PIKO_ENCUESTAS_TOKEN para publicar.');
   process.exit(1);
 }
+const jwt = await pedirJwt(url, token);
 
 for (const def of defs) {
   if (pedidas.length && !pedidas.includes(def.slug)) continue;
   const res = await fetch(`${url.replace(/\/$/, '')}/api/admin/encuestas/${def.slug}`, {
     method: 'PUT',
-    headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
+    headers: { 'content-type': 'application/json', authorization: `Bearer ${jwt}` },
     body: JSON.stringify(def),
   });
   const r = await res.json().catch(() => ({}));
