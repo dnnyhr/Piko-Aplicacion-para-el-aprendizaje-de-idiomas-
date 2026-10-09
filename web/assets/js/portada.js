@@ -82,13 +82,13 @@
     /* ---- Problema: la foto entra por un lado, las cifras por el otro ---- */
     gsap.from(".problema__grid .foto", {x:-45, opacity:0, scale:.97, duration:1,
       scrollTrigger:{trigger:".problema__grid", start:"top 82%", once:true}});
-    gsap.from(".cifras .cifra", {x:45, opacity:0, duration:.8, stagger:.14,
-      scrollTrigger:{trigger:".cifras", start:"top 85%", once:true}});
+    gsap.from("#problema .cifra", {x:45, opacity:0, duration:.8, stagger:.14,
+      scrollTrigger:{trigger:"#problema .cifras", start:"top 85%", once:true}});
     gsap.from(".nota", {y:20, opacity:0, duration:.7,
       scrollTrigger:{trigger:".nota", start:"top 92%", once:true}});
 
     /* ---- Los números cuentan hacia arriba (sirve para "36" y para "71–89%") ---- */
-    gsap.utils.toArray(".cifra b").forEach(function(el){
+    gsap.utils.toArray("#problema .cifra b").forEach(function(el){
       var original = el.textContent;
       var partes = original.split(/(\d[\d.,]*)/);
       var destinos = partes.map(function(p){ return /^\d/.test(p) ? parseFloat(p.replace(/,/g,"")) : null; });
@@ -391,5 +391,58 @@
         })
         .catch(function(){ /* sin conexión: el botón queda apuntando a releases/latest */ });
     }
+  }
+
+  /* ============================================================
+     5. La comunidad en vivo: el contador de la API en Azure
+     ============================================================ */
+  /* La API vive en otro dominio (api.piko.mugiware.com): el navegador solo
+     deja leer la respuesta si el servidor la habilita con CORS para este sitio.
+     Si no responde, la sección sigue oculta y la portada queda como siempre. */
+  var metaApi = document.querySelector('meta[name="piko-api"]');
+  var seccionComunidad = document.getElementById("comunidad");
+  if (window.fetch && metaApi && seccionComunidad) {
+    var api = metaApi.content.replace(/\/+$/, "");
+    var actual = {personas:0, palabras:0};
+
+    document.querySelectorAll("[data-api-enlace]").forEach(function(a){
+      a.href = api + a.getAttribute("data-api-enlace");
+    });
+
+    var subirA = function(clave, valor){
+      var el = document.querySelector('[data-contador="' + clave + '"]');
+      if (!el || valor === actual[clave]) return;
+      var desde = actual[clave];
+      actual[clave] = valor;
+      if (!animar) { el.textContent = valor.toLocaleString("es"); return; }
+      var reloj = {v:desde};
+      gsap.to(reloj, {
+        v:valor, duration:1.1, ease:"power2.out",
+        onUpdate:function(){ el.textContent = Math.round(reloj.v).toLocaleString("es"); }
+      });
+    };
+
+    var pedirContador = function(){
+      fetch(api + "/api/publico/contador", {mode:"cors", credentials:"omit"})
+        .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+        .then(function(c){
+          if (seccionComunidad.hidden) {
+            seccionComunidad.hidden = false;
+            /* La página creció: las animaciones al hacer scroll recalculan dónde empiezan. */
+            if (animar) {
+              ScrollTrigger.refresh();
+              gsap.from("#comunidad .cifra", {x:45, opacity:0, duration:.8, stagger:.14,
+                scrollTrigger:{trigger:"#comunidad .cifras", start:"top 85%", once:true}});
+            }
+          }
+          subirA("personas", c.personas || 0);
+          subirA("palabras", c.palabras || 0);
+        })
+        .catch(function(){ /* sin conexión o sin permiso CORS: la sección queda oculta */ });
+    };
+
+    pedirContador();
+    /* Cada 30 s, y solo con la pestaña a la vista. */
+    setInterval(function(){ if (!document.hidden && !seccionComunidad.hidden) pedirContador(); }, 30000);
   }
 })();

@@ -219,6 +219,22 @@
       <li class="tarjeta"><span><b>Un hablante decide.</b> Un modelo de lenguaje busca patrones y los propone como hipótesis; los hablantes dicen qué es correcto. <a href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/blob/main/diccionario/metodologia.md" target="_blank" rel="noopener">Cómo trabajamos</a>.</span></li>
     </ul>
   </section>
+  <section class="bloque bloque--hondo" id="servidor">
+    <div class="contenedor">
+      <div class="bloque__cabeza" data-aparece>
+        <p class="etiqueta">El servidor</p>
+        <h2>Dónde viven <em>tus aportes</em></h2>
+        <p class="bloque__bajada">La app no necesita internet. Lo que sí está en un servidor son las encuestas, y viven en Azure, armadas para que tus respuestas lleguen cifradas y nadie de afuera pueda tocar la base de datos.</p>
+      </div>
+      <ol class="pasos" data-aparece="grupo">
+        <li><b>Tu teléfono habla con Nginx, por HTTPS.</b> Es la única puerta abierta a internet. Todo viaja cifrado, con certificado de Let's Encrypt.</li>
+        <li><b>Nginx le pasa el pedido a la API.</b> Corre en su propio contenedor Docker, sin ningún puerto hacia afuera, y solo acepta pedidos del navegador que vengan de los sitios de Piko (CORS).</li>
+        <li><b>La API guarda en la base de datos.</b> Otro contenedor, en una red interna: desde internet ni siquiera se ve que existe.</li>
+        <li><b>El servidor no se maneja como root.</b> Se entra con un usuario normal y una llave, nunca con contraseña. Las claves secretas no están en el código: viven solo en el servidor. Y Azure avisa si la API deja de responder.</li>
+      </ol>
+      <p class="bloque__bajada" style="margin-top:1.4rem"><a href="https://github.com/dnnyhr/Piko-Aplicacion-para-el-aprendizaje-de-idiomas-/tree/main/despliegue" target="_blank" rel="noopener">Ver cómo está armado</a></p>
+    </div>
+  </section>
 </main>
 
 <div id="pie"></div>

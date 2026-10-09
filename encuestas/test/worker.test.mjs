@@ -248,3 +248,40 @@ test('el panel abre, cierra y pasa a borrador una encuesta sin tocar sus respues
   assert.equal((await cambiar('abierta')).status, 200);
   assert.equal((await (await llamar('/api/encuestas')).json()).encuestas.length, 1);
 });
+
+/* ------------------------------------------------------- contador y CORS */
+
+const SITIO = 'https://piko.mugiware.com';
+
+test('el contador cuenta personas y palabras, y solo da CORS al sitio', async () => {
+  env.CORS_ORIGINS = `${SITIO}, https://azure.piko.mugiware.com`;
+  await publicar(real);
+  await llamar(`/api/encuestas/${real.slug}/respuestas`, { method: 'POST', body: respuestaValida() });
+
+  const ok = await llamar('/api/publico/contador', { headers: { origin: SITIO } });
+  assert.equal(ok.status, 200);
+  assert.equal(ok.headers.get('access-control-allow-origin'), SITIO);
+  assert.equal(ok.headers.get('vary'), 'Origin');
+  const { personas, palabras } = await ok.json();
+  assert.equal(personas, 1);
+  assert.equal(typeof palabras, 'number');
+
+  const ajeno = await llamar('/api/publico/contador', { headers: { origin: 'https://malo.example' } });
+  assert.equal(ajeno.status, 200);
+  assert.equal(ajeno.headers.get('access-control-allow-origin'), null);
+});
+
+test('preflight: 204 al sitio, 403 a cualquier otro', async () => {
+  env.CORS_ORIGINS = SITIO;
+  assert.equal((await llamar('/api/publico/contador', { method: 'OPTIONS', headers: { origin: SITIO } })).status, 204);
+  assert.equal((await llamar('/api/publico/contador', { method: 'OPTIONS', headers: { origin: 'https://malo.example' } })).status, 403);
+});
+
+test('sin CORS_ORIGINS nadie de afuera tiene CORS, y admin nunca lo tiene', async () => {
+  const r = await llamar('/api/publico/contador', { headers: { origin: SITIO } });
+  assert.equal(r.headers.get('access-control-allow-origin'), null);
+  env.CORS_ORIGINS = SITIO;
+  const admin = await llamar('/api/admin/encuestas', { token: TOKEN, headers: { origin: SITIO } });
+  assert.equal(admin.status, 200);
+  assert.equal(admin.headers.get('access-control-allow-origin'), null);
+});

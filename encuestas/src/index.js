@@ -13,6 +13,8 @@
  *   GET  /api/encuestas                        las abiertas
  *   GET  /api/encuestas/:slug                  definición vigente
  *   POST /api/encuestas/:slug/respuestas       guardar una respuesta
+ *   GET  /api/publico/contador                 cuántas personas y palabras van (con CORS,
+ *                                              para la portada de piko.mugiware.com)
  *
  *   PUT  /api/admin/encuestas/:slug            publicar / actualizar (token)
  *   GET  /api/admin/encuestas                  todas, con conteo (token)
@@ -111,6 +113,12 @@ async function enrutar(request, env, ctx) {
 
   if (a === 'salud' && m === 'GET') return json({ ok: true });
 
+  if (a === 'publico') {
+    const cors = cabecerasCors(request, env);
+    if (m === 'OPTIONS') return new Response(null, { status: cors ? 204 : 403, headers: cors ?? {} });
+    if (b === 'contador' && !c && m === 'GET') return contador(env, cors ?? {});
+  }
+
   if (a === 'encuestas') {
     if (!b && m === 'GET') return listarAbiertas(env);
     if (b && !c && m === 'GET') return obtenerEncuesta(env, b, await tokenValido(request, env));
@@ -138,6 +146,39 @@ async function enrutar(request, env, ctx) {
   }
 
   throw new ErrorHttp(404, 'Ruta no encontrada.');
+}
+
+/* ---------------------------------------------------------------- público */
+
+/**
+ * CORS solo para /api/publico/*: la portada del sitio vive en otro dominio y
+ * pide el contador desde el navegador. Se permite exactamente lo que está en
+ * CORS_ORIGINS (separado por comas); nunca '*', y nunca en /api/admin/*.
+ * Devuelve null si el origen no está en la lista.
+ */
+function cabecerasCors(request, env) {
+  const origen = request.headers.get('origin');
+  const permitidos = String(env.CORS_ORIGINS ?? '')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+  if (!origen || !permitidos.includes(origen)) return null;
+  return {
+    'access-control-allow-origin': origen,
+    'access-control-allow-methods': 'GET, OPTIONS',
+    'access-control-max-age': '86400',
+    vary: 'Origin',
+  };
+}
+
+/** Solo conteos: ni una respuesta, ni un nombre, ni un correo sale por acá. */
+async function contador(env, cors) {
+  const { personas } = await env.DB.prepare('SELECT COUNT(*) AS personas FROM respuestas').first();
+  // Las traducciones son las únicas filas con item (fila) y texto a la vez.
+  const { palabras } = await env.DB.prepare(
+    'SELECT COUNT(*) AS palabras FROM respuestas_items WHERE fila IS NOT NULL AND texto IS NOT NULL',
+  ).first();
+  return json({ personas, palabras }, 200, { ...cors, 'cache-control': 'public, max-age=60' });
 }
 
 /* ----------------------------------------------------------------- página */
