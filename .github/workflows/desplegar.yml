@@ -1,8 +1,8 @@
 name: Desplegar en Azure
 
-# Cada merge a main, cuando CI pasa, el servidor de Azure queda exactamente
-# igual a main: entra por SSH, corre despliegue/actualizar.sh y después
-# comprueba en vivo que el sitio y la API digan el mismo commit.
+# Cada merge a main, cuando CI pasa, el servidor de Azure (las encuestas)
+# queda exactamente igual a main: entra por SSH, corre despliegue/actualizar.sh
+# y después comprueba en vivo que la API diga el mismo commit.
 #
 # Secretos del repositorio (Settings → Secrets and variables → Actions):
 #   AZURE_VM_HOST         la IP o el nombre de la VM
@@ -28,7 +28,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HOST: ${{ secrets.AZURE_VM_HOST }}
-      SITIO: https://azure.piko.mugiware.com
       API: https://api.piko.mugiware.com
       COMMIT: ${{ github.event.workflow_run.head_sha || github.sha }}
 
@@ -58,10 +57,9 @@ jobs:
         if: steps.listo.outputs.ok == 'true'
         run: |
           for i in $(seq 1 20); do
-            web=$(curl -fsS "$SITIO/version.json" | jq -r .commit || true)
             api=$(curl -fsS "$API/api/salud" | jq -r .version || true)
-            echo "sitio: $web · api: $api · esperado: $COMMIT"
-            if [ "$web" = "$COMMIT" ] && [ "$api" = "$COMMIT" ]; then
+            echo "api: $api · esperado: $COMMIT"
+            if [ "$api" = "$COMMIT" ]; then
               echo "### Azure corre main @ \`${COMMIT:0:7}\`" >> "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
@@ -74,7 +72,6 @@ jobs:
         if: steps.listo.outputs.ok == 'true'
         run: |
           set -e
-          test "$(curl -s -o /dev/null -w '%{http_code}' "http://${SITIO#https://}/")" = 301
-          curl -s "$SITIO/no-existe-$RANDOM" | grep -q 'Esta página se fue volando'
+          test "$(curl -s -o /dev/null -w '%{http_code}' "http://${API#https://}/")" = 301
           curl -s "$API/api/no-existe" | jq -e .error > /dev/null
-          echo "HTTP→HTTPS, 404 amigable y errores de la API en JSON: bien."
+          echo "HTTP→HTTPS y errores de la API en JSON con mensaje: bien."

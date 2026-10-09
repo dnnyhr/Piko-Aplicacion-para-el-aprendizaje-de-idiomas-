@@ -1,18 +1,17 @@
 # Piko en Azure
 
-Esta guía arma un servidor propio en Azure para el sitio de Piko y para sus encuestas, paso a paso y desde cero.
-`piko.mugiware.com` sigue en Netlify y las encuestas siguen en Cloudflare. Esto se suma a eso y no lo reemplaza.
+Esta guía arma un servidor propio en Azure para las encuestas de Piko, paso a paso y desde cero.
+El sitio (`piko.mugiware.com`) sigue en Netlify; en Azure corren solo las encuestas, su panel y su API.
 
 | Dirección | Qué sirve |
 |---|---|
-| `https://azure.piko.mugiware.com` | El sitio (`web/`) y la app web (`/probar/app`) |
-| `https://api.piko.mugiware.com` | Las encuestas y su API (`encuestas/`) |
+| `https://api.piko.mugiware.com` | Las encuestas, el panel (`/admin.html`) y su API (`encuestas/`) |
 
 ```
-Internet ──443──▶ nginx ─┬─ azure.piko.mugiware.com → web/ (archivos, comprimidos)
-   (único puerto          └─ api.piko.mugiware.com   → api:8787 ──▶ db:8080
-    abierto)                                          (Node)        (libSQL, volumen)
-                         └────────── red interna de Docker ──────────────┘
+Internet ──443──▶ nginx ── api.piko.mugiware.com ──▶ api:8787 ──▶ db:8080
+   (único puerto     │  estilos y dibujos directo    (Node, JWT)   (libSQL, volumen)
+    abierto)         └─ si la API cae: 50x.html
+                    └────────── red interna de Docker ──────────────┘
 VM Ubuntu 24.04 en Azure · usuario piko (no root) · SSH solo con llave · ufw · fail2ban
 ```
 
@@ -22,7 +21,7 @@ Los del sprint 3 (errores amigables, JWT, despliegue automático y Azure igual a
 
 | Entregable | Dónde está |
 |---|---|
-| **1. Compilación final** | La app web sale minificada de `npm run web:sitio`. Nginx la comprime con gzip, usa HTTP/2 y deja guardar en caché por un año los archivos que llevan huella en el nombre. El APK sale de `eas build --profile production`, con ProGuard y shrink ([paso 9](#9-compilación-final)). |
+| **1. Compilación final** | La app web sale minificada de `npm run web:sitio` y la publica Netlify con el sitio, con caché de un año para los archivos con huella. En Azure, Nginx comprime con gzip, usa HTTP/2 y sirve directo los estilos y dibujos de las encuestas. El APK sale de `eas build --profile production`, con ProGuard y shrink ([paso 9](#9-compilación-final)). |
 | **2. Servidor seguro** | Usuario `piko`, root bloqueado por SSH, sin contraseñas, firewall, fail2ban y actualizaciones automáticas (`preparar-vm.sh`). Monitoreo con Azure Monitor y una prueba de disponibilidad ([paso 8](#8-monitoreo)). |
 | **3. Proxy inverso** | Nginx (`nginx/piko.conf.template`) es lo único con puertos publicados. La API y la base no tienen ninguno. |
 | **4. Contenedores** | `docker-compose.yml` levanta `nginx`, `api` (`encuestas/Dockerfile`, corre como usuario `node` y con el disco en solo lectura), `db` (libSQL) y `certbot`. |
@@ -77,11 +76,10 @@ az vm show -d -g piko -n piko-vm --query publicIps -o tsv
 
 ## 2. El DNS en Cloudflare
 
-En Cloudflare, entrá a **mugiware.com → DNS → Records → Add record** y creá dos registros:
+En Cloudflare, entrá a **mugiware.com → DNS → Records → Add record** y creá el registro:
 
 | Tipo | Nombre | Contenido | Proxy |
 |---|---|---|---|
-| A | `azure.piko` | la IP de la VM | **DNS only** (nube gris) |
 | A | `api.piko` | la IP de la VM | **DNS only** (nube gris) |
 
 **¿Por qué la nube gris?** Hay dos razones:
@@ -89,10 +87,9 @@ En Cloudflare, entrá a **mugiware.com → DNS → Records → Add record** y cr
 1. El certificado gratis de Cloudflare cubre `*.mugiware.com`, pero no `*.piko.mugiware.com`. Con la nube naranja, el navegador daría un error de certificado.
 2. Con la nube gris, el tráfico llega directo a tu Nginx y Let's Encrypt puede emitir el certificado en el servidor. HTTPS lo pone tu propio servidor, que es lo que se evalúa.
 
-Comprobá que ya resuelven. Puede tardar un par de minutos:
+Comprobá que ya resuelve. Puede tardar un par de minutos:
 
 ```bash
-dig +short azure.piko.mugiware.com
 dig +short api.piko.mugiware.com
 ```
 
@@ -139,12 +136,12 @@ chmod 600 .env
 
 - `.env` **no va a git**: el `.gitignore` de la raíz lo ignora. Solo existe en el servidor y solo `piko` puede leerlo.
 - Docker se lo pasa al contenedor `api` como variables de entorno (`env_file`).
-- `CORS_ORIGINS` lista exactamente qué sitios pueden pedir el contador desde el navegador: `https://piko.mugiware.com,https://azure.piko.mugiware.com`.
+- `CORS_ORIGINS` lista exactamente qué sitios pueden pedir el contador desde el navegador: `https://piko.mugiware.com`.
 
 **Qué es secreto y qué no:**
 
-- Son secretos `ADMIN_TOKEN` y `RESEND_API_KEY`, y viven solo en el `.env`.
-- No es secreta la dirección de la API (`<meta name="piko-api">` en `web/index.html`): el navegador la necesita para pedir el contador. Lo que la protege es CORS y que la parte de admin pide el token.
+- Son secretos `ADMIN_TOKEN`, `JWT_SECRET` y `RESEND_API_KEY`, y viven solo en el `.env`.
+- No es secreta la dirección de la API (`<meta name="piko-api">` en `web/index.html`): el navegador la necesita para pedir el contador. Lo que la protege es CORS y que la parte de admin pide un JWT.
 
 ## 5. El certificado HTTPS (una sola vez)
 
@@ -154,8 +151,16 @@ Nginx no arranca sin certificado, así que el primero se pide con certbot en mod
 cd ~/piko/despliegue
 docker compose run --rm -p 80:80 --entrypoint certbot certbot certonly --standalone \
   --cert-name certificado-piko \
-  -d azure.piko.mugiware.com -d api.piko.mugiware.com \
+  -d api.piko.mugiware.com \
   -m tu-correo@ejemplo.com --agree-tos -n
+```
+
+**Si el servidor ya tenía el certificado con `azure.piko`** (cuando el sitio también corría acá), hay que volver a pedirlo solo para `api.piko`, o la renovación falla al borrar ese DNS. Con Nginx andando:
+
+```bash
+docker compose run --rm certbot certonly --webroot -w /var/www/certbot \
+  --cert-name certificado-piko -d api.piko.mugiware.com --force-renewal -n
+docker compose exec nginx nginx -s reload
 ```
 
 Después, el contenedor `certbot` lo renueva solo cada 12 horas si hace falta, y Nginx se recarga cada 12 horas para tomarlo.
@@ -174,7 +179,7 @@ Para probar desde tu compu:
 
 ```bash
 curl https://api.piko.mugiware.com/api/salud
-curl -sI https://azure.piko.mugiware.com | head -5
+curl -sI https://api.piko.mugiware.com | head -5
 ```
 
 ## 7. Publicar las encuestas en el servidor nuevo
@@ -234,7 +239,7 @@ sudo fail2ban-client status sshd
 cd app && npm run web:sitio      # exporta minificado a web/probar/app
 ```
 
-Subí `web/probar/app/` a git y en el servidor corré `~/piko/despliegue/actualizar.sh`.
+Subí `web/probar/app/` a git: Netlify lo publica solo en cada merge a main.
 
 **APK de producción** (ProGuard, minify y shrink ya están en `app/app.json`):
 
@@ -245,11 +250,10 @@ cd app && npx eas-cli build -p android --profile production
 **Comprobar la compresión y la caché:**
 
 ```bash
-curl -sI -H 'Accept-Encoding: gzip' https://azure.piko.mugiware.com/assets/js/portada.js | grep -i content-encoding
-curl -sI https://azure.piko.mugiware.com/probar/app/ | grep -i -E 'HTTP|cache'
+curl -sI -H 'Accept-Encoding: gzip' https://api.piko.mugiware.com/css/encuesta.css | grep -i content-encoding
 ```
 
-**Lighthouse.** En Chrome, abrí DevTools → Lighthouse → *Mobile* sobre `https://azure.piko.mugiware.com/probar/app/` y guardá la captura.
+**Lighthouse.** En Chrome, abrí DevTools → Lighthouse → *Mobile* sobre `https://api.piko.mugiware.com/` y guardá la captura.
 
 ## 10. Pruebas para la entrega
 
@@ -274,14 +278,11 @@ Si sacás ese origen de `CORS_ORIGINS` y reiniciás la API (`docker compose up -
 
 ## 11. Actualizar
 
-Azure corre **exactamente main de GitHub**. `actualizar.sh` hace `git reset --hard origin/main`, reconstruye y deja anotado el commit:
-
-- `https://azure.piko.mugiware.com/version.json` → `{"commit": "<sha de main>", ...}`
-- `https://api.piko.mugiware.com/api/salud` → `{"ok": true, "version": "<sha de main>"}`
+Azure corre **exactamente main de GitHub**. `actualizar.sh` hace `git reset --hard origin/main`, reconstruye y deja anotado el commit en `https://api.piko.mugiware.com/api/salud` → `{"ok": true, "version": "<sha de main>"}`.
 
 ### Automático, en cada merge a main
 
-[`.github/workflows/desplegar.yml`](../.github/workflows/desplegar.yml) corre cuando CI pasa en main: entra por SSH, corre `actualizar.sh` y comprueba en vivo que el sitio y la API digan el mismo commit que GitHub, que HTTP lleve a HTTPS y que el 404 sea el amigable. Para prenderlo, una sola vez:
+[`.github/workflows/desplegar.yml`](../.github/workflows/desplegar.yml) corre cuando CI pasa en main: entra por SSH, corre `actualizar.sh` y comprueba en vivo que la API diga el mismo commit que GitHub, que HTTP lleve a HTTPS y que los errores salgan con mensaje. Para prenderlo, una sola vez:
 
 ```bash
 # En tu compu: una llave solo para desplegar
@@ -317,7 +318,7 @@ docker compose exec db sh -c 'tar czf - /var/lib/sqld' > respaldo-$(date +%F).tg
 | Síntoma | Causa probable |
 |---|---|
 | certbot: *Timeout during connect* | El DNS todavía no apunta a la VM, la nube de Cloudflare está naranja o el puerto 80 está cerrado en Azure o en `ufw`. |
-| nginx se reinicia en bucle | Falta el certificado (paso 5) o el `.env` no tiene `DOMINIO_WEB`/`DOMINIO_API`. Mirá `docker compose logs nginx`. |
+| nginx se reinicia en bucle | Falta el certificado (paso 5) o el `.env` no tiene `DOMINIO_API`. Mirá `docker compose logs nginx`. |
 | api *unhealthy* | `docker compose logs api`. Si dice *la base todavía no responde*, revisá `docker compose logs db`. |
 | La portada no muestra el contador | Abrí la consola del navegador. Si dice *CORS*, falta el origen en `CORS_ORIGINS`. Si dice *ERR_NAME_NOT_RESOLVED*, falta el DNS de `api.piko`. |
 | El panel dice *La sesión venció* | El JWT dura 8 horas, o cambió `ADMIN_TOKEN`/`JWT_SECRET`. Volvé a entrar con la contraseña. |

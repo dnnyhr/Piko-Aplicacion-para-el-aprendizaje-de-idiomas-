@@ -11,10 +11,9 @@ git fetch --quiet origin main
 git checkout --quiet main
 git reset --quiet --hard origin/main
 
-# El commit que queda corriendo: la API lo dice en /api/salud y el sitio en /version.json.
+# El commit que queda corriendo: la API lo dice en /api/salud.
 VERSION="$(git rev-parse HEAD)"
 export VERSION
-printf '{"commit":"%s","rama":"main","desplegado":"%s"}\n' "$VERSION" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > web/version.json
 
 cd despliegue
 docker compose up -d --build --remove-orphans

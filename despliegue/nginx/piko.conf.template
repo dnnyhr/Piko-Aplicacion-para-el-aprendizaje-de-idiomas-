@@ -1,9 +1,9 @@
-# Piko en Azure. Nginx es lo único que da a internet: el sitio sale de web/
-# (montado de solo lectura) y la API se reenvía al contenedor "api", que no
-# tiene ningún puerto abierto hacia afuera.
+# Piko en Azure: las encuestas. Nginx es lo único que da a internet; la API
+# se reenvía al contenedor "api", que no tiene ningún puerto abierto hacia
+# afuera. El sitio (web/) sigue en Netlify.
 #
-# Es una plantilla: al arrancar, la imagen de Nginx reemplaza ${DOMINIO_WEB} y
-# ${DOMINIO_API} con lo que diga despliegue/.env. Las variables propias de
+# Es una plantilla: al arrancar, la imagen de Nginx reemplaza ${DOMINIO_API}
+# con lo que diga despliegue/.env. Las variables propias de
 # Nginx ($host, $uri, …) no se tocan.
 
 server_tokens off;
@@ -42,62 +42,6 @@ server {
     return 444;
 }
 
-# ── El sitio y la app web: ${DOMINIO_WEB} ──
-server {
-    listen 443 ssl;
-    http2 on;
-    server_name ${DOMINIO_WEB};
-    include /etc/nginx/snippets/tls.conf;
-
-    root /srv/web;
-    index index.html;
-
-    # Páginas de error amigables, sin códigos a la vista (web/404.html y web/50x.html).
-    error_page 404 /404.html;
-    error_page 500 502 503 504 /50x.html;
-    location = /404.html { internal; }
-    location = /50x.html { internal; }
-
-    # Las herramientas del sitio no son páginas.
-    location /herramientas/ { return 404; }
-
-    # La app del navegador: sus archivos llevan una huella en el nombre y
-    # nunca cambian, así que el navegador los guarda un año (como en netlify.toml).
-    location /probar/app/_expo/ {
-        include /etc/nginx/snippets/cabeceras.conf;
-        add_header Cache-Control "public, max-age=31536000, immutable" always;
-        try_files $uri =404;
-    }
-    location /probar/app/assets/ {
-        include /etc/nginx/snippets/cabeceras.conf;
-        add_header Cache-Control "public, max-age=31536000, immutable" always;
-        try_files $uri =404;
-    }
-    # Las rutas de la app (app/app/*.tsx) abren la app; cualquier otra cosa
-    # es la página 404 del sitio, no la pantalla en inglés de Expo.
-    # Si se agrega una pantalla nueva a la app, va también acá.
-    location ~ ^/probar/app/(arbol|perfil|practicar|maestro|estudiante/(jugar|unirse)|logros(/canjear)?|minijuegos(/(chibolas|gallinita|rayuela|trompo))?|musica(/[\w-]+)?)/?$ {
-        try_files /probar/app/index.html =404;
-    }
-    location /probar/app/ {
-        try_files $uri $uri/ =404;
-    }
-
-    # El commit de main que está corriendo (lo escribe actualizar.sh).
-    location = /version.json {
-        include /etc/nginx/snippets/cabeceras.conf;
-        add_header Cache-Control "no-store" always;
-    }
-
-    location = /site.webmanifest {
-        default_type application/manifest+json;
-    }
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-}
-
 # ── La API y las encuestas: ${DOMINIO_API} → contenedor api ──
 server {
     listen 443 ssl;
@@ -132,10 +76,12 @@ server {
     location / {
         proxy_pass http://api:8787;
         include /etc/nginx/snippets/proxy.conf;
-        # Si la API se cae, la página de "volvemos enseguida" del sitio.
+        # Si la API se cae, la página de "volvemos enseguida" (encuestas/public/50x.html).
         error_page 502 503 504 /50x.html;
     }
-    location = /50x.html { root /srv/web; internal; }
-    # Los estilos y el dibujo que usa esa página (encuestas no tiene /assets/).
-    location /assets/ { root /srv/web; }
+    location = /50x.html { root /srv/encuestas; internal; }
+    # Los estilos y los dibujos salen directo de Nginx: más rápido, y la
+    # página de arriba se ve bien aunque la API esté caída.
+    location /css/ { root /srv/encuestas; }
+    location /img/ { root /srv/encuestas; }
 }

@@ -132,9 +132,10 @@ jobs:
           openssl req -x509 -nodes -newkey rsa:2048 -days 1 -subj /CN=prueba \
             -keyout /tmp/le/live/certificado-piko/privkey.pem -out /tmp/le/live/certificado-piko/fullchain.pem
           docker run --rm --add-host api:127.0.0.1 \
-            -e DOMINIO_WEB=azure.piko.mugiware.com -e DOMINIO_API=api.piko.mugiware.com \
+            -e DOMINIO_API=api.piko.mugiware.com \
             -v "$PWD/nginx/piko.conf.template:/etc/nginx/templates/default.conf.template:ro" \
             -v "$PWD/nginx/snippets:/etc/nginx/snippets:ro" \
+            -v "$PWD/../encuestas/public:/srv/encuestas:ro" \
             -v /tmp/le:/etc/letsencrypt:ro \
             nginx:1.27-alpine sh -c '/docker-entrypoint.d/20-envsubst-on-templates.sh && nginx -t'
 
@@ -142,30 +143,3 @@ jobs:
         if: always()
         run: docker compose down -v
 
-  despliegue:
-    name: Despliegue — Nginx y Compose
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      # Un certificado de mentira, solo para que nginx -t encuentre los archivos.
-      - name: Certificado de prueba
-        run: |
-          mkdir -p /tmp/le/live/certificado-piko
-          openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj /CN=prueba \
-            -keyout /tmp/le/live/certificado-piko/privkey.pem -out /tmp/le/live/certificado-piko/fullchain.pem
-
-      - name: La plantilla de Nginx es válida
-        run: |
-          docker run --rm -e DOMINIO_WEB=azure.prueba -e DOMINIO_API=api.prueba --add-host api:127.0.0.1 \
-            -v "$PWD/despliegue/nginx/piko.conf.template:/etc/nginx/templates/default.conf.template:ro" \
-            -v "$PWD/despliegue/nginx/snippets:/etc/nginx/snippets:ro" \
-            -v "$PWD/web:/srv/web:ro" -v /tmp/le:/etc/letsencrypt:ro \
-            nginx:1.27-alpine nginx -t
-
-      - name: docker-compose.yml es válido
-        run: cp despliegue/.env.example despliegue/.env && docker compose -f despliegue/docker-compose.yml config -q
-
-      - name: Las páginas de error existen
-        run: test -s web/404.html && test -s web/50x.html
