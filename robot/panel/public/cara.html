@@ -194,6 +194,7 @@ body.con-tarjeta #tarjeta{transform:none}
 
 <script src="piko.js"></script>
 <script src="vigilia.js"></script>
+<script src="oido.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 const escena = $('escena');
@@ -292,6 +293,9 @@ function arrancar() {
   prepararVoz();
   despertarAudio();
   try { voz.play().catch(() => {}); voz.pause(); } catch { }
+
+  // El permiso del micrófono también pide un gesto: se aprovecha el mismo.
+  prepararOido();
 
   for (const el of piezas.values()) {
     if (el.tagName === 'VIDEO') el.play().catch(() => {});
@@ -608,6 +612,51 @@ function mostrarTarjeta(tarjeta) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════
+//  El oído
+// ═══════════════════════════════════════════════════════════════════════
+
+/**
+ * Piko escucha por el micrófono de este teléfono: el chico le habla a la cara,
+ * no al maestro. Esta página sólo graba y manda; quien decide si se parece es
+ * el oído (robot/escucha), y quien decide qué hacer con eso, el panel.
+ *
+ * Si el micrófono no está —sin permiso, o la página abierta por http en la red
+ * local—, se dice acá y se le avisa al panel con cada pedido, para que el
+ * maestro pueda cambiar a escuchar desde su aparato.
+ */
+let sinOido = null;          // motivo por el que no se puede escuchar, o null
+let grabacionCortada = false; // el panel mandó cortar la grabación en curso
+
+async function prepararOido() {
+  try {
+    await Oido.preparar(contexto || undefined);
+    sinOido = null;
+  } catch (e) {
+    sinOido = e && e.name === 'NotAllowedError' ? 'no dieron permiso para el micrófono' : (e.message || String(e));
+    avisar(`Piko no puede escuchar: ${sinOido}`);
+  }
+}
+
+async function escuchar(m) {
+  const contar = (t, extra) => { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t, id: m.id, ...extra })); };
+  if (!Oido.listo()) {
+    contar('oidoerror', { motivo: sinOido || 'la cara todavía no arrancó (falta tocar la pantalla)' });
+    return;
+  }
+  /* Que no se escuche a sí mismo: si quedaba algo sonando, se corta antes de
+     abrir el micrófono. */
+  callar();
+  contar('grabando');
+  try {
+    const g = await Oido.grabar({ maxSegundos: m.segundos });
+    if (grabacionCortada) return;   // se cortó: no hay nada que evaluar
+    await Oido.mandar(m.id, g.wav);
+  } catch (e) {
+    contar('oidoerror', { motivo: e.message || String(e) });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
 //  Conexión
 // ═══════════════════════════════════════════════════════════════════════
 
@@ -665,7 +714,11 @@ function conectar() {
 
     if (m.t === 'tarjeta') { mostrarTarjeta(m.tarjeta); return; }
 
-    if (m.t === 'callar') { callar(); }
+    if (m.t === 'callar') { callar(); return; }
+
+    if (m.t === 'grabar') { grabacionCortada = false; escuchar(m); return; }
+
+    if (m.t === 'nograbar') { grabacionCortada = true; Oido.cortar(); }
   };
 }
 

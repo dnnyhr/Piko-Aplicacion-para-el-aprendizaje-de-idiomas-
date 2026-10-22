@@ -10,7 +10,8 @@
  *
  * Y además le pone voz a Piko: `/voz` trae del traductor de Google el audio
  * de cualquier frase, lo guarda, y la cara lo reproduce por el mismo camino
- * que ya le mueve la boca.
+ * que ya le mueve la boca. Y oído: lo que graba la cara entra por `/oido` y se
+ * lo pasa al modelo de robot/escucha (ver «EL OÍDO» más abajo).
  *
  * Todo pasa por acá. El control nunca le habla al teléfono de la cara: le
  * habla al puente, y el puente reparte. Así se puede tener dos maestros
@@ -20,6 +21,7 @@
  *   node server.js --puerto COM6   forzar el puerto serie
  *   node server.js --http 8080     cambiar el puerto web
  *   node server.js --listar        listar puertos serie y salir
+ *   node server.js --oido URL      dónde está el oído (http://127.0.0.1:4710)
  *
  * El latido va de punta a punta a propósito: lo manda el navegador que
  * controla, no este servidor. Si lo generara acá, el Arduino seguiría creyendo
@@ -54,6 +56,7 @@ function argumento(nombre, pordefecto = null) {
 
 const PUERTO_HTTP = Number(argumento('--http', 4700));
 const PUERTO_FIJO = argumento('--puerto');
+const OIDO_URL = argumento('--oido', 'http://127.0.0.1:4710');
 
 // ═════════════════════════════════════════════════════════════════════════
 //  PUERTO SERIE
@@ -148,6 +151,7 @@ function avisarEstado() {
     puerto: nombrePuerto,
     controles: cuantos('control'),
     caras: cuantos('cara'),
+    oido: estadoOido,
   });
 }
 
@@ -279,11 +283,174 @@ let expresionActual = null;
  * quedaba registrada como tal y los sonidos, que van dirigidos sólo a ella, no
  * le llegaban nunca.
  */
-let catalogo = { caras: [], sonidos: [] };
+let catalogo = { caras: [], sonidos: [], palabras: [] };
 
 async function refrescarCatalogo() {
-  catalogo = { caras: await listarCaras(), sonidos: await listarSonidos() };
+  catalogo = { caras: await listarCaras(), sonidos: await listarSonidos(), palabras: await listarPalabras() };
 }
+
+// ═════════════════════════════════════════════════════════════════════════
+//  LAS PALABRAS DEL EJERCICIO DE PRONUNCIACIÓN
+// ═════════════════════════════════════════════════════════════════════════
+
+/**
+ * `palabras.json` elige cuáles y por qué cuestan; todo lo demás sale del
+ * diccionario que publica el sitio.
+ *
+ * Así el robot no tiene su propia copia de nada que se pueda corregir: si un
+ * hablante arregla una palabra en el léxico y se corre `npm run contenido`, el
+ * robot la dice y la escucha arreglada. Y como el diccionario sólo trae lo
+ * confirmado, una palabra que perdió la confirmación sale sola del ejercicio.
+ */
+const PALABRAS = path.join(AQUI, 'palabras.json');
+const DICCIONARIO = path.join(AQUI, '..', '..', 'web', 'datos', 'diccionario-miq.json');
+
+async function listarPalabras() {
+  try {
+    const [elegidas, dicc] = await Promise.all([
+      fsp.readFile(PALABRAS, 'utf8').then(JSON.parse),
+      fsp.readFile(DICCIONARIO, 'utf8').then(JSON.parse),
+    ]);
+    const porId = new Map(dicc.entradas.map((e) => [e.id, e]));
+    return elegidas.palabras
+      .filter((p) => porId.has(p.id))
+      .map((p) => {
+        const e = porId.get(p.id);
+        /* Cualquiera de las formas en que la escribió un hablante vale como
+           respuesta: «mitha» es «mihta» (gramática, S3). */
+        const formas = [e.forma, ...(e.variantes?.escrituras || []).map((x) => x.forma)];
+        const unicas = [...new Map(formas.map((f) => [f.toLowerCase(), f])).values()];
+        return {
+          id: p.id, nivel: p.nivel, motivo: p.motivo, nombreNivel: elegidas.niveles[p.nivel],
+          forma: e.forma, es: e.es, voz: e.voz || e.forma, formas: unicas,
+        };
+      });
+  } catch (e) {
+    console.warn(`Sin palabras para el ejercicio: ${e.message}`);
+    return [];
+  }
+}
+
+// ═════════════════════════════════════════════════════════════════════════
+//  EL OÍDO
+// ═════════════════════════════════════════════════════════════════════════
+
+/**
+ * Escuchar a un chico es un viaje de tres tramos, y el puente está en el medio
+ * de todos:
+ *
+ *   panel ──escuchar──► puente ──grabar──► cara (o el propio panel) graba
+ *                                                   │
+ *   panel ◄────oido──── puente ◄──POST /oido──────── ┘
+ *                         │  ▲
+ *                         ▼  │  POST /evaluar
+ *                        robot/escucha (Python, el modelo)
+ *
+ * El modelo vive aparte porque es Python y pesa casi 4 GB: arrancarlo con cada
+ * `npm start` haría que probar el panel tarde un minuto. Si no está encendido,
+ * todo lo demás sigue andando y el panel lo dice.
+ *
+ * Lo que manda cada navegador se valida acá. Un audio sólo se acepta si hay un
+ * pedido de escucha abierto con ese id —lo abrió un control—, así que nadie
+ * puede usar el puente para hacerle evaluar cualquier cosa al modelo.
+ */
+let estadoOido = { listo: false, modelo: null, error: null };
+
+async function vigilarOido() {
+  let nuevo;
+  try {
+    const r = await fetch(`${OIDO_URL}/salud`, { signal: AbortSignal.timeout(1500) });
+    const s = await r.json();
+    nuevo = { listo: !!s.listo, modelo: s.modelo || null, error: s.error || (s.listo ? null : 'cargando el modelo') };
+  } catch {
+    nuevo = { listo: false, modelo: null, error: 'apagado' };
+  }
+  const cambio = JSON.stringify(nuevo) !== JSON.stringify(estadoOido);
+  estadoOido = nuevo;
+  if (cambio) avisarEstado();
+}
+
+const EXIGENCIAS = ['suave', 'normal', 'estricta'];
+const FUENTES = ['cara', 'control'];
+const MS_PEDIDO = 60000;
+const AUDIO_MAXIMO = 4 * 1024 * 1024;
+
+/** id → { formas, exigencia, vence }. Un pedido se usa una sola vez. */
+const pedidosDeEscucha = new Map();
+
+function abrirEscucha(socket, m) {
+  const id = limpiarTexto(m.id, 40);
+  const formas = Array.isArray(m.formas)
+    ? m.formas.map((f) => limpiarTexto(f, TARJETA_LARGO)).filter(Boolean).slice(0, 6)
+    : [];
+  const segundos = Math.min(Math.max(Number(m.segundos) || 4, 1), 10);
+  const fuente = FUENTES.includes(m.fuente) ? m.fuente : 'cara';
+  const exigencia = EXIGENCIAS.includes(m.exigencia) ? m.exigencia : 'normal';
+  const responder = (error) => socket.send(JSON.stringify({ t: 'oido', id, error }));
+
+  if (!id || !formas.length) return responder('falta la palabra que hay que escuchar');
+  if (!estadoOido.listo) return responder(`el oído no está listo (${estadoOido.error || 'apagado'})`);
+  if (fuente === 'cara' && cuantos('cara') === 0) return responder('no hay cara conectada para escuchar');
+
+  pedidosDeEscucha.set(id, { formas, exigencia, vence: Date.now() + MS_PEDIDO });
+  if (fuente === 'cara') difundir({ t: 'grabar', id, segundos }, 'cara');
+  difundir({ t: 'serie', dir: 'out', linea: `👂 ${formas[0]}` }, 'control');
+}
+
+/** Lee el cuerpo de un POST, cortando si se pasa de largo. */
+function leerCuerpo(pedido, maximo) {
+  return new Promise((listo, fallo) => {
+    const partes = [];
+    let largo = 0;
+    pedido.on('data', (p) => {
+      largo += p.length;
+      if (largo > maximo) { fallo(new Error('demasiado largo')); pedido.destroy(); return; }
+      partes.push(p);
+    });
+    pedido.on('end', () => listo(Buffer.concat(partes)));
+    pedido.on('error', fallo);
+  });
+}
+
+async function atenderOido(url, pedido, respuesta) {
+  const id = limpiarTexto(url.searchParams.get('id'), 40);
+  const abierto = pedidosDeEscucha.get(id);
+  if (pedido.method !== 'POST' || !abierto || abierto.vence < Date.now()) {
+    respuesta.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' }).end('no hay un pedido de escucha con ese id');
+    return;
+  }
+  pedidosDeEscucha.delete(id);
+
+  let wav;
+  try {
+    wav = await leerCuerpo(pedido, AUDIO_MAXIMO);
+  } catch (e) {
+    respuesta.writeHead(413).end(e.message);
+    return;
+  }
+  respuesta.writeHead(202, { 'Content-Type': 'text/plain; charset=utf-8' }).end('recibido');
+  difundir({ t: 'evaluando', id }, 'control');
+
+  try {
+    const q = `formas=${encodeURIComponent(JSON.stringify(abierto.formas))}&exigencia=${abierto.exigencia}`;
+    const r = await fetch(`${OIDO_URL}/evaluar?${q}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'audio/wav' },
+      body: wav,
+      signal: AbortSignal.timeout(30000),
+    });
+    const resultado = await r.json();
+    if (!r.ok) throw new Error(resultado.error || `el oído contestó ${r.status}`);
+    difundir({ t: 'oido', id, resultado }, 'control');
+  } catch (e) {
+    difundir({ t: 'oido', id, error: e.message }, 'control');
+  }
+}
+
+setInterval(() => {
+  const ahora = Date.now();
+  for (const [id, p] of pedidosDeEscucha) if (p.vence < ahora) pedidosDeEscucha.delete(id);
+}, MS_PEDIDO);
 
 // ═════════════════════════════════════════════════════════════════════════
 //  LA VOZ
@@ -460,6 +627,12 @@ const servidor = http.createServer((pedido, respuesta) => {
     return;
   }
 
+  // Lo que grabó la cara (o el panel) para que lo escuche el oído.
+  if (url.pathname === '/oido') {
+    atenderOido(url, pedido, respuesta);
+    return;
+  }
+
   let relativo;
   if (url.pathname === '/') relativo = 'index.html';
   else if (url.pathname === '/cara') relativo = 'cara.html';
@@ -611,6 +784,33 @@ wss.on('connection', (socket) => {
 
     if (mensaje.t === 'callar') {
       difundir({ t: 'callar' }, 'cara');
+      return;
+    }
+
+    /* Escuchar al chico. Sólo lo puede pedir quien controla: una cara no
+       decide cuándo se evalúa a nadie. */
+    if (mensaje.t === 'escuchar' && socket.rol === 'control') {
+      abrirEscucha(socket, mensaje);
+      return;
+    }
+
+    if (mensaje.t === 'nograbar' && socket.rol === 'control') {
+      difundir({ t: 'nograbar' }, 'cara');
+      return;
+    }
+
+    /* La cara cuenta en qué va: empezó a grabar, o no pudo (sin micrófono,
+       sin permiso, página sin https). El panel lo muestra y no se queda
+       esperando un audio que no va a llegar. */
+    if (mensaje.t === 'grabando') {
+      difundir({ t: 'grabando', id: limpiarTexto(mensaje.id, 40) }, 'control');
+      return;
+    }
+
+    if (mensaje.t === 'oidoerror') {
+      const id = limpiarTexto(mensaje.id, 40);
+      pedidosDeEscucha.delete(id);
+      difundir({ t: 'oido', id, error: limpiarTexto(mensaje.motivo, 160) || 'no se pudo grabar' }, 'control');
     }
   });
 
@@ -630,6 +830,7 @@ wss.on('connection', (socket) => {
       t: 'catalogo',
       caras: catalogo.caras,
       sonidos: catalogo.sonidos,
+      palabras: catalogo.palabras,
       expresion: expresionActual,
       tarjeta: tarjetaActual,
     }));
@@ -654,6 +855,11 @@ servidor.listen(PUERTO_HTTP, () => {
 });
 
 abrirPuerto();
+
+/* El oído se pregunta seguido porque se enciende y se apaga aparte, y tarda
+   en cargar: el panel tiene que pasar de «cargando» a «listo» solo. */
+vigilarOido();
+setInterval(vigilarOido, 5000);
 
 // Ctrl+C con el motor girando no puede dejarlo girando.
 for (const senal of ['SIGINT', 'SIGTERM']) {

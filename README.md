@@ -154,7 +154,7 @@ Dos caminos distintos. **El mismo destino: que estas lenguas sigan vivas.**
 
 **El robot** se construye sobre una placa Arduino (un Makeblock MegaPi) que mueve el cuerpo y las luces, mientras una pequeña computadora en el aula se encarga del procesamiento más pesado — es más económico tener una sola por aula que un dispositivo potente por estudiante. **La cara de Piko es un teléfono** montado en el robot, que muestra sus expresiones y habla.
 
-**Lo que ya funciona (prototipo):** el maestro maneja a Piko desde el navegador de su teléfono — expresiones, luces, movimientos y frases habladas — y corre el primer ejercicio completo: Piko muestra una palabra, pide «Di esta palabra», y festeja o vuelve a mostrar cómo se dice. Por ahora **quien escucha es el maestro** y aprieta una de dos teclas; el día que haya reconocimiento de voz, sólo cambia de dónde sale ese sí o ese no. Los detalles están en [robot/README.md](robot/README.md).
+**Lo que ya funciona (prototipo):** el maestro maneja a Piko desde el navegador de su teléfono — expresiones, luces, movimientos y frases habladas — y corre el primer ejercicio completo: Piko muestra una palabra, pide «Di esta palabra», y festeja o vuelve a mostrar cómo se dice. Y ahora **Piko escucha**: un modelo de Meta que conoce el miskito compara lo que dijo el chico con la palabra, y el panel elige si Piko decide solo o sugiere y el maestro confirma. Es un prototipo: el maestro siempre puede corregirlo con dos teclas. Los detalles están en [robot/README.md](robot/README.md).
 
 **Lo que viene:**
 
@@ -284,7 +284,7 @@ npm run sim -- --students 8 --rondas 2   # un aula entera sobre TCP, sin teléfo
 
 # El panel del robot (no necesita la placa para probarse)
 cd robot/panel && npm install
-npm run prueba           # 44 comprobaciones del puente
+npm run prueba           # 61 comprobaciones del puente
 npm start                # http://localhost:4700 (control) y /cara
 
 # Las encuestas

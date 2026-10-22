@@ -253,6 +253,48 @@ select{
 }
 .paso b{font-weight:650}
 
+/* ---------- el ejercicio de pronunciación ---------- */
+/* Las palabras van como las frases a mano, con un punto del color del nivel:
+   el maestro elige mirando al chico, y el color se lee sin leer. */
+.palabras{max-height:190px; overflow-y:auto; padding:.15rem 0 .3rem}
+.palabras .frase i{width:9px; height:9px; border-radius:50%; flex:none; background:var(--verde-pasto)}
+.palabras .frase[data-nivel="2"] i{background:var(--pico)}
+.palabras .frase[data-nivel="3"] i{background:var(--copete)}
+.palabras .frase small{font-weight:400; opacity:.65}
+.palabras .frase.puesta{background:var(--verde-piko); color:var(--papel); box-shadow:0 3px 0 var(--verde-noche)}
+
+.resultado{margin-top:.6rem; padding:.7rem .75rem; border-radius:12px; background:var(--papel-hondo)}
+.resultado__oyo{margin:0; font-size:.88rem}
+.resultado__oyo b{font-size:1.05rem}
+.resultado__cifras{margin:.45rem 0 0; font-size:.72rem; color:#3B4C42}
+.sello{
+  display:inline-block; margin-left:.35rem; padding:.1rem .55rem; border-radius:999px;
+  font-size:.75rem; font-weight:700; background:var(--papel-sombra);
+}
+.sello.bien{background:var(--verde-pasto); color:var(--verde-noche)}
+.sello.casi{background:var(--pico)}
+/* Cada letra con su barra: alta es que el oído la encontró clara. La h no se
+   califica (gramática, S3) y va gris. */
+.letras{display:flex; flex-wrap:wrap; gap:.25rem; margin-top:.55rem}
+.letra{
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+  width:30px; height:58px; padding-bottom:.15rem; border-radius:8px;
+  background:linear-gradient(to top, var(--verde-pasto) var(--p), #fff var(--p));
+  font-weight:700; font-size:1rem; color:var(--grafito);
+}
+.letra.floja{background:linear-gradient(to top, var(--copete) var(--p), #fff var(--p))}
+.letra.no-cuenta{background:#fff; color:#A9B3AC}
+.letra.separa{width:10px; background:none}
+.letra small{font-size:.58rem; font-weight:500; opacity:.7}
+.historial{margin:.5rem 0 0; padding-left:1.2rem; font-size:.78rem; color:#3B4C42}
+.historial li{margin:.1rem 0}
+
+details.ajustes{margin-top:.7rem; border-top:2px dashed var(--papel-sombra); padding-top:.5rem}
+details.ajustes summary{cursor:pointer; font-size:.82rem; font-weight:650; color:var(--verde-bosque); padding:.35rem 0}
+.casilla{display:flex; align-items:center; gap:.5rem; font-size:.85rem; margin:.55rem 0}
+.casilla input{width:22px; height:22px; accent-color:var(--verde-piko); flex:none}
+.tecla.sugerida{outline:3px solid var(--grafito); outline-offset:2px}
+
 button:disabled{opacity:.4; cursor:default; transform:translateY(4px); box-shadow:none}
 button:disabled:active{transform:translateY(4px)}
 
@@ -335,23 +377,37 @@ details.plegable > .cuerpo{padding:0 .85rem 1rem}
     <span class="chip"><span class="punto" id="pSerie"></span><span id="txtSerie">placa</span></span>
     <span class="chip"><span class="punto" id="pCara"></span><span id="txtCara">cara</span></span>
     <span class="chip"><span class="punto" id="pLatido"></span>latido</span>
+    <span class="chip"><span class="punto" id="pOido"></span><span id="txtOido">oído</span></span>
   </div>
 </header>
 
 <main class="wrap">
 
   <section class="bloque">
-    <h2>Ejercicio (simulación)</h2>
+    <h2>Ejercicio de pronunciación</h2>
+    <label>Palabras en miskito</label>
     <div class="fila">
+      <select id="nivel" aria-label="Dificultad">
+        <option value="">Todas</option>
+        <option value="1">Fáciles</option>
+        <option value="2">Medias</option>
+        <option value="3">Difíciles</option>
+      </select>
+      <button class="tecla" id="btnAzar">Otra al azar</button>
+    </div>
+    <div class="frases palabras" id="palabras"><p class="vacio">Buscando las palabras…</p></div>
+
+    <div class="fila" style="margin-top:.4rem">
       <div style="flex:2 1 0">
         <label>Palabra</label>
-        <input type="text" id="palabra" value="Naksa" autocomplete="off" spellcheck="false">
+        <input type="text" id="palabra" value="yul" autocomplete="off" spellcheck="false">
       </div>
       <div>
         <label>Voz de la palabra</label>
         <select id="idiomaPalabra"></select>
       </div>
     </div>
+    <p class="nota" id="sobrePalabra" style="margin-top:.35rem"></p>
     <label>Consigna</label>
     <input type="text" id="consigna" value="Di esta palabra" autocomplete="off">
 
@@ -360,19 +416,76 @@ details.plegable > .cuerpo{padding:0 .85rem 1rem}
     </div>
     <div class="fila" style="margin-top:.5rem">
       <button class="tecla" id="btnPronunciar">Pronunciar la palabra</button>
-      <button class="tecla" id="btnEsperar">Esperar la respuesta</button>
+      <button class="tecla" id="btnEsperar">Escuchar otra vez</button>
     </div>
     <div class="fila" style="margin-top:.5rem">
       <button class="tecla tecla--verde" id="btnBien">✓ Lo dijo</button>
       <button class="tecla tecla--ambar" id="btnMal">↻ Casi</button>
     </div>
-    <button class="tecla" id="btnTerminar" style="width:100%;margin-top:.5rem">Terminar</button>
+    <div class="fila" style="margin-top:.5rem">
+      <button class="tecla" id="btnSiguiente">Siguiente palabra</button>
+      <button class="tecla" id="btnTerminar">Terminar</button>
+    </div>
 
     <p class="paso"><span class="punto" id="pEjercicio"></span><b id="pasoEjercicio">sin ejercicio</b></p>
-    <p class="nota">La palabra aparece en la pantalla del robot y Piko dice la
-      consigna. Quién acertó y quién no lo decide el maestro con las dos teclas
-      de abajo: el robot todavía no escucha, y esta simulación es para ver el
-      ejercicio entero antes de que lo haga.</p>
+
+    <div class="resultado" id="resultado" hidden>
+      <p class="resultado__oyo">Oyó <b id="oyo"></b> <span class="sello" id="sello"></span></p>
+      <div class="letras" id="letras"></div>
+      <p class="resultado__cifras" id="cifras"></p>
+    </div>
+    <ol class="historial" id="historial"></ol>
+
+    <details class="ajustes">
+      <summary>Cómo escucha Piko</summary>
+      <label class="casilla"><input type="checkbox" id="escucha" checked> Piko escucha y corrige</label>
+      <div class="fila">
+        <div>
+          <label for="fuente">Micrófono</label>
+          <select id="fuente">
+            <option value="cara">El del robot</option>
+            <option value="control">El de este aparato</option>
+          </select>
+        </div>
+        <div>
+          <label for="exigencia">Exigencia</label>
+          <select id="exigencia">
+            <option value="suave">Suave</option>
+            <option value="normal" selected>Normal</option>
+            <option value="estricta">Estricta</option>
+          </select>
+        </div>
+      </div>
+      <div class="fila">
+        <div>
+          <label for="decide">Quién decide</label>
+          <select id="decide">
+            <option value="piko">Piko, solo</option>
+            <option value="maestro">Piko sugiere, el maestro confirma</option>
+          </select>
+        </div>
+      </div>
+      <div class="fila">
+        <div>
+          <label for="segundos">Segundos para contestar</label>
+          <input type="number" id="segundos" min="2" max="10" value="5">
+        </div>
+        <div>
+          <label for="intentos">Intentos por palabra</label>
+          <input type="number" id="intentos" min="1" max="6" value="3">
+        </div>
+      </div>
+      <label class="casilla"><input type="checkbox" id="decirPalabra" checked> Decir la palabra al presentarla</label>
+      <label class="casilla"><input type="checkbox" id="pistas" checked> Decir qué sonido escuchar cuando no sale</label>
+      <label class="casilla"><input type="checkbox" id="pasarSola"> Pasar sola a otra palabra del mismo nivel</label>
+    </details>
+
+    <p class="nota">Piko dice la palabra, escucha al chico por el micrófono y le
+      pregunta al oído (<b>robot/escucha</b>) qué tan cerca estuvo. Cuando no
+      sale, nunca dice «mal»: vuelve a mostrar cómo es. Las teclas ✓ y ↻ siguen
+      mandando: el maestro puede corregir a Piko en cualquier momento. Las
+      palabras son las confirmadas del diccionario; cuáles y por qué cuestan
+      está en <b>robot/panel/palabras.json</b>.</p>
   </section>
 
   <section class="bloque">
@@ -502,6 +615,7 @@ details.plegable > .cuerpo{padding:0 .85rem 1rem}
 
 <script src="piko.js"></script>
 <script src="vigilia.js"></script>
+<script src="oido.js"></script>
 <script>
 const $ = (id) => document.getElementById(id);
 
@@ -572,6 +686,7 @@ function conectar() {
       hayCara = m.caras > 0;
       $('pCara').classList.toggle('si', m.caras > 0);
       $('txtCara').textContent = m.caras > 0 ? `cara ×${m.caras}` : 'sin cara';
+      pintarOido(m.oido);
       return;
     }
 
@@ -579,7 +694,23 @@ function conectar() {
        Sin esto el ejercicio encadenaría a ciegas y Piko se pisaría solo. */
     if (m.t === 'vozfin') { const soltar = esperandoVoz.get(m.id); if (soltar) soltar(); return; }
 
-    if (m.t === 'catalogo') { pintarCaras(m.caras); pintarSonidos(m.sonidos); if (m.expresion) marcar(m.expresion); return; }
+    if (m.t === 'catalogo') {
+      pintarCaras(m.caras);
+      pintarSonidos(m.sonidos);
+      if (m.expresion) marcar(m.expresion);
+      palabras = m.palabras || [];
+      pintarPalabras();
+      return;
+    }
+
+    /* El oído: la cara empezó a grabar, el audio llegó y se está evaluando, o
+       ya está la nota. El que esperaba es `escucharIntento`. */
+    if (m.t === 'grabando') { if (ejercicio) paso('grabando: que lo diga ahora'); return; }
+    if (m.t === 'evaluando') {
+      if (ejercicio) { paso('Piko está pensando…'); ponerExpresion('arriba'); }
+      return;
+    }
+    if (m.t === 'oido') { const soltar = esperandoOido.get(m.id); if (soltar) soltar(m); return; }
     if (m.t === 'expresion') { marcar(m.nombre); return; }
 
     if (m.t === 'serie') {
@@ -611,7 +742,11 @@ function parar() {
 }
 $('btnParada').addEventListener('click', parar);
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' || e.code === 'Space') { e.preventDefault(); parar(); }
+  /* El espacio frena, salvo escribiendo: «titan yamni» lleva uno, y antes
+     cada palabra de dos partes paraba el robot a la mitad. Escape frena
+     siempre. */
+  const escribiendo = e.target.closest && e.target.closest('input, textarea, select');
+  if (e.key === 'Escape' || (e.code === 'Space' && !escribiendo)) { e.preventDefault(); parar(); }
 });
 document.addEventListener('visibilitychange', () => { if (document.hidden) parar(); });
 
@@ -1228,31 +1363,241 @@ $('btnGuardarFrase').addEventListener('click', () => {
 
 pintarFrases();
 
-// ── El ejercicio simulado ────────────────────────────────────────────────
+// ── El ejercicio de pronunciación ────────────────────────────────────────
 
 /**
- * El ejercicio entero corre en este navegador: muestra la palabra, la dice,
- * espera, festeja o vuelve a mostrarla.
+ * Piko muestra una palabra en miskito, la dice, escucha al chico y reacciona.
  *
- * Lo que no hace es escuchar. Que Piko decida solo si el chico pronunció bien
- * es otro problema —micrófono, reconocimiento, una lengua que ningún modelo
- * conoce— y no hace falta resolverlo para ver si el ejercicio funciona. Acá el
- * que escucha es el maestro y aprieta una de dos teclas; todo lo demás pasa
- * igual que si lo hubiera decidido el robot. El día que haya reconocimiento, lo
- * único que cambia es de dónde sale ese sí o ese no.
+ * Corre entero en este navegador, igual que las secuencias: cada paso
+ * comprueba su propio testigo antes de seguir, así la parada de emergencia y
+ * cualquier otra tecla lo cortan de verdad y no una frase más tarde.
  *
- * Va con la misma disciplina que las secuencias: cada paso comprueba su propio
- * testigo antes de seguir, así la parada de emergencia y cualquier otra tecla
- * lo cortan de verdad y no una frase más tarde.
+ * Quién escucha:
+ *
+ *   El oído (robot/escucha), si está encendido y la casilla «Piko escucha»
+ *   está puesta. La cara graba —o este aparato, si se eligió—, el puente le
+ *   pasa el audio al oído y la nota vuelve acá.
+ *   El maestro, siempre. Las teclas ✓ y ↻ andan en cualquier momento, y con
+ *   «Piko sugiere» es el maestro quien confirma. Sin oído, el ejercicio es el
+ *   de antes: escucha el maestro y aprieta una de dos teclas.
+ *
+ * Cuando no sale, Piko nunca dice «mal» ni «incorrecto»: reconoce el intento y
+ * vuelve a mostrar cómo es. La regla está en `app/src/ui/piko/frases.ts` y vale
+ * igual acá — el chico que está aprendiendo la lengua de su comunidad no
+ * necesita que un robot le diga que la habla mal. Con «Decir qué sonido
+ * escuchar», Piko además nombra el sonido que el oído encontró más flojo, como
+ * quien muestra, no como quien marca.
  */
 
 const ACIERTO = ['¡Esa es!', '¡Bien ahí!', '¡Muy bien!', '¡Le atinaste!', '¡Así se hace!'];
 const INTENTO = ['Casi. Escuchá cómo es:', 'Buen intento. Es así:', 'Ya casi. Se dice:', 'La próxima sale. Es:'];
+const OTRA = ['¡Buen intento! Vamos con otra.', '¡Bien que lo probaste! Vamos con otra.'];
+const SIN_OIR = '¿Lo decís otra vez? No te escuché.';
 const alAzar = (lista) => lista[Math.floor(Math.random() * lista.length)];
 
 let ejercicio = null;          // el testigo del ejercicio en curso, o null
-let palabraEnJuego = '';
-let idiomaEnJuego = 'es';
+let enJuego = null;            // { forma, voz, idioma, formas }
+let intento = 0;
+let silencios = 0;
+let ultimoResultado = null;
+
+// ── Las palabras ─────────────────────────────────────────────────────────
+
+let palabras = [];             // las del catálogo: ver palabras.json en el puente
+let elegida = null;            // la de la lista que está puesta, o null si se escribió a mano
+const recientes = [];          // para que «al azar» no repita enseguida
+
+function pintarPalabras() {
+  const cont = $('palabras');
+  cont.textContent = '';
+  const nivel = $('nivel').value;
+  const lista = palabras.filter((p) => !nivel || String(p.nivel) === nivel);
+  if (!lista.length) {
+    const v = document.createElement('p');
+    v.className = 'vacio';
+    v.textContent = palabras.length ? 'No hay palabras de ese nivel.' : 'Sin palabras: falta web/datos/diccionario-miq.json (npm run contenido).';
+    cont.appendChild(v);
+    return;
+  }
+  for (const p of lista) {
+    const b = document.createElement('button');
+    b.className = 'frase';
+    b.dataset.nivel = p.nivel;
+    b.dataset.id = p.id;
+    b.title = `${p.nombreNivel}: ${p.motivo}`;
+    b.append(document.createElement('i'), p.forma, ' ');
+    const es = document.createElement('small');
+    es.textContent = p.es;
+    b.appendChild(es);
+    b.classList.toggle('puesta', elegida?.id === p.id);
+    b.addEventListener('click', () => elegirPalabra(p));
+    cont.appendChild(b);
+  }
+}
+
+function elegirPalabra(p) {
+  elegida = p;
+  $('palabra').value = p.forma;
+  // Las lenguas originarias no están en la voz: se leen con la del español,
+  // escritas como suenan (`voz`, que arma diccionario/herramientas/voz.ts).
+  $('idiomaPalabra').value = 'es';
+  contarPalabra();
+  document.querySelectorAll('#palabras .frase').forEach((b) => b.classList.toggle('puesta', b.dataset.id === p.id));
+  recientes.push(p.id);
+  if (recientes.length > 6) recientes.shift();
+}
+
+function contarPalabra() {
+  const p = elegida;
+  $('sobrePalabra').textContent = p
+    ? `«${p.es}» · ${p.nombreNivel.toLowerCase()}: ${p.motivo}` +
+      (p.formas.length > 1 ? ` · también vale: ${p.formas.slice(1).join(', ')}` : '')
+    : '';
+}
+
+/** Otra palabra del nivel elegido, que no sea de las últimas. */
+function palabraAlAzar() {
+  const nivel = $('nivel').value;
+  const del = palabras.filter((p) => !nivel || String(p.nivel) === nivel);
+  const frescas = del.filter((p) => !recientes.includes(p.id));
+  const lista = frescas.length ? frescas : del;
+  if (lista.length) elegirPalabra(alAzar(lista));
+}
+
+/** Lo que hay que mostrar, decir y aceptar, según lo que haya en el campo. */
+function palabraPuesta() {
+  const forma = ($('palabra').value || '').trim();
+  if (elegida && elegida.forma === forma) {
+    return { forma, voz: elegida.voz, idioma: $('idiomaPalabra').value, formas: elegida.formas };
+  }
+  return { forma, voz: forma, idioma: $('idiomaPalabra').value, formas: [forma] };
+}
+
+$('nivel').addEventListener('change', pintarPalabras);
+$('btnAzar').addEventListener('click', palabraAlAzar);
+$('palabra').addEventListener('input', () => {
+  if (elegida && $('palabra').value.trim() !== elegida.forma) {
+    elegida = null;
+    contarPalabra();
+    document.querySelectorAll('#palabras .frase').forEach((b) => b.classList.remove('puesta'));
+  }
+});
+
+// ── Los ajustes, que se recuerdan en este aparato ────────────────────────
+
+const LLAVE_AJUSTES = 'piko.pronunciacion';
+const AJUSTES = ['escucha', 'fuente', 'exigencia', 'decide', 'segundos', 'intentos', 'decirPalabra', 'pistas', 'pasarSola', 'nivel'];
+
+function guardarAjustes() {
+  const datos = {};
+  for (const id of AJUSTES) datos[id] = $(id).type === 'checkbox' ? $(id).checked : $(id).value;
+  try { localStorage.setItem(LLAVE_AJUSTES, JSON.stringify(datos)); } catch { }
+}
+
+(function leerAjustes() {
+  let datos = {};
+  try { datos = JSON.parse(localStorage.getItem(LLAVE_AJUSTES)) || {}; } catch { }
+  for (const id of AJUSTES) {
+    if (!(id in datos)) continue;
+    if ($(id).type === 'checkbox') $(id).checked = !!datos[id];
+    else $(id).value = datos[id];
+  }
+  for (const id of AJUSTES) $(id).addEventListener('change', guardarAjustes);
+})();
+
+const numero = (id, min, max) => Math.min(Math.max(Number($(id).value) || min, min), max);
+
+// ── El oído ──────────────────────────────────────────────────────────────
+
+let oidoListo = false;
+let nOido = 0;
+const esperandoOido = new Map();   // id → función que suelta la espera
+
+function pintarOido(o) {
+  oidoListo = !!(o && o.listo);
+  $('pOido').classList.toggle('si', oidoListo);
+  $('txtOido').textContent = oidoListo ? 'oído' : `oído: ${(o && o.error) || 'apagado'}`;
+}
+
+/** Con el micrófono de este aparato, el permiso se pide en el toque de
+    «Presentar»: después de los `await` de la consigna ya no hay gesto. */
+async function prepararMicrofonoAca() {
+  if ($('fuente').value !== 'control' || !$('escucha').checked) return;
+  try { await Oido.preparar(); }
+  catch (e) { log(`✗ micrófono de este aparato: ${e.message || e}`, 'mal'); }
+}
+
+function soltarOido(datos) {
+  for (const soltar of esperandoOido.values()) soltar(datos);
+  esperandoOido.clear();
+}
+
+/** Graba un intento y devuelve lo que dijo el oído: { resultado } o { error }. */
+function escucharIntento(formas) {
+  const id = `o${++nOido}`;
+  const segundos = numero('segundos', 2, 10);
+  const fuente = $('fuente').value;
+  ws.send(JSON.stringify({ t: 'escuchar', id, formas, segundos, fuente, exigencia: $('exigencia').value }));
+
+  if (fuente === 'control') {
+    Oido.grabar({ maxSegundos: segundos })
+      .then((g) => Oido.mandar(id, g.wav))
+      .catch((e) => { const s = esperandoOido.get(id); if (s) s({ error: e.message || String(e) }); });
+  }
+
+  return new Promise((listo) => {
+    const plazo = setTimeout(() => { esperandoOido.delete(id); listo({ error: 'el oído no contestó a tiempo' }); },
+                             segundos * 1000 + 30000);
+    esperandoOido.set(id, (datos) => { clearTimeout(plazo); esperandoOido.delete(id); listo(datos); });
+  });
+}
+
+function sugerir(tecla) {
+  $('btnBien').classList.toggle('sugerida', tecla === 'bien');
+  $('btnMal').classList.toggle('sugerida', tecla === 'casi');
+}
+
+function mostrarResultado(r) {
+  $('resultado').hidden = false;
+  $('oyo').textContent = r.oyo ? `«${r.oyo}»` : '(nada)';
+  const sello = $('sello');
+  sello.className = `sello ${r.veredicto}`;
+  sello.textContent = { bien: '✓ lo dijo', casi: '↻ casi', silencio: 'no se oyó' }[r.veredicto] || r.veredicto;
+
+  const letras = $('letras');
+  letras.textContent = '';
+  (r.letras || []).forEach((l, i) => {
+    const d = document.createElement('div');
+    if (l.letra === '|') { d.className = 'letra separa'; letras.appendChild(d); return; }
+    d.className = 'letra';
+    if (!l.cuenta) d.classList.add('no-cuenta');
+    else if (r.pista && r.pista.posicion === i) d.classList.add('floja');
+    d.style.setProperty('--p', `${Math.round(l.seguridad * 100)}%`);
+    d.title = l.cuenta ? `${Math.round(l.seguridad * 100)} %` : 'la h no se califica (gramática, S3)';
+    d.append(l.letra);
+    const s = document.createElement('small');
+    s.textContent = l.cuenta ? Math.round(l.seguridad * 100) : '·';
+    d.appendChild(s);
+    letras.appendChild(d);
+  });
+
+  $('cifras').textContent = r.veredicto === 'silencio'
+    ? `Pico de volumen ${r.pico}: no hubo voz. ¿El micrófono está lejos o tapado?`
+    : `Seguridad ${Math.round(r.puntaje * 100)} % · parecido ${Math.round(r.parecido * 100)} %` +
+      (r.forma !== enJuego?.forma ? ` · la tomó como «${r.forma}»` : '') +
+      (r.otra_palabra ? ' · parece otra palabra' : '') +
+      ` · ${r.segundos} s`;
+}
+
+function anotar(texto) {
+  const li = document.createElement('li');
+  li.textContent = texto;
+  const h = $('historial');
+  h.prepend(li);
+  while (h.childElementCount > 8) h.lastChild.remove();
+}
+
+// ── Los pasos ────────────────────────────────────────────────────────────
 
 function tarjeta(datos) {
   if (vivo) ws.send(JSON.stringify({ t: 'tarjeta', tarjeta: datos }));
@@ -1270,36 +1615,85 @@ function cortarEjercicio() {
   if (!ejercicio) return;
   ejercicio = null;
   callar();                    // que no se quede hablando solo después del corte
+  if (vivo) ws.send(JSON.stringify({ t: 'nograbar' }));
+  Oido.cortar();
+  soltarOido({ error: 'cortado' });
+  sugerir(null);
   paso('sin ejercicio');
 }
 
-function esperarRespuesta() {
+/** El turno del chico: lo escucha Piko si puede, y si no, el maestro. */
+async function turnoDelChico() {
   if (!ejercicio) return;
-  paso('escuchando la respuesta');
-  tarjeta({ texto: palabraEnJuego, sub: 'Te escucho…', estado: 'escuchando' });
+  const mio = ejercicio;
+  sugerir(null);
+  tarjeta({ texto: enJuego.forma, sub: 'Te escucho…', estado: 'escuchando' });
   ponerExpresion('enfrente');
   ponerEfecto('respirar');     // la luz que respira es la señal de que es tu turno
+
+  if (!$('escucha').checked || !oidoListo) {
+    paso($('escucha').checked ? 'el oído no está encendido — decidí con las teclas' : 'escuchando: decidí con las teclas');
+    return;
+  }
+
+  paso('escuchando al chico…');
+  const r = await escucharIntento(enJuego.formas);
+  if (ejercicio !== mio) return;
+
+  if (r.error) {
+    log(`✗ oído: ${r.error}`, 'mal');
+    paso(`no se pudo escuchar (${r.error}) — decidí con las teclas`);
+    return;
+  }
+
+  const res = r.resultado;
+  ultimoResultado = res;
+  mostrarResultado(res);
+  log(`👂 oyó «${res.oyo || ''}» → ${res.veredicto}`, res.veredicto === 'bien' ? 'ent' : 'sal');
+
+  if (res.veredicto === 'silencio') {
+    if (++silencios > 2) {
+      paso('no se oye nada — revisá el micrófono o decidí con las teclas');
+      return;
+    }
+    paso('no se escuchó: lo pide otra vez');
+    await decir(SIN_OIR, 'es');
+    if (ejercicio !== mio) return;
+    return turnoDelChico();
+  }
+  silencios = 0;
+
+  if ($('decide').value === 'maestro') {
+    sugerir(res.veredicto);
+    paso(`Piko sugiere ${res.veredicto === 'bien' ? '✓' : '↻'} — confirmá con las teclas`);
+    return;
+  }
+  calificar(res.veredicto === 'bien', res);
 }
 
 async function presentarEjercicio() {
-  const palabra = ($('palabra').value || '').trim();
-  if (!palabra) { log('✗ falta la palabra del ejercicio', 'mal'); return; }
+  const puesta = palabraPuesta();
+  if (!puesta.forma) { log('✗ falta la palabra del ejercicio', 'mal'); return; }
 
+  prepararMicrofonoAca();      // antes de cualquier await: necesita el toque
   cortarSecuencia();
   cortarEjercicio();
 
-  palabraEnJuego = palabra;
-  idiomaEnJuego = $('idiomaPalabra').value;
+  enJuego = puesta;
+  intento = 0;
+  silencios = 0;
+  ultimoResultado = null;
+  $('resultado').hidden = true;
   const consigna = ($('consigna').value || '').trim() || 'Di esta palabra';
 
   const mio = {};
   ejercicio = mio;
-  log(`▶ ejercicio: ${palabraEnJuego}`, 'sal');
+  log(`▶ ejercicio: ${enJuego.forma}`, 'sal');
 
   paso('presentando la palabra');
   ponerExpresion('enfrente');
   ponerEfecto('fijo');
-  tarjeta({ texto: palabraEnJuego, sub: '', estado: 'neutro' });
+  tarjeta({ texto: enJuego.forma, sub: '', estado: 'neutro' });
 
   /* Un respiro antes de hablar: la palabra tiene que estar en pantalla cuando
      se escucha «di esta palabra», y no aparecer con la frase ya empezada. */
@@ -1308,52 +1702,92 @@ async function presentarEjercicio() {
 
   await decir(consigna, 'es');
   if (ejercicio !== mio) return;
-
-  esperarRespuesta();
+  if ($('decirPalabra').checked) {
+    await decir(enJuego.voz, enJuego.idioma);
+    if (ejercicio !== mio) return;
+  }
+  turnoDelChico();
 }
 
 async function pronunciarPalabra() {
   if (!ejercicio) return;
   const mio = ejercicio;
   paso('pronunciando la palabra');
-  await decir(palabraEnJuego, idiomaEnJuego);
+  await decir(enJuego.voz, enJuego.idioma);
   if (ejercicio !== mio) return;
-  esperarRespuesta();
+  turnoDelChico();
 }
 
-async function calificar(acierto) {
+/** Lo que dice Piko para mostrar el sonido que costó, o null. */
+function pistaEnVoz(res) {
+  if (!$('pistas').checked || !res || !res.pista) return null;
+  const letra = res.pista.letra;
+  if (res.pista.tipo === 'vocal_larga') {
+    const base = letra.normalize('NFD')[0];
+    return { voz: `Con la ${base} larga:`, sub: `La «${letra}» es larga` };
+  }
+  return { voz: `Escuchá la ${letra}:`, sub: `Escuchá la «${letra}»` };
+}
+
+async function calificar(acierto, res = ultimoResultado) {
   if (!ejercicio) return;
   const mio = ejercicio;
+  sugerir(null);
+  intento++;
 
   if (acierto) {
     const elogio = alAzar(ACIERTO);
     paso('festejando');
-    tarjeta({ texto: palabraEnJuego, sub: elogio, estado: 'bien' });
+    anotar(`${enJuego.forma} — ✓ ${intento === 1 ? 'al primer intento' : `al intento ${intento}`}`);
+    tarjeta({ texto: enJuego.forma, sub: elogio, estado: 'bien' });
     /* El festejo no se espera: la voz y el aleteo tienen que ir juntos. La
        secuencia corta lo que hubiera antes y deja las alas abajo al terminar. */
     correrSecuencia('celebrar');
     await decir(elogio, 'es');
     if (ejercicio !== mio) return;
-    await decir(palabraEnJuego, idiomaEnJuego);
+    await decir(enJuego.voz, enJuego.idioma);
     if (ejercicio !== mio) return;
-    paso('listo — cambiá la palabra o terminá');
-    return;
+    return despuesDeLaPalabra(mio);
   }
 
-  /* Nunca «mal» ni «incorrecto»: se reconoce el intento y se vuelve a mostrar
-     cómo es. La regla está escrita en `app/src/ui/piko/frases.ts` y vale igual
-     acá — el chico que está aprendiendo la lengua de su comunidad no necesita
-     que un robot le diga que la habla mal. */
+  if (intento >= numero('intentos', 1, 6)) {
+    const otra = alAzar(OTRA);
+    anotar(`${enJuego.forma} — ↻ ${intento} intentos`);
+    paso('pasando a otra');
+    tarjeta({ texto: enJuego.forma, sub: otra, estado: 'neutro' });
+    await decir(otra, 'es');
+    if (ejercicio !== mio) return;
+    return despuesDeLaPalabra(mio);
+  }
+
   const aliento = alAzar(INTENTO);
-  paso('mostrando cómo es');
-  tarjeta({ texto: palabraEnJuego, sub: aliento, estado: 'mal' });
+  const pista = pistaEnVoz(res);
+  paso(`mostrando cómo es (intento ${intento + 1})`);
+  tarjeta({ texto: enJuego.forma, sub: pista ? pista.sub : aliento, estado: 'mal' });
   ponerExpresion('enfrente');
   ponerEfecto('fijo');
   await decir(aliento, 'es');
   if (ejercicio !== mio) return;
-  await decir(palabraEnJuego, idiomaEnJuego);
+  if (pista) {
+    await decir(pista.voz, 'es');
+    if (ejercicio !== mio) return;
+  }
+  await decir(enJuego.voz, enJuego.idioma);
   if (ejercicio !== mio) return;
-  esperarRespuesta();
+  turnoDelChico();
+}
+
+/** Terminó una palabra: otra sola, o esperar al maestro. */
+async function despuesDeLaPalabra(mio) {
+  if (!$('pasarSola').checked) {
+    paso('listo — elegí otra palabra o terminá');
+    return;
+  }
+  paso('eligiendo otra palabra');
+  await dormir(1200);
+  if (ejercicio !== mio) return;
+  palabraAlAzar();
+  presentarEjercicio();
 }
 
 function terminarEjercicio() {
@@ -1365,9 +1799,10 @@ function terminarEjercicio() {
 
 $('btnPresentar').addEventListener('click', presentarEjercicio);
 $('btnPronunciar').addEventListener('click', pronunciarPalabra);
-$('btnEsperar').addEventListener('click', esperarRespuesta);
+$('btnEsperar').addEventListener('click', turnoDelChico);
 $('btnBien').addEventListener('click', () => calificar(true));
 $('btnMal').addEventListener('click', () => calificar(false));
+$('btnSiguiente').addEventListener('click', () => { palabraAlAzar(); presentarEjercicio(); });
 $('btnTerminar').addEventListener('click', terminarEjercicio);
 
 paso('sin ejercicio');   // las teclas quedan apagadas hasta que haya uno

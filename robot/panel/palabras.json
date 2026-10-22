@@ -1,0 +1,38 @@
+{
+  "$comentario": "Las palabras del ejercicio de pronunciación, por dificultad. Acá sólo se elige cuáles y por qué cuestan; la forma, la traducción, la voz y las otras formas de escribirla salen del diccionario (web/datos/diccionario-miq.json, que escribe `npm run contenido`). Un id que el diccionario no tenga se ignora: sólo entran palabras confirmadas. Los motivos citan las reglas de diccionario/miskito/gramatica.md.",
+  "niveles": {
+    "1": "Fácil",
+    "2": "Media",
+    "3": "Difícil"
+  },
+  "palabras": [
+    { "id": "yul", "nivel": 1, "motivo": "corta, se escribe como se dice" },
+    { "id": "bila", "nivel": 1, "motivo": "corta, se escribe como se dice" },
+    { "id": "kuku", "nivel": 1, "motivo": "sílabas que se repiten" },
+    { "id": "napa", "nivel": 1, "motivo": "corta, se escribe como se dice" },
+    { "id": "tasba", "nivel": 1, "motivo": "dos sílabas" },
+    { "id": "kumi", "nivel": 1, "motivo": "un número" },
+    { "id": "yapti", "nivel": 1, "motivo": "dos sílabas" },
+    { "id": "plun", "nivel": 1, "motivo": "empieza con pl" },
+
+    { "id": "tingki", "nivel": 2, "motivo": "ng antes de k (S4)" },
+    { "id": "sangni", "nivel": 2, "motivo": "ng en el medio (S4)" },
+    { "id": "mihta", "nivel": 2, "motivo": "h junto a consonante (S3)" },
+    { "id": "pihni", "nivel": 2, "motivo": "h junto a consonante (S3)" },
+    { "id": "slisma", "nivel": 2, "motivo": "empieza con sl" },
+    { "id": "kakamuk", "nivel": 2, "motivo": "tres sílabas, acento al principio (S9)" },
+    { "id": "titan_yamni", "nivel": 2, "motivo": "dos palabras" },
+    { "id": "aisaby", "nivel": 2, "motivo": "la y final suena i (S2)" },
+
+    { "id": "kati_mes", "nivel": 3, "motivo": "vocal larga: kâti es mes, kati es luna (S8)" },
+    { "id": "plit", "nivel": 3, "motivo": "vocal larga (S8)" },
+    { "id": "klin", "nivel": 3, "motivo": "vocal larga después de kl (S8)" },
+    { "id": "yumpha", "nivel": 3, "motivo": "h después de mp (S3)" },
+    { "id": "walhwal", "nivel": 3, "motivo": "h entre consonantes, se repite (S3, M10)" },
+    { "id": "matlalkahbi", "nivel": 3, "motivo": "cuatro sílabas y h junto a consonante (S3)" },
+    { "id": "luhpi_waitna", "nivel": 3, "motivo": "h junto a consonante, dos palabras (S3)" },
+    { "id": "nakra_pura_tamaya", "nivel": 3, "motivo": "tres palabras" },
+    { "id": "frase.mi_mama_esta_en_la_casa", "nivel": 3, "motivo": "una frase entera" },
+    { "id": "frase.aporte_abuela_coco", "nivel": 3, "motivo": "el refrán: kuki, kuku y kaiki casi iguales" }
+  ]
+}
