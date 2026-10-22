@@ -89,7 +89,7 @@ diga que la habla mal.
   la pantalla que no se apaga en toda la clase.
 - Voz (la de Google, con la del teléfono de respaldo sin internet) y el primer
   ejercicio completo, «Di esta palabra», con el maestro decidiendo si estuvo bien.
-- 44 comprobaciones automáticas del puente, sin placa ni teléfonos.
+- 61 comprobaciones automáticas del puente, sin placa ni teléfonos.
 
 **Las encuestas** (encuestas.piko.mugiware.com)
 

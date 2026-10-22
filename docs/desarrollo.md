@@ -215,7 +215,7 @@ Con dos teléfonos y el *development build* instalado:
 ```bash
 cd robot/panel
 npm install
-npm run prueba      # 44 comprobaciones del puente: no hace falta la placa
+npm run prueba      # 61 comprobaciones del puente: no hace falta la placa
 npm start           # http://localhost:4700 (control) y http://localhost:4700/cara
 ```
 

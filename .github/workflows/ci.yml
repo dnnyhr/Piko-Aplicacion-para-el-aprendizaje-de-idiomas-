@@ -65,6 +65,12 @@ jobs:
       - name: Comprobaciones del puente
         run: npm run prueba
 
+      # Las reglas de qué cuenta como la misma palabra. Sólo la biblioteca
+      # estándar: el modelo no se baja en CI.
+      - name: Reglas del oído
+        working-directory: robot/escucha
+        run: python3 -m unittest prueba_comparar
+
   encuestas:
     name: Encuestas — Worker, D1 y definiciones
     runs-on: ubuntu-latest

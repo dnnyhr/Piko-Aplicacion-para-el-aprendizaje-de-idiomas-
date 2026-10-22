@@ -103,7 +103,7 @@ npm run validate:packs
 En el robot (`robot/panel/`):
 
 ```bash
-npm run prueba        # 44 comprobaciones del puente, sin placa
+npm run prueba        # 61 comprobaciones del puente, sin placa
 ```
 
 En las encuestas (`encuestas/`):

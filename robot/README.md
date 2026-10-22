@@ -24,21 +24,25 @@ robot/
 ├── firmware/            sketches de Arduino
 │   ├── piko_robot/      el de verdad: protocolo serie, motores y luces
 │   └── probar_*/ …      uno por módulo, para diagnosticar de a uno
-└── panel/               el puente, en Node
-    ├── server.js        serie ↔ WebSocket, voz y archivos
-    ├── consola.mjs      monitor serie por línea de comandos
-    ├── prueba-puente.mjs  las comprobaciones automáticas
-    └── public/          el panel (index.html), la cara (cara.html), caras y sonidos
+├── panel/               el puente, en Node
+│   ├── server.js        serie ↔ WebSocket, voz, oído y archivos
+│   ├── palabras.json    las palabras del ejercicio de pronunciación, por nivel
+│   ├── oido.mjs         `npm run oido`: enciende robot/escucha
+│   ├── consola.mjs      monitor serie por línea de comandos
+│   ├── prueba-puente.mjs  las comprobaciones automáticas
+│   └── public/          el panel (index.html), la cara (cara.html), el micrófono (oido.js), caras y sonidos
+└── escucha/             el oído: un modelo de Meta que escucha miskito, en Python
 ```
 
 **Qué hace falta:** Node 22 o más nuevo para el puente, y
 [`arduino-cli`](https://arduino.github.io/arduino-cli/) (o el IDE de Arduino)
-con las bibliotecas **Servo** y **Adafruit NeoPixel** para el firmware.
+con las bibliotecas **Servo** y **Adafruit NeoPixel** para el firmware. Para
+que Piko escuche, además Python 3.9 o más nuevo (ver [El oído](#el-oído)).
 
 **En esta página:** [Qué está probado](#qué-está-probado-en-la-placa) ·
 [Cableado](#cableado) · [Correr el puente](#correr-el-puente) ·
 [Las caras](#las-caras) · [Los sonidos](#los-sonidos) · [La voz](#la-voz) ·
-[El ejercicio simulado](#el-ejercicio-simulado) · [El protocolo](#el-protocolo) ·
+[El ejercicio de pronunciación](#el-ejercicio-de-pronunciación) · [El oído](#el-oído) · [El protocolo](#el-protocolo) ·
 [Probar de a uno](#probar-de-a-uno) · [Abrirlo a internet](#abrirlo-a-internet)
 
 ## Qué está probado en la placa
@@ -47,10 +51,11 @@ con las bibliotecas **Servo** y **Adafruit NeoPixel** para el firmware.
 |---|---|
 | 4× WS2812 · pin 28 | **anda** |
 | 28BYJ-48 · PORT2 | **anda** — gira; falta confirmar que 4096 sea vuelta exacta |
-| Panel, puente y reparto de roles | **anda** — 44 comprobaciones automáticas |
+| Panel, puente y reparto de roles | **anda** — 61 comprobaciones automáticas |
 | Voz de Google y ejercicio simulado | **anda** — probado de punta a punta en el navegador, sin placa |
 | Cara en el navegador | **anda** — las ocho expresiones, con la mirada animada |
 | La boca sigue a la voz | **anda** — probada con una onda de sílabas medidas |
+| El oído: escucha y corrige palabras en miskito | **anda** — de punta a punta con grabaciones reales; falta probarlo con chicos en un aula |
 | Que no se apague la pantalla | **a medias** — probado el respaldo de video; el candado, no |
 | Servo · pin 29 | sin probar |
 | Segunda tira de LEDs · pin 27 | sin probar |
@@ -134,7 +139,7 @@ Y la prueba, que no necesita ni placa ni teléfonos (CI la corre en cada pull
 request):
 
 ```bash
-npm run prueba      # 44 comprobaciones del puente
+npm run prueba      # 61 comprobaciones del puente
 ```
 
 ---
@@ -292,54 +297,140 @@ Las lenguas originarias no están en Google. Escritas como suenan y leídas con 
 voz en español quedan más cerca que con cualquier otra, así que el desplegable
 arranca en español y ahí se queda para miskitu, mayangna y rama.
 
-## El ejercicio simulado
+## El ejercicio de pronunciación
 
-La primera actividad completa, manejada entera desde el panel:
+Piko muestra una palabra en miskito, la dice, **escucha al chico** y reacciona:
 
 ```
-  palabra en la pantalla   ──►  «Di esta palabra»  ──►  el chico responde
-                                                              │
-                        el maestro aprieta una de dos teclas ◄┘
+  palabra en la pantalla ──► «Di esta palabra: tingki» ──► el chico responde
+                                                                  │
+                         el oído la compara con la palabra ◄──────┘
                                      │
-              ✓ ─────────────────────┴───────────────────── ↻
-       festejo, luces y elogio                 «casi, se dice…» y de nuevo
+          ✓ ─────────────────────────┴───────────────────────── ↻
+   festejo, luces y elogio          «Casi. Escuchá la k: tingki» y escucha de nuevo;
+                                     al último intento, «¡Buen intento! Vamos con otra.»
 ```
+
+Todo se maneja desde el panel, en el bloque **Ejercicio de pronunciación**:
+
+- **Las palabras**: 26, de fáciles a difíciles, con un punto del color del
+  nivel. «Otra al azar» elige del nivel puesto sin repetir las últimas. También
+  se puede escribir cualquier palabra a mano.
+- **Cómo escucha Piko** (plegado, y se recuerda en cada aparato):
+  - si escucha o no (sin oído, el ejercicio es el de antes: decide el maestro);
+  - qué micrófono usa: el del robot o el del aparato del maestro;
+  - la exigencia (suave, normal o estricta);
+  - quién decide: Piko solo, o Piko sugiere y el maestro confirma;
+  - cuántos segundos tiene el chico para contestar y cuántos intentos por palabra;
+  - si dice la palabra al presentarla, si nombra el sonido que costó, y si pasa
+    solo a otra palabra del mismo nivel.
+- **Lo que oyó**: la transcripción, una barra por letra y las cifras, para que
+  el maestro vea por qué Piko decidió lo que decidió. Las teclas ✓ y ↻ andan
+  siempre: el maestro puede corregir a Piko en cualquier momento.
 
 La palabra va en **una franja abajo, y la cara no se toca**: sigue entera y a
 pantalla completa. Correrla a un costado para hacerle lugar al texto se probó y
 se ve mal — la cara es el robot, y achicada deja de serlo.
 
-La franja es corta a propósito, un sexto de la pantalla, y queda por debajo del
-pico, que es lo que se mueve cuando Piko habla. Eso es lo que hace que la palabra
-se lea como algo que él está diciendo y no como un cartel: se le ve el pico
-moverse mientras suena. En una pantalla angosta las tres partes se apilan, que
-ahí sobra alto: parado, el dibujo es tan ancho que deja negro arriba y abajo y la
-franja se come el de abajo sin tapar nada.
-
-**Lo que el robot no hace es escuchar.** Que decida solo si el chico pronunció
-bien es otro problema —micrófono, reconocimiento, una lengua que ningún modelo
-conoce— y no hace falta resolverlo para ver si el ejercicio funciona. Acá el que
-escucha es el maestro y aprieta una de dos teclas; todo lo demás pasa igual que
-si lo hubiera decidido el robot. El día que haya reconocimiento, lo único que
-cambia es de dónde sale ese sí o ese no.
-
 Cuando el chico no acierta, **Piko no dice «mal» ni «incorrecto»**: reconoce el
-intento y vuelve a mostrar cómo es. La regla y las frases salen de
+intento y vuelve a mostrar cómo es. La regla sale de
 [`app/src/ui/piko/frases.ts`](../app/src/ui/piko/frases.ts), para que el robot y
-la aplicación hablen igual. El que está aprendiendo la lengua de su comunidad no
-necesita que un robot le diga que la habla mal.
+la aplicación hablen igual. Con la pista puesta, además nombra el sonido que el
+oído encontró más flojo («Escuchá la k», «Con la a larga») como quien muestra,
+no como quien marca; si al maestro le parece demasiado, se apaga en los ajustes.
 
-Dos detalles del andamiaje:
+### Qué palabras, y por qué cuestan
+
+[`panel/palabras.json`](panel/palabras.json) dice **cuáles y por qué**; todo lo
+demás —la forma, la traducción, cómo la dice la voz en español y las otras
+formas de escribirla— sale del diccionario que publica el sitio
+(`web/datos/diccionario-miq.json`). Así el robot no tiene una copia propia de
+nada que se pueda corregir, y una palabra que pierde la confirmación sale sola
+del ejercicio. Los motivos citan las reglas de
+[`gramatica.md`](../diccionario/miskito/gramatica.md): la vocal larga (S8), la h
+junto a consonante (S3), la ng (S4).
+
+Cualquiera de las formas en que la escribió un hablante vale como respuesta: si
+el chico dice «mitha» y la tarjeta dice «mihta», está bien.
+
+### Dos detalles del andamiaje
 
 **La cara avisa cuando terminó de hablar.** El ejercicio encadena consigna,
-palabra y festejo, y si el panel calculara la duración con una cuenta de
-caracteres, Piko se pisaría a sí mismo cada vez que Google tarde en contestar.
-El único que sabe cuándo dejó de sonar es el teléfono, así que lo dice él —con
-un plazo máximo por si no hay ninguna cara conectada.
+palabra, escucha y festejo, y si el panel calculara la duración con una cuenta
+de caracteres, Piko se pisaría a sí mismo —o se escucharía a sí mismo— cada vez
+que Google tarde en contestar. El único que sabe cuándo dejó de sonar es el
+teléfono, así que lo dice él, con un plazo máximo por si no hay ninguna cara
+conectada.
 
 **Se corta de verdad.** Cada paso comprueba su propio testigo antes de seguir,
-igual que las secuencias, así que la parada de emergencia y el botón «Cortar» lo
-detienen en el acto y no una frase más tarde.
+igual que las secuencias, así que la parada de emergencia y el botón «Cortar»
+lo detienen en el acto, micrófono incluido, y no una frase más tarde.
+
+---
+
+## El oído
+
+El que escucha es [`escucha/`](escucha): un servicio aparte, en Python, con el
+modelo **MMS-1b-all de Meta** y su adaptador de miskito. Sobre cada intento hace
+dos pasadas:
+
+- **Libre**: transcribe sin saber qué esperar («oyó *tetam yadni*»). Sirve para
+  ver si dijo otra palabra.
+- **Forzada**: se le da la palabra esperada y se le pide que la ubique letra por
+  letra en el audio. La seguridad de cada letra dice dónde sonó distinto.
+
+```
+  panel ──escuchar──► puente ──grabar──► cara: graba con el micrófono del teléfono
+                                                   │
+  panel ◄────nota──── puente ◄──POST /oido──────── ┘
+                        │ ▲
+                        ▼ │  POST /evaluar
+                     escucha/servidor.py (127.0.0.1:4710)
+```
+
+**Qué cuenta como la misma palabra** no lo decide el modelo: lo dicen las
+reglas «Para Piko» de la gramática, escritas en
+[`escucha/comparar.py`](escucha/comparar.py) con su cita al lado. Una i que suena
+[e] no es un error (S1); la h cambia de lugar según quién escribe (S3) y no se
+califica; dónde termina una palabra no está fijo (S6). La vocal larga sí cuenta:
+*kati* es luna y *kâti*, mes (S8).
+
+### Encenderlo
+
+Una sola vez, el entorno de Python (unos 4 GB con el modelo, que se baja la
+primera vez que arranca):
+
+```bash
+cd robot/escucha && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+```
+
+Y cada vez, en otra terminal además del puente:
+
+```bash
+cd robot/panel && npm run oido
+```
+
+El panel muestra «oído» en verde cuando terminó de cargar. Si no está
+encendido, todo lo demás sigue andando y el ejercicio cae a que decida el
+maestro.
+
+### Lo que hay que saber
+
+- **El micrófono sólo anda por https o en localhost.** Igual que el candado de
+  pantalla: por `http://192.168…` el navegador no lo presta. Por el túnel sí. Si
+  la cara no puede grabar, lo dice en su pantalla y el panel también; se puede
+  cambiar a «el de este aparato».
+- **Es un prototipo.** El modelo aprendió de un lector de la Biblia, adulto. Con
+  voces de chicos y ruido de aula va a fallar más, y mide qué tan parecido suena
+  al lector, no si está bien dicho: una variante de Raiti puede salir «casi».
+  Por eso el maestro siempre puede corregirlo.
+- **No sirve para el robot que se venda.** MMS-1b-all tiene licencia CC-BY-NC
+  4.0, no comercial. Cambiar de modelo es cambiar `PIKO_MODELO` y `PIKO_IDIOMA`;
+  omniASR (Apache 2.0) también cubre el miskito.
+- **No guarda nada.** Los audios pasan por la memoria y se descartan.
+
+Para probarlo sin el modelo: `python3 -m unittest prueba_comparar`, dentro de
+`escucha/`, corre las reglas de comparación (CI lo hace en cada pull request).
 
 ---
 

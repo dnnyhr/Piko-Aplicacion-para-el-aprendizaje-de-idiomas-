@@ -7,15 +7,21 @@
  * hace falta tener nada conectado: lo que se prueba acá es todo lo que está
  * antes del cable y antes de los navegadores — el reparto entre roles, la
  * lista blanca de órdenes, el catálogo de caras y los caminos de archivos.
+ *
+ * El oído (robot/escucha) tampoco hace falta: se levanta uno de mentira que
+ * contesta siempre lo mismo y anota lo que le llega. Lo que se prueba es el
+ * camino del audio por el puente, no el modelo.
  */
 
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
+import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import WebSocket from 'ws';
 
 const PUERTO = 4711;
+const PUERTO_OIDO = 4712;
 const RAIZ = path.dirname(fileURLToPath(import.meta.url));
 const CARA_DE_PRUEBA = path.join(RAIZ, 'public', 'caras', '_prueba.svg');
 
@@ -23,7 +29,28 @@ const CARA_DE_PRUEBA = path.join(RAIZ, 'public', 'caras', '_prueba.svg');
    reparto de expresiones. Se borra al final. */
 fs.writeFileSync(CARA_DE_PRUEBA, '<svg xmlns="http://www.w3.org/2000/svg"/>');
 
-const servidor = spawn(process.execPath, ['server.js', '--http', String(PUERTO)], {
+/* El oído de mentira. Contesta «bien» a todo y guarda el último pedido. */
+const alOido = [];
+const oidoFalso = http.createServer((pedido, respuesta) => {
+  const url = new URL(pedido.url, 'http://local');
+  if (url.pathname === '/salud') {
+    respuesta.end(JSON.stringify({ listo: true, modelo: 'falso' }));
+    return;
+  }
+  const partes = [];
+  pedido.on('data', (p) => partes.push(p));
+  pedido.on('end', () => {
+    alOido.push({
+      formas: JSON.parse(url.searchParams.get('formas')),
+      exigencia: url.searchParams.get('exigencia'),
+      bytes: Buffer.concat(partes).length,
+    });
+    respuesta.end(JSON.stringify({ veredicto: 'bien', oyo: 'yul', letras: [], puntaje: 1, parecido: 1 }));
+  });
+});
+await new Promise((r) => oidoFalso.listen(PUERTO_OIDO, '127.0.0.1', r));
+
+const servidor = spawn(process.execPath, ['server.js', '--http', String(PUERTO), '--oido', `http://127.0.0.1:${PUERTO_OIDO}`], {
   cwd: RAIZ,
   stdio: ['ignore', 'pipe', 'pipe'],
 });
@@ -40,6 +67,7 @@ function comprobar(nombre, ok, extra) {
 function limpiar(codigo) {
   try { fs.unlinkSync(CARA_DE_PRUEBA); } catch { }
   servidor.kill();
+  oidoFalso.close();
   process.exit(codigo);
 }
 
@@ -102,8 +130,10 @@ console.log('\nLas dos páginas\n');
 
   comprobar('las dos páginas usan Fredoka',
     html.includes('family=Fredoka') && htmlCara.includes('family=Fredoka'));
-  comprobar('el panel trae el ejercicio simulado',
-    html.includes('btnPresentar') && html.includes("t: 'tarjeta'"));
+  comprobar('el panel trae el ejercicio de pronunciación',
+    html.includes('btnPresentar') && html.includes("t: 'tarjeta'") && html.includes("t: 'escuchar'"));
+  comprobar('la cara y el panel cargan el micrófono',
+    htmlCara.includes('oido.js') && html.includes('oido.js'));
   comprobar('la cara muestra la palabra al lado de Piko', htmlCara.includes('id="tarjeta"'));
   comprobar('y sin red cae a la voz del propio teléfono',
     htmlCara.includes('SpeechSynthesisUtterance'));
@@ -231,6 +261,68 @@ console.log('\nLa tarjeta del ejercicio\n');
   control.send(JSON.stringify({ t: 'tarjeta', tarjeta: null }));
   await esperar(200);
   comprobar('y se saca mandando null', ultima(cara, 'tarjeta')?.tarjeta === null);
+}
+
+console.log('\nLas palabras y el oído\n');
+
+{
+  const cat = ultima(control, 'catalogo');
+  const tingki = cat?.palabras?.find((p) => p.id === 'tingki');
+  comprobar('el catálogo trae las palabras del ejercicio', (cat?.palabras?.length || 0) > 10,
+    `llegaron ${cat?.palabras?.length}`);
+  comprobar('con la forma y la voz sacadas del diccionario', tingki?.forma === 'tingki' && !!tingki?.voz);
+  comprobar('y las otras escrituras como respuestas válidas',
+    !!tingki && tingki.formas.includes('Tinki'), tingki && tingki.formas.join(', '));
+
+  /* El estado del oído se pregunta cada 5 s; el primero sale al arrancar. */
+  let est = ultima(control, 'estado');
+  for (let i = 0; i < 30 && !est?.oido?.listo; i++) { await esperar(250); est = ultima(control, 'estado'); }
+  comprobar('el panel se entera de que el oído está listo', est?.oido?.listo === true);
+}
+
+{
+  control.send(JSON.stringify({ t: 'escuchar', id: 'o1', formas: ['yul'], segundos: 99, fuente: 'cara', exigencia: 'estricta' }));
+  await esperar(250);
+  const g = ultima(cara, 'grabar');
+  comprobar('pedir que escuche le dice a la cara que grabe', g?.id === 'o1');
+  comprobar('sin pasarse de 10 segundos', g?.segundos === 10, `pidió ${g?.segundos}`);
+
+  const sinPedido = await fetch(`http://localhost:${PUERTO}/oido?id=inventado`, { method: 'POST', body: Buffer.alloc(100) });
+  comprobar('un audio sin pedido de escucha se rechaza', sinPedido.status === 403, `dio ${sinPedido.status}`);
+
+  const audio = Buffer.alloc(3200);
+  const ok = await fetch(`http://localhost:${PUERTO}/oido?id=o1`, { method: 'POST', body: audio });
+  comprobar('el audio del pedido se acepta', ok.status === 202, `dio ${ok.status}`);
+  await esperar(300);
+  comprobar('el panel ve que se está evaluando', !!control.recibidos.find((m) => m.t === 'evaluando' && m.id === 'o1'));
+  const nota = control.recibidos.find((m) => m.t === 'oido' && m.id === 'o1');
+  comprobar('y le llega la nota del oído', nota?.resultado?.veredicto === 'bien');
+  const pedido = alOido.at(-1);
+  comprobar('al oído le llegan el audio, la palabra y la exigencia',
+    pedido?.bytes === audio.length && pedido?.formas?.[0] === 'yul' && pedido?.exigencia === 'estricta');
+  comprobar('la cara no recibe la nota: la decisión es del panel', !cara.recibidos.some((m) => m.t === 'oido'));
+
+  const otraVez = await fetch(`http://localhost:${PUERTO}/oido?id=o1`, { method: 'POST', body: audio });
+  comprobar('un pedido de escucha sirve una sola vez', otraVez.status === 403, `dio ${otraVez.status}`);
+}
+
+{
+  const antes = cara.recibidos.filter((m) => m.t === 'grabar').length;
+  cara.send(JSON.stringify({ t: 'escuchar', id: 'o2', formas: ['yul'], fuente: 'cara' }));
+  await esperar(250);
+  comprobar('una cara no puede pedir que se escuche', cara.recibidos.filter((m) => m.t === 'grabar').length === antes);
+
+  control.send(JSON.stringify({ t: 'escuchar', id: 'o3', formas: [], fuente: 'cara' }));
+  await esperar(250);
+  comprobar('sin palabra no se abre la escucha',
+    !!control.recibidos.find((m) => m.t === 'oido' && m.id === 'o3' && m.error));
+
+  control.send(JSON.stringify({ t: 'escuchar', id: 'o4', formas: ['bila'], fuente: 'cara' }));
+  await esperar(200);
+  cara.send(JSON.stringify({ t: 'oidoerror', id: 'o4', motivo: 'no dieron permiso para el micrófono' }));
+  await esperar(250);
+  const error = control.recibidos.find((m) => m.t === 'oido' && m.id === 'o4');
+  comprobar('si la cara no puede grabar, el panel se entera', /permiso/.test(error?.error || ''));
 }
 
 console.log('\nLista blanca de órdenes\n');
