@@ -1584,6 +1584,7 @@ function mostrarResultado(r) {
   $('cifras').textContent = r.veredicto === 'silencio'
     ? `Pico de volumen ${r.pico}: no hubo voz. ¿El micrófono está lejos o tapado?`
     : `Seguridad ${Math.round(r.puntaje * 100)} % · parecido ${Math.round(r.parecido * 100)} %` +
+      (r.cobertura != null ? ` · cobertura ${Math.round(r.cobertura * 100)} %` : '') +
       (r.forma !== enJuego?.forma ? ` · la tomó como «${r.forma}»` : '') +
       (r.otra_palabra ? ' · parece otra palabra' : '') +
       ` · ${r.segundos} s`;
