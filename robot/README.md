@@ -379,17 +379,6 @@ dos pasadas:
 - **Forzada**: se le da la palabra esperada y se le pide que la ubique letra por
   letra en el audio. La seguridad de cada letra dice dónde sonó distinto.
 
-La forzada sola se deja engañar: encuentra k-a-t-i dentro de «tingki pali» y
-las cuatro letras salen con seguridad alta. Por eso cada nota lleva además la
-**cobertura**, cuánto de lo que se habló explica la palabra esperada, y sin
-cobertura no hay «bien». Medido con 26 palabras del panel, cada una contra las
-otras 25: en exigencia normal pasó de aceptar 106 palabras equivocadas de 2028
-a aceptar una, sin perder las buenas.
-
-Para probar el oído no sirve la voz en miskito de Meta diciendo una palabra
-sola: con textos tan cortos balbucea («kuku» suena *tanan*). Dicha dentro de
-una frase y recortada, el oído la reconoce bien.
-
 ```
   panel ──escuchar──► puente ──grabar──► cara: graba con el micrófono del teléfono
                                                    │
