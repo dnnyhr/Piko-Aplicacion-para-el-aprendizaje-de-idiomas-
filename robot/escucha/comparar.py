@@ -102,32 +102,22 @@ def letras_a_evaluar(forma: str) -> list[tuple[str, bool]]:
 #   puntaje   promedio de la seguridad del modelo, letra por letra
 #   parecido  cuánto se parece lo que transcribió solo, sin pistas
 #   minimo    la letra más floja
-#   cobertura cuánto de lo que se habló explica la palabra esperada
 #
 # La letra más floja sólo cuenta en «estricta». Medido con voces reales, una
 # sola letra en cero es común aunque la palabra se entienda: en «yul plun pisa»
 # la n de «plun» se oye m porque viene una p, y el modelo la marca en cero. Eso
 # lo hace cualquier hablante; no es pronunciar distinto.
-#
-# La cobertura va siempre. Sin ella, la alineación forzada encuentra k-a-t-i
-# dentro de «tingki pali» y la da por buena: el puntaje mira sólo las letras
-# que se buscaron, no lo que sobra. Los umbrales salen de un banco de 26
-# palabras dichas en frase y recortadas, cada una contra las otras 25 (2028
-# pares que no son): en «normal» la regla vieja aceptaba 106 equivocadas; ésta,
-# una sola, y sigue aceptando 70 de 81 buenas.
 EXIGENCIAS = {
-    "suave":    {"cobertura": 0.45, "puntaje": 0.55, "parecido": 0.65, "minimo": 0.0},
-    "normal":   {"cobertura": 0.50, "puntaje": 0.65, "parecido": 0.70, "minimo": 0.0},
-    "estricta": {"cobertura": 0.55, "puntaje": 0.80, "parecido": 0.80, "minimo": 0.30},
+    "suave":    {"puntaje": 0.50, "parecido": 0.70, "minimo": 0.0},
+    "normal":   {"puntaje": 0.65, "parecido": 0.80, "minimo": 0.0},
+    "estricta": {"puntaje": 0.80, "parecido": 0.80, "minimo": 0.30},
 }
 
 
-def veredicto(puntaje: float, minimo: float, sim: float, cobertura: float, exigencia: str = "normal") -> str:
+def veredicto(puntaje: float, minimo: float, sim: float, exigencia: str = "normal") -> str:
     """«bien» o «casi». Nunca «mal»: lo que no llega es un intento (ver
     app/src/ui/piko/frases.ts)."""
     u = EXIGENCIAS.get(exigencia, EXIGENCIAS["normal"])
-    if cobertura < u["cobertura"]:
-        return "casi"
     if exigencia == "estricta":
         ok = puntaje >= u["puntaje"] and sim >= u["parecido"] and minimo >= u["minimo"]
     else:

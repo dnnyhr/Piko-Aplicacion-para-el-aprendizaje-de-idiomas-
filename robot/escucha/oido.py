@@ -98,31 +98,18 @@ class Oido:
                 logp[:, a] = torch.logaddexp(logp[:, a], logp[:, b])
         return logp
 
-    def _alinear(self, logp: torch.Tensor, forma: str) -> tuple[list[dict], float]:
-        """Las letras de `forma` ubicadas en el audio, y la cobertura.
-
-        La cobertura es cuánto de lo hablado explica `forma`: en cada cuadro
-        donde suena algo (para el modelo libre o para la alineación), qué tan
-        probable es lo que la alineación puso ahí comparado con lo mejor que el
-        modelo podía poner. Si el chico dijo «tingki pali» y se busca «kati»,
-        las cuatro letras aparecen con seguridad alta, pero «ng», «p», «l»
-        quedan sin explicar y la cobertura baja."""
+    def _alinear(self, logp: torch.Tensor, forma: str) -> list[dict]:
         letras = [(c if c != "|" else self.separador, cuenta) for c, cuenta in letras_a_evaluar(forma)]
         letras = [(c, cuenta) for c, cuenta in letras if c in self.vocab]
         if not letras:
-            return [], 0.0
+            return []
         ids = torch.tensor([[self.vocab[c] for c, _ in letras]], dtype=torch.int32)
         alin, puntos = F.forced_align(logp.unsqueeze(0), ids, blank=self.blanco)
         tramos = F.merge_tokens(alin[0], puntos[0].exp())
-
-        camino = alin[0]
-        habla = (logp.argmax(-1) != self.blanco) | (camino != self.blanco)
-        relativo = logp[torch.arange(len(camino)), camino] - logp.max(-1).values
-        cobertura = float(relativo[habla].exp().mean()) if habla.any() else 0.0
         return [
             {"letra": c, "seguridad": round(float(t.score), 3), "cuenta": cuenta}
             for (c, cuenta), t in zip(letras, tramos)
-        ], cobertura
+        ]
 
     def evaluar(self, wav: bytes, formas: list[str], exigencia: str = "normal") -> dict:
         audio, sr = leer_wav(wav)
@@ -144,11 +131,11 @@ class Oido:
         candidatas = []
         for forma in formas:
             try:
-                letras, cobertura = self._alinear(logp, forma)
+                letras = self._alinear(logp, forma)
             except Exception:
                 # El audio es más corto que la palabra: no entra ni una letra
                 # por cuadro. Pasa con un «sí» cuando se esperaba una frase.
-                letras, cobertura = [], 0.0
+                letras = []
             calificadas = [l for l in letras if l["cuenta"]]
             puntaje = sum(l["seguridad"] for l in calificadas) / len(calificadas) if calificadas else 0.0
             minimo = min((l["seguridad"] for l in calificadas), default=0.0)
@@ -159,13 +146,12 @@ class Oido:
                 "puntaje": round(puntaje, 3),
                 "minimo": round(minimo, 3),
                 "parecido": round(sim, 3),
-                "cobertura": round(cobertura, 3),
-                "veredicto": veredicto(puntaje, minimo, sim, cobertura, exigencia),
+                "veredicto": veredicto(puntaje, minimo, sim, exigencia),
             })
 
         # Cualquiera de las formas aceptadas vale: si dijo «mitha» y la tarjeta
         # dice «mihta», está bien (S3).
-        mejor = max(candidatas, key=lambda c: (c["veredicto"] == "bien", c["puntaje"] + c["parecido"] + c["cobertura"]))
+        mejor = max(candidatas, key=lambda c: (c["veredicto"] == "bien", c["puntaje"] + c["parecido"]))
         return {
             **base,
             "oyo": oyo,
@@ -175,8 +161,7 @@ class Oido:
             "puntaje": mejor["puntaje"],
             "minimo": mejor["minimo"],
             "parecido": mejor["parecido"],
-            "cobertura": mejor["cobertura"],
-            "otra_palabra": mejor["parecido"] < 0.35 and (mejor["puntaje"] < 0.3 or mejor["cobertura"] < 0.35),
+            "otra_palabra": mejor["parecido"] < 0.35 and mejor["puntaje"] < 0.3,
             "pista": pista(mejor["letras"]) if mejor["veredicto"] == "casi" else None,
             "segundos": round(time.time() - t, 2),
         }

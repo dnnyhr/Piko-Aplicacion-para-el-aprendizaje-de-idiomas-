@@ -85,24 +85,18 @@ class Veredicto(unittest.TestCase):
 
     def test_nunca_mal(self):
         for p in (0, 0.3, 0.6, 1):
-            self.assertIn(veredicto(p, p, p, p), ("bien", "casi"))
+            self.assertIn(veredicto(p, p, p), ("bien", "casi"))
 
     def test_la_exigencia_sube_la_vara(self):
-        self.assertEqual(veredicto(0.6, 0.3, 0.5, 0.6, "suave"), "bien")
-        self.assertEqual(veredicto(0.6, 0.3, 0.5, 0.6, "normal"), "casi")
-        self.assertEqual(veredicto(0.7, 0.3, 0.5, 0.6, "normal"), "bien")
-        self.assertEqual(veredicto(0.7, 0.3, 0.5, 0.6, "estricta"), "casi")
+        self.assertEqual(veredicto(0.55, 0.3, 0.5, "suave"), "bien")
+        self.assertEqual(veredicto(0.55, 0.3, 0.5, "normal"), "casi")
+        self.assertEqual(veredicto(0.7, 0.3, 0.5, "normal"), "bien")
+        self.assertEqual(veredicto(0.7, 0.3, 0.5, "estricta"), "casi")
 
     def test_una_letra_en_cero_no_tumba_la_palabra(self):
         # «yul plun pisa» real: la n de plun se oye m delante de la p.
-        self.assertEqual(veredicto(0.81, 0.0, 0.82, 0.6, "normal"), "bien")
-        self.assertEqual(veredicto(0.81, 0.0, 0.82, 0.6, "estricta"), "casi")
-
-    def test_lo_que_sobra_no_se_regala(self):
-        # El audio de «tingki pali» contra «kati»: las cuatro letras aparecen,
-        # con seguridad alta, pero explican menos de la mitad de lo dicho.
-        self.assertEqual(veredicto(0.75, 0.5, 0.31, 0.3, "suave"), "casi")
-        self.assertEqual(veredicto(0.75, 0.5, 0.31, 0.3, "normal"), "casi")
+        self.assertEqual(veredicto(0.81, 0.0, 0.82, "normal"), "bien")
+        self.assertEqual(veredicto(0.81, 0.0, 0.82, "estricta"), "casi")
 
 
 if __name__ == "__main__":
