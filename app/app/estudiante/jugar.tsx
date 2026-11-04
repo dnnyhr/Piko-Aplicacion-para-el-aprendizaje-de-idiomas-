@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Boton } from '../../src/ui/components/Boton';
 import { Globo } from '../../src/ui/components/Globo';
@@ -22,9 +22,11 @@ import { useProgreso } from '../../src/features/progreso/store';
 import { RecompensaLeccion } from '../../src/features/arbol/RecompensaLeccion';
 import { ContadorSacuanjoches } from '../../src/ui/arbol/ContadorSacuanjoches';
 import { recompensaEntre, type Recompensa } from '../../src/core/progress/arbol';
-import { color, espacio, radio, texto } from '../../src/ui/tokens';
+import { espacio, radio, texto } from '../../src/ui/tokens';
+import { crearEstilos } from '../../src/ui/tema';
 
 export default function Jugar() {
+  const styles = useEstilos();
   const router = useRouter();
   const { items, roster, studentId, conexion, board, reintentaEnMs } = useAulaCliente();
   const responder = useAulaCliente((s) => s.responder);
@@ -176,6 +178,7 @@ export default function Jugar() {
 }
 
 function Dato({ valor, etiqueta }: { valor: string; etiqueta: string }) {
+  const styles = useEstilos();
   return (
     <View style={styles.dato}>
       <Text style={styles.datoValor}>{valor}</Text>
@@ -184,7 +187,7 @@ function Dato({ valor, etiqueta }: { valor: string; etiqueta: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   raiz: { flex: 1, backgroundColor: color.papel },
   cintaCaida: { backgroundColor: color.intentoFondo, paddingVertical: espacio.sm },
   cintaTexto: { ...texto.chico, color: color.intentoTinta, textAlign: 'center' },
@@ -242,4 +245,4 @@ const styles = StyleSheet.create({
   cuentaTabla: { ...texto.cuerpoFuerte, color: color.verde },
 
   esperando: { ...texto.cuerpo, color: color.tintaSuave, textAlign: 'center' },
-});
+}));

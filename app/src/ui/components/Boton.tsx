@@ -7,17 +7,17 @@
  * y que en gama baja no cuesta nada porque no hay blur de por medio.
  */
 
-import { useRef } from 'react';
+import { useRef, type ReactNode } from 'react';
 import {
   Animated,
   Pressable,
-  StyleSheet,
   Text,
   View,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { color, espacio, fuente, labio, radio } from '../tokens';
+import { color as colorNormal, colorContraste, espacio, fuente, labio, radio, type Paleta } from '../tokens';
+import { crearEstilos, useColor, useEscalaTexto } from '../tema';
 
 export type TonoBoton = 'verde' | 'cielo' | 'papel' | 'fantasma' | 'pico';
 
@@ -28,18 +28,24 @@ interface Tono {
   borde?: string;
 }
 
-const TONOS: Record<TonoBoton, Tono> = {
-  verde: { fondo: color.verdePasto, labio: '#7BA22C', texto: color.verdeHondo },
-  cielo: { fondo: color.cielo, labio: color.cieloHondo, texto: '#0B3D57' },
-  pico: { fondo: color.pico, labio: '#C08417', texto: '#5C3D02' },
-  papel: {
-    fondo: color.blanco,
-    labio: color.bordeHondo,
-    texto: color.verde,
-    borde: color.borde,
-  },
-  fantasma: { fondo: 'transparent', labio: 'transparent', texto: color.tintaSuave },
-};
+function tonos(color: Paleta): Record<TonoBoton, Tono> {
+  // Con alto contraste todo botón lleva borde: se distingue aunque no se vea el color.
+  const borde = color === colorContraste ? color.borde : undefined;
+  return {
+    verde: { fondo: color.verdePasto, labio: color.labioVerde, texto: color.verdeHondo, borde },
+    cielo: { fondo: color.cielo, labio: color.cieloHondo, texto: color.tintaCielo, borde },
+    pico: { fondo: color.pico, labio: color.labioPico, texto: color.tintaPico, borde },
+    papel: {
+      fondo: color.blanco,
+      labio: color.bordeHondo,
+      texto: color.verde,
+      borde: color.borde,
+    },
+    fantasma: { fondo: 'transparent', labio: 'transparent', texto: color.tintaSuave, borde },
+  };
+}
+
+const TONOS = { normal: tonos(colorNormal), contraste: tonos(colorContraste) };
 
 export interface BotonProps {
   children: string;
@@ -49,6 +55,8 @@ export interface BotonProps {
   ancho?: boolean;
   chico?: boolean;
   disabled?: boolean;
+  /** Un dibujo antes del texto. */
+  icono?: ReactNode;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -59,10 +67,14 @@ export function Boton({
   ancho = false,
   chico = false,
   disabled = false,
+  icono,
   style,
 }: BotonProps) {
+  const styles = useEstilos();
   const hundido = useRef(new Animated.Value(0)).current;
-  const t = TONOS[tono];
+  const color = useColor();
+  const t = TONOS[color === colorContraste ? 'contraste' : 'normal'][tono];
+  const escala = useEscalaTexto();
   const alto = chico ? labio.chico : labio.normal;
 
   const mover = (hacia: number) =>
@@ -98,9 +110,10 @@ export function Boton({
             t.borde ? { borderWidth: 2, borderColor: t.borde } : null,
           ]}
         >
+          {icono}
           <Text
-            numberOfLines={1}
-            style={[styles.texto, { color: t.texto, fontSize: chico ? 14 : 16 }]}
+            numberOfLines={escala > 1 ? 2 : 1}
+            style={[chico ? styles.textoChico : styles.texto, { color: t.texto }]}
           >
             {children}
           </Text>
@@ -110,18 +123,32 @@ export function Boton({
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   ancho: { alignSelf: 'stretch' },
   labio: { borderRadius: radio.md },
   cuerpo: {
     borderRadius: radio.md,
     paddingHorizontal: espacio.xl,
+    flexDirection: 'row',
+    gap: espacio.sm,
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: 44,
   },
   texto: {
     fontFamily: fuente.boton,
+    fontSize: 16,
     letterSpacing: 0.6,
+    textAlign: 'center',
     textTransform: 'uppercase',
+    flexShrink: 1,
   },
-});
+  textoChico: {
+    fontFamily: fuente.boton,
+    fontSize: 14,
+    letterSpacing: 0.6,
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    flexShrink: 1,
+  },
+}));

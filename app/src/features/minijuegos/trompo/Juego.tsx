@@ -11,7 +11,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Boton } from '../../../ui/components/Boton';
 import { Opcion, type EstadoOpcion } from '../../../ui/components/Opcion';
@@ -35,7 +35,10 @@ import {
   type Reto,
 } from '../../../core/minijuegos/trompo';
 import { callar, decir, vozDePiko } from '../voz';
-import { color, espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
+import { VerEscrito } from '../../instrucciones/VerEscrito';
+import { textoDelAudio } from '../../../core/preferencias/escrito';
+import { espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
+import { crearEstilos, useColor } from '../../../ui/tema';
 
 /** Segundos de más en los retos de audio: lo que tarda Piko en decirlo. */
 const EXTRA_AUDIO = 2;
@@ -55,6 +58,8 @@ export interface JuegoTrompoProps {
 type Fase = 'listo' | 'lanzando' | 'reto' | 'respuesta' | 'final';
 
 export function JuegoTrompo({ retos, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoTrompoProps) {
+  const styles = useEstilos();
+  const color = useColor();
   const { t, frases, idioma } = useTextos();
   const [fase, setFase] = useState<Fase>('listo');
   const [partida, setPartida] = useState<EstadoTrompo>(partidaNueva);
@@ -243,7 +248,10 @@ export function JuegoTrompo({ retos, lengua, nivel, sacuanjoches, onResponder, o
                 {r.tipo === 'traduccion' ? `«${r.foco}»` : r.foco}
               </Text>
             ) : r.tipo === 'audio' ? (
-              <Text style={styles.oculto}>• • •</Text>
+              <>
+                <Text style={styles.oculto}>• • •</Text>
+                <VerEscrito key={indice} alternativa={textoDelAudio(r.palabra, r.opcionesEnMeta)} />
+              </>
             ) : null}
             {tiempoAgotado && <Text style={styles.aviso}>{t('trompo.se_acabo_tiempo')}</Text>}
           </View>
@@ -319,7 +327,7 @@ export function JuegoTrompo({ retos, lengua, nivel, sacuanjoches, onResponder, o
 /** Dónde empieza el patio. */
 const HORIZONTE = 300;
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   raiz: { flex: 1, backgroundColor: color.nube },
   cabecera: {
     flexDirection: 'row',
@@ -423,4 +431,4 @@ const styles = StyleSheet.create({
   opciones: { flexDirection: 'row', flexWrap: 'wrap', gap: espacio.sm },
   mitad: { width: '48.5%' },
   entera: { width: '100%' },
-});
+}));

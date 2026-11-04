@@ -37,10 +37,10 @@ export function Hoja({ ancho = 44 }: { ancho?: number }) {
   );
 }
 
-export function Parlante({ tam = 28 }: { tam?: number }) {
+export function Parlante({ tam = 28, tinta = color.blanco }: { tam?: number; tinta?: string }) {
   return (
-    <Svg width={tam} height={tam} viewBox="0 0 24 24" fill="none" stroke={color.blanco} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
-      <Path d="M3 9.5 H7 L12 5.5 V18.5 L7 14.5 H3 Z" fill={color.blanco} />
+    <Svg width={tam} height={tam} viewBox="0 0 24 24" fill="none" stroke={tinta} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+      <Path d="M3 9.5 H7 L12 5.5 V18.5 L7 14.5 H3 Z" fill={tinta} />
       <Path d="M15.5 9.5 C16.5 10.8 16.5 13.2 15.5 14.5" />
       <Path d="M18 7.5 C20 10 20 14 18 16.5" />
     </Svg>

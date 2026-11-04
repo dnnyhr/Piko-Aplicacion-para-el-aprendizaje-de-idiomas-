@@ -16,7 +16,8 @@ import { PikoMascota } from '../../../ui/piko/PikoMascota';
 import type { EstadoPiko } from '../../../ui/piko/sprites';
 import { Pictograma } from '../../../ui/minijuegos/Pictograma';
 import { TIZA } from '../../../ui/minijuegos/Escena';
-import { color, fuente } from '../../../ui/tokens';
+import { fuente, type Paleta } from '../../../ui/tokens';
+import { crearEstilos, useColor } from '../../../ui/tema';
 
 export type EstadoCasilla = 'normal' | 'correcta' | 'intento' | 'probada' | 'apagada';
 
@@ -94,6 +95,7 @@ export function Tablero({
   etiquetaCasilla,
   onElegir,
 }: TableroProps) {
+  const styles = useEstilos();
   const [tam, setTam] = useState<{ w: number; h: number } | null>(null);
   const onLayout = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
@@ -215,13 +217,13 @@ export function Tablero({
   );
 }
 
-const COLORES: Record<EstadoCasilla, { fondo: string; borde: string; tinta: string; opacidad: number }> = {
+const colores = (color: Paleta): Record<EstadoCasilla, { fondo: string; borde: string; tinta: string; opacidad: number }> => ({
   normal: { fondo: 'rgba(255,253,244,0.38)', borde: TIZA, tinta: color.grafito, opacidad: 1 },
   correcta: { fondo: color.aciertoFondo, borde: color.acierto, tinta: color.aciertoTinta, opacidad: 1 },
   intento: { fondo: color.intentoFondo, borde: color.intento, tinta: color.intentoTinta, opacidad: 1 },
   probada: { fondo: 'rgba(255,253,244,0.38)', borde: TIZA, tinta: color.grafito, opacidad: 0.4 },
   apagada: { fondo: 'rgba(255,253,244,0.38)', borde: TIZA, tinta: color.grafito, opacidad: 0.55 },
-};
+});
 
 function Celda({
   casilla,
@@ -240,8 +242,10 @@ function Celda({
   quieta: boolean;
   onPress: () => void;
 }) {
+  const styles = useEstilos();
+  const color = useColor();
   const golpe = useRef(new Animated.Value(0)).current;
-  const c = COLORES[casilla.estado];
+  const c = colores(color)[casilla.estado];
 
   // Acierto: un latido. Intento: un temblor corto, cuando Piko ya volvió.
   useEffect(() => {
@@ -298,7 +302,7 @@ function Celda({
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   raiz: { flex: 1 },
   abs: { position: 'absolute' },
   lleno: { flex: 1 },
@@ -337,4 +341,4 @@ const styles = StyleSheet.create({
   texto: { fontFamily: fuente.titulo, fontSize: 19, lineHeight: 23, textAlign: 'center' },
   textoMedio: { fontFamily: fuente.titulo, fontSize: 16, lineHeight: 20, textAlign: 'center' },
   textoLargo: { fontFamily: fuente.cuerpoFuerte, fontSize: 14, lineHeight: 18, textAlign: 'center' },
-});
+}), { escalaMaxima: 1.2 }); // las casillas tienen tamaño fijo

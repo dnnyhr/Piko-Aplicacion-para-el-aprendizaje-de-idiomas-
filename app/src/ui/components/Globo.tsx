@@ -3,8 +3,9 @@
  * apuntándole.
  */
 
-import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
-import { color, espacio, radio, texto } from '../tokens';
+import { Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { espacio, radio, texto } from '../tokens';
+import { crearEstilos } from '../tema';
 
 export interface GloboProps {
   children: string;
@@ -14,6 +15,7 @@ export interface GloboProps {
 }
 
 export function Globo({ children, hacia = 'izquierda', style }: GloboProps) {
+  const styles = useEstilos();
   return (
     <View style={[styles.contenedor, style]}>
       <View style={styles.caja}>
@@ -31,7 +33,7 @@ export function Globo({ children, hacia = 'izquierda', style }: GloboProps) {
  */
 const LADO = 14;
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenedor: { position: 'relative' },
   caja: {
     backgroundColor: color.blanco,
@@ -67,4 +69,4 @@ const styles = StyleSheet.create({
     borderColor: color.borde,
     transform: [{ rotate: '45deg' }],
   },
-});
+}));

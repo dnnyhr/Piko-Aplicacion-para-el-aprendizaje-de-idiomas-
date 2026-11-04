@@ -6,7 +6,7 @@
  * juego ya dio flores hoy, lo dice: no se festeja algo que no pasó.
  */
 
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { Boton } from '../../ui/components/Boton';
 import { Globo } from '../../ui/components/Globo';
 import { PikoMascota } from '../../ui/piko/PikoMascota';
@@ -14,7 +14,8 @@ import { Sacuanjoche } from '../../ui/arbol/Sacuanjoche';
 import { RecompensaLeccion } from '../arbol/RecompensaLeccion';
 import { useTextos } from '../../ui/textos/useTextos';
 import type { Recompensa } from '../../core/progress/arbol';
-import { color, espacio, radio, texto } from '../../ui/tokens';
+import { espacio, radio, texto } from '../../ui/tokens';
+import { crearEstilos } from '../../ui/tema';
 
 export interface DatoPartida {
   valor: string;
@@ -50,6 +51,7 @@ export function FinPartida({
   onOtra,
   onVerArbol,
 }: FinPartidaProps) {
+  const styles = useEstilos();
   const { t } = useTextos();
   const hubo = recompensa.ganadas > 0;
 
@@ -104,7 +106,7 @@ export function FinPartida({
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { flexGrow: 1, gap: espacio.xl, paddingBottom: espacio.xl },
   sinFlores: { alignItems: 'center', gap: espacio.lg },
   flores: { flexDirection: 'row', gap: espacio.sm },
@@ -123,4 +125,4 @@ const styles = StyleSheet.create({
   datoValor: { ...texto.titulo, color: color.verde },
   datoEtiqueta: { ...texto.chico, color: color.tinta, textAlign: 'center' },
   acciones: { gap: espacio.md, marginTop: 'auto' },
-});
+}));

@@ -20,7 +20,6 @@ import {
   Animated,
   Easing,
   Pressable,
-  StyleSheet,
   Text,
   View,
   type LayoutChangeEvent,
@@ -54,7 +53,10 @@ import {
   type Ronda,
 } from '../../../core/minijuegos/gallinita';
 import { callar, decir, vozDePiko } from '../voz';
-import { color, espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
+import { VerEscrito } from '../../instrucciones/VerEscrito';
+import { textoDelAudio } from '../../../core/preferencias/escrito';
+import { espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
+import { crearEstilos, useColor } from '../../../ui/tema';
 
 const HORIZONTE = 226;
 const PIKO = 92;
@@ -104,6 +106,8 @@ function Oscuridad({ r }: { r: number }) {
 }
 
 export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoGallinitaProps) {
+  const styles = useEstilos();
+  const color = useColor();
   const { t, frases, idioma } = useTextos();
   const [indice, setIndice] = useState(0);
   const [partida, setPartida] = useState<EstadoGallinita>(partidaNueva);
@@ -130,7 +134,10 @@ export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponde
   const nombreLengua = t(`lengua.${lengua}`);
   const maximo = ESCUCHAS[nivel];
   const quedan = maximo === Infinity ? Infinity : Math.max(0, maximo - escuchas);
-  const soloOido = soloSeEscuchan(r, nivel);
+  // «Ver escrito» muestra también las opciones que sólo se escuchaban.
+  const [escrito, setEscrito] = useState(false);
+  useEffect(() => setEscrito(false), [indice]);
+  const soloOido = soloSeEscuchan(r, nivel) && !escrito;
   const verDibujos = r.tipo === 'oye_dibujo';
   const altoEscondite = verDibujos ? 104 : 64;
 
@@ -359,6 +366,13 @@ export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponde
             {t('gallinita.etiqueta', { lengua: nombreLengua, nivel: t(`minijuegos.nivel_${nivel}`), n: indice + 1, total: RONDAS })}
           </Text>
           <Text style={styles.pregunta}>{pregunta}</Text>
+          {fase !== 'respuesta' && (
+            <VerEscrito
+              key={indice}
+              alternativa={r.tipo === 'dibujo_oye' ? { forma: 'significa', texto: r.palabra.es } : textoDelAudio(r.palabra, r.opcionesEnMeta)}
+              onVer={() => setEscrito(true)}
+            />
+          )}
           {fase === 'respuesta' && r.tipo !== 'dibujo_oye' && (
             <Text style={r.palabra.meta.length > 14 ? styles.focoLargo : styles.foco} numberOfLines={2}>
               {r.palabra.meta}
@@ -521,7 +535,7 @@ export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponde
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   raiz: { flex: 1, backgroundColor: color.nube },
   cabecera: {
     flexDirection: 'row',
@@ -674,4 +688,4 @@ const styles = StyleSheet.create({
     paddingVertical: espacio.sm,
   },
   cartelTexto: { fontFamily: fuente.tituloFuerte, fontSize: 22, color: '#5C3D02' },
-});
+}));

@@ -7,8 +7,9 @@
  */
 
 import { useRef } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
-import { color, espacio, labio, radio, texto } from '../tokens';
+import { Animated, Pressable, Text, View } from 'react-native';
+import { espacio, labio, radio, texto } from '../tokens';
+import { crearEstilos } from '../tema';
 
 export interface BloqueProps {
   children: string;
@@ -19,6 +20,7 @@ export interface BloqueProps {
 }
 
 export function Bloque({ children, onPress, fantasma = false, disabled = false }: BloqueProps) {
+  const styles = useEstilos();
   const hundido = useRef(new Animated.Value(0)).current;
 
   const mover = (hacia: number) =>
@@ -53,7 +55,7 @@ export function Bloque({ children, onPress, fantasma = false, disabled = false }
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   labio: {
     backgroundColor: color.bordeHondo,
     borderRadius: radio.sm + 2,
@@ -74,4 +76,4 @@ const styles = StyleSheet.create({
   },
   texto: { ...texto.cuerpoFuerte, color: color.grafito },
   textoInvisible: { opacity: 0 },
-});
+}));

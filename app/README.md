@@ -136,6 +136,24 @@ las da **una sola vez por día** por juego, lengua y nivel: repetir la misma
 partida es práctica, no flores. Como todo el progreso, suman al total, se ven
 en el perfil, hacen crecer el madroño y viajan al maestro.
 
+## Mi forma de aprender
+
+Cada estudiante acomoda la app en `app/mi-forma-de-aprender.tsx`: tamaño de
+letra, alto contraste, narración, paso a paso y lengua de señas. Se pueden
+combinar y quedan guardadas en el teléfono (`device.preferencias`; en el
+navegador, `localStorage`). Son gustos, no etiquetas: ver la decisión 25.
+
+Al escribir una pantalla nueva:
+
+- **Estilos:** `crearEstilos` de `src/ui/tema.ts` en vez de `StyleSheet.create`,
+  y `useColor()` para los colores que van fuera de la hoja. Así respeta el
+  tamaño y el contraste sin más trabajo.
+- **Estados:** nunca sólo con color. `Marca` dibuja el punto («esto elegiste») y
+  el visto («esta es la respuesta»).
+- **Audio:** si una pregunta sólo se escucha, lleva `VerEscrito`.
+- **Minijuego nuevo:** sus pasos van en `src/features/instrucciones/pasos.ts`.
+- **Lengua de señas:** ver `content/senas/README.md`. Nada sin validar.
+
 ## La Música de Piko
 
 `app/musica/` es la sección de canciones: aprender inglés con canciones de

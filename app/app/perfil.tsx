@@ -7,21 +7,26 @@
  */
 
 import { useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Boton } from '../src/ui/components/Boton';
 import { BarraProgreso } from '../src/ui/components/BarraProgreso';
 import { Pantalla } from '../src/ui/components/Pantalla';
+import { useTextos } from '../src/ui/textos/useTextos';
 import { ArbolMadrono } from '../src/ui/arbol/ArbolMadrono';
 import { Sacuanjoche } from '../src/ui/arbol/Sacuanjoche';
 import { useProgreso } from '../src/features/progreso/store';
 import { useAulaCliente } from '../src/features/aula/cliente';
 import { lugarDePiko, progresoEtapa, progresoNivel } from '../src/core/progress/arbol';
-import { color, espacio, radio, texto } from '../src/ui/tokens';
+import { espacio, radio, texto } from '../src/ui/tokens';
 import { CANCIONES } from '../content/canciones';
+import { crearEstilos, useColor } from '../src/ui/tema';
 
 export default function Perfil() {
+  const styles = useEstilos();
+  const color = useColor();
   const router = useRouter();
+  const { t } = useTextos();
   const estado = useProgreso((s) => s.estado);
   const nombre = useAulaCliente((s) => s.roster.find((r) => r.id === s.studentId)?.nombre ?? null);
 
@@ -105,6 +110,9 @@ export default function Perfil() {
           <Boton ancho onPress={() => router.push('/arbol')}>
             Ver mi árbol
           </Boton>
+          <Boton ancho tono="papel" onPress={() => router.push('/mi-forma-de-aprender')}>
+            {t('portada.mi_forma')}
+          </Boton>
           <Boton ancho tono="fantasma" onPress={() => router.back()}>
             Volver
           </Boton>
@@ -115,6 +123,7 @@ export default function Perfil() {
 }
 
 function Dato({ valor, etiqueta }: { valor: string; etiqueta: string }) {
+  const styles = useEstilos();
   return (
     <View style={styles.dato}>
       <Text style={styles.datoValor}>{valor}</Text>
@@ -123,7 +132,7 @@ function Dato({ valor, etiqueta }: { valor: string; etiqueta: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { gap: espacio.xl, paddingBottom: espacio.xl },
   titulo: { ...texto.display, color: color.verde },
 
@@ -165,4 +174,4 @@ const styles = StyleSheet.create({
   datoEtiqueta: { ...texto.chico, color: color.tintaSuave },
 
   acciones: { gap: espacio.md },
-});
+}));

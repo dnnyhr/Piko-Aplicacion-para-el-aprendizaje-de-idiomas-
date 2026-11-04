@@ -8,20 +8,23 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Boton } from '../../src/ui/components/Boton';
 import { Globo } from '../../src/ui/components/Globo';
 import { Pantalla } from '../../src/ui/components/Pantalla';
 import { PikoMascota } from '../../src/ui/piko/PikoMascota';
-import { color, espacio, radio, texto } from '../../src/ui/tokens';
+import { espacio, radio, texto } from '../../src/ui/tokens';
 import { useAulaCliente } from '../../src/features/aula/cliente';
 import { buscarAnfitrion, ipValida } from '../../src/net/descubrir';
 import { hayRed, transporteDelDispositivo } from '../../src/net/transporte';
 import { abrirBase, ultimoHost } from '../../src/db';
 import { useTextos } from '../../src/ui/textos/useTextos';
+import { crearEstilos, useColor } from '../../src/ui/tema';
 
 export default function Unirse() {
+  const styles = useEstilos();
+  const color = useColor();
   const router = useRouter();
   const { conexion, roster, roomCode, studentId, rechazo } = useAulaCliente();
   const conectar = useAulaCliente((s) => s.conectar);
@@ -185,7 +188,7 @@ export default function Unirse() {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { gap: espacio.xl, paddingBottom: espacio.xl },
   cabecera: { flexDirection: 'row', alignItems: 'center' },
   globo: { flex: 1, marginLeft: espacio.sm },
@@ -226,4 +229,4 @@ const styles = StyleSheet.create({
     paddingVertical: espacio.md,
     paddingHorizontal: espacio.lg,
   },
-});
+}));

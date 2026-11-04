@@ -7,13 +7,23 @@
  */
 
 import { useRef, type ReactNode } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
-import { color, espacio, labio, radio, texto } from '../tokens';
+import { Animated, Pressable, Text, View } from 'react-native';
+import { color as colorNormal, colorContraste, espacio, labio, radio, texto, type Paleta } from '../tokens';
+import { Marca } from './Marca';
+import { useTextos } from '../textos/useTextos';
+import { crearEstilos, useColor } from '../tema';
 
 export type EstadoOpcion = 'normal' | 'elegida' | 'correcta' | 'fallada';
 
-const PALETA: Record<EstadoOpcion, { fondo: string; borde: string; labio: string; texto: string }> =
-  {
+interface Tinta {
+  fondo: string;
+  borde: string;
+  labio: string;
+  texto: string;
+}
+
+function paleta(color: Paleta): Record<EstadoOpcion, Tinta> {
+  return {
     normal: {
       fondo: color.blanco,
       borde: color.borde,
@@ -22,23 +32,26 @@ const PALETA: Record<EstadoOpcion, { fondo: string; borde: string; labio: string
     },
     elegida: {
       fondo: color.nube,
-      borde: color.cielo,
+      borde: color.bordeElegido,
       labio: color.cieloHondo,
-      texto: '#0B3D57',
+      texto: color.tintaCielo,
     },
     correcta: {
       fondo: color.aciertoFondo,
       borde: color.acierto,
-      labio: '#7BA22C',
+      labio: color.labioVerde,
       texto: color.aciertoTinta,
     },
     fallada: {
       fondo: color.intentoFondo,
       borde: color.intento,
-      labio: '#C08417',
+      labio: color.labioPico,
       texto: color.intentoTinta,
     },
   };
+}
+
+const PALETAS = { normal: paleta(colorNormal), contraste: paleta(colorContraste) };
 
 export interface OpcionProps {
   children: string;
@@ -52,8 +65,13 @@ export interface OpcionProps {
 }
 
 export function Opcion({ children, estado = 'normal', onPress, disabled, indice, icono }: OpcionProps) {
+  const styles = useEstilos();
   const hundido = useRef(new Animated.Value(0)).current;
-  const p = PALETA[estado];
+  const color = useColor();
+  const p = PALETAS[color === colorContraste ? 'contraste' : 'normal'][estado];
+  const { t } = useTextos();
+  // El estado también se dice y se dibuja: el color solo no alcanza.
+  const dicho = estado === 'normal' ? '' : `, ${t(`opcion.${estado}`)}`;
 
   const mover = (hacia: number) =>
     Animated.timing(hundido, { toValue: hacia, duration: 60, useNativeDriver: true }).start();
@@ -67,6 +85,7 @@ export function Opcion({ children, estado = 'normal', onPress, disabled, indice,
       onPressOut={() => mover(0)}
       disabled={disabled}
       accessibilityRole="button"
+      accessibilityLabel={`${children}${dicho}`}
       accessibilityState={{ selected: estado !== 'normal', disabled: !!disabled }}
     >
       <View style={[styles.labio, { backgroundColor: p.labio }]}>
@@ -83,13 +102,18 @@ export function Opcion({ children, estado = 'normal', onPress, disabled, indice,
           )}
           {icono}
           <Text style={[styles.texto, { color: p.texto }]}>{children}</Text>
+          {estado !== 'normal' && (
+            <View style={styles.marca}>
+              <Marca tipo={estado === 'correcta' ? 'visto' : 'punto'} tinta={p.texto} />
+            </View>
+          )}
         </Animated.View>
       </View>
     </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   labio: { borderRadius: radio.md, paddingBottom: labio.normal },
   cuerpo: {
     borderRadius: radio.md,
@@ -101,9 +125,10 @@ const styles = StyleSheet.create({
     gap: espacio.md,
     minHeight: 64,
   },
+  marca: { marginLeft: 'auto' },
   insignia: {
-    width: 26,
-    height: 26,
+    minWidth: 26,
+    minHeight: 26,
     borderRadius: radio.sm,
     borderWidth: 2,
     alignItems: 'center',
@@ -111,4 +136,4 @@ const styles = StyleSheet.create({
   },
   insigniaTexto: { ...texto.chico, fontFamily: 'Fredoka_600SemiBold' },
   texto: { ...texto.subtitulo, flexShrink: 1 },
-});
+}));

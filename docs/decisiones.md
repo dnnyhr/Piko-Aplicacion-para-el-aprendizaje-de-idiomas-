@@ -515,7 +515,49 @@ directo a la app: siempre las confirma alguien que habla la lengua.
 
 ---
 
+## 25. «Mi forma de aprender»: gustos del teléfono, no perfiles de la persona
+
+**Decisión.** La accesibilidad es un conjunto de preferencias combinables
+(tamaño de letra, alto contraste, narración, paso a paso, lengua de señas). No
+hay perfiles por discapacidad ni preguntas sobre el estudiante. Se guardan en
+`device.preferencias`, en el teléfono: no viajan por el protocolo del aula ni
+entran al log de progreso.
+
+**Por qué.** Dos niños con la misma discapacidad no necesitan lo mismo, y una
+etiqueta guardada en un teléfono compartido del aula es un dato sensible que no
+hace falta. Como no pasan por el log, tampoco pueden mover el XP, las
+sacuanjoches ni el semáforo: repetir instrucciones no cuesta nada.
+
+**Cómo llega a las pantallas.** `StyleSheet.create` fija los estilos al cargar
+el archivo, así que `crearEstilos` (`src/ui/tema.ts`) lo reemplaza: recibe la
+paleta, escala `fontSize` y `lineHeight`, y guarda cada variante. Con los
+valores iniciales los estilos son los de siempre.
+
+**La alternativa escrita está siempre.** «Ver escrito» no depende de ninguna
+preferencia, y nunca regala la respuesta: muestra el significado si las opciones
+están en la lengua meta, y la palabra si las opciones son significados.
+
+**La narración sólo lee la lengua de la app**, con `vozDePiko`. No agrega voz
+sintética a ninguna lengua que no la tenga (decisión 16).
+
+**Lengua de señas: estructura sin contenido.** La misma regla que con mayangna,
+rama y garífuna: preferimos no tener contenido a inventarlo. Un recurso sin
+validación no pasa `validarRecurso` y no se muestra. `expo-video` se instala
+con el primer video validado: antes sería una dependencia nativa sin uso.
+
+**Costo.** Una pantalla nueva tiene que usar `crearEstilos` y no
+`StyleSheet.create` para respetar las preferencias. El dibujo de los juegos
+(escenas, mascota, árbol) conserva sus colores a propósito. Son por teléfono, no
+por estudiante: en un teléfono compartido, cada quien las ajusta al usarlo.
+
+---
+
 ## Pendientes conocidos
+
+- **Lengua de señas:** grabar y validar los videos con personas competentes en
+  la lengua; instalar `expo-video` con el primero (`app/content/senas/README.md`).
+- **Probar «Mi forma de aprender» con niños y docentes**, y en teléfonos reales
+  con TalkBack y la voz en español instalada.
 
 - **El contenido de mayangna, rama y garífuna, y grabaciones de hablantes de
   miskito.** El riesgo principal. *Tu lengua en Piko* ya está juntando

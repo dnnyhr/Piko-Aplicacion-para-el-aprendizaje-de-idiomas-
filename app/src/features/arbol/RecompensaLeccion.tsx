@@ -8,12 +8,13 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Easing, Pressable, Text, View } from 'react-native';
 import { progresoNivel, type Recompensa } from '../../core/progress/arbol';
 import { ArbolMadrono } from '../../ui/arbol/ArbolMadrono';
 import { Sacuanjoche } from '../../ui/arbol/Sacuanjoche';
 import { BarraProgreso } from '../../ui/components/BarraProgreso';
-import { color, espacio, fuente, radio, texto } from '../../ui/tokens';
+import { espacio, fuente, radio, texto } from '../../ui/tokens';
+import { crearEstilos } from '../../ui/tema';
 
 export interface RecompensaLeccionProps {
   recompensa: Recompensa;
@@ -21,6 +22,7 @@ export interface RecompensaLeccionProps {
 }
 
 export function RecompensaLeccion({ recompensa, onVerArbol }: RecompensaLeccionProps) {
+  const styles = useEstilos();
   const { antes, despues, ganadas, subioNivel, crecioArbol, nivelDespues, etapaDespues } = recompensa;
   const [cuenta, setCuenta] = useState(antes);
   const [llego, setLlego] = useState(!subioNivel);
@@ -108,7 +110,7 @@ export function RecompensaLeccion({ recompensa, onVerArbol }: RecompensaLeccionP
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   tarjeta: {
     alignSelf: 'stretch',
     alignItems: 'center',
@@ -149,4 +151,4 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     paddingVertical: espacio.xs,
   },
-});
+}));

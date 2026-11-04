@@ -44,7 +44,10 @@ import { vozDePalabra, type LenguaMinijuego, type NivelMinijuego, type Palabra }
 import { pistaDe, type Reto } from '../../../core/minijuegos/retos';
 import { ARRASTRE_MAXIMO, chibolaAlcanzada, leerArrastre, puntoDeImpacto, TIROS } from '../../../core/minijuegos/chibolas';
 import { callar, decir, vozDePiko } from '../voz';
-import { color, espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
+import { VerEscrito } from '../../instrucciones/VerEscrito';
+import { textoDelAudio } from '../../../core/preferencias/escrito';
+import { espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
+import { crearEstilos, useColor } from '../../../ui/tema';
 
 const HORIZONTE = 236;
 const TAM_CHIBOLA = 46;
@@ -110,6 +113,8 @@ const FLORES = [
 ];
 
 export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoChibolasProps) {
+  const styles = useEstilos();
+  const color = useColor();
   const { t, frases, idioma } = useTextos();
   const [paso, setPaso] = useState(0);
   const [probadas, setProbadas] = useState<number[]>([]);
@@ -436,7 +441,10 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
               {r.tipo === 'traduccion' ? `«${r.foco}»` : r.foco}
             </Text>
           ) : r.tipo === 'audio' ? (
-            <Text style={styles.oculto}>• • •</Text>
+            <>
+              <Text style={styles.oculto}>• • •</Text>
+              <VerEscrito key={paso} alternativa={textoDelAudio(r.palabra, r.opcionesEnMeta)} />
+            </>
           ) : null}
         </View>
         {(r.tipo === 'audio' || r.tipo === 'significado') && (
@@ -630,7 +638,7 @@ export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder,
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   raiz: { flex: 1, backgroundColor: color.nube },
   cabecera: {
     flexDirection: 'row',
@@ -769,4 +777,4 @@ const styles = StyleSheet.create({
     color: color.tinta,
   },
   aviso: { ...texto.cuerpoFuerte, fontSize: 14, color: color.verdeHondo },
-});
+}));

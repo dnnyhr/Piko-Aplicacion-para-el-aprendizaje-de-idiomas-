@@ -35,11 +35,21 @@ export const color = {
   // Tinta
   grafito: '#16241D',
   tinta: '#33453B',
-  tintaSuave: '#6B7A70',
+  tintaSuave: '#56655B',
 
   // Bordes y superficies neutras
   borde: '#E3DACA',
   bordeHondo: '#CFC3AD',
+
+  // Labios y tintas de los botones de color
+  labioVerde: '#7BA22C',
+  labioPico: '#C08417',
+  tintaCielo: '#0B3D57',
+  tintaPico: '#5C3D02',
+
+  // Lo que cambia de rol con el alto contraste
+  barra: '#97C137',
+  bordeElegido: '#60C5FA',
 
   /**
    * Estados de respuesta. El error es ámbar, nunca rojo: Piko refuerza sin
@@ -53,6 +63,59 @@ export const color = {
   intentoFondo: '#FDF2DC',
   intentoTinta: '#8A5A08',
 } as const;
+
+export type Paleta = { readonly [K in keyof typeof color]: string };
+
+/**
+ * El alto contraste de «Mi forma de aprender».
+ *
+ * Sigue siendo Piko: los botones conservan su verde, su celeste y su ámbar,
+ * pero más limpios y con tinta casi negra; el papel pasa a blanco y los bordes
+ * se vuelven oscuros para que cada tarjeta se distinga aunque se vea poco el
+ * color. `tests/contraste.test.ts` comprueba las parejas de texto y fondo.
+ */
+export const colorContraste: Paleta = {
+  verde: '#0A4530',
+  verdeHondo: '#00261A',
+  verdeBosque: '#0A4530',
+  verdeMonte: '#0A4530',
+  verdeHoja: '#0A4530',
+  verdePasto: '#B6E34A',
+
+  cielo: '#9ADCFF',
+  cieloHondo: '#0B4F7A',
+  nube: '#E3F5FF',
+
+  papel: '#FFFFFF',
+  papelHondo: '#E6E6E6',
+  blanco: '#FFFFFF',
+
+  copete: '#8F3600',
+  pico: '#FFC94D',
+  picoHondo: '#7A5200',
+
+  grafito: '#000000',
+  tinta: '#0D0D0D',
+  tintaSuave: '#1F2A24',
+
+  borde: '#16241D',
+  bordeHondo: '#000000',
+
+  labioVerde: '#00261A',
+  labioPico: '#5C3D02',
+  tintaCielo: '#00212F',
+  tintaPico: '#2B1C00',
+
+  barra: '#0A4530',
+  bordeElegido: '#0B4F7A',
+
+  acierto: '#1E6B00',
+  aciertoFondo: '#E9FBD0',
+  aciertoTinta: '#174D00',
+  intento: '#8A5A08',
+  intentoFondo: '#FFF0CC',
+  intentoTinta: '#4F2F00',
+};
 
 /** Escala de 4 puntos. */
 export const espacio = {

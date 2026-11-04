@@ -6,12 +6,13 @@
  * para que el banco no se reacomode bajo el dedo.
  */
 
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { Bloque } from '../../ui/components/Bloque';
 import { PikoMascota } from '../../ui/piko/PikoMascota';
-import { color, espacio, radio, texto } from '../../ui/tokens';
+import { espacio, radio, texto } from '../../ui/tokens';
 import type { BuildItem } from '../../core/content/schema';
 import { useTextos } from '../../ui/textos/useTextos';
+import { crearEstilos } from '../../ui/tema';
 
 export interface EjercicioBloquesProps {
   item: BuildItem;
@@ -30,6 +31,7 @@ export function EjercicioBloques({
   onArmado,
   revelado,
 }: EjercicioBloquesProps) {
+  const styles = useEstilos();
   const { t } = useTextos();
   const colocar = (indice: number) => {
     if (revelado || armado.includes(indice)) return;
@@ -87,7 +89,7 @@ export function EjercicioBloques({
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { paddingBottom: espacio.xxxl, gap: espacio.xl },
   cabecera: { flexDirection: 'row', alignItems: 'center', gap: espacio.md },
   enunciado: { flex: 1, gap: espacio.xs },
@@ -111,4 +113,4 @@ const styles = StyleSheet.create({
   },
   pista: { ...texto.chico, color: color.tintaSuave, textAlign: 'center' },
   fichas: { flexDirection: 'row', flexWrap: 'wrap', gap: espacio.sm },
-});
+}));

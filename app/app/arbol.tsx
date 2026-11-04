@@ -7,7 +7,7 @@
  */
 
 import { useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Boton } from '../src/ui/components/Boton';
 import { Globo } from '../src/ui/components/Globo';
@@ -25,9 +25,11 @@ import {
   lugarDePiko,
   nivelDe,
 } from '../src/core/progress/arbol';
-import { color, espacio, fuente, radio, texto } from '../src/ui/tokens';
+import { espacio, fuente, radio, texto } from '../src/ui/tokens';
+import { crearEstilos } from '../src/ui/tema';
 
 export default function Arbol() {
+  const styles = useEstilos();
   const router = useRouter();
   const total = useProgreso((s) => s.estado.sacuanjoches);
 
@@ -96,6 +98,7 @@ export default function Arbol() {
 }
 
 function Paso({ n, texto: t }: { n: string; texto: string }) {
+  const styles = useEstilos();
   return (
     <View style={styles.paso}>
       <View style={styles.pasoNumero}>
@@ -106,7 +109,7 @@ function Paso({ n, texto: t }: { n: string; texto: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { gap: espacio.lg, paddingBottom: espacio.xl },
   cabecera: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   titulo: { ...texto.display, color: color.verde },
@@ -162,4 +165,4 @@ const styles = StyleSheet.create({
   etapaDesc: { ...texto.chico, color: color.tintaSuave },
   umbral: { flexDirection: 'row', alignItems: 'center', gap: 2 },
   umbralTexto: { fontFamily: fuente.titulo, fontSize: 15, color: color.verde },
-});
+}));
