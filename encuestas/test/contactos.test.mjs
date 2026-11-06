@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import worker from '../src/index.js';
 import { leerContactos, normalizarTelefono } from '../src/contactos.js';
 import { d1Falso } from './d1-falso.mjs';
+import { entrar } from './sesion.mjs';
 
 const real = JSON.parse(readFileSync(new URL('../definiciones/que-le-falta-a-piko.json', import.meta.url), 'utf8'));
 const TOKEN = 'secreto-de-prueba';
@@ -41,7 +42,11 @@ afterEach(() => {
 async function llamar(ruta, { method = 'GET', body, token = TOKEN } = {}) {
   const h = {};
   if (body !== undefined) h['content-type'] = 'application/json';
-  if (token) h.authorization = `Bearer ${token}`;
+  if (token) {
+    const s = await entrar(env, token, h['cf-connecting-ip']);
+    if (!s.jwt) return s.res;
+    h.authorization = `Bearer ${s.jwt}`;
+  }
   return worker.fetch(new Request(`https://encuestas.test${ruta}`, { method, headers: h, body: body === undefined ? undefined : JSON.stringify(body) }), env, { waitUntil() {} });
 }
 const agregar = (texto, enviar) => llamar(`/api/admin/encuestas/${real.slug}/contactos`, { method: 'POST', body: { texto, enviar } });

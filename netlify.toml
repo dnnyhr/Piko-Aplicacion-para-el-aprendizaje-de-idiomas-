@@ -22,3 +22,13 @@
   for = "/site.webmanifest"
   [headers.values]
     Content-Type = "application/manifest+json; charset=utf-8"
+
+# La app del navegador es de una sola página: cualquier dirección dentro de
+# /probar/app (/probar/app/logros, /probar/app/musica…) la resuelve la app.
+# Sin esto, abrir o recargar una de esas direcciones da 404. Los archivos que
+# existen (los .js, las imágenes) se siguen sirviendo tal cual: Netlify sólo
+# aplica esta regla cuando no hay un archivo con ese nombre.
+[[redirects]]
+  from = "/probar/app/*"
+  to = "/probar/app/index.html"
+  status = 200

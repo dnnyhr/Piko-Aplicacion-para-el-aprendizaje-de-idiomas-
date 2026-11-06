@@ -5,6 +5,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTipografias } from '../src/ui/fuentes';
 import { useColor } from '../src/ui/tema';
+import { useLogros } from '../src/features/logros/store';
+import { CelebracionLogros } from '../src/ui/logros/Celebracion';
 
 // La splash se mantiene hasta que las tipografías están listas: si no, el
 // primer cuadro se vería con la fuente del sistema y saltaría.
@@ -18,6 +20,11 @@ export default function Layout() {
     if (listas) SplashScreen.hideAsync().catch(() => undefined);
   }, [listas]);
 
+  // Empieza a mirar el progreso para festejar los logros nuevos.
+  useEffect(() => {
+    useLogros.getState().preparar();
+  }, []);
+
   if (!listas) return null;
 
   return (
@@ -30,6 +37,7 @@ export default function Layout() {
           animation: 'slide_from_right',
         }}
       />
+      <CelebracionLogros />
     </SafeAreaProvider>
   );
 }

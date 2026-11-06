@@ -55,6 +55,7 @@ import { useNarrador } from '../instrucciones/useNarrador';
 import { useTramo } from './useTramo';
 import { espacio, fuente, labio, radio, texto } from '../../ui/tokens';
 import { crearEstilos, useColor } from '../../ui/tema';
+import { usePausaLogros } from '../logros/store';
 
 export interface ResultadoCancion {
   correct: number;
@@ -81,6 +82,8 @@ export function Experiencia({ cancion, audio, premiable, admin = false, onTermin
   const styles = useEstilos();
   const { voz } = useNarrador();
   const color = useColor();
+  // Un logro ganado a mitad de la ronda se festeja al terminarla.
+  usePausaLogros();
   const { t, frases, idioma } = useTextos();
   const tramo = useTramo(audio);
   const [i, setI] = useState(0);
@@ -598,6 +601,13 @@ const Letra = memo(function Letra({ cancion, desde, hasta, activo, tiempo, marca
         const n = desde + j;
         const marca = n > desde ? marcas[n] : null;
         const repetido = (repetidos[n] as number) >= 0;
+        // Una línea que se repite lleva su traducción igual; si no la trae,
+        // usa la de la primera vez que sonó.
+        const orig = repetido ? (cancion.letra[repetidos[n] as number] ?? v) : v;
+        const es = v.es ?? orig.es;
+        const en = v.en ?? orig.en;
+        const aproximado = v.en ? v.aproximado : orig.aproximado;
+        const nota = v.nota ?? orig.nota;
         return (
           <View
             key={n}
@@ -612,15 +622,15 @@ const Letra = memo(function Letra({ cancion, desde, hasta, activo, tiempo, marca
             )}
             <View style={[styles.verso, n === activo ? styles.versoActivo : null, repetido ? styles.versoRepetido : null]}>
               <VersoCantado verso={v} tiempo={tiempo} activo={sonando && n === activo} periodo={periodo} estilo={styles.versoTexto} />
-              {!repetido && cancion.lengua !== 'spa' && v.es && <Text style={styles.versoEs}>{v.es}</Text>}
-              {!repetido && v.en && cancion.lengua !== 'eng' && (
+              {cancion.lengua !== 'spa' && es && <Text style={styles.versoEs}>{es}</Text>}
+              {en && cancion.lengua !== 'eng' && (
                 <View style={styles.versoFilaEn}>
                   <Bandera lengua="eng" ancho={18} />
-                  <Text style={styles.versoEn}>{v.en}</Text>
+                  <Text style={styles.versoEn}>{en}</Text>
                 </View>
               )}
-              {!repetido && v.aproximado && <Text style={styles.aproximado}>≈ {textos.aproximado}</Text>}
-              {!repetido && !v.en && v.nota && <Text style={styles.nota_}>{v.nota}</Text>}
+              {aproximado && <Text style={styles.aproximado}>≈ {textos.aproximado}</Text>}
+              {!en && nota && <Text style={styles.nota_}>{nota}</Text>}
             </View>
           </View>
         );

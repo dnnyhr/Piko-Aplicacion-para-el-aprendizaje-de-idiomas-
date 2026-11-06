@@ -1,0 +1,87 @@
+# Piko en Azure: las encuestas. Nginx es lo único que da a internet; la API
+# se reenvía al contenedor "api", que no tiene ningún puerto abierto hacia
+# afuera. El sitio (web/) sigue en Netlify.
+#
+# Es una plantilla: al arrancar, la imagen de Nginx reemplaza ${DOMINIO_API}
+# con lo que diga despliegue/.env. Las variables propias de
+# Nginx ($host, $uri, …) no se tocan.
+
+server_tokens off;
+
+# ── Compresión: el JS de la app baja a la cuarta parte ──
+gzip on;
+gzip_comp_level 6;
+gzip_min_length 1024;
+gzip_vary on;
+gzip_proxied any;
+gzip_types text/plain text/css text/javascript application/javascript application/json
+           application/manifest+json image/svg+xml font/ttf application/x-font-ttf;
+
+# ── Límite de peticiones a la API: 10 por segundo por IP, con ráfagas de 20 ──
+limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+limit_req_status 429;
+
+# ── HTTP: solo para Let's Encrypt; todo lo demás va a HTTPS ──
+server {
+    listen 80 default_server;
+    server_name _;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# ── Cualquier nombre que no sea el nuestro (escaneos por IP): se corta ──
+server {
+    listen 443 ssl default_server;
+    http2 on;
+    include /etc/nginx/snippets/tls.conf;
+    return 444;
+}
+
+# ── La API y las encuestas: ${DOMINIO_API} → contenedor api ──
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name ${DOMINIO_API};
+    include /etc/nginx/snippets/tls.conf;
+
+    # Igual que CUERPO_MAX del Worker (64 KB) con margen.
+    client_max_body_size 128k;
+
+    location /api/ {
+        limit_req zone=api burst=20 nodelay;
+        proxy_pass http://api:8787;
+        include /etc/nginx/snippets/proxy.conf;
+        # Si la API no responde o se pide demasiado, igual sale JSON con un
+        # mensaje para la persona, como los errores de la propia API.
+        error_page 502 503 504 = @api_caida;
+        error_page 429 = @api_espera;
+    }
+    location @api_caida {
+        default_type application/json;
+        include /etc/nginx/snippets/cabeceras.conf;
+        add_header Cache-Control "no-store" always;
+        return 503 '{"error":"El servicio no está disponible en este momento. Probá de nuevo en un rato."}';
+    }
+    location @api_espera {
+        default_type application/json;
+        include /etc/nginx/snippets/cabeceras.conf;
+        add_header Retry-After "10" always;
+        return 429 '{"error":"Muchos pedidos seguidos. Esperá unos segundos y probá de nuevo."}';
+    }
+    location / {
+        proxy_pass http://api:8787;
+        include /etc/nginx/snippets/proxy.conf;
+        # Si la API se cae, la página de "volvemos enseguida" (encuestas/public/50x.html).
+        error_page 502 503 504 /50x.html;
+    }
+    location = /50x.html { root /srv/encuestas; internal; }
+    # Los estilos y los dibujos salen directo de Nginx: más rápido, y la
+    # página de arriba se ve bien aunque la API esté caída.
+    location /css/ { root /srv/encuestas; }
+    location /img/ { root /srv/encuestas; }
+}

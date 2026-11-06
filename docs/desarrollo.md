@@ -215,7 +215,7 @@ Con dos teléfonos y el *development build* instalado:
 ```bash
 cd robot/panel
 npm install
-npm run prueba      # 44 comprobaciones del puente: no hace falta la placa
+npm run prueba      # 61 comprobaciones del puente: no hace falta la placa
 npm start           # http://localhost:4700 (control) y http://localhost:4700/cara
 ```
 
@@ -254,13 +254,14 @@ Crear una encuesta, publicarla y el despliegue en Cloudflare:
 ## Qué corre CI
 
 En cada pull request y en cada push a `main`, [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
-corre tres trabajos, con Node 22:
+corre cuatro trabajos, con Node 22:
 
 | Trabajo | Comandos |
 |---|---|
 | App | `npm test` · `npm run typecheck` · `npm run validate:packs` |
 | Robot | `npm run prueba` (en `robot/panel`) |
 | Encuestas | `npm run prueba` · `npm run validar` (en `encuestas`) |
+| Despliegue | `docker compose config`, la API con libSQL y su CORS, y `nginx -t` (en `despliegue`) |
 
 Conviene correr localmente los de la parte que tocaste antes de abrir el PR.
 

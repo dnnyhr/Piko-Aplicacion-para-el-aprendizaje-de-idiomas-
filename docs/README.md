@@ -27,6 +27,8 @@ Más la landing estática en [`web/`](../web/) (piko.mugiware.com).
 | [../diccionario/metodologia.md](../diccionario/metodologia.md) | Cómo se descubren las reglas de cada lengua con modelos de razonamiento y hablantes nativos |
 | [../robot/README.md](../robot/README.md) | Cableado, puente, caras, voz y protocolo serie del robot |
 | [../encuestas/README.md](../encuestas/README.md) | Encuestas: ponerlas en marcha, crear una nueva, palabras para la app |
+| [../despliegue/README.md](../despliegue/README.md) | El servidor en Azure: Docker, Nginx, HTTPS y el despliegue automático |
+| [entregables-sprint-3.md](entregables-sprint-3.md) | Sprint 3: rendimiento, HTTPS, errores amigables, JWT y Azure igual a main |
 
 ---
 
@@ -87,7 +89,7 @@ diga que la habla mal.
   la pantalla que no se apaga en toda la clase.
 - Voz (la de Google, con la del teléfono de respaldo sin internet) y el primer
   ejercicio completo, «Di esta palabra», con el maestro decidiendo si estuvo bien.
-- 44 comprobaciones automáticas del puente, sin placa ni teléfonos.
+- 61 comprobaciones automáticas del puente, sin placa ni teléfonos.
 
 **Las encuestas** (encuestas.piko.mugiware.com)
 

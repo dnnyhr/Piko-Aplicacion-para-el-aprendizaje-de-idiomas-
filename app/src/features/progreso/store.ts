@@ -9,7 +9,15 @@
 import { create } from 'zustand';
 import { abrirBase } from '../../db';
 import { uuidv4 } from '../../core/ids';
-import { answerEvent, gameDoneEvent, lessonDoneEvent, type GameDonePayload } from '../../core/progress/events';
+import {
+  answerEvent,
+  canjeEvent,
+  gameDoneEvent,
+  hitoEvent,
+  lessonDoneEvent,
+  type CanjePayload,
+  type GameDonePayload,
+} from '../../core/progress/events';
 import { recompensaEntre, type Recompensa } from '../../core/progress/arbol';
 import { emptyState, project, type StudentState } from '../../core/progress/projection';
 import type { Item } from '../../core/content/schema';
@@ -65,6 +73,10 @@ interface ProgresoStore {
    * la primera vez en el día, suma sacuanjoches (ver `projection.ts`).
    */
   terminarMinijuego: (partida: GameDonePayload) => Recompensa;
+  /** Anota un hito para los logros (p. ej. saludar a Piko). Una sola vez por clave. */
+  registrarHito: (clave: string) => void;
+  /** Guarda un código canjeado: el logro especial queda en el perfil para siempre. */
+  registrarCanje: (canje: CanjePayload) => void;
   recomputar: () => void;
 }
 
@@ -139,6 +151,20 @@ export const useProgreso = create<ProgresoStore>((set, get) => ({
     );
     get().recomputar();
     return recompensaEntre(antes, get().estado.sacuanjoches);
+  },
+
+  registrarHito(clave) {
+    if (get().estado.hitos.includes(clave)) return;
+    const { log, deviceId } = abrirBase();
+    log.appendLocal(hitoEvent({ id: uuidv4(), studentId: get().studentId, originDevice: deviceId, createdAt: Date.now(), clave }));
+    get().recomputar();
+  },
+
+  registrarCanje(canje) {
+    if (get().estado.canjes[canje.logro] !== undefined) return;
+    const { log, deviceId } = abrirBase();
+    log.appendLocal(canjeEvent({ id: uuidv4(), studentId: get().studentId, originDevice: deviceId, createdAt: Date.now(), ...canje }));
+    get().recomputar();
   },
 
   recomputar() {

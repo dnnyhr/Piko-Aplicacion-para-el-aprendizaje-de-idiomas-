@@ -1,0 +1,77 @@
+name: Desplegar en Azure
+
+# Cada merge a main, cuando CI pasa, el servidor de Azure (las encuestas)
+# queda exactamente igual a main: entra por SSH, corre despliegue/actualizar.sh
+# y después comprueba en vivo que la API diga el mismo commit.
+#
+# Secretos del repositorio (Settings → Secrets and variables → Actions):
+#   AZURE_VM_HOST         la IP o el nombre de la VM
+#   AZURE_VM_SSH_KEY      la llave privada de despliegue (ver despliegue/README.md, paso 11)
+#   AZURE_VM_KNOWN_HOSTS  opcional: la línea de known_hosts de la VM
+# Sin AZURE_VM_HOST no despliega: solo avisa, y CI no se pone en rojo.
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: azure
+  cancel-in-progress: false
+
+jobs:
+  azure:
+    name: Azure — main en vivo
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      HOST: ${{ secrets.AZURE_VM_HOST }}
+      API: https://api.piko.mugiware.com
+      COMMIT: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+    steps:
+      - name: ¿Está configurado?
+        id: listo
+        run: |
+          if [ -z "$HOST" ]; then
+            echo "::notice::Falta el secreto AZURE_VM_HOST: no se despliega (ver despliegue/README.md, paso 11)."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Actualizar el servidor por SSH
+        if: steps.listo.outputs.ok == 'true'
+        env:
+          LLAVE: ${{ secrets.AZURE_VM_SSH_KEY }}
+          CONOCIDOS: ${{ secrets.AZURE_VM_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$LLAVE" > ~/.ssh/piko && chmod 600 ~/.ssh/piko
+          if [ -n "$CONOCIDOS" ]; then printf '%s\n' "$CONOCIDOS" > ~/.ssh/known_hosts; else ssh-keyscan -H "$HOST" > ~/.ssh/known_hosts; fi
+          ssh -i ~/.ssh/piko -o BatchMode=yes "piko@$HOST" '~/piko/despliegue/actualizar.sh'
+
+      - name: Comprobar que Azure corre este commit
+        if: steps.listo.outputs.ok == 'true'
+        run: |
+          for i in $(seq 1 20); do
+            api=$(curl -fsS "$API/api/salud" | jq -r .version || true)
+            echo "api: $api · esperado: $COMMIT"
+            if [ "$api" = "$COMMIT" ]; then
+              echo "### Azure corre main @ \`${COMMIT:0:7}\`" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 6
+          done
+          echo "::error::Azure no está corriendo $COMMIT"
+          exit 1
+
+      - name: Páginas de error y HTTPS
+        if: steps.listo.outputs.ok == 'true'
+        run: |
+          set -e
+          test "$(curl -s -o /dev/null -w '%{http_code}' "http://${API#https://}/")" = 301
+          curl -s "$API/api/no-existe" | jq -e .error > /dev/null
+          echo "HTTP→HTTPS y errores de la API en JSON con mensaje: bien."

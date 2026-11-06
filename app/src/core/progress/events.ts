@@ -4,7 +4,7 @@
  * dos dispositivos converjan al mismo estado sin coordinarse.
  */
 
-export type ProgressEventKind = 'answer' | 'lessonDone' | 'joinedSession' | 'gameDone';
+export type ProgressEventKind = 'answer' | 'lessonDone' | 'joinedSession' | 'gameDone' | 'hito' | 'canje';
 
 export interface AnswerPayload {
   itemId: string;
@@ -46,6 +46,29 @@ export interface GameDonePayload {
   day: string;
 }
 
+/**
+ * Algo que el estudiante hizo una vez y que cuenta para un logro aunque no
+ * sea una respuesta ni una partida, p. ej. saludar a Piko (`clave: 'piko'`).
+ * Las claves las define el catálogo de logros (`core/logros/catalogo.ts`).
+ */
+export interface HitoPayload {
+  clave: string;
+}
+
+/**
+ * Un código de logro especial canjeado (las tarjetas de un evento). El
+ * servidor ya confirmó que el código existe y que es de este estudiante; el
+ * evento es lo que hace que el logro quede en su perfil para siempre y viaje
+ * con él.
+ */
+export interface CanjePayload {
+  codigo: string;
+  /** El id del logro que desbloquea, como lo devolvió el servidor. */
+  logro: string;
+  /** Cuándo lo registró el servidor (ISO 8601). */
+  canjeadoEn: string;
+}
+
 export interface JoinedSessionPayload {
   sessionId: string;
 }
@@ -54,7 +77,9 @@ export type ProgressPayload =
   | ({ kind: 'answer' } & AnswerPayload)
   | ({ kind: 'lessonDone' } & LessonDonePayload)
   | ({ kind: 'joinedSession' } & JoinedSessionPayload)
-  | ({ kind: 'gameDone' } & GameDonePayload);
+  | ({ kind: 'gameDone' } & GameDonePayload)
+  | ({ kind: 'hito' } & HitoPayload)
+  | ({ kind: 'canje' } & CanjePayload);
 
 export interface ProgressEvent {
   /** UUID. Es la clave de idempotencia: reenviar un evento nunca lo duplica. */
@@ -145,6 +170,16 @@ export function gameDoneEvent(
   return { id, studentId, originDevice, createdAt, kind: 'gameDone', payload: { ...rest } };
 }
 
+export function hitoEvent(args: { id: string; studentId: string; originDevice: string; createdAt: number } & HitoPayload): ProgressEvent {
+  const { id, studentId, originDevice, createdAt, clave } = args;
+  return { id, studentId, originDevice, createdAt, kind: 'hito', payload: { clave } };
+}
+
+export function canjeEvent(args: { id: string; studentId: string; originDevice: string; createdAt: number } & CanjePayload): ProgressEvent {
+  const { id, studentId, originDevice, createdAt, ...rest } = args;
+  return { id, studentId, originDevice, createdAt, kind: 'canje', payload: { ...rest } };
+}
+
 export function joinedSessionEvent(args: {
   id: string;
   studentId: string;
@@ -158,7 +193,7 @@ export function joinedSessionEvent(args: {
 
 // ------------------------------------------------------------------ validación
 
-const KINDS: ReadonlySet<string> = new Set(['answer', 'lessonDone', 'joinedSession', 'gameDone']);
+const KINDS: ReadonlySet<string> = new Set(['answer', 'lessonDone', 'joinedSession', 'gameDone', 'hito', 'canje']);
 
 /** Valida un evento que llegó por la red. Nunca confiar en el otro extremo. */
 export function parseEvent(raw: unknown): ProgressEvent | null {

@@ -16,8 +16,11 @@ de cada vuelta.
 | 17 | El progreso se ve como un madroño que crece | App |
 | 18–19 | El diccionario es la única fuente del contenido; la app también en miskito | Contenido |
 | 20 | El sitio, de folleto a herramienta | Sitio |
-| 21–23 | El robot: proyecto aparte, la cara es un teléfono, el maestro escucha | Robot |
+| 21–22 | El robot: proyecto aparte, la cara es un teléfono | Robot |
+| 23 | ~~En el ejercicio del robot, escucha el maestro~~ — reemplazada por la 26 | Robot |
 | 24 | Las encuestas corren en un servidor, fuera del aula | Encuestas |
+| 25 | Los logros salen del log; sólo el canje de códigos usa el servidor | App |
+| 26 | El robot escucha con un modelo de Meta, y el maestro sigue mandando | Robot |
 
 ---
 
@@ -476,7 +479,7 @@ salga de pantalla completa — ver «Que la pantalla no se apague» en
 
 ---
 
-## 23. En el ejercicio del robot, por ahora escucha el maestro
+## 23. ~~En el ejercicio del robot, por ahora escucha el maestro~~ — reemplazada por la 26
 
 **Contexto.** El robot tiene que decidir si el chico pronunció bien.
 
@@ -512,6 +515,57 @@ personales fuera de un teléfono (correos y nombres opcionales). Está cubierto
 en [SECURITY.md](../SECURITY.md) y en «Seguridad» y «Privacidad» de
 [encuestas/README.md](../encuestas/README.md). Las palabras nunca pasan
 directo a la app: siempre las confirma alguien que habla la lengua.
+
+## 25. Los logros salen del log; sólo el canje de códigos usa el servidor
+
+**Contexto.** Los logros tienen que motivar sin ser una lista de tareas, poder
+crecer (eventos, concursos, escuelas) sin tocar toda la app, y el logro de
+Hackathon Nicaragua 2026 sólo se consigue con el código de una tarjeta que
+sirve una vez.
+
+**Decisión.** Cada logro es una entrada de datos en
+`app/src/core/logros/catalogo.ts` (qué es, cómo se ve, qué condición lo
+desbloquea). Si está desbloqueado y desde cuándo lo calcula la proyección, a
+partir del mismo log de eventos que el XP y las sacuanjoches. Saludar a Piko es
+un evento `hito` y un código canjeado es un evento `canje`. Validar que un
+código existe y que nadie lo usó lo hace el Worker de las encuestas, con la
+tabla `codigos` en D1.
+
+**Por qué.** Desde el log, los logros viajan con el estudiante de teléfono en
+teléfono y dan lo mismo en cualquiera, sin servidor. Un código de un solo uso
+entre todos los teléfonos, en cambio, no se puede comprobar sin alguien que
+recuerde cuáles se usaron. El Worker ya existe y tiene D1, pruebas y panel:
+sumarle una tabla es más simple y seguro que montar otro servidor.
+
+**Costo.** Canjear necesita internet en ese momento (la app lo dice si no
+hay). El servidor guarda qué estudiante (un id anónimo de la app, el teléfono
+y, si está en una clase, su nombre) canjeó cada código. La racha se cuenta en
+hora de Nicaragua (UTC−6) y no en la del teléfono, para que dé igual en todos.
+
+---
+
+## 26. El robot escucha con un modelo de Meta, y el maestro sigue mandando
+
+**Contexto.** La 23 dejó la escucha para cuando hubiera reconocimiento. Probado
+a mano, MMS-1b-all de Meta, con su adaptador de miskito, entendió «titan yamni»
+dicho por alguien del equipo, letra por letra.
+
+**Decisión.** Un servicio aparte, `robot/escucha`, evalúa cada intento: lo
+transcribe y además ubica la palabra esperada letra por letra en el audio. Qué
+cuenta como la misma palabra lo deciden las reglas «Para Piko» de la gramática
+(S1–S8), no el modelo. El panel elige si Piko decide solo o sugiere y el
+maestro confirma, y las teclas ✓ y ↻ siguen andando siempre.
+
+**Por qué.** Es lo que cambia de dónde sale el sí o el no, como preveía la 23,
+sin tocar el resto del ejercicio. El servicio va aparte porque es Python y pesa
+casi 4 GB: el puente sigue arrancando al instante y sigue andando si el oído no
+está.
+
+**Costo.** MMS-1b-all es CC-BY-NC 4.0: sirve para probar, no para el robot que
+se venda; omniASR (Apache 2.0) es el reemplazo a medir. El modelo aprendió de un
+lector adulto de la Biblia: mide parecido con su voz, no corrección, y con
+chicos va a fallar más. Por eso el maestro tiene la última palabra. El
+micrófono del navegador sólo anda por https o en localhost.
 
 ---
 
@@ -571,4 +625,7 @@ por estudiante: en un teléfono compartido, cada quien las ajusta al usarlo.
 - **Probar en dispositivos reales.** Hace falta un mínimo de dos teléfonos
   Android.
 - **Robot:** probar el servo y la segunda tira de LEDs, armarlo entero, y
-  que en el aula la cara entre por la red local y no por el túnel.
+  que en el aula la cara entre por la red local y no por el túnel (ojo: por
+  http en la red local el navegador no presta el micrófono).
+- **El oído con chicos de verdad**, en un aula, y comparar MMS-1b-all con
+  omniASR, que sí se puede usar en un robot que se venda.

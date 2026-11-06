@@ -5,6 +5,7 @@ import worker from '../src/index.js';
 import { agrupar, armarPaquetes, clavePalabra } from '../src/palabras.js';
 import { aFilas, limpiarTraducciones, muestraDelBanco, revisar, validarDefinicion } from '../public/js/reglas.js';
 import { d1Falso } from './d1-falso.mjs';
+import { entrar } from './sesion.mjs';
 
 const def = JSON.parse(readFileSync(new URL('../definiciones/tu-lengua.json', import.meta.url), 'utf8'));
 const palabras = def.secciones[1].preguntas[0];
@@ -105,16 +106,18 @@ let env;
 beforeEach(() => {
   env = { DB: d1Falso(), ADMIN_TOKEN: TOKEN };
 });
-const llamar = (ruta, { method = 'GET', body, token } = {}) =>
-  worker.fetch(
+async function llamar(ruta, { method = 'GET', body, token } = {}) {
+  const jwt = token ? (await entrar(env, token)).jwt : null;
+  return worker.fetch(
     new Request(`https://encuestas.test${ruta}`, {
       method,
-      headers: { ...(body ? { 'content-type': 'application/json' } : {}), ...(token ? { authorization: `Bearer ${token}` } : {}) },
+      headers: { ...(body ? { 'content-type': 'application/json' } : {}), ...(jwt ? { authorization: `Bearer ${jwt}` } : {}) },
       body: body ? JSON.stringify(body) : undefined,
     }),
     env,
     { waitUntil() {} },
   );
+}
 
 function respuesta(lengua, region, traducciones, permiso = 'si') {
   return {

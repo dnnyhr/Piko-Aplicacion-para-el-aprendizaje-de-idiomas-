@@ -5,6 +5,7 @@ import worker from '../src/index.js';
 import { armarCorreo, limpiarNombre, nombreDesdeCorreo } from '../src/correo.js';
 import { esCorreo, esTelefono, revisar } from '../public/js/reglas.js';
 import { d1Falso } from './d1-falso.mjs';
+import { entrar } from './sesion.mjs';
 
 const real = JSON.parse(readFileSync(new URL('../definiciones/que-le-falta-a-piko.json', import.meta.url), 'utf8'));
 const TOKEN = 'secreto-de-prueba';
@@ -84,7 +85,11 @@ const ctx = { waitUntil: (p) => pendientes.push(p) };
 async function llamar(ruta, { method = 'GET', body, token } = {}) {
   const h = {};
   if (body !== undefined) h['content-type'] = 'application/json';
-  if (token) h.authorization = `Bearer ${token}`;
+  if (token) {
+    const s = await entrar(env, token, h['cf-connecting-ip']);
+    if (!s.jwt) return s.res;
+    h.authorization = `Bearer ${s.jwt}`;
+  }
   const res = await worker.fetch(
     new Request(`https://encuestas.test${ruta}`, { method, headers: h, body: body === undefined ? undefined : JSON.stringify(body) }),
     env,

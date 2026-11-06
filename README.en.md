@@ -64,8 +64,10 @@ showing animated expressions and speaking.
 *Working today (prototype):* the teacher drives Piko from their phone's browser
 — expressions, lights, movement and spoken phrases — and runs the first complete
 exercise: Piko shows a word, asks the child to say it, and either celebrates or
-shows again how it is said. For now **the teacher is the one who listens** and
-presses one of two keys. See [`robot/README.md`](robot/README.md) (Spanish).
+shows again how it is said. And now **Piko listens**: a Meta model that knows
+Miskito compares what the child said with the word, and the panel chooses
+whether Piko decides alone or suggests and the teacher confirms. It is a
+prototype: the teacher can always overrule it with two keys. See [`robot/README.md`](robot/README.md) (Spanish).
 
 *Planned:* forming mixed-level groups for peer teaching and rotating them
 between sessions, and a lightweight speech model on the classroom computer that
@@ -148,7 +150,7 @@ in a browser — a development build is required. See [`app/README.md`](app/READ
 The robot bridge and the surveys have their own checks, which CI also runs:
 
 ```bash
-cd robot/panel && npm install && npm run prueba   # 44 bridge checks, no board needed
+cd robot/panel && npm install && npm run prueba   # 61 bridge checks, no board needed
 cd encuestas && npm install && npm run prueba     # Worker against an in-memory D1
 npm run validar                                   # survey definitions
 ```

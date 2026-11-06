@@ -48,6 +48,7 @@ import { VerEscrito } from '../../instrucciones/VerEscrito';
 import { textoDelAudio } from '../../../core/preferencias/escrito';
 import { espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
 import { crearEstilos, useColor } from '../../../ui/tema';
+import { usePausaLogros } from '../../logros/store';
 
 const HORIZONTE = 236;
 const TAM_CHIBOLA = 46;
@@ -115,6 +116,8 @@ const FLORES = [
 export function JuegoChibolas({ retos, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoChibolasProps) {
   const styles = useEstilos();
   const color = useColor();
+  // Un logro ganado a mitad de la ronda se festeja al terminarla.
+  usePausaLogros();
   const { t, frases, idioma } = useTextos();
   const [paso, setPaso] = useState(0);
   const [probadas, setProbadas] = useState<number[]>([]);

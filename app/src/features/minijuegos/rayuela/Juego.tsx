@@ -32,6 +32,7 @@ import { Tablero, type Casilla } from './Tablero';
 import { Globito } from '../../../ui/minijuegos/Iconos';
 import { espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
 import { crearEstilos, useColor } from '../../../ui/tema';
+import { usePausaLogros } from '../../logros/store';
 
 /** Dónde termina el cielo y empieza el patio. */
 const HORIZONTE = 236;
@@ -52,6 +53,8 @@ type Resultado = null | 'acierto' | 'intento';
 export function Juego({ preguntas, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoProps) {
   const styles = useEstilos();
   const color = useColor();
+  // Un logro ganado a mitad de la ronda se festeja al terminarla.
+  usePausaLogros();
   const { t, frases, idioma } = useTextos();
   const [paso, setPaso] = useState(0);
   const [pikoEn, setPikoEn] = useState<number | 'inicio'>('inicio');

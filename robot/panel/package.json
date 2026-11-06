@@ -8,7 +8,8 @@
   "scripts": {
     "start": "node server.js",
     "prueba": "node prueba-puente.mjs",
-    "puertos": "node server.js --listar"
+    "puertos": "node server.js --listar",
+    "oido": "node oido.mjs"
   },
   "dependencies": {
     "serialport": "^13.0.0",

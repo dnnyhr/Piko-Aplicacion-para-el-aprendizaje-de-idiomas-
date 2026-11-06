@@ -9,6 +9,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
 <meta name="theme-color" content="#0F5D3D">
+<!-- La API de las encuestas en el servidor de Azure (despliegue/). No es un
+     secreto: el navegador la necesita para pedir el contador de la comunidad. -->
+<meta name="piko-api" content="https://api.piko.mugiware.com">
 <link rel="canonical" href="https://piko.mugiware.com/">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="Equipo MugiWare">
@@ -272,6 +275,24 @@
         <h3>El progreso es del estudiante</h3>
         <p>Queda guardado por persona, no por aparato. En aulas donde los dispositivos se comparten, esto no es un detalle.</p>
       </article>
+    </div>
+  </div>
+</section>
+
+<!-- Se muestra solo si la API responde (portada.js): sin conexión, la portada queda igual que siempre. -->
+<section class="seccion seccion--hondo comunidad" id="comunidad" hidden>
+  <div class="wrap">
+    <div class="comunidad__grid">
+      <div>
+        <p class="eyebrow">La comunidad <span class="en-vivo">en vivo</span></p>
+        <h2>Piko aprende de la gente que habla estas lenguas.</h2>
+        <p>Cada palabra que alguien escribe en la encuesta <em>Tu lengua en Piko</em> se revisa y se convierte en lecciones de la app. Estos números se actualizan solos.</p>
+        <div class="acciones"><a class="btn btn--solido" data-api-enlace="/e/tu-lengua" href="#">Enseñale una palabra a Piko</a></div>
+      </div>
+      <ul class="cifras">
+        <li class="cifra"><b data-contador="personas">0</b><span>personas ya respondieron las encuestas de Piko.</span></li>
+        <li class="cifra"><b data-contador="palabras">0</b><span>palabras y frases aportadas en su propia lengua.</span></li>
+      </ul>
     </div>
   </div>
 </section>

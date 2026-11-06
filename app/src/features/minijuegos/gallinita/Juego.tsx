@@ -57,6 +57,7 @@ import { VerEscrito } from '../../instrucciones/VerEscrito';
 import { textoDelAudio } from '../../../core/preferencias/escrito';
 import { espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
 import { crearEstilos, useColor } from '../../../ui/tema';
+import { usePausaLogros } from '../../logros/store';
 
 const HORIZONTE = 226;
 const PIKO = 92;
@@ -108,6 +109,8 @@ function Oscuridad({ r }: { r: number }) {
 export function JuegoGallinita({ rondas, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoGallinitaProps) {
   const styles = useEstilos();
   const color = useColor();
+  // Un logro ganado a mitad de la ronda se festeja al terminarla.
+  usePausaLogros();
   const { t, frases, idioma } = useTextos();
   const [indice, setIndice] = useState(0);
   const [partida, setPartida] = useState<EstadoGallinita>(partidaNueva);

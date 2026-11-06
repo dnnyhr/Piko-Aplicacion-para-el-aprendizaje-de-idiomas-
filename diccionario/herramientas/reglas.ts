@@ -1,14 +1,16 @@
 /**
- * La página de reglas del sitio (web/reglas/), sacada de `<lengua>/gramatica.md`.
+ * La página de reglas del sitio (web/reglas/).
  *
- * Sólo van las reglas sólidas (confianza A): 3 ejemplos o más y ningún
- * contraejemplo. Las probables y las hipótesis quedan en gramatica.md, igual
- * que las palabras en revisión quedan fuera del diccionario del sitio. Y sin
- * lo técnico: las glosas palabra por palabra, las predicciones y las
- * hipótesis no se publican.
+ * Dos archivos de `<lengua>/`:
+ * - `gramatica.md` decide qué reglas se publican: sólo las sólidas
+ *   (confianza A: 3 ejemplos o más y ningún contraejemplo), y en qué sección.
+ *   Las probables y las hipótesis quedan fuera, igual que las palabras en
+ *   revisión quedan fuera del diccionario del sitio.
+ * - `reglas-sitio.md` tiene el texto que se muestra: formal, sin nombrar a
+ *   quienes contestaron las encuestas y sin la historia del trabajo, que viven
+ *   en gramatica.md.
  *
- * El texto de cada regla se escribe en gramatica.md y en ningún otro lado;
- * acá sólo se pasa de Markdown a HTML.
+ * Acá sólo se cruzan los dos y se pasa de Markdown a HTML.
  */
 
 export interface Regla {
@@ -26,9 +28,6 @@ const SECCIONES: Record<string, { id: string; nombre: string }> = {
   Vocabulario: { id: 'vocabulario', nombre: 'Vocabulario' },
   'Los números': { id: 'numeros', nombre: 'Los números' },
 };
-
-/** Párrafos que no se publican: lo que todavía no se sabe, o que es sólo para el equipo. */
-const NO_VA = /^\*\*(Predicci|Hipótesis|Dos hipótesis|Para Piko|Lo que decía|Historia|Contraejemplo)/;
 
 const escapar = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c);
 
@@ -91,30 +90,49 @@ function bloqueHtml(b: string, codigos: Set<string>): string {
   return `<p>${enLinea(lineas.join(' '), codigos)}</p>`;
 }
 
-/** Las reglas sólidas de gramatica.md, en orden, con su texto en HTML. */
-export function reglasSolidas(md: string): Regla[] {
-  const crudas: { codigo: string; titulo: string; seccion: string; cuerpo: string }[] = [];
+/** Código → sección, de las reglas de confianza A de gramatica.md. */
+function solidas(gramatica: string): Map<string, string> {
+  const salida = new Map<string, string>();
   let seccion = '';
-  const partes = md.split(/^(?=#{2,3} )/m);
-  for (const parte of partes) {
-    const h2 = /^## (.+)$/m.exec(parte);
-    if (parte.startsWith('## ') && h2) {
-      seccion = h2[1]!.trim();
-      continue;
-    }
-    const h3 = /^### ([A-Z]\d+) · (.+?) — Confianza ([ABC])\b.*$/m.exec(parte);
-    if (!h3 || h3[3] !== 'A' || !SECCIONES[seccion]) continue;
-    crudas.push({ codigo: h3[1]!, titulo: h3[2]!.trim(), seccion, cuerpo: parte.slice(parte.indexOf('\n') + 1) });
+  for (const linea of gramatica.split('\n')) {
+    const h2 = /^## (.+)$/.exec(linea);
+    if (h2) seccion = h2[1]!.trim();
+    const h3 = /^### ([A-Z]\d+) · .+ — Confianza ([ABC])\b/.exec(linea);
+    if (h3 && h3[2] === 'A' && SECCIONES[seccion]) salida.set(h3[1]!, seccion);
   }
+  return salida;
+}
+
+/** Las reglas de reglas-sitio.md: código, título y cuerpo en Markdown. */
+function textos(sitio: string) {
+  return sitio
+    .split(/^(?=### )/m)
+    .map((parte) => /^### ([A-Z]\d+) · (.+)$/m.exec(parte) && { parte, m: /^### ([A-Z]\d+) · (.+)$/m.exec(parte)! })
+    .filter(Boolean)
+    .map((x) => ({ codigo: x!.m[1]!, titulo: x!.m[2]!.trim(), cuerpo: x!.parte.slice(x!.parte.indexOf('\n') + 1) }));
+}
+
+/** Lo que no cuadra entre los dos archivos (para validate:diccionario). */
+export function problemasDeLasReglas(gramatica: string, sitio: string): string[] {
+  const a = solidas(gramatica);
+  return textos(sitio)
+    .filter((r) => !a.has(r.codigo))
+    .map((r) => `reglas-sitio.md: ${r.codigo} no es una regla de confianza A en gramatica.md (no se publica)`);
+}
+
+/** Las reglas que se publican, en el orden de reglas-sitio.md, con su texto en HTML. */
+export function reglasSolidas(gramatica: string, sitio: string): Regla[] {
+  const a = solidas(gramatica);
+  const crudas = textos(sitio).filter((r) => a.has(r.codigo));
   const codigos = new Set(crudas.map((r) => r.codigo));
   return crudas.map((r) => {
     const html = bloques(r.cuerpo)
-      .filter((b) => !NO_VA.test(b.trim()) && !b.startsWith('---'))
+      .filter((b) => !b.startsWith('---'))
       .map((b) => bloqueHtml(b, codigos));
     // Lo primero se ve siempre; el resto, al abrir la tarjeta.
     const [primero = '', ...resto] = html;
-    const mas = resto.length ? `<details><summary>Ver más</summary>${resto.join('')}</details>` : '';
-    return { codigo: r.codigo, titulo: r.titulo, seccion: r.seccion, html: primero + mas };
+    const mas = resto.length ? `<details><summary>Ver ejemplos</summary>${resto.join('')}</details>` : '';
+    return { codigo: r.codigo, titulo: r.titulo, seccion: a.get(r.codigo)!, html: primero + mas };
   });
 }
 
