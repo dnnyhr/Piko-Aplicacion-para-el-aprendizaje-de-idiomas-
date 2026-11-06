@@ -28,7 +28,7 @@ robot/
     ├── server.js        serie ↔ WebSocket, voz y archivos
     ├── consola.mjs      monitor serie por línea de comandos
     ├── prueba-puente.mjs  las comprobaciones automáticas
-    └── public/          el panel (index.html), la cara (cara.html), caras y sonidos
+    └── public/          el panel (index.html, panel.css, panel-vista.js), la cara (cara.html), caras y sonidos
 ```
 
 **Qué hace falta:** Node 22 o más nuevo para el puente, y
@@ -47,7 +47,7 @@ con las bibliotecas **Servo** y **Adafruit NeoPixel** para el firmware.
 |---|---|
 | 4× WS2812 · pin 28 | **anda** |
 | 28BYJ-48 · PORT2 | **anda** — gira; falta confirmar que 4096 sea vuelta exacta |
-| Panel, puente y reparto de roles | **anda** — 44 comprobaciones automáticas |
+| Panel, puente y reparto de roles | **anda** — 53 comprobaciones automáticas |
 | Voz de Google y ejercicio simulado | **anda** — probado de punta a punta en el navegador, sin placa |
 | Cara en el navegador | **anda** — las ocho expresiones, con la mirada animada |
 | La boca sigue a la voz | **anda** — probada con una onda de sílabas medidas |

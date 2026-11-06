@@ -1,0 +1,670 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   El panel de Pikobot.
+
+   La página es una aplicación de una sola pantalla: arriba el estado, en el
+   medio la hoja que se desplaza y la parada siempre a la vista. Lo que ordena
+   todo es el armazón `.app`, una grilla de alto completo. Por eso la parada no
+   necesita `position:fixed`: es una fila de la grilla, y ninguna hoja larga
+   puede taparla ni empujarla fuera de la pantalla.
+
+   Todo lo que se aprieta mide al menos 56 píxeles de alto. Por debajo de eso, un
+   dedo falla. En un teléfono no hay «hover», así que apretar achica el botón:
+   es la única confirmación de que el dedo dio en el blanco.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+:root{
+  --verde-noche:#063D22;
+  --verde-hondo:#0A4530;
+  --verde-piko:#0F5D3D;
+  --verde-bosque:#197249;
+  --verde-pasto:#97C137;
+  --verde-brote:#E4EFC6;
+  --crema:#FBF6EA;
+  --papel:#FFFDF7;
+  --papel-hondo:#F1E9D8;
+  --borde:#E5DAC3;
+  --pico:#F2B632;
+  --pico-hondo:#B07715;
+  --pico-claro:#FDF0CC;
+  --grafito:#16241D;
+  --gris:#5C6B62;
+  --alarma:#C62B1F;
+  --alarma-hondo:#8E1F16;
+  --sombra:0 1px 2px rgba(6,61,34,.06), 0 8px 24px -10px rgba(6,61,34,.22);
+  --sombra-boton:0 1px 2px rgba(6,61,34,.12), 0 4px 10px -4px rgba(6,61,34,.28);
+  --radio:22px;
+  --radio-boton:16px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--verde-noche);
+  color:var(--grafito);
+  font-family:Fredoka,"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.4;
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+  overflow:hidden;
+}
+h1,h2,p,dl,dd{margin:0}
+[hidden]{display:none !important}
+
+.ico{
+  width:1.35em; height:1.35em; flex:none;
+  fill:none; stroke:currentColor; stroke-width:2;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+
+/* ---------- el armazón ---------- */
+.app{
+  height:100vh; height:100dvh;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  grid-template-rows:auto auto auto minmax(0,1fr) auto;
+  grid-template-areas:
+    "marca  general"
+    "chips  chips"
+    "nav    nav"
+    "hoja   hoja"
+    "parada parada";
+  background:var(--verde-noche);
+  padding-top:env(safe-area-inset-top, 0px);
+}
+
+/* ---------- identidad ---------- */
+.marca{
+  grid-area:marca; min-width:0;
+  display:flex; align-items:center; gap:.6rem;
+  padding:.55rem .25rem .35rem .8rem;
+  color:var(--crema);
+}
+.marca img{width:40px; height:40px; border-radius:13px; flex:none; box-shadow:0 0 0 2px rgba(255,255,255,.14)}
+.marca h1{font-size:1.2rem; font-weight:700; line-height:1.1; letter-spacing:-.01em}
+.marca p{font-size:.72rem; opacity:.72; white-space:nowrap}
+
+/* ---------- el estado general ---------- */
+.general{
+  grid-area:general; align-self:center;
+  display:inline-flex; align-items:center; gap:.45rem;
+  margin:.45rem .75rem .25rem 0; padding:.42rem .75rem;
+  max-width:52vw;
+  border-radius:999px; font-size:.82rem;
+  background:rgba(255,255,255,.1); color:var(--crema);
+}
+.general b{font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.general__luz{width:10px; height:10px; border-radius:50%; flex:none; background:currentColor}
+.general[data-tono="bien"]{background:var(--verde-pasto); color:var(--verde-noche)}
+.general[data-tono="ocupado"]{background:var(--pico); color:var(--grafito)}
+.general[data-tono="ocupado"] .general__luz{animation:titilar 1s ease-in-out infinite}
+.general[data-tono="atento"]{background:var(--pico-claro); color:#6A4708}
+.general[data-tono="mal"]{background:#F9D8D3; color:var(--alarma-hondo)}
+
+/* ---------- los eslabones ---------- */
+.chips{
+  grid-area:chips; min-width:0;
+  display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.3rem;
+  padding:.15rem .7rem .45rem;
+}
+.chip{
+  display:flex; align-items:center; justify-content:center; gap:.32rem; min-width:0;
+  background:rgba(255,255,255,.09); color:var(--crema);
+  border-radius:999px; padding:.28rem .45rem; font-size:.74rem;
+  transition:background-color .25s;
+}
+.chip > span:last-child{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.chip.responde{background:rgba(151,193,55,.42)}
+.punto{width:9px; height:9px; border-radius:50%; background:#F0776A; flex:none}
+.punto.si{background:var(--verde-pasto); box-shadow:0 0 0 3px rgba(151,193,55,.24)}
+.punto.late{animation:latir .4s ease-out}
+/* El punto del latido lo enciende la lógica una vez y queda; esto lo apaga cuando
+   la telemetría deja de llegar. */
+.chip.sin .punto{background:#F0776A; box-shadow:none}
+@keyframes latir{from{transform:scale(2); opacity:.35} to{transform:scale(1); opacity:1}}
+@keyframes titilar{50%{opacity:.35}}
+
+/* ---------- navegación ---------- */
+.nav{
+  grid-area:nav; min-width:0;
+  display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:.1rem;
+  padding:0 .3rem;
+}
+button{
+  font:inherit; cursor:pointer; border:none; color:inherit; background:none;
+  touch-action:manipulation;
+}
+.nav__item{
+  position:relative;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.12rem;
+  min-height:56px; padding:.35rem 0 .4rem;
+  border-radius:15px 15px 0 0;
+  color:rgba(251,246,234,.74); font-size:.68rem; font-weight:500;
+  transition:background-color .12s, color .12s;
+}
+.nav__item .ico{width:22px; height:22px}
+.nav__item[aria-current="page"]{background:var(--crema); color:var(--verde-piko); font-weight:600}
+/* Hay algo corriendo ahí dentro aunque se esté mirando otra sección. */
+.nav__item.vivo::after{
+  content:""; position:absolute; top:7px; left:calc(50% + 8px);
+  width:9px; height:9px; border-radius:50%;
+  background:var(--pico); box-shadow:0 0 0 2px var(--verde-noche);
+}
+
+/* ---------- la hoja ---------- */
+.hoja{
+  grid-area:hoja; min-width:0; min-height:0;
+  background:var(--crema);
+  overflow-y:auto; overscroll-behavior:contain;
+  padding:.75rem .75rem 1rem;
+  -webkit-overflow-scrolling:touch;
+}
+.vista{display:none; gap:.75rem}
+.vista.activa{display:grid; grid-template-columns:minmax(0,1fr)}
+
+.aviso{
+  display:flex; align-items:center; gap:.5rem;
+  margin-bottom:.75rem; padding:.6rem .8rem;
+  border-radius:14px; font-size:.86rem; font-weight:500;
+  background:var(--pico-claro); color:#6A4708;
+}
+.aviso.grave{background:#F9D8D3; color:var(--alarma-hondo)}
+
+/* ---------- las tarjetas ---------- */
+.tarjeta{
+  min-width:0;
+  background:var(--papel);
+  border:1px solid var(--borde);
+  border-radius:var(--radio);
+  box-shadow:var(--sombra);
+  padding:.9rem;
+}
+.tarjeta h2{
+  display:flex; align-items:center; gap:.5rem;
+  font-size:1.02rem; font-weight:600; color:var(--verde-noche);
+  margin-bottom:.7rem;
+}
+.tarjeta h2 .ico{
+  box-sizing:content-box; width:18px; height:18px; padding:6px;
+  border-radius:11px; background:var(--verde-brote); color:var(--verde-piko);
+}
+.nota{font-size:.8rem; color:var(--gris); margin-top:.65rem; line-height:1.4}
+.rotulo{font-size:.82rem; font-weight:500; color:var(--gris); margin:.8rem 0 .4rem}
+.vacio{font-size:.86rem; color:var(--gris); font-style:italic}
+
+/* Lo que se lee una vez y después estorba. */
+.ayuda{margin-top:.6rem; font-size:.8rem; color:var(--gris)}
+.ayuda summary{
+  cursor:pointer; list-style:none; min-height:32px;
+  display:flex; align-items:center; gap:.35rem;
+  font-weight:500; color:var(--verde-bosque);
+}
+.ayuda summary::-webkit-details-marker{display:none}
+.ayuda summary::before{content:"?"; display:grid; place-items:center; width:18px; height:18px; border-radius:50%; background:var(--verde-brote); font-size:.72rem; font-weight:700}
+.ayuda p{margin-top:.3rem; line-height:1.45}
+
+/* ---------- las teclas ---------- */
+.tecla, .preset, .cara, .frase, .atajo{
+  transition:transform .08s, background-color .12s, box-shadow .12s;
+}
+.tecla{
+  display:inline-flex; align-items:center; justify-content:center; gap:.45rem;
+  min-height:56px; padding:.6rem .7rem;
+  border-radius:var(--radio-boton);
+  background:var(--papel-hondo); color:var(--grafito);
+  font-size:.95rem; font-weight:550;
+  box-shadow:inset 0 0 0 1px var(--borde);
+}
+.tecla:active, .preset:active, .cara:active, .frase:active, .atajo:active{transform:scale(.96)}
+.tecla--verde{background:var(--verde-piko); color:var(--crema); box-shadow:var(--sombra-boton)}
+.tecla--ambar{background:var(--pico); color:var(--grafito); box-shadow:var(--sombra-boton)}
+.tecla--ancha{width:100%; margin-top:.5rem}
+
+.fila{display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.5rem}
+.fila > *{flex:1 1 0; min-width:0}
+.fila--decir > button{flex:2 1 0}
+.fila--palabra > :first-child{flex:2 1 0}
+.fila--palabra{margin-top:0}
+
+/* Lo que está puesto: relleno verde y el borde amarillo de Piko. */
+.tecla.puesto, .cara.puesta{
+  background:var(--verde-piko); color:var(--crema);
+  box-shadow:0 0 0 3px var(--pico);
+}
+
+.enlace{
+  display:inline-flex; align-items:center; gap:.2rem;
+  min-height:44px; padding:0 .15rem; margin-top:.2rem;
+  font-size:.86rem; font-weight:500; color:var(--verde-bosque);
+}
+.enlace .ico{width:16px; height:16px}
+
+/* ---------- Inicio: Piko ---------- */
+/* Fondo claro y no verde: las alas del dibujo son verdes y sobre verde se pierden. */
+.heroe{
+  min-width:0;
+  background:radial-gradient(110% 85% at 50% 22%, var(--papel) 0%, var(--verde-brote) 100%);
+  color:var(--verde-noche);
+  border:1px solid var(--borde);
+  border-radius:var(--radio);
+  box-shadow:var(--sombra);
+  padding:.8rem .8rem .7rem;
+}
+/* El robot es pikobot.svg tal como está dibujado. Encima de su pantalla va la cara
+   viva: los porcentajes salen del rectángulo de la pantalla en el dibujo (x 122,
+   y 142, 476 × 222,2) sobre su lienzo de 720 × 625. */
+.robot{
+  position:relative; width:min(100%,205px); aspect-ratio:720/625;
+  margin-inline:auto;
+}
+.robot > svg{position:absolute; inset:0; width:100%; height:100%; overflow:visible}
+#espejo{
+  position:absolute; z-index:1;
+  left:16.944%; top:22.72%; width:66.111%; height:35.552%;
+  border-radius:2.5%/5.4%; overflow:hidden;
+}
+/* El ala gira desde el hombro con el ángulo de la última orden. Conserva el verde
+   del dibujo: el color de la tira de ese lado se ve en el resplandor. */
+.robot__ala{
+  transform-box:view-box;
+  filter:drop-shadow(0 0 12px var(--brillo-ala,transparent));
+  transition:transform .28s cubic-bezier(.3,.9,.3,1);
+}
+.robot__ala--izq{transform-origin:130px 262.4px; transform:rotate(var(--giro-ala,0deg))}
+.robot__ala--der{transform-origin:590px 262.4px; transform:rotate(calc(var(--giro-ala,0deg) * -1))}
+.robot.arcoiris .robot__ala{animation:arcoiris 2.5s linear infinite}
+@keyframes arcoiris{to{filter:hue-rotate(360deg)}}
+/* Al abrir, sin teléfono y sin ninguna orden todavía, se ve el dibujo tal cual, con
+   su propia cara. La viva aparece encima con el teléfono o con la primera orden. */
+.robot.en-reposo #espejo{display:none}
+
+.datos{
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.35rem;
+  margin-top:.7rem;
+}
+.datos > div{min-width:0; padding:.32rem .55rem; border-radius:12px; background:rgba(255,255,255,.72)}
+.datos dt{font-size:.68rem; opacity:.74}
+.datos dd{font-size:.9rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.respuesta{
+  display:flex; align-items:center; gap:.45rem;
+  margin-top:.45rem; font-size:.76rem; opacity:.9;
+}
+.respuesta > span:last-child{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.respuesta__luz{width:8px; height:8px; border-radius:50%; flex:none; background:rgba(6,61,34,.3)}
+.respuesta__luz.bien{background:var(--verde-bosque)}
+.respuesta__luz.mal{background:var(--alarma)}
+
+/* ---------- Inicio: lo que hace ---------- */
+.acciones{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.5rem}
+.preset{
+  position:relative; min-width:0;
+  display:flex; align-items:center; gap:.55rem;
+  min-height:72px; padding:.55rem .6rem;
+  border-radius:var(--radio-boton); text-align:left;
+  background:var(--verde-piko); color:var(--crema);
+  font-size:1rem; font-weight:600; line-height:1.15;
+  box-shadow:var(--sombra-boton);
+}
+.preset__ico{
+  flex:none; display:grid; place-items:center;
+  width:38px; height:38px; border-radius:12px;
+  background:rgba(255,255,255,.14); color:var(--pico);
+}
+.preset__ico .ico{width:22px; height:22px}
+.preset__txt{min-width:0}
+.preset small{display:block; font-weight:400; font-size:.72rem; opacity:.84; margin-top:.14rem; line-height:1.2}
+.preset.corriendo{background:var(--pico); color:var(--grafito); box-shadow:0 0 0 3px rgba(242,182,50,.4)}
+.preset.corriendo .preset__ico{background:rgba(6,61,34,.14); color:var(--verde-noche)}
+.preset.corriendo .preset__ico::after{
+  content:""; position:absolute; top:7px; right:8px; width:9px; height:9px;
+  border-radius:50%; background:var(--verde-noche); animation:titilar 1s ease-in-out infinite;
+}
+.preset--corte{background:var(--papel-hondo); color:var(--grafito); box-shadow:inset 0 0 0 1px var(--borde)}
+.preset--corte .preset__ico{background:var(--papel); color:var(--gris)}
+
+/* ---------- la cruz de dirección ---------- */
+/* El dedo no tiene que leer: la posición del botón ya dice para dónde manda. */
+.cruz{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-areas:
+    ".   arriba ."
+    "izq centro der";
+  gap:.45rem; max-width:340px; margin-inline:auto;
+}
+.rumbo{flex-direction:column; gap:.05rem; min-height:64px; padding:.35rem .2rem}
+.rumbo[data-celda="arriba"]{grid-area:arriba}
+.rumbo[data-celda="izq"]{grid-area:izq}
+.rumbo[data-celda="centro"]{grid-area:centro}
+.rumbo[data-celda="der"]{grid-area:der}
+.rumbo .flecha{display:flex; line-height:1}
+.rumbo .rotulo{display:block; margin:0; font-size:.74rem; font-weight:500; color:inherit; opacity:.92}
+.rumbo.corriendo{background:var(--pico); color:var(--grafito); box-shadow:0 0 0 3px rgba(242,182,50,.4)}
+
+/* ---------- Inicio: decir algo ---------- */
+.rapido{display:flex; gap:.5rem}
+.rapido input{flex:1 1 auto; min-width:0}
+.rapido .tecla{flex:none; padding-inline:1.05rem}
+
+/* ---------- Inicio: los atajos ---------- */
+.atajos{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.5rem}
+.atajo{
+  min-width:0; display:flex; align-items:center; gap:.55rem;
+  min-height:64px; padding:.5rem .65rem;
+  background:var(--papel); border:1px solid var(--borde);
+  border-radius:var(--radio-boton); box-shadow:var(--sombra); text-align:left;
+}
+.atajo > .ico{color:var(--verde-piko); width:24px; height:24px}
+.atajo > span{min-width:0; display:block}
+.atajo b{display:block; font-weight:600; font-size:.9rem; color:var(--verde-noche); line-height:1.15}
+.atajo small{display:block; font-size:.74rem; color:var(--gris); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+
+/* ---------- campos ---------- */
+label{display:block; font-size:.82rem; font-weight:500; color:var(--gris); margin:.55rem 0 .2rem}
+.fila label:first-child, .fila--palabra label{margin-top:0}
+textarea, select, input[type=text], input[type=number]{
+  width:100%; min-height:56px; padding:.7rem .75rem;
+  font:inherit; font-size:1rem; color:var(--grafito);
+  background:#fff; border:2px solid var(--borde); border-radius:var(--radio-boton);
+}
+textarea{resize:vertical; min-height:92px}
+input:focus-visible, textarea:focus-visible, select:focus-visible{
+  outline:3px solid var(--verde-pasto); outline-offset:1px;
+}
+button:focus-visible, summary:focus-visible{outline:3px solid var(--verde-pasto); outline-offset:2px}
+
+.medida{display:flex; align-items:baseline; justify-content:space-between}
+.medida label{margin:0}
+.valor{font-size:1.7rem; font-weight:600; line-height:1.1; color:var(--verde-piko); font-variant-numeric:tabular-nums}
+
+/* Pista gorda y perilla grande: en un teléfono una fina es imposible de agarrar.
+   El relleno lo pinta `--lleno`, que panel-vista.js mantiene al día. */
+input[type=range]{
+  -webkit-appearance:none; appearance:none;
+  width:100%; height:44px; margin:.1rem 0 .35rem; background:none; cursor:pointer;
+}
+input[type=range]::-webkit-slider-runnable-track{
+  height:12px; border-radius:999px;
+  background:linear-gradient(to right, var(--verde-bosque) var(--lleno,50%), var(--papel-hondo) var(--lleno,50%));
+}
+input[type=range]::-moz-range-track{height:12px; border-radius:999px; background:var(--papel-hondo)}
+input[type=range]::-moz-range-progress{height:12px; border-radius:999px; background:var(--verde-bosque)}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; width:32px; height:32px; margin-top:-10px;
+  border-radius:50%; background:var(--pico); border:4px solid #fff;
+  box-shadow:0 2px 7px rgba(6,61,34,.4);
+}
+input[type=range]::-moz-range-thumb{
+  width:24px; height:24px; border-radius:50%; background:var(--pico); border:4px solid #fff;
+  box-shadow:0 2px 7px rgba(6,61,34,.4);
+}
+
+/* ---------- mover ---------- */
+.tecla--pos{flex-direction:column; gap:.1rem; min-height:68px}
+.tarjeta--aleteo{display:flex; flex-direction:column}
+.sostener{
+  flex-direction:column; gap:.15rem; width:100%; flex:1 1 auto; min-height:124px;
+  font-size:1.25rem; font-weight:600;
+  touch-action:none; user-select:none; -webkit-user-select:none;
+}
+.sostener .ico{width:32px; height:32px; color:var(--pico)}
+.sostener small{font-size:.8rem; font-weight:400; opacity:.86}
+.sostener.activo{
+  background:var(--pico); color:var(--grafito);
+  box-shadow:0 0 0 5px rgba(242,182,50,.4); transform:scale(.98);
+}
+.sostener.activo .ico{color:var(--verde-noche)}
+
+/* ---------- luces ---------- */
+.modulos{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.5rem}
+.modulo{margin:0; display:flex; flex-direction:column; gap:.25rem}
+.modulo input[type=color]{
+  width:100%; height:72px; padding:0; cursor:pointer;
+  border:2px solid var(--borde); border-radius:var(--radio-boton); background:none;
+}
+.modulo input[type=color]::-webkit-color-swatch-wrapper{padding:4px}
+.modulo input[type=color]::-webkit-color-swatch{border:none; border-radius:11px}
+.modulo input[type=color]::-moz-color-swatch{border:none; border-radius:11px}
+.colores{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.4rem}
+.muestra{flex-direction:column; gap:.22rem; padding:.45rem .1rem; font-size:.8rem; min-height:68px}
+.muestra i{width:24px; height:24px; border-radius:50%; box-shadow:inset 0 0 0 1px rgba(6,61,34,.22)}
+.efectos{display:grid; grid-template-columns:repeat(auto-fit,minmax(92px,1fr)); gap:.4rem}
+.efecto{flex-direction:column; gap:.1rem; font-size:.84rem; min-height:64px; padding:.4rem .2rem}
+
+/* ---------- caras y sonidos ---------- */
+.caras{display:grid; grid-template-columns:repeat(auto-fill,minmax(112px,1fr)); gap:.5rem}
+.cara{
+  min-width:0; display:flex; flex-direction:column; gap:.25rem;
+  min-height:56px; padding:.35rem .35rem .4rem;
+  border-radius:var(--radio-boton);
+  background:var(--papel-hondo); color:var(--grafito);
+  font-size:.84rem; font-weight:550; text-align:center;
+  box-shadow:inset 0 0 0 1px var(--borde);
+}
+.cara img{display:block; width:100%; aspect-ratio:647/302; object-fit:cover; border-radius:10px; background:#659327}
+#listaSonidos{display:flex; flex-direction:column; gap:.4rem; max-height:280px; overflow-y:auto}
+#listaSonidos .tecla{justify-content:flex-start; text-align:left; flex:none}
+#listaSonidos .ico{color:var(--verde-bosque)}
+
+/* ---------- frases ---------- */
+/* Son etiquetas y no teclas: son muchas y cortas, y en fila ocupan lo que cada
+   una necesita. Igual llegan a 44 píxeles de alto, lo mínimo que un dedo acierta. */
+.frases{display:flex; flex-wrap:wrap; gap:.4rem}
+.frase{
+  display:inline-flex; align-items:center; gap:.4rem;
+  min-height:44px; padding:.4rem .85rem; font-size:.9rem; font-weight:500;
+  background:var(--verde-brote); color:var(--verde-noche);
+  border-radius:999px; text-align:left;
+}
+.frase .borrar{
+  font-size:1.15rem; line-height:1; opacity:.55;
+  margin-right:-.25rem; padding:.3rem .35rem;
+}
+.frase .borrar:hover{opacity:1}
+
+/* ---------- ejercicio ---------- */
+/* El maestro está mirando al chico, no al teléfono: cuando vuelve la vista tiene
+   que saber de un vistazo si Piko está hablando o esperando. */
+.paso{
+  display:flex; align-items:center; gap:.5rem;
+  padding:.65rem .8rem; border-radius:14px;
+  background:var(--verde-noche); color:var(--crema); font-size:.9rem;
+}
+.paso b{font-weight:550}
+button:disabled{opacity:.42; cursor:default; box-shadow:none; transform:none}
+
+/* ---------- consola ---------- */
+.consola{
+  background:var(--verde-noche); color:#CFE8D8; border-radius:14px;
+  padding:.7rem .8rem; height:230px; overflow-y:auto;
+  font-family:ui-monospace,"Cascadia Code",Consolas,monospace;
+  font-size:.76rem; line-height:1.5;
+}
+.consola div{white-space:pre-wrap; word-break:break-word}
+.ent{color:#9FD4B4} .sal{color:var(--pico)} .mal{color:#FF9C8F}
+
+/* ---------- un error que no se puede pasar por alto ---------- */
+.brindis{
+  position:fixed; z-index:40; left:50%; bottom:calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  transform:translateX(-50%);
+  width:max-content; max-width:calc(100vw - 2rem);
+  margin:0; padding:.6rem 1rem; border-radius:14px;
+  background:var(--grafito); color:#FFC9C1; font-size:.86rem;
+  box-shadow:0 10px 26px -8px rgba(0,0,0,.5);
+}
+
+/* ---------- la parada ---------- */
+/* No se parece a ningún otro botón a propósito: es el único rojo, el único con
+   marco de obra y el único que ocupa todo el ancho. Va abajo porque cuando algo
+   se mueve mal la mano ya está ahí sosteniendo el teléfono, y estirarse hasta el
+   encabezado cuesta un segundo que es justo el que no hay. */
+.parada{
+  grid-area:parada;
+  display:flex; align-items:center; justify-content:center; gap:.6rem;
+  min-height:64px; width:100%;
+  padding:.5rem 1rem;
+  padding-bottom:calc(.5rem + env(safe-area-inset-bottom, 0px));
+  border-top:6px solid transparent;
+  border-image:repeating-linear-gradient(-45deg, var(--pico) 0 14px, var(--grafito) 14px 28px) 6;
+  background:var(--alarma); color:#fff;
+  font-size:1.08rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  transition:background-color .08s;
+}
+.parada .ico{width:28px; height:28px; stroke-width:2.2}
+.parada:active{background:var(--alarma-hondo)}
+.parada.dada{background:var(--alarma-hondo)}
+
+@media (prefers-reduced-motion:reduce){
+  .tecla, .preset, .cara, .frase, .atajo, .chip, .robot__ala{transition:none}
+  .punto.late, .general[data-tono="ocupado"] .general__luz, .robot.arcoiris .robot__ala,
+  .preset.corriendo .preset__ico::after{animation:none}
+}
+
+/* ---------- teléfonos angostos ---------- */
+@media (max-width:359px){
+  .nav__item{font-size:.6rem}
+  .parada{font-size:.94rem; letter-spacing:.03em}
+  .preset small{display:none}
+}
+
+/* ---------- tabletas ---------- */
+@media (min-width:700px){
+  .app{
+    grid-template-columns:auto auto minmax(0,1fr);
+    grid-template-rows:auto auto minmax(0,1fr) auto;
+    grid-template-areas:
+      "marca  general chips"
+      "nav    nav     nav"
+      "hoja   hoja    hoja"
+      "parada parada  parada";
+  }
+  .marca{padding:.6rem .5rem .5rem 1rem}
+  .general{max-width:280px; margin:.4rem .5rem .4rem 0}
+  .chips{display:flex; justify-content:flex-end; align-items:center; padding:.5rem 1rem .5rem 0}
+  .chip{max-width:150px}
+  .nav{padding:0 .6rem}
+  .nav__item{flex-direction:row; gap:.4rem; font-size:.9rem; min-height:56px}
+  .nav__item.vivo::after{top:9px; left:auto; right:9px}
+  .hoja{padding:1rem}
+  .vista{gap:1rem}
+  .vista--dos.activa{grid-template-columns:repeat(2,minmax(0,1fr)); align-items:start}
+  .vista--cara.activa{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+  .tarjeta{padding:1.1rem}
+
+  .vista--inicio.activa{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    align-items:stretch;
+  }
+  .tarjeta--acciones{grid-column:1 / -1; grid-row:2}
+  .acciones{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .robot{width:min(100%,250px)}
+  .heroe{display:flex; flex-direction:column; justify-content:center}
+  .tarjeta--rapido, .atajos{grid-column:1 / -1}
+  .atajos{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .brindis{bottom:6rem}
+}
+
+/* ---------- computadoras ---------- */
+/* Riel a la izquierda con la marca, la navegación y la parada: así la parada
+   queda quieta en el mismo lugar haga lo que haga la hoja, y la hoja gana todo
+   el alto de la pantalla. */
+@media (min-width:1100px){
+  .app{
+    grid-template-columns:236px auto minmax(0,1fr);
+    grid-template-rows:auto minmax(0,1fr) auto;
+    grid-template-areas:
+      "marca  general chips"
+      "nav    hoja    hoja"
+      "parada hoja    hoja";
+  }
+  .marca{padding:1rem .75rem .9rem 1.1rem; gap:.7rem}
+  .marca img{width:46px; height:46px}
+  .marca h1{font-size:1.4rem}
+  .marca p{font-size:.8rem}
+  .general{margin:.55rem 1rem .55rem 1.5rem; font-size:.92rem; padding:.5rem .95rem}
+  .chips{padding:.7rem 1.4rem .7rem 0; gap:.4rem}
+  .chip{font-size:.82rem; padding:.34rem .75rem}
+
+  .nav{display:flex; flex-direction:column; align-content:start; gap:.2rem; padding:.25rem .75rem}
+  .nav__item{
+    flex-direction:row; justify-content:flex-start; gap:.7rem;
+    min-height:52px; padding:0 .85rem; border-radius:15px;
+    font-size:1rem;
+  }
+  .nav__item:hover{background:rgba(255,255,255,.08); color:var(--crema)}
+  .nav__item[aria-current="page"]:hover{background:var(--crema); color:var(--verde-piko)}
+  .nav__item.vivo::after{top:50%; right:14px; margin-top:-5px}
+
+  .hoja{border-top-left-radius:30px; padding:1.25rem 1.5rem 1.5rem}
+  .aviso, .vista{max-width:1280px; margin-inline:auto}
+  .aviso{margin-bottom:1rem}
+
+  .parada{
+    flex-direction:column; gap:.35rem;
+    width:auto; min-height:124px; margin:.75rem;
+    border:5px solid transparent; border-radius:22px;
+    background:
+      linear-gradient(var(--alarma),var(--alarma)) padding-box,
+      repeating-linear-gradient(-45deg, var(--pico) 0 12px, var(--grafito) 12px 24px) border-box;
+    border-image:none;
+    font-size:1rem; letter-spacing:.05em; line-height:1.15;
+    box-shadow:0 12px 26px -10px rgba(198,43,31,.75);
+  }
+  .parada .ico{width:36px; height:36px}
+  .parada:hover{filter:brightness(1.08)}
+  .parada:active, .parada.dada{
+    background:
+      linear-gradient(var(--alarma-hondo),var(--alarma-hondo)) padding-box,
+      repeating-linear-gradient(-45deg, var(--pico) 0 12px, var(--grafito) 12px 24px) border-box;
+  }
+
+  /* Inicio: Piko a la izquierda, lo que más se aprieta a la derecha, y todo en
+     una sola pantalla sin desplazarse. */
+  .vista--inicio.activa{
+    grid-template-columns:minmax(0,5fr) minmax(0,3.5fr) minmax(0,3.5fr);
+    grid-template-rows:auto auto auto;
+    grid-template-areas:
+      "heroe  acciones acciones"
+      "heroe  mirada   atajos"
+      "rapido mirada   atajos";
+  }
+  .heroe{grid-area:heroe}
+  .robot{width:min(100%,340px)}
+  .tarjeta--acciones{grid-area:acciones}
+  .tarjeta--mirada{grid-area:mirada}
+  .tarjeta--rapido{grid-area:rapido}
+  .atajos{grid-area:atajos; grid-template-columns:minmax(0,1fr)}
+  .tarjeta--mirada .nota{font-size:.76rem}
+  .brindis{left:calc(50% + 118px); bottom:1.5rem}
+}
+
+/* ---------- teléfono acostado ---------- */
+/* Con 360 píxeles de alto, una barra arriba y otra abajo no dejan hoja. La parada
+   pasa a ser una columna al costado, igual de grande e igual de fija, y lo que
+   es sólo información se comprime. Va al final para ganarles a las tabletas: un
+   teléfono acostado también mide más de 700 de ancho. */
+@media (max-height:520px) and (min-width:560px) and (max-width:1099px){
+  .app{
+    grid-template-columns:minmax(0,1fr) auto 124px;
+    grid-template-rows:auto auto minmax(0,1fr);
+    grid-template-areas:
+      "chips general parada"
+      "nav   nav     parada"
+      "hoja  hoja    parada";
+    padding-left:env(safe-area-inset-left, 0px);
+  }
+  .marca{display:none}
+  .general{margin:.3rem .5rem .2rem 0; padding:.28rem .65rem}
+  .chips{padding:.3rem .5rem .2rem}
+  .nav__item{flex-direction:row; gap:.3rem; min-height:44px; padding:.2rem 0}
+  .nav__item .ico{width:18px; height:18px}
+  .parada{
+    flex-direction:column; gap:.3rem; height:100%; padding:.5rem;
+    padding-right:calc(.5rem + env(safe-area-inset-right, 0px));
+    border-top:none; border-left:6px solid transparent;
+    font-size:.82rem; letter-spacing:.02em; line-height:1.15;
+  }
+  .parada .ico{width:34px; height:34px}
+  .brindis{bottom:1rem}
+}
