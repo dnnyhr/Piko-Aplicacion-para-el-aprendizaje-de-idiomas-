@@ -3,14 +3,23 @@ name: APK
 # Compila el APK de Piko en GitHub, sin la cola de EAS: Expo genera la carpeta
 # android/ localmente (prebuild) y Gradle compila. Unos 15 minutos.
 # El APK queda en la pestaña "Actions" → esta corrida → "Artifacts".
+#
+# Al subir una etiqueta `v*` (por ejemplo `git tag v0.2.0 && git push origin v0.2.0`)
+# además publica una release con el APK adjunto. piko.mugiware.com toma sola la
+# release más nueva que traiga un .apk, así que el botón de descarga se
+# actualiza sin tocar el sitio.
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
+    tags: ['v*']
     paths:
       - 'app/**'
       - '.github/workflows/apk.yml'
+
+permissions:
+  contents: write
 
 jobs:
   apk:
@@ -52,3 +61,16 @@ jobs:
           name: piko-apk
           path: app/android/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
+
+      - name: Nombre del APK para la release
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: cp android/app/build/outputs/apk/release/app-release.apk "piko-${GITHUB_REF_NAME}.apk"
+
+      - name: Publicar la release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          files: app/piko-${{ github.ref_name }}.apk
+          body_path: .github/release-notas.md
+          fail_on_unmatched_files: true
