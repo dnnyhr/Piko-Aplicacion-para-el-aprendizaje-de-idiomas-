@@ -4,15 +4,17 @@ name: APK
 # android/ localmente (prebuild) y Gradle compila. Unos 15 minutos.
 # El APK queda en la pestaña "Actions" → esta corrida → "Artifacts".
 #
-# Al subir una etiqueta `v*` (por ejemplo `git tag v0.2.0 && git push origin v0.2.0`)
-# además publica una release con el APK adjunto. piko.mugiware.com toma sola la
+# Publica además una release con el APK adjunto, en dos casos:
+#  - al subir una etiqueta `v*` (`git tag v0.2.0 && git push origin v0.2.0`);
+#  - con `[publicar]` en el mensaje del commit: usa la versión de app/app.json
+#    como etiqueta (v0.2.0) y la crea sola. piko.mugiware.com toma sola la
 # release más nueva que traiga un .apk, así que el botón de descarga se
 # actualiza sin tocar el sitio.
 
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, 'claude/**']
     tags: ['v*']
     paths:
       - 'app/**'
@@ -62,15 +64,29 @@ jobs:
           path: app/android/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
 
+      - name: ¿Se publica? ¿Con qué etiqueta?
+        id: version
+        env:
+          MENSAJE: ${{ github.event.head_commit.message }}
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "tag=$GITHUB_REF_NAME" >> "$GITHUB_OUTPUT"
+          elif [[ "$MENSAJE" == *"[publicar]"* ]]; then
+            echo "tag=v$(node -p "require('./app.json').expo.version")" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Nombre del APK para la release
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: cp android/app/build/outputs/apk/release/app-release.apk "piko-${GITHUB_REF_NAME}.apk"
+        if: steps.version.outputs.tag != ''
+        run: cp android/app/build/outputs/apk/release/app-release.apk "piko-${{ steps.version.outputs.tag }}.apk"
 
       - name: Publicar la release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: steps.version.outputs.tag != ''
         uses: softprops/action-gh-release@v2
         with:
-          name: ${{ github.ref_name }}
-          files: app/piko-${{ github.ref_name }}.apk
+          tag_name: ${{ steps.version.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: ${{ steps.version.outputs.tag }}
+          files: app/piko-${{ steps.version.outputs.tag }}.apk
           body_path: .github/release-notas.md
+          make_latest: true
           fail_on_unmatched_files: true
