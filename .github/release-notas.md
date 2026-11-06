@@ -1,4 +1,11 @@
-## Piko — conexión por hotspot rehecha
+## Piko 0.2.1 — el ícono de Piko
+
+- **La app ya tiene su ícono:** la cabeza de Piko en blanco sobre verde, igual
+  que en piko.mugiware.com. Antes mostraba el ícono de plantilla de Expo.
+  También cambia la pantalla de arranque.
+- Se instala encima de la 0.2.0 sin desinstalar nada.
+
+## De la 0.2.0: conexión por hotspot rehecha
 
 La sala del aula se rehízo desde abajo: ahora los teléfonos de los estudiantes
 encuentran solos el hotspot del maestro.
@@ -17,8 +24,9 @@ encuentran solos el hotspot del maestro.
 
 1. Descargá `piko-*.apk` de esta release en el teléfono.
 2. Permití instalar apps de orígenes desconocidos cuando el teléfono lo pida.
-3. **Si tenías una versión anterior de Piko, desinstalala primero:** esta
-   versión se compila de otra forma y Android no deja instalarla encima.
+3. **Si tenías la 0.1.x, desinstalala primero:** desde la 0.2.0 la app se
+   compila de otra forma y Android no deja instalarla encima. Sobre la 0.2.0
+   se actualiza directo.
 
 ### En el aula
 

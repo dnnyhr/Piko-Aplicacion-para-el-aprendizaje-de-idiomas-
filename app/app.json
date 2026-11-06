@@ -2,7 +2,7 @@
   "expo": {
     "name": "Piko",
     "slug": "piko",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "orientation": "portrait",
     "scheme": "piko",
     "icon": "./assets/icon.png",
@@ -28,7 +28,7 @@
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
       ],
-      "versionCode": 200
+      "versionCode": 201
     },
     "ios": {
       "supportsTablet": true,
