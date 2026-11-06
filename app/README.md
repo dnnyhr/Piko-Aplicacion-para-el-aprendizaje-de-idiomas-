@@ -32,19 +32,28 @@ Dos diferencias respecto del teléfono, ambas a propósito:
   `SharedArrayBuffer`, que no vale la pena para mirar pantallas.
 
 Metro elige por plataforma: `base.ts` / `base.web.ts` y `transporte.ts` /
-`transporte.web.ts`. Así `expo-sqlite` y `react-native-tcp-socket` ni siquiera
+`transporte.web.ts`. Así `expo-sqlite` y el módulo nativo de red (`modules/piko-red`) ni siquiera
 entran al bundle web.
 
 ### En el teléfono
 
-La app usa módulos nativos (sockets TCP), así que **no corre en Expo Go**. Hace
-falta un development build:
+La app usa un módulo nativo propio (`modules/piko-red`: sockets TCP atados al
+wifi y el faro UDP de la sala), así que **no corre en Expo Go**. El APK se
+compila sin la nube de Expo, en GitHub (*Actions → APK → Run workflow*) o en la
+computadora con JDK 17 y el Android SDK:
 
 ```bash
-npx eas build --profile development --platform android
+npm run apk
 ```
 
-Con el dev client instalado en el teléfono:
+El APK queda en `android/app/build/outputs/apk/release/app-release.apk`.
+
+Para desarrollar con recarga en caliente, un build de depuración con el dev
+client (también local) y después el servidor de desarrollo:
+
+```bash
+npx expo run:android
+```
 
 ```bash
 npm start

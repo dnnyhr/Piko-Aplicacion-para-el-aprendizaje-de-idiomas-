@@ -3,7 +3,7 @@
  *
  * No hay mocks del socket: se levanta el mismo `AulaHost` y el mismo
  * `EstudianteCliente` que corren en el teléfono. Lo único distinto es el
- * transporte, que acá es `node:net` en vez de `react-native-tcp-socket`.
+ * transporte, que acá es `node:net` en vez del módulo nativo `PikoRed`.
  */
 
 import { afterEach, describe, expect, it } from 'vitest';

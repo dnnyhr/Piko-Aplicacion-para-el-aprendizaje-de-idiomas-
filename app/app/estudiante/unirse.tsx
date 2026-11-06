@@ -17,7 +17,8 @@ import { PikoMascota } from '../../src/ui/piko/PikoMascota';
 import { espacio, radio, texto } from '../../src/ui/tokens';
 import { useAulaCliente } from '../../src/features/aula/cliente';
 import { buscarAnfitrion, ipValida } from '../../src/net/descubrir';
-import { hayRed, transporteDelDispositivo } from '../../src/net/transporte';
+import { PUERTO_AULA } from '../../src/core/protocol/messages';
+import { hayRed, redDelDispositivo, transporteDelDispositivo } from '../../src/net/transporte';
 import { abrirBase, ultimoHost } from '../../src/db';
 import { useTextos } from '../../src/ui/textos/useTextos';
 import { crearEstilos, useColor } from '../../src/ui/tema';
@@ -52,32 +53,41 @@ export default function Unirse() {
     // Si ya jugó antes en esta aula, se prueba primero la última dirección.
     const { sql } = abrirBase();
     const conocida = ultimoHost(sql);
-    const candidatas = conocida ? [conocida] : [];
+    let sinWifi = false;
 
-    for (const ip of candidatas) {
-      try {
-        await conectar(ip);
-        setBuscando(false);
-        return;
-      } catch {
-        /* seguimos buscando */
-      }
+    let encontrada: Awaited<ReturnType<typeof buscarAnfitrion>> = null;
+    try {
+      encontrada = await buscarAnfitrion(transporteDelDispositivo(), redDelDispositivo(), {
+        conocidas: conocida ? [conocida] : [],
+        señal: señal.current,
+        onProgreso: (paso) => {
+          if (paso === 'sin_wifi') sinWifi = true;
+          setMensaje(
+            t(
+              paso === 'sin_wifi'
+                ? 'unirse.sin_wifi'
+                : paso === 'barrido'
+                  ? 'unirse.revisando_red'
+                  : 'unirse.buscando_maestro',
+            ),
+          );
+        },
+      });
+    } catch {
+      encontrada = null;
     }
 
-    const encontrada = await buscarAnfitrion(transporteDelDispositivo(), {
-      onProgreso: (paso) => setMensaje(t(paso === 'barrido' ? 'unirse.revisando_red' : 'unirse.buscando_maestro')),
-      señal: señal.current,
-    });
+    if (señal.current.cancelado) return;
 
     if (!encontrada) {
       setBuscando(false);
-      setMensaje(t('unirse.no_encontre'));
+      setMensaje(t(sinWifi ? 'unirse.sin_wifi' : 'unirse.no_encontre'));
       setMostrarManual(true);
       return;
     }
 
     try {
-      await conectar(encontrada);
+      await conectar(encontrada.ip, encontrada.puerto);
     } catch {
       setMensaje(t('unirse.no_pude_entrar'));
       setMostrarManual(true);
@@ -100,13 +110,17 @@ export default function Unirse() {
   }, [studentId, router]);
 
   const conectarManual = async () => {
-    if (!ipValida(manual)) {
+    // Se acepta "192.168.43.1" y también "192.168.43.1:7331", tal como lo
+    // muestra la pantalla del maestro.
+    const [ipEscrita = '', puertoEscrito] = manual.trim().split(':');
+    const puerto = puertoEscrito ? Number(puertoEscrito) : PUERTO_AULA;
+    if (!ipValida(ipEscrita) || !(puerto > 0 && puerto < 65536)) {
       setMensaje(t('unirse.ip_invalida'));
       return;
     }
     setMensaje(null);
     try {
-      await conectar(manual.trim());
+      await conectar(ipEscrita, puerto);
     } catch {
       setMensaje(t('unirse.sin_respuesta'));
     }

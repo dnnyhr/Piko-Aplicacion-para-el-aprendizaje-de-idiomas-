@@ -1,6 +1,6 @@
 {
   "name": "piko",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "expo-router/entry",
   "private": true,
   "scripts": {
@@ -8,6 +8,7 @@
     "start:go": "expo start",
     "android": "expo start --android",
     "web": "expo start --web --port 8081",
+    "apk": "expo prebuild --platform android --no-install && cd android && ./gradlew assembleRelease -x lint",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json",
@@ -48,8 +49,6 @@
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "~4.26.0",
     "react-native-svg": "15.15.4",
-    "react-native-tcp-socket": "^6.4.2",
-    "react-native-udp": "^4.1.7",
     "react-native-web": "^0.21.2",
     "react-native-worklets": "0.10.1",
     "zustand": "^5.0.14"

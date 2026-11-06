@@ -45,7 +45,7 @@ const LUZ: Record<Semaforo, string> = {
 export default function PanelMaestro() {
   const styles = useEstilos();
   const router = useRouter();
-  const { abierta, abriendo, error, roomCode, ip, conectados, sesion, semaforo } = useAnfitrion();
+  const { abierta, abriendo, error, roomCode, ips, conectados, sesion, semaforo } = useAnfitrion();
   const abrir = useAnfitrion((s) => s.abrir);
   const iniciarRonda = useAnfitrion((s) => s.iniciarRonda);
   const terminarRonda = useAnfitrion((s) => s.terminarRonda);
@@ -109,10 +109,14 @@ export default function PanelMaestro() {
           <View style={styles.tarjetaSala}>
             <Text style={styles.etiquetaSala}>{t('maestro.codigo')}</Text>
             <Text style={styles.codigo}>{roomCode}</Text>
-            {ip && (
+            {ips.length > 0 ? (
               <Text style={styles.ip}>
-                {t('maestro.si_no_encuentra', { direccion: `${ip}:${PUERTO_AULA}` })}
+                {t('maestro.si_no_encuentra', {
+                  direccion: ips.map((ip) => `${ip}:${PUERTO_AULA}`).join('  ·  '),
+                })}
               </Text>
+            ) : (
+              <Text style={styles.ip}>{t('maestro.sin_hotspot')}</Text>
             )}
           </View>
         )}

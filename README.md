@@ -294,8 +294,9 @@ npm run validar          # las definiciones de definiciones/
 ```
 
 El aula en red necesita sockets TCP nativos, así que no corre en Expo Go ni en
-el navegador: para los teléfonos hace falta un *development build*. Todo el
-detalle está en [docs/desarrollo.md](docs/desarrollo.md).
+el navegador: para los teléfonos hace falta el APK, que se compila sin la nube
+de Expo (GitHub Actions → *APK*, o `npm run apk`). Todo el detalle está en
+[docs/desarrollo.md](docs/desarrollo.md).
 
 <br>
 
