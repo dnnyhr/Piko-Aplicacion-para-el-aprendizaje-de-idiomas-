@@ -202,3 +202,34 @@ describe('los códigos de las tarjetas', () => {
     expect(formatearMientrasEscribe('PIKO-HK26-7KQ2-M9XA-EXTRA')).toBe('PIKO-HK26-7KQ2-M9XA');
   });
 });
+
+describe('los códigos que la app reconoce sin internet', () => {
+  it('el SHA-256 da lo mismo que el de siempre', async () => {
+    const { createHash } = await import('node:crypto');
+    const { sha256 } = await import('@core/logros/sha256');
+    for (const t of ['', 'abc', 'PIKO-HK26-7KQ2-M9XA', 'ñandú 🦜', 'x'.repeat(200)]) {
+      expect(sha256(t)).toBe(createHash('sha256').update(t).digest('hex'));
+    }
+  });
+
+  it('un código que no está en la lista no desbloquea nada', async () => {
+    const { logroDeCodigoLocal } = await import('@core/logros/codigosLocales');
+    expect(logroDeCodigoLocal('PIKO-HK26-0000-0000')).toBeNull();
+  });
+
+  it('cada huella apunta a un logro especial que existe', async () => {
+    const { CODIGOS_LOCALES } = await import('@core/logros/codigosLocales');
+    const entradas = Object.values(CODIGOS_LOCALES);
+    expect(entradas.length).toBeGreaterThan(0);
+    for (const c of entradas) {
+      expect(c.logro).toBe(LOGRO_HACKATHON);
+      expect(Number.isNaN(Date.parse(c.hasta))).toBe(false);
+    }
+  });
+
+  it('el código del Hackathon vale hasta el 31 de diciembre de 2026 en Nicaragua', async () => {
+    const { CODIGOS_LOCALES } = await import('@core/logros/codigosLocales');
+    const hk = Object.values(CODIGOS_LOCALES).find((c) => c.logro === LOGRO_HACKATHON)!;
+    expect(hk.hasta).toBe('2027-01-01T06:00:00Z');
+  });
+});

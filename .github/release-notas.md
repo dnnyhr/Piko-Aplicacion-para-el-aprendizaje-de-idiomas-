@@ -1,17 +1,10 @@
-## Piko — conexión por hotspot rehecha
+## Piko 0.2.2 — el código de Hackathon Nicaragua 2026 funciona
 
-La sala del aula se rehízo desde abajo: ahora los teléfonos de los estudiantes
-encuentran solos el hotspot del maestro.
-
-- **Los estudiantes entran sin escribir nada.** La app lee la dirección del
-  maestro directamente del wifi (en un hotspot, el maestro es el router), y
-  además el maestro anuncia la sala con un faro en la red. Escribir la IP queda
-  solo como último recurso.
-- **Funciona aunque el hotspot no tenga internet** y el teléfono tenga los
-  datos móviles prendidos: la conexión se ata al wifi del aula.
-- **Sin esperas largas.** Probar una dirección vacía ya no traba la búsqueda.
-- El maestro ve sus direcciones en pantalla, y un aviso si el hotspot todavía
-  no está encendido. El estudiante ve un aviso si no está conectado a ningún wifi.
+- **El código de las tarjetas de Hackathon Nicaragua 2026 ya desbloquea su
+  logro.** La app lo reconoce sola, sin internet ni servidor: en *Mis logros →
+  Canjear código*.
+- El código vale **hasta el 31 de diciembre de 2026**. Cada estudiante lo
+  canjea una vez y el logro queda en su progreso para siempre.
 
 ### Instalar
 
