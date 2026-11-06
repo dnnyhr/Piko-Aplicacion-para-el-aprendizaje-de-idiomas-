@@ -6,11 +6,12 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SvgXml } from 'react-native-svg';
 import { Boton } from '../src/ui/components/Boton';
 import { Globo } from '../src/ui/components/Globo';
+import { Marca } from '../src/ui/components/Marca';
 import { Pantalla } from '../src/ui/components/Pantalla';
 import { PikoMascota } from '../src/ui/piko/PikoMascota';
 import { MARCA_SVG } from '../src/ui/piko/vector.gen';
@@ -24,9 +25,12 @@ import { ContadorSacuanjoches } from '../src/ui/arbol/ContadorSacuanjoches';
 import { useProgreso } from '../src/features/progreso/store';
 import { etapaDe, nivelDe } from '../src/core/progress/arbol';
 import { resumenLogros } from '../src/core/logros/evaluar';
-import { color, espacio, radio, texto } from '../src/ui/tokens';
+import { espacio, radio, texto } from '../src/ui/tokens';
+import { crearEstilos, useColor } from '../src/ui/tema';
 
 export default function Portada() {
+  const styles = useEstilos();
+  const color = useColor();
   const router = useRouter();
   const { t, frases, idioma } = useTextos();
   const cambiarIdioma = useIdioma((s) => s.cambiar);
@@ -80,6 +84,7 @@ export default function Portada() {
               accessibilityState={{ selected: i === idioma }}
               style={[styles.idioma, i === idioma && styles.idiomaElegido]}
             >
+              {i === idioma && <Marca tipo="visto" tinta={color.blanco} tam={16} />}
               <Text style={[styles.idiomaTexto, i === idioma && styles.idiomaTextoElegido]}>{AUTONIMO[i]}</Text>
             </Pressable>
           ))}
@@ -98,7 +103,10 @@ export default function Portada() {
           <Boton ancho tono="cielo" onPress={() => router.push('/estudiante/unirse')}>
             {t('portada.unirme')}
           </Boton>
-          <Pressable onPress={() => router.push('/maestro')} hitSlop={8}>
+          <Boton ancho tono="papel" onPress={() => router.push('/mi-forma-de-aprender')}>
+            {t('portada.mi_forma')}
+          </Boton>
+          <Pressable onPress={() => router.push('/maestro')} hitSlop={8} accessibilityRole="button">
             <Text style={styles.soyMaestro}>{t('portada.maestro')}</Text>
           </Pressable>
         </View>
@@ -147,7 +155,7 @@ export default function Portada() {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { flexGrow: 1, gap: espacio.xl, paddingBottom: espacio.xl },
   marca: { alignItems: 'center', marginTop: espacio.sm },
   saludo: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
@@ -198,6 +206,9 @@ const styles = StyleSheet.create({
   idiomas: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: espacio.sm },
   idiomaEtiqueta: { ...texto.chico, color: color.tintaSuave },
   idioma: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: espacio.xs,
     borderWidth: 2,
     borderColor: color.borde,
     borderRadius: radio.redondo,
@@ -208,4 +219,4 @@ const styles = StyleSheet.create({
   idiomaElegido: { borderColor: color.verde, backgroundColor: color.verde },
   idiomaTexto: { ...texto.cuerpoFuerte, color: color.verde },
   idiomaTextoElegido: { color: color.blanco },
-});
+}));

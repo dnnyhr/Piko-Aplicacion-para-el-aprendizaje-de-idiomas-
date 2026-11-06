@@ -6,7 +6,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Boton } from '../src/ui/components/Boton';
 import { Globo } from '../src/ui/components/Globo';
@@ -21,10 +21,11 @@ import { useProgreso } from '../src/features/progreso/store';
 import { RecompensaLeccion } from '../src/features/arbol/RecompensaLeccion';
 import { ContadorSacuanjoches } from '../src/ui/arbol/ContadorSacuanjoches';
 import type { Recompensa } from '../src/core/progress/arbol';
-import { color, espacio, radio, texto } from '../src/ui/tokens';
+import { espacio, radio, texto } from '../src/ui/tokens';
 import { PACKS } from '../content';
 import { pickAdaptive, temasDe } from '../src/core/content/selector';
 import { LANGS, type LangCode } from '../src/core/content/schema';
+import { crearEstilos } from '../src/ui/tema';
 
 const ITEMS_POR_RONDA = 8;
 
@@ -34,6 +35,7 @@ const conContenido = (desde: LangCode) => LANGS.filter((l) => temasDe(PACKS, l, 
 type Fase = 'elegir' | 'jugando' | 'resultado';
 
 export default function Practicar() {
+  const styles = useEstilos();
   const router = useRouter();
   const estado = useProgreso((s) => s.estado);
   const registrar = useProgreso((s) => s.registrar);
@@ -194,6 +196,7 @@ export default function Practicar() {
 }
 
 function Dato({ valor, etiqueta }: { valor: string; etiqueta: string }) {
+  const styles = useEstilos();
   return (
     <View style={styles.dato}>
       <Text style={styles.datoValor}>{valor}</Text>
@@ -203,7 +206,7 @@ function Dato({ valor, etiqueta }: { valor: string; etiqueta: string }) {
 }
 
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { gap: espacio.xl, paddingBottom: espacio.xl },
   cabecera: { flexDirection: 'row', alignItems: 'center', gap: espacio.md },
   cabeceraTexto: { flex: 1 },
@@ -234,4 +237,4 @@ const styles = StyleSheet.create({
   datoValor: { ...texto.titulo, color: color.verde },
   datoEtiqueta: { ...texto.chico, color: color.tintaSuave },
   acciones: { alignSelf: 'stretch', gap: espacio.md, marginTop: espacio.lg },
-});
+}));

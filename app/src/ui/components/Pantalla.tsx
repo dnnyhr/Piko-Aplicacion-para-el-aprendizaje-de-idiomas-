@@ -3,9 +3,10 @@
  */
 
 import type { ReactNode } from 'react';
-import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { View, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { color, espacio } from '../tokens';
+import { espacio } from '../tokens';
+import { crearEstilos, useColor } from '../tema';
 
 export interface PantallaProps {
   children: ReactNode;
@@ -18,18 +19,20 @@ export interface PantallaProps {
 export function Pantalla({
   children,
   acolchado = true,
-  fondo = color.papel,
+  fondo,
   style,
 }: PantallaProps) {
+  const styles = useEstilos();
+  const color = useColor();
   return (
-    <SafeAreaView style={[styles.raiz, { backgroundColor: fondo }]} edges={['top', 'bottom']}>
+    <SafeAreaView style={[styles.raiz, { backgroundColor: fondo ?? color.papel }]} edges={['top', 'bottom']}>
       <View style={[styles.cuerpo, acolchado && styles.acolchado, style]}>{children}</View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   raiz: { flex: 1 },
   cuerpo: { flex: 1 },
   acolchado: { paddingHorizontal: espacio.xl, paddingVertical: espacio.lg },
-});
+}));

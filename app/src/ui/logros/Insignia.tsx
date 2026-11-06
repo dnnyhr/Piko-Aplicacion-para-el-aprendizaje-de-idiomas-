@@ -10,10 +10,11 @@
  * relojito en lugar del candado.
  */
 
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Svg, { Circle, G, Path, Polygon, Rect } from 'react-native-svg';
 import type { Logro } from '../../core/logros/tipos';
 import { InsigniaHackathon } from './InsigniaHackathon';
+import { crearEstilos } from '../tema';
 
 export interface InsigniaProps {
   logro: Logro;
@@ -46,6 +47,7 @@ const FESTONES = Array.from({ length: 14 }, (_, i) => {
 });
 
 export function Insignia({ logro, desbloqueado, proximamente = false, tam = 88 }: InsigniaProps) {
+  const styles = useEstilos();
   if (logro.insignia.forma === 'hackathon') return <InsigniaHackathon desbloqueado={desbloqueado} tam={tam} />;
 
   const base = desbloqueado ? logro.insignia.color : GRIS.aro;
@@ -107,7 +109,7 @@ function Reloj({ tam }: { tam: number }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   centro: { position: 'absolute', left: 0, top: 0, alignItems: 'center', justifyContent: 'center' },
   marca: { position: 'absolute' },
-});
+}));

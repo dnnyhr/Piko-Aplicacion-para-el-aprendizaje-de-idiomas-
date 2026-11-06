@@ -123,6 +123,7 @@ export default function Gallinita() {
     <Pantalla>
       <ElegirPartida
         {...juego.eleccion}
+        actividad="gallinita"
         titulo={t('gallinita.nombre')}
         portada={<IconoGallinita tam={120} />}
         pregunta={t('gallinita.elegir_lengua')}

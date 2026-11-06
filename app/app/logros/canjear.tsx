@@ -8,7 +8,7 @@
  */
 
 import { useState } from 'react';
-import { ActivityIndicator, Animated, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Animated, ScrollView, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Boton } from '../../src/ui/components/Boton';
 import { Globo } from '../../src/ui/components/Globo';
@@ -24,7 +24,8 @@ import { useAulaCliente } from '../../src/features/aula/cliente';
 import { formatearMientrasEscribe, normalizarCodigo } from '../../src/core/logros/codigo';
 import { logroPorId } from '../../src/core/logros/catalogo';
 import type { Clave } from '../../src/ui/textos/traducir';
-import { color, espacio, fuente, radio, texto } from '../../src/ui/tokens';
+import { espacio, fuente, radio, texto } from '../../src/ui/tokens';
+import { crearEstilos, useColor } from '../../src/ui/tema';
 
 const AVISOS: Partial<Record<ResultadoCanje['tipo'], Clave>> = {
   invalido: 'canje.invalido',
@@ -37,6 +38,8 @@ const AVISOS: Partial<Record<ResultadoCanje['tipo'], Clave>> = {
 };
 
 export default function Canjear() {
+  const styles = useEstilos();
+  const color = useColor();
   const router = useRouter();
   const { t } = useTextos();
   const nombre = useAulaCliente((s) => s.roster.find((r) => r.id === s.studentId)?.nombre ?? null);
@@ -121,6 +124,7 @@ export default function Canjear() {
 
 /** Lo que queda en pantalla después del canje (la celebración sale encima). */
 function Exito({ logroId, onOtro }: { logroId: string; onOtro: () => void }) {
+  const styles = useEstilos();
   const router = useRouter();
   const { t } = useTextos();
   const entrada = useEntrada();
@@ -161,7 +165,7 @@ function Exito({ logroId, onOtro }: { logroId: string; onOtro: () => void }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { gap: espacio.lg, paddingBottom: espacio.xl, maxWidth: 520, width: '100%', alignSelf: 'center' },
   saludo: { flexDirection: 'row', alignItems: 'center' },
   globo: { flex: 1, marginLeft: espacio.sm },
@@ -204,4 +208,4 @@ const styles = StyleSheet.create({
   exitoNombre: { ...texto.titulo, color: '#FFFFFF', textAlign: 'center' },
   exitoTexto: { ...texto.cuerpo, color: '#DDF1FC', textAlign: 'center' },
   exitoFecha: { ...texto.cuerpoFuerte, color: '#F4C542' },
-});
+}));

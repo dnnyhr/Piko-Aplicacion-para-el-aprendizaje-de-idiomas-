@@ -8,10 +8,11 @@
  * única de oro.
  */
 
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, View } from 'react-native';
 import Svg, { Circle, G, Line, Path, Polygon, Rect, Text as SvgText } from 'react-native-svg';
 import { Sacuanjoche } from '../arbol/Sacuanjoche';
 import { Candado, GRIS } from './Insignia';
+import { crearEstilos } from '../tema';
 
 const PIKO = require('../../../assets/piko/alegre.png');
 
@@ -28,6 +29,7 @@ const ORO = '#F4C542';
 const ORO_HONDO = '#C98A1B';
 
 export function InsigniaHackathon({ desbloqueado, tam = 88 }: { desbloqueado: boolean; tam?: number }) {
+  const styles = useEstilos();
   const alto = tam * 1.12;
   const azul = desbloqueado ? AZUL : GRIS.aroHondo;
   const blanco = desbloqueado ? '#FFFFFF' : GRIS.centro;
@@ -100,7 +102,7 @@ export function InsigniaHackathon({ desbloqueado, tam = 88 }: { desbloqueado: bo
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   cara: { position: 'absolute', overflow: 'hidden', alignItems: 'flex-start' },
   flor: { position: 'absolute' },
-});
+}));

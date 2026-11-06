@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useTipografias } from '../src/ui/fuentes';
-import { color } from '../src/ui/tokens';
+import { useColor } from '../src/ui/tema';
 import { useLogros } from '../src/features/logros/store';
 import { CelebracionLogros } from '../src/ui/logros/Celebracion';
 
@@ -14,6 +14,7 @@ SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
 export default function Layout() {
   const listas = useTipografias();
+  const color = useColor();
 
   useEffect(() => {
     if (listas) SplashScreen.hideAsync().catch(() => undefined);

@@ -8,7 +8,7 @@
  * batería.
  */
 
-export const VERSION_ESQUEMA = 4;
+export const VERSION_ESQUEMA = 5;
 
 /**
  * Notas de diseño de las tablas:
@@ -92,6 +92,8 @@ export const MIGRACIONES: readonly string[][] = [
   // (JSON `{ studentId: [ids] }`). NULL = nunca se miró: lo ya ganado no se
   // vuelve a festejar.
   ['ALTER TABLE device ADD COLUMN logros_vistos TEXT'],
+  // v5: «Mi forma de aprender», en JSON. NULL = lo de siempre.
+  ['ALTER TABLE device ADD COLUMN preferencias TEXT'],
 ];
 
 export const SQL_INICIAL = [

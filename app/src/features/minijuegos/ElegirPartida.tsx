@@ -6,13 +6,17 @@
  */
 
 import type { ReactNode } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { Candado, Globito } from '../../ui/minijuegos/Iconos';
 import { Boton } from '../../ui/components/Boton';
 import { PikoMascota } from '../../ui/piko/PikoMascota';
 import { ContadorSacuanjoches } from '../../ui/arbol/ContadorSacuanjoches';
 import { useTextos } from '../../ui/textos/useTextos';
+import { PasosInstruccion } from '../instrucciones/PasosInstruccion';
+import type { Actividad } from '../instrucciones/pasos';
+import { PanelSenas } from '../senas/PanelSenas';
+import { usePreferencias } from '../preferencias/store';
 import { esClave } from '../../ui/textos/traducir';
 import {
   LENGUAS_MINIJUEGOS,
@@ -20,9 +24,12 @@ import {
   type LenguaMinijuego,
   type NivelMinijuego,
 } from '../../core/minijuegos/vocabulario';
-import { color, espacio, labio, radio, texto } from '../../ui/tokens';
+import { color, espacio, labio, radio, texto, type Paleta } from '../../ui/tokens';
+import { crearEstilos, useColor } from '../../ui/tema';
 
 export interface ElegirPartidaProps {
+  /** Qué instrucciones paso a paso mostrar. */
+  actividad: Actividad;
   /** El nombre del juego, arriba. */
   titulo: string;
   /** Piko con el juego, en grande. */
@@ -53,6 +60,7 @@ export interface ElegirPartidaProps {
 }
 
 export function ElegirPartida({
+  actividad,
   titulo,
   portada,
   pregunta,
@@ -73,12 +81,17 @@ export function ElegirPartida({
   onVolver,
   onPerfil,
 }: ElegirPartidaProps) {
+  const styles = useEstilos();
+  const color = useColor();
   const { t } = useTextos();
   const nombreTema = (tema: string) => {
     const k = `tema.${tema}`;
     return esClave(k) ? t(k) : tema;
   };
   const hayAlgo = niveles.some((n) => n.abierto);
+  const verPasos = usePreferencias((s) => s.pasoAPaso || s.narracion);
+  // Con la letra más grande, «Intermedio» ya no entra en un tercio de pantalla.
+  const letraMaxima = usePreferencias((s) => s.tamano === 'muy_grande');
 
   return (
     <ScrollView contentContainerStyle={styles.contenido} showsVerticalScrollIndicator={false}>
@@ -98,6 +111,9 @@ export function ElegirPartida({
         <PikoMascota estado="saludando" tam={120} />
         {portada}
       </View>
+
+      {verPasos && <PasosInstruccion actividad={actividad} dibujo={portada} />}
+      <PanelSenas claves={[`instruccion.${actividad}`]} />
 
       <Text style={styles.pregunta}>{pregunta}</Text>
       <View style={styles.lenguas}>
@@ -137,7 +153,7 @@ export function ElegirPartida({
             <Text style={styles.subtitulo}>{t('minijuegos.nivel')}</Text>
             {sugerido && <Text style={styles.chico}>{t('minijuegos.segun_lecciones', { nivel: t(`minijuegos.nivel_${sugerido}`) })}</Text>}
           </View>
-          <View style={styles.niveles} accessibilityRole="radiogroup">
+          <View style={[styles.niveles, letraMaxima ? styles.nivelesEnColumna : null]} accessibilityRole="radiogroup">
             {niveles.map((n) => {
               const elegido = n.nivel === nivel;
               return (
@@ -191,15 +207,16 @@ export function ElegirPartida({
   );
 }
 
-const tarjeta = {
-  backgroundColor: color.blanco,
-  borderWidth: 2,
-  borderColor: color.borde,
-  borderBottomWidth: 2 + labio.normal,
-  borderBottomColor: color.bordeHondo,
-} as const;
+const tarjeta = (color: Paleta) =>
+  ({
+    backgroundColor: color.blanco,
+    borderWidth: 2,
+    borderColor: color.borde,
+    borderBottomWidth: 2 + labio.normal,
+    borderBottomColor: color.bordeHondo,
+  }) as const;
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { flexGrow: 1, gap: espacio.lg, paddingBottom: espacio.xl },
   cabecera: { flexDirection: 'row', alignItems: 'center', gap: espacio.md },
   redondo: {
@@ -228,7 +245,7 @@ const styles = StyleSheet.create({
   pregunta: { ...texto.subtitulo, color: color.grafito },
   lenguas: { gap: espacio.md },
   lengua: {
-    ...tarjeta,
+    ...tarjeta(color),
     flexDirection: 'row',
     alignItems: 'center',
     gap: espacio.md,
@@ -237,7 +254,7 @@ const styles = StyleSheet.create({
     paddingVertical: espacio.md,
     borderRadius: radio.lg,
   },
-  lenguaElegida: { backgroundColor: color.nube, borderColor: color.cielo, borderBottomColor: color.cieloHondo },
+  lenguaElegida: { backgroundColor: color.nube, borderColor: color.bordeElegido, borderBottomColor: color.cieloHondo },
   lenguaTextos: { flex: 1 },
   lenguaNombre: { ...texto.subtitulo, color: color.grafito },
   lenguaSub: { ...texto.chico, color: color.tinta },
@@ -255,8 +272,9 @@ const styles = StyleSheet.create({
   subtitulo: { ...texto.subtitulo, color: color.grafito },
   chico: { ...texto.chico, color: color.tinta, flexShrink: 1 },
   niveles: { flexDirection: 'row', gap: espacio.sm },
+  nivelesEnColumna: { flexDirection: 'column' },
   nivel: {
-    ...tarjeta,
+    ...tarjeta(color),
     flex: 1,
     minHeight: 72,
     borderRadius: radio.md,
@@ -282,4 +300,4 @@ const styles = StyleSheet.create({
   desc: { ...texto.cuerpo, color: color.tinta },
   pie: { marginTop: 'auto', gap: espacio.md },
   nota: { flexDirection: 'row', alignItems: 'center', gap: espacio.sm },
-});
+}));

@@ -24,6 +24,7 @@ export const ES = {
   'portada.lengua_app': 'La app en',
   'portada.minijuegos': 'Minijuegos',
   'portada.musica': 'La Música de Piko',
+  'portada.mi_forma': 'Mi forma de aprender',
   'portada.logros': 'Mis logros',
 
   // ── Comunes
@@ -51,6 +52,75 @@ export const ES = {
   'ejercicio.comprobar': 'Comprobar',
   'ejercicio.continuar': 'Continuar',
   'ejercicio.terminar': 'Terminar',
+
+  // ── Cómo se nombra el estado de una opción, además del color
+  'opcion.elegida': 'tu elección',
+  'opcion.correcta': 'es la respuesta',
+  'opcion.fallada': 'tu elección',
+
+  // ── Mi forma de aprender. Son gustos, no etiquetas: nunca se nombra a la persona.
+  'forma.titulo': 'Mi forma de aprender',
+  'forma.saludo': 'Acomodá Piko como te guste. Podés elegir varias cosas y cambiarlas cuando querás.',
+  'forma.letras': 'Tamaño de las letras',
+  'forma.tam_chico': 'Chicas',
+  'forma.tam_normal': 'Normales',
+  'forma.tam_grande': 'Grandes',
+  'forma.tam_muy_grande': 'Muy grandes',
+  'forma.mas_chicas': 'Letras más chicas',
+  'forma.mas_grandes': 'Letras más grandes',
+  'forma.contraste': 'Alto contraste',
+  'forma.contraste_ayuda': 'Letras más oscuras y bordes bien marcados.',
+  'forma.narracion': 'Piko me lee',
+  'forma.narracion_ayuda': 'Piko dice las instrucciones en voz alta. También las ves escritas.',
+  'forma.probar_voz': 'Probar la voz',
+  'forma.voz_prueba': '¡Hola! Así te voy a leer las instrucciones.',
+  'forma.pasos': 'Paso a paso',
+  'forma.pasos_ayuda': 'Las instrucciones vienen en pasos cortos. Vas a tu ritmo.',
+  'forma.senas': 'Lengua de señas',
+  'forma.senas_ayuda': 'Muestra videos en lengua de señas cuando estén disponibles.',
+  'forma.si': 'Sí',
+  'forma.no': 'No',
+  'forma.guardado': 'Queda guardado en este teléfono, también sin internet.',
+  'forma.listo': '¡Listo!',
+  'forma.restablecer': 'Volver a como estaba',
+
+  // ── Instrucciones
+  'instruccion.repetir': 'Repetir',
+  'instruccion.paso_de': 'Paso {n} de {total}',
+  'instruccion.atras': 'Atrás',
+  'instruccion.siguiente': 'Siguiente',
+  'instruccion.entendido': '¡Entendido!',
+  'instruccion.otra_vez': 'Ver otra vez',
+  'instruccion.ver_pasos': 'Ver los pasos',
+  'paso.comprobar': 'Tocá el botón Comprobar.',
+  'paso.choice_1': 'Leé la palabra de arriba.',
+  'paso.choice_2': 'Tocá la tarjeta que significa lo mismo.',
+  'paso.listen_1': 'Tocá el parlante y escuchá. Podés escuchar las veces que querás.',
+  'paso.listen_2': 'Si preferís leer, tocá Ver escrito.',
+  'paso.listen_3': 'Tocá la tarjeta que corresponde.',
+  'paso.build_1': 'Leé lo que quiere decir la oración.',
+  'paso.build_2': 'Tocá las palabras en orden para armarla.',
+  'paso.build_3': 'Para quitar una palabra, tocala otra vez.',
+  'paso.mirar_pregunta': 'Mirá la pregunta. Si tiene parlante, tocalo para escuchar.',
+  'paso.rayuela_2': 'Tocá la casilla con la respuesta. Piko salta hasta ahí.',
+  'paso.rayuela_3': 'Si Piko vuelve, probá con otra casilla.',
+  'paso.rayuela_4': 'Seguí saltando hasta llegar al cielo.',
+  'paso.trompo_1': 'Tocá el botón para lanzar el trompo.',
+  'paso.trompo_3': 'Tocá la respuesta antes de que se acabe el tiempo.',
+  'paso.trompo_4': 'Cada respuesta buena hace que el trompo siga girando.',
+  'paso.chibolas_2': 'Agarrá tu chibola y estirala hacia atrás, apuntando a la respuesta.',
+  'paso.chibolas_3': 'Soltala para tirar.',
+  'paso.gallinita_1': 'Escuchá a Piko. También podés tocar Ver escrito.',
+  'paso.gallinita_2': 'Tocá un «?» para que Piko vaya a tantear.',
+  'paso.gallinita_3': 'Cuando encuentres la respuesta, tocá ¡Es esta!',
+
+  // ── La alternativa escrita de lo que sólo se escucha
+  'escrito.ver': 'Ver escrito',
+  'escrito.significa': 'Significa: {texto}',
+  'escrito.dice': 'Dice: {texto}',
+
+  // ── Lengua de señas
+  'senas.pendiente': 'Todavía no hay video en lengua de señas para esto. Primero lo tienen que preparar y revisar personas que conocen la lengua.',
 
   // ── Unirse a la clase
   'unirse.sin_red': 'El aula necesita un teléfono: los navegadores no pueden abrir sockets TCP. Desde la computadora podés jugar la práctica en solitario.',
@@ -95,6 +165,9 @@ export const ES = {
   'maestro.terminar_ronda': 'Terminar la ronda',
   'maestro.empezar_ronda': 'Empezar una ronda',
   'maestro.cerrar': 'Cerrar la sala',
+  'maestro.ritmo_verde': 'Al ritmo del grupo',
+  'maestro.ritmo_ambar': 'Un poco atrás',
+  'maestro.ritmo_rojo': 'Para acompañar',
 
   // ── Minijuegos
   'minijuegos.titulo': 'Minijuegos',

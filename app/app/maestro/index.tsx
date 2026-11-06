@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Boton } from '../../src/ui/components/Boton';
 import { Pantalla } from '../../src/ui/components/Pantalla';
@@ -19,6 +19,7 @@ import { PACKS } from '../../content';
 import { PUERTO_AULA, type PresetSummary } from '../../src/core/protocol/messages';
 import type { Semaforo } from '../../src/core/progress/rezago';
 import { useTextos } from '../../src/ui/textos/useTextos';
+import { crearEstilos } from '../../src/ui/tema';
 
 const PRESET_BASE: PresetSummary = {
   id: 'base',
@@ -42,6 +43,7 @@ const LUZ: Record<Semaforo, string> = {
 };
 
 export default function PanelMaestro() {
+  const styles = useEstilos();
   const router = useRouter();
   const { abierta, abriendo, error, roomCode, ip, conectados, sesion, semaforo } = useAnfitrion();
   const abrir = useAnfitrion((s) => s.abrir);
@@ -132,9 +134,10 @@ export default function PanelMaestro() {
               ? semaforo.map((fila) => (
                   <View key={fila.studentId} style={styles.fila}>
                     <View style={[styles.punto, { backgroundColor: LUZ[fila.semaforo] }]} />
-                    <Text style={styles.nombre}>
-                      {nombres.get(fila.studentId) ?? fila.studentId}
-                    </Text>
+                    <View style={styles.nombreCaja}>
+                      <Text style={styles.nombre}>{nombres.get(fila.studentId) ?? fila.studentId}</Text>
+                      <Text style={styles.ritmo}>{t(`maestro.ritmo_${fila.semaforo}`)}</Text>
+                    </View>
                     <Text style={styles.cuenta}>
                       {fila.correct}/{fila.answered}
                     </Text>
@@ -190,7 +193,7 @@ export default function PanelMaestro() {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { gap: espacio.lg, paddingBottom: espacio.xl },
   cabecera: { flexDirection: 'row', alignItems: 'center', gap: espacio.md },
   cabeceraTexto: { flex: 1 },
@@ -247,9 +250,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: espacio.lg,
   },
   punto: { width: 14, height: 14, borderRadius: 7 },
+  nombreCaja: { flex: 1 },
+  ritmo: { ...texto.chico, color: color.tintaSuave },
   puntoApagado: { backgroundColor: color.bordeHondo },
   nombre: { ...texto.cuerpoFuerte, color: color.grafito, flex: 1 },
   cuenta: { ...texto.cuerpo, color: color.tintaSuave },
 
   acciones: { gap: espacio.md, marginTop: espacio.sm },
-});
+}));

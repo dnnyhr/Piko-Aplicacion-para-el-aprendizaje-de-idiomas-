@@ -3,9 +3,10 @@
  * que el total esté siempre a la vista; tocarla lleva al perfil.
  */
 
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { color, espacio, fuente, radio } from '../tokens';
+import { Pressable, Text, View } from 'react-native';
+import { espacio, fuente, radio } from '../tokens';
 import { Sacuanjoche } from './Sacuanjoche';
+import { crearEstilos } from '../tema';
 
 export interface ContadorSacuanjochesProps {
   total: number;
@@ -13,6 +14,7 @@ export interface ContadorSacuanjochesProps {
 }
 
 export function ContadorSacuanjoches({ total, onPress }: ContadorSacuanjochesProps) {
+  const styles = useEstilos();
   const contenido = (
     <View style={styles.pastilla}>
       <Sacuanjoche tam={22} />
@@ -32,7 +34,7 @@ export function ContadorSacuanjoches({ total, onPress }: ContadorSacuanjochesPro
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   pastilla: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -46,4 +48,4 @@ const styles = StyleSheet.create({
     paddingRight: espacio.md,
   },
   numero: { fontFamily: fuente.tituloFuerte, fontSize: 17, color: color.verde },
-});
+}));

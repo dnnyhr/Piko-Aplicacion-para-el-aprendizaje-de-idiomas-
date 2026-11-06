@@ -114,6 +114,7 @@ export default function Chibolas() {
     <Pantalla>
       <ElegirPartida
         {...juego.eleccion}
+        actividad="chibolas"
         titulo={t('chibolas.nombre')}
         portada={<IconoChibolas tam={110} />}
         pregunta={t('chibolas.elegir_lengua')}

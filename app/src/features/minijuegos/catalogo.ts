@@ -12,6 +12,9 @@
  * 3. Al terminar una partida llama a `cerrar` de `useMinijuego`: las
  *    sacuanjoches, el tope diario y el madroño salen solos de ahí.
  * 4. Se agrega acá abajo, con sus textos en `src/ui/textos/es.ts`.
+ * 5. Sus instrucciones en pasos cortos van en
+ *    `src/features/instrucciones/pasos.ts`. Si alguna pregunta sólo se
+ *    escucha, lleva `VerEscrito`.
  */
 
 import type { ComponentType } from 'react';

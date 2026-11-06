@@ -18,7 +18,7 @@
  */
 
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View, type LayoutChangeEvent } from 'react-native';
+import { Animated, Easing, Pressable, ScrollView, Text, View, type LayoutChangeEvent } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Boton } from '../../ui/components/Boton';
 import { Globo } from '../../ui/components/Globo';
@@ -49,8 +49,12 @@ import {
 } from '../../core/canciones/cancion';
 import { paraVozEspanola } from '../../core/content/voz';
 import { callar, decir, vozDePiko } from '../minijuegos/voz';
+import { VerEscrito } from '../instrucciones/VerEscrito';
+import { BotonRepetir } from '../instrucciones/BotonRepetir';
+import { useNarrador } from '../instrucciones/useNarrador';
 import { useTramo } from './useTramo';
-import { color, espacio, fuente, labio, radio, texto } from '../../ui/tokens';
+import { espacio, fuente, labio, radio, texto } from '../../ui/tokens';
+import { crearEstilos, useColor } from '../../ui/tema';
 import { usePausaLogros } from '../logros/store';
 
 export interface ResultadoCancion {
@@ -75,6 +79,9 @@ type Paso = { tipo: 'escuchar' } | { tipo: 'frase'; k: number } | { tipo: 'activ
 const ingles = (t: string) => decir([{ texto: t, lang: 'en-US' }]);
 
 export function Experiencia({ cancion, audio, premiable, admin = false, onTerminar, onSalir }: ExperienciaProps) {
+  const styles = useEstilos();
+  const { voz } = useNarrador();
+  const color = useColor();
   // Un logro ganado a mitad de la ronda se festeja al terminarla.
   usePausaLogros();
   const { t, frases, idioma } = useTextos();
@@ -282,6 +289,17 @@ export function Experiencia({ cancion, audio, premiable, admin = false, onTermin
           <Globo>{frase || ayuda}</Globo>
         </View>
       </View>
+
+      {paso.tipo !== 'escuchar' && paso.tipo !== 'cantar' && (
+        <View style={styles.repetir}>
+          {/* La actividad de escucha hace sonar su propia frase al aparecer. */}
+          <BotonRepetir
+            voces={[voz(ayuda)]}
+            clave={`${grupo}-${ayuda}`}
+            auto={!(paso.tipo === 'actividad' && paso.act === 'escucha')}
+          />
+        </View>
+      )}
 
       {(paso.tipo === 'escuchar' || paso.tipo === 'cantar') && (
         <>
@@ -495,6 +513,10 @@ export function Experiencia({ cancion, audio, premiable, admin = false, onTermin
                   <Parlante tam={34} />
                   <Text style={styles.escuchaTexto}>{t('musica.escuchar_otra_vez')}</Text>
                 </Pressable>
+                <VerEscrito
+                  key={paso.k}
+                  alternativa={{ forma: 'significa', texto: leccion.verso.es ?? leccion.verso.texto }}
+                />
                 {leccion.escucha.opciones.map((op, k) => (
                   <Opcion
                     key={k}
@@ -563,6 +585,7 @@ interface LetraProps {
  * (`VersoCantado`). La lista se desplaza sola para que la línea se vea.
  */
 const Letra = memo(function Letra({ cancion, desde, hasta, activo, tiempo, marcas, repetidos, sonando, periodo, textos }: LetraProps) {
+  const styles = useEstilos();
   const lista = useRef<ScrollView>(null);
   const lugares = useRef<Record<number, { y: number; h: number }>>({});
 
@@ -616,7 +639,7 @@ const Letra = memo(function Letra({ cancion, desde, hasta, activo, tiempo, marca
   );
 });
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   raiz: { flex: 1 },
   cabecera: { flexDirection: 'row', alignItems: 'center', gap: espacio.md },
   redondo: {
@@ -769,4 +792,5 @@ const styles = StyleSheet.create({
   },
   escuchaTexto: { fontFamily: fuente.boton, fontSize: 17, color: color.blanco },
   pie: { gap: espacio.sm, paddingTop: espacio.sm },
-});
+  repetir: { alignItems: 'flex-end' },
+}));

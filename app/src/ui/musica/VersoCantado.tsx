@@ -13,10 +13,10 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, StyleSheet, Text, View, type LayoutChangeEvent, type TextStyle } from 'react-native';
+import { Animated, Easing, Text, View, type LayoutChangeEvent, type TextStyle } from 'react-native';
 import { Sacuanjoche } from '../arbol/Sacuanjoche';
 import { palabraEn, palabrasDelVerso, type Verso } from '../../core/canciones/cancion';
-import { color } from '../tokens';
+import { crearEstilos } from '../tema';
 
 const FLOR = 30;
 /** Las florcitas del rastro. */
@@ -49,6 +49,7 @@ export interface VersoCantadoProps {
 }
 
 export function VersoCantado({ verso, tiempo, activo, periodo, estilo }: VersoCantadoProps) {
+  const styles = useEstilos();
   const palabras = palabrasDelVerso(verso.texto);
   const actual = activo ? palabraEn(verso, tiempo) : -1;
   const lugares = useRef<Record<number, { x: number; y: number; w: number }>>({});
@@ -187,6 +188,7 @@ export function VersoCantado({ verso, tiempo, activo, periodo, estilo }: VersoCa
 
 /** Una florcita del rastro: aparece cuando pasa la flor y se desvanece. */
 function Florcita({ punto }: { punto: Punto }) {
+  const styles = useEstilos();
   const v = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     const anim = Animated.sequence([
@@ -219,7 +221,7 @@ function Florcita({ punto }: { punto: Punto }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   // Lugar arriba de cada renglón para que la flor no tape el renglón de arriba.
   fila: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 6, rowGap: FLOR - 2, paddingTop: FLOR - 2 },
   flor: { position: 'absolute', left: 0, top: 0, width: FLOR, height: FLOR },
@@ -229,4 +231,4 @@ const styles = StyleSheet.create({
   resaltada: { backgroundColor: '#FFE3A3', borderRadius: 6, marginHorizontal: -3, paddingHorizontal: 3 },
   actual: { color: color.copete },
   cantada: { color: color.verde },
-});
+}));

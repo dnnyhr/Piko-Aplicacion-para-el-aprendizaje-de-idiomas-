@@ -138,6 +138,29 @@ console.log('\nLas dos páginas\n');
   comprobar('y sin red cae a la voz del propio teléfono',
     htmlCara.includes('SpeechSynthesisUtterance'));
 
+  /* El panel son tres piezas: la lógica en el HTML, y el aspecto y la vista en
+     archivos aparte. La vista va después porque lee las variables de la lógica. */
+  const css = await fetch(`http://localhost:${PUERTO}/panel.css`);
+  comprobar('sirve la hoja de estilos del panel',
+    css.status === 200 && (css.headers.get('content-type') || '').includes('text/css'));
+  const vista = await fetch(`http://localhost:${PUERTO}/panel-vista.js`);
+  const jsVista = await vista.text();
+  comprobar('sirve la capa de vista', vista.status === 200);
+  comprobar('la vista carga después de la lógica',
+    html.indexOf('<script src="panel-vista.js"') > html.indexOf("t: 'hb'"));
+  comprobar('la vista no le habla al robot por su cuenta',
+    !jsVista.includes('ws.send') && !jsVista.includes('mandar('));
+  const dibujo2 = await fetch(`http://localhost:${PUERTO}/pikobot.svg`);
+  comprobar('sirve el dibujo del robot', dibujo2.status === 200);
+  comprobar('el espacio no frena mientras se escribe, y Escape siempre',
+    html.includes("e.key === 'Escape' || (e.code === 'Space' && !escribiendo(e))"));
+  comprobar('la cara de Inicio se ve con la primera orden, aun sin teléfono',
+    jsVista.includes('window.ponerExpresion') && jsVista.includes('!hayCara && !caraViva'));
+  comprobar('la parada corta el aleteo aunque el botón siga apretado',
+    html.includes('if (aleteo) { clearInterval(aleteo); aleteo = null; }'));
+  comprobar('la parada sigue en el panel',
+    html.includes('id="btnParada"') && html.includes("mandar('PARA')"));
+
   const pikojs = await fetch(`http://localhost:${PUERTO}/piko.js`);
   const dibujo = await pikojs.text();
   comprobar('piko.js abre el pico por cantidad y no por sí o no',

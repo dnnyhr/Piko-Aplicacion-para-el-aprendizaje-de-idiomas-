@@ -8,7 +8,7 @@
  */
 
 import { useMemo } from 'react';
-import { Animated, Modal, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Animated, Modal, Text, useWindowDimensions, View } from 'react-native';
 import { logroPorId } from '../../core/logros/catalogo';
 import type { Logro } from '../../core/logros/tipos';
 import { useLogros } from '../../features/logros/store';
@@ -16,9 +16,10 @@ import { Boton } from '../components/Boton';
 import { PikoMascota } from '../piko/PikoMascota';
 import { elegir } from '../piko/frases';
 import { useTextos } from '../textos/useTextos';
-import { color, espacio, fuente, radio, texto } from '../tokens';
+import { espacio, fuente, radio, texto } from '../tokens';
 import { LluviaFlores, Rayos, useEntrada } from './Festejo';
 import { Insignia } from './Insignia';
+import { crearEstilos } from '../tema';
 
 export function CelebracionLogros() {
   const cola = useLogros((s) => s.cola);
@@ -30,6 +31,7 @@ export function CelebracionLogros() {
 }
 
 export function Cartel({ logro, onCerrar }: { logro: Logro; onCerrar: () => void }) {
+  const styles = useEstilos();
   const { t, frases } = useTextos();
   const { width, height } = useWindowDimensions();
   const entrada = useEntrada();
@@ -78,7 +80,7 @@ export function Cartel({ logro, onCerrar }: { logro: Logro; onCerrar: () => void
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   fondo: { flex: 1, backgroundColor: 'rgba(10,69,48,0.72)', alignItems: 'center', justifyContent: 'center' },
   tarjeta: {
     backgroundColor: color.papel,
@@ -103,4 +105,4 @@ const styles = StyleSheet.create({
   piko: { flexDirection: 'row', alignItems: 'center', gap: espacio.sm },
   globo: { backgroundColor: color.blanco, borderRadius: radio.md, borderWidth: 2, borderColor: color.borde, paddingHorizontal: espacio.md, paddingVertical: espacio.sm },
   globoTexto: { fontFamily: fuente.cuerpoFuerte, fontSize: 15, color: color.verde },
-});
+}));

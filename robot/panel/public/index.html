@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Piko — control del robot</title>
+<title>Pikobot — panel de control</title>
 <meta name="theme-color" content="#063D22">
+<link rel="icon" href="icono.svg" type="image/svg+xml">
 
 <!-- Fredoka. Se baja de Google como en la landing; sin red cae al tipo del
      sistema y el panel funciona igual, que es lo que tiene que pasar cuando
@@ -12,606 +13,391 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-/* ═══════════════════════════════════════════════════════════════════════
-   Un control de juguete, pensado para un pulgar.
-
-   La idea que ordena todo esto: la página no es un formulario, es la carcasa
-   de un control. El fondo verde oscuro es el plástico, los bloques crema son
-   la placa de botones, y cada botón tiene una sombra sólida abajo que se
-   aplasta al apretarlo. Eso último no es adorno — en un teléfono no hay
-   cursor ni estado «hover», así que el hundido es la única confirmación de
-   que el dedo dio en el blanco.
-
-   Todo mide al menos 56 píxeles de alto. Por debajo de eso, un dedo falla.
-   ═══════════════════════════════════════════════════════════════════════ */
-
-:root{
-  --verde-piko:#0F5D3D;
-  --verde-hondo:#0A4530;
-  --verde-noche:#063D22;
-  --verde-bosque:#197249;
-  --verde-pasto:#97C137;
-  --cielo:#60C5FA;
-  --papel:#F7F0E4;
-  --papel-hondo:#ECE1CC;
-  --papel-sombra:#D6C9AF;
-  --copete:#E97927;
-  --pico:#E8A429;
-  --pico-hondo:#B07715;
-  --grafito:#16241D;
-  --alarma:#C0392B;
-  --alarma-hondo:#8E2A1F;
-  --radio:16px;
-}
-
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{
-  margin:0;
-  background:var(--verde-hondo);
-  color:var(--grafito);
-  font-family:Fredoka,"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  font-size:16px; line-height:1.45;
-  -webkit-font-smoothing:antialiased;
-  -webkit-tap-highlight-color:transparent;
-  /* Sitio para la parada, que va fija abajo y al alcance del pulgar. */
-  padding-bottom:calc(5.5rem + env(safe-area-inset-bottom, 0px));
-}
-h1,h2{margin:0; font-weight:700; letter-spacing:-.01em}
-
-.wrap{width:min(720px,100%); margin-inline:auto; padding:0 .7rem}
-
-/* ---------- la tira de estado ---------- */
-header{
-  background:var(--verde-noche);
-  color:var(--papel);
-  position:sticky; top:0; z-index:20;
-  padding:.55rem 0 .5rem;
-  padding-top:calc(.55rem + env(safe-area-inset-top, 0px));
-  box-shadow:0 3px 0 rgba(0,0,0,.25);
-}
-.barra{display:flex; align-items:center; gap:.4rem; flex-wrap:wrap}
-.barra h1{font-size:1rem; margin-right:auto; letter-spacing:.02em}
-.chip{
-  display:inline-flex; align-items:center; gap:.35rem;
-  background:rgba(255,255,255,.1); border-radius:999px;
-  padding:.25rem .6rem; font-size:.72rem; white-space:nowrap;
-}
-.punto{width:8px; height:8px; border-radius:50%; background:var(--alarma); flex:none}
-.punto.si{background:var(--verde-pasto)}
-.punto.late{animation:latir .4s ease-out}
-@keyframes latir{from{transform:scale(2); opacity:.35} to{transform:scale(1); opacity:1}}
-
-/* ---------- los bloques ---------- */
-main{padding-top:.8rem}
-.bloque{
-  background:var(--papel);
-  border-radius:var(--radio);
-  padding:.85rem .85rem 1rem;
-  margin-bottom:.7rem;
-  box-shadow:0 4px 0 rgba(0,0,0,.22);
-}
-.bloque h2{
-  font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--verde-bosque); margin-bottom:.7rem;
-  display:flex; align-items:center; gap:.45rem;
-}
-.bloque h2::before{
-  content:""; width:16px; height:4px; border-radius:2px;
-  background:var(--pico); flex:none;
-}
-.nota{font-size:.74rem; color:#6B7A70; margin:.7rem 0 0; line-height:1.4}
-
-/* ---------- las teclas ---------- */
-/* La sombra sólida abajo y el hundido al apretar son lo que hace que se
-   sientan como teclas de verdad. En un teléfono es la única confirmación
-   que hay, porque no existe el «hover». */
-button{
-  font:inherit; cursor:pointer; border:none;
-  border-radius:12px;
-  font-weight:650;
-  transition:transform .05s, box-shadow .05s;
-  touch-action:manipulation;
-}
-.tecla{
-  min-height:56px; padding:.7rem .6rem;
-  background:var(--papel-hondo); color:var(--grafito);
-  box-shadow:0 4px 0 var(--papel-sombra);
-  font-size:.95rem;
-}
-.tecla:active{transform:translateY(4px); box-shadow:0 0 0 var(--papel-sombra)}
-.tecla--verde{background:var(--verde-piko); color:var(--papel); box-shadow:0 4px 0 var(--verde-noche)}
-.tecla--verde:active{box-shadow:0 0 0 var(--verde-noche)}
-.tecla--ambar{background:var(--pico); color:var(--grafito); box-shadow:0 4px 0 var(--pico-hondo)}
-.tecla--ambar:active{box-shadow:0 0 0 var(--pico-hondo)}
-
-.fila{display:flex; gap:.5rem; flex-wrap:wrap}
-.fila>*{flex:1 1 0; min-width:0}
-
-/* ---------- la cruz de dirección ---------- */
-/* Es el control que más se va a usar, así que va primero y grande. La cruz
-   funciona porque el dedo no tiene que leer: la posición del botón ya dice
-   para dónde manda. */
-.cruz{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  grid-template-areas:
-    ".      arriba  ."
-    "izq    centro  der";
-  gap:.5rem;
-  background:var(--verde-noche);
-  padding:.55rem; border-radius:var(--radio);
-}
-.cruz .rumbo{min-height:64px; font-size:1rem}
-.rumbo[data-celda="arriba"]{grid-area:arriba}
-.rumbo[data-celda="izq"]{grid-area:izq}
-.rumbo[data-celda="centro"]{grid-area:centro}
-.rumbo[data-celda="der"]{grid-area:der}
-.rumbo .flecha{display:block; font-size:1.5rem; line-height:1}
-.rumbo .rotulo{display:block; font-size:.66rem; font-weight:500; opacity:.8; margin-top:.1rem}
-.rumbo.corriendo{background:var(--copete); box-shadow:0 4px 0 #A9531A}
-
-/* ---------- las acciones ---------- */
-.acciones{display:grid; grid-template-columns:1fr 1fr; gap:.5rem}
-.preset{
-  min-height:64px; padding:.65rem .6rem;
-  background:var(--verde-piko); color:var(--papel);
-  box-shadow:0 4px 0 var(--verde-noche);
-  text-align:left; font-size:.95rem;
-}
-.preset:active{transform:translateY(4px); box-shadow:0 0 0 var(--verde-noche)}
-.preset small{display:block; font-weight:400; font-size:.68rem; opacity:.72; margin-top:.15rem}
-.preset.corriendo{background:var(--copete); box-shadow:0 4px 0 #A9531A}
-.preset--corte{background:var(--papel-hondo); color:var(--grafito); box-shadow:0 4px 0 var(--papel-sombra)}
-.preset--corte:active{box-shadow:0 0 0 var(--papel-sombra)}
-
-/* ---------- expresiones ---------- */
-.caras{display:grid; grid-template-columns:repeat(auto-fit,minmax(90px,1fr)); gap:.45rem}
-.cara{
-  min-height:52px; padding:.55rem .3rem; font-size:.82rem;
-  background:var(--papel-hondo); color:var(--grafito);
-  box-shadow:0 3px 0 var(--papel-sombra);
-}
-.cara:active{transform:translateY(3px); box-shadow:0 0 0 var(--papel-sombra)}
-.cara.puesta{background:var(--verde-piko); color:var(--papel); box-shadow:0 3px 0 var(--verde-noche)}
-
-/* ---------- luces ---------- */
-.modulos{display:grid; grid-template-columns:1fr 1fr; gap:.5rem; margin-bottom:.6rem}
-.modulo{display:flex; flex-direction:column; gap:.3rem; font-size:.72rem; color:#3B4C42}
-.modulo input[type=color]{
-  width:100%; height:64px; padding:0; cursor:pointer;
-  border:3px solid var(--papel-sombra); border-radius:12px; background:none;
-}
-.colores{display:grid; grid-template-columns:repeat(4,1fr); gap:.45rem}
-.colores .tecla{font-size:.8rem; padding:.7rem .25rem}
-.efectos{display:grid; grid-template-columns:repeat(auto-fit,minmax(94px,1fr)); gap:.45rem}
-.efecto{min-height:50px; font-size:.85rem}
-.efecto.puesto{background:var(--verde-piko); color:var(--papel); box-shadow:0 4px 0 var(--verde-noche)}
-
-/* ---------- deslizadores ---------- */
-label{display:block; font-size:.76rem; color:#3B4C42; margin:.5rem 0 .2rem}
-.valor{float:right; font-variant-numeric:tabular-nums; font-weight:700; color:var(--verde-piko)}
-input[type=range]{
-  width:100%; margin:.2rem 0 .5rem;
-  accent-color:var(--verde-piko);
-  height:34px;   /* pista gorda: en un teléfono una fina es imposible de agarrar */
-}
-input[type=number]{
-  width:100%; padding:.7rem .6rem; font:inherit; font-size:1rem;
-  border:3px solid var(--papel-sombra); border-radius:12px; background:#fff;
-}
-input:focus-visible{outline:3px solid var(--verde-pasto); outline-offset:1px}
-button:focus-visible{outline:3px solid var(--verde-pasto); outline-offset:2px}
-
-.sostener{touch-action:none; user-select:none; -webkit-user-select:none}
-.sostener.activo{background:var(--copete); color:var(--papel); box-shadow:0 4px 0 #A9531A}
-
-/* ---------- sonidos ---------- */
-#listaSonidos{display:flex; flex-direction:column; gap:.4rem; max-height:230px; overflow-y:auto}
-#listaSonidos .tecla{text-align:left}
-.vacio{font-size:.8rem; color:#6B7A70; font-style:italic; margin:0}
-
-/* ---------- lo que dice y el ejercicio ---------- */
-/* Los campos de texto son los primeros de este panel que se escriben en vez de
-   apretarse, así que van con el mismo grosor de borde y de alto que las teclas:
-   un formulario metido en un control de juguete se ve pegado con cinta. */
-textarea, input[type=text]{
-  width:100%; padding:.7rem .6rem; font:inherit; font-size:1rem;
-  border:3px solid var(--papel-sombra); border-radius:12px; background:#fff;
-  resize:vertical;
-}
-select{
-  width:100%; min-height:56px; padding:.6rem .5rem; font:inherit; font-size:.95rem;
-  border:3px solid var(--papel-sombra); border-radius:12px; background:#fff;
-}
-
-/* Las frases a mano son etiquetas y no teclas: son muchas y cortas, y en fila
-   ocupan lo que cada una necesita. Igual llegan a 44 píxeles de alto, que es lo
-   mínimo que un dedo acierta. */
-.frases{display:flex; flex-wrap:wrap; gap:.4rem}
-.frase{
-  display:inline-flex; align-items:center; gap:.4rem;
-  min-height:44px; padding:.4rem .85rem; font-size:.85rem; font-weight:500;
-  background:var(--papel-hondo); color:var(--grafito);
-  border-radius:999px; box-shadow:0 3px 0 var(--papel-sombra);
-  text-align:left;
-}
-.frase:active{transform:translateY(3px); box-shadow:0 0 0 var(--papel-sombra)}
-.frase .borrar{
-  font-size:1rem; line-height:1; opacity:.45; padding:0 .15rem;
-}
-.frase .borrar:hover{opacity:1}
-
-/* En qué paso va el ejercicio. No es adorno: el maestro está mirando al chico,
-   no al teléfono, y cuando vuelve la vista tiene que saber en un vistazo si
-   Piko está hablando o esperando. */
-.paso{
-  display:flex; align-items:center; gap:.5rem;
-  margin:.75rem 0 0; padding:.6rem .7rem; border-radius:10px;
-  background:var(--verde-noche); color:var(--papel); font-size:.82rem;
-}
-.paso b{font-weight:650}
-
-/* ---------- el ejercicio de pronunciación ---------- */
-/* Las palabras van como las frases a mano, con un punto del color del nivel:
-   el maestro elige mirando al chico, y el color se lee sin leer. */
-.palabras{max-height:190px; overflow-y:auto; padding:.15rem 0 .3rem}
-.palabras .frase i{width:9px; height:9px; border-radius:50%; flex:none; background:var(--verde-pasto)}
-.palabras .frase[data-nivel="2"] i{background:var(--pico)}
-.palabras .frase[data-nivel="3"] i{background:var(--copete)}
-.palabras .frase small{font-weight:400; opacity:.65}
-.palabras .frase.puesta{background:var(--verde-piko); color:var(--papel); box-shadow:0 3px 0 var(--verde-noche)}
-
-.resultado{margin-top:.6rem; padding:.7rem .75rem; border-radius:12px; background:var(--papel-hondo)}
-.resultado__oyo{margin:0; font-size:.88rem}
-.resultado__oyo b{font-size:1.05rem}
-.resultado__cifras{margin:.45rem 0 0; font-size:.72rem; color:#3B4C42}
-.sello{
-  display:inline-block; margin-left:.35rem; padding:.1rem .55rem; border-radius:999px;
-  font-size:.75rem; font-weight:700; background:var(--papel-sombra);
-}
-.sello.bien{background:var(--verde-pasto); color:var(--verde-noche)}
-.sello.casi{background:var(--pico)}
-/* Cada letra con su barra: alta es que el oído la encontró clara. La h no se
-   califica (gramática, S3) y va gris. */
-.letras{display:flex; flex-wrap:wrap; gap:.25rem; margin-top:.55rem}
-.letra{
-  display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
-  width:30px; height:58px; padding-bottom:.15rem; border-radius:8px;
-  background:linear-gradient(to top, var(--verde-pasto) var(--p), #fff var(--p));
-  font-weight:700; font-size:1rem; color:var(--grafito);
-}
-.letra.floja{background:linear-gradient(to top, var(--copete) var(--p), #fff var(--p))}
-.letra.no-cuenta{background:#fff; color:#A9B3AC}
-.letra.separa{width:10px; background:none}
-.letra small{font-size:.58rem; font-weight:500; opacity:.7}
-.historial{margin:.5rem 0 0; padding-left:1.2rem; font-size:.78rem; color:#3B4C42}
-.historial li{margin:.1rem 0}
-
-details.ajustes{margin-top:.7rem; border-top:2px dashed var(--papel-sombra); padding-top:.5rem}
-details.ajustes summary{cursor:pointer; font-size:.82rem; font-weight:650; color:var(--verde-bosque); padding:.35rem 0}
-.casilla{display:flex; align-items:center; gap:.5rem; font-size:.85rem; margin:.55rem 0}
-.casilla input{width:22px; height:22px; accent-color:var(--verde-piko); flex:none}
-.tecla.sugerida{outline:3px solid var(--grafito); outline-offset:2px}
-
-button:disabled{opacity:.4; cursor:default; transform:translateY(4px); box-shadow:none}
-button:disabled:active{transform:translateY(4px)}
-
-/* ---------- lo de ajustar y lo de mirar ---------- */
-/* El control fino del motor y la consola no se usan jugando: se usan cuando
-   algo anda mal. Van plegados para que no compitan por el pulgar. */
-details.plegable{
-  background:var(--papel); border-radius:var(--radio);
-  margin-bottom:.7rem; box-shadow:0 4px 0 rgba(0,0,0,.22);
-  overflow:hidden;
-}
-details.plegable > summary{
-  padding:.9rem .85rem; cursor:pointer; list-style:none;
-  font-size:.68rem; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--verde-bosque); font-weight:700;
-  display:flex; align-items:center; gap:.45rem;
-}
-details.plegable > summary::-webkit-details-marker{display:none}
-details.plegable > summary::before{content:"▸"; font-size:.9rem; letter-spacing:0}
-details.plegable[open] > summary::before{content:"▾"}
-details.plegable > .cuerpo{padding:0 .85rem 1rem}
-
-.consola{
-  background:var(--verde-noche); color:#CFE8D8; border-radius:12px;
-  padding:.7rem .8rem; height:210px; overflow-y:auto;
-  font-family:ui-monospace,"Cascadia Code",Consolas,monospace;
-  font-size:.74rem; line-height:1.5;
-}
-.consola div{white-space:pre-wrap; word-break:break-word}
-.ent{color:#9FD4B4} .sal{color:var(--pico)} .mal{color:#FF9C8F}
-
-/* ---------- la parada, fija al alcance del pulgar ---------- */
-/* Arriba no sirve: cuando algo se está moviendo mal, la mano ya está abajo
-   sosteniendo el teléfono, y estirarse hasta el encabezado cuesta un segundo
-   que es justo el que no hay. */
-.parada{
-  position:fixed; left:0; right:0; bottom:0; z-index:30;
-  margin:0; width:100%;
-  padding:1.05rem 1rem;
-  padding-bottom:calc(1.05rem + env(safe-area-inset-bottom, 0px));
-  border-radius:0;
-  background:var(--alarma); color:#fff;
-  font-size:1.05rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
-  box-shadow:0 -4px 0 var(--alarma-hondo), 0 -14px 26px rgba(0,0,0,.28);
-}
-.parada:active{background:#A63125; box-shadow:0 -4px 0 var(--alarma-hondo)}
-
-@media (prefers-reduced-motion:reduce){
-  button{transition:none}
-  .punto.late{animation:none}
-}
-
-/* ---------- pantallas grandes ---------- */
-/* En una PC el control de un juguete estirado a mil píxeles se ve absurdo.
-   Se mantiene angosto y se pone en dos columnas, sin perder el tamaño de los
-   botones: sirven igual para el mouse. */
-@media (min-width:760px){
-  .wrap{width:min(1000px,100%); padding:0 1rem}
-  .doble{display:grid; grid-template-columns:1fr 1fr; gap:.7rem; align-items:start; margin-bottom:.7rem}
-  .doble > *{margin-bottom:0}
-  .acciones{grid-template-columns:repeat(3,1fr)}
-  /* Una cruz de un metro de ancho no es una cruz. Se queda del tamaño de una
-     mano aunque el bloque que la contiene sea más largo. */
-  .cruz{max-width:420px; margin-inline:auto}
-  .parada{
-    position:sticky; bottom:.9rem;
-    width:min(968px,calc(100% - 2rem)); margin:1rem auto 0;
-    border-radius:var(--radio);
-  }
-  body{padding-bottom:1.5rem}
-}
-</style>
+<link rel="stylesheet" href="panel.css">
 </head>
 <body>
 
-<header>
-  <div class="wrap barra">
-    <h1>Piko · control</h1>
-    <span class="chip"><span class="punto" id="pSocket"></span><span id="txtSocket">puente</span></span>
-    <span class="chip"><span class="punto" id="pSerie"></span><span id="txtSerie">placa</span></span>
-    <span class="chip"><span class="punto" id="pCara"></span><span id="txtCara">cara</span></span>
-    <span class="chip"><span class="punto" id="pLatido"></span>latido</span>
-    <span class="chip"><span class="punto" id="pOido"></span><span id="txtOido">oído</span></span>
+<!-- Los íconos, dibujados una sola vez. Van acá y no en archivos porque el panel
+     tiene que verse igual sin internet, con el cable USB como única conexión. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-casa" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></symbol>
+    <symbol id="i-hablar" viewBox="0 0 24 24"><path d="M4 5.5h16v11H11l-4.5 3.5v-3.5H4z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></symbol>
+    <symbol id="i-ala" viewBox="0 0 24 24"><path d="M3.5 7.5c6 0 12.5 1 17 8.5-3 .8-5 .4-6.5-.6.3 1.700-.2 2.900-1.200 3.800-1.600-.6-2.800-1.800-3.300-3.400-.8 1-2 1.500-3.500 1.300.3-1.800 0-3.300-.7-4.600C4.300 11 3.700 9.500 3.500 7.500z"/></symbol>
+    <symbol id="i-luz" viewBox="0 0 24 24"><path d="M9 17.500h6M10 20.500h4"/><path d="M12 3.500a6.500 6.500 0 0 0-3.800 11.800c.5.4.8 1 .8 1.700V17.500h6V17c0-.7.3-1.300.8-1.700A6.500 6.500 0 0 0 12 3.500z"/></symbol>
+    <symbol id="i-cara" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.500"/><path d="M8.500 14.500c1 1.300 2.100 2 3.500 2s2.500-.7 3.500-2"/><path d="M9 9.500h.01M15 9.500h.01"/></symbol>
+    <symbol id="i-ejercicio" viewBox="0 0 24 24"><path d="M12 5 2.500 9.500 12 14l9.500-4.500z"/><path d="M6.500 12v4.500c1.500 1.300 3.300 2 5.500 2s4-.7 5.500-2V12"/><path d="M21.500 9.500V15"/></symbol>
+    <symbol id="i-ajustes" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+    <symbol id="i-celebrar" viewBox="0 0 24 24"><path d="M4 20.500 9 8l7 7z"/><path d="M14 4.500v.01M19.500 5.500l-3 3M20 13h.01M12.500 9c.5-1.500.5-2.500 0-3.500M15 11.500c1.500-.5 2.500-.5 3.500 0"/></symbol>
+    <symbol id="i-saludar" viewBox="0 0 24 24"><path d="M8 13V6.500a1.500 1.500 0 0 1 3 0V11M11 11V4.500a1.500 1.500 0 0 1 3 0V11M14 11V6a1.500 1.500 0 0 1 3 0v6M17 9a1.500 1.500 0 0 1 3 0v5.500a6.500 6.500 0 0 1-6.500 6.500h-1a6 6 0 0 1-4.600-2.200L4 14.500c-1-1.300.9-2.900 2.200-1.800L8 14"/></symbol>
+    <symbol id="i-pensar" viewBox="0 0 24 24"><path d="M7.500 15.500a4.500 4.500 0 0 1-.6-8.900 5.500 5.500 0 0 1 10.300.5 4.300 4.300 0 0 1-.7 8.400z"/><path d="M9 19h.01M6 21.500h.01"/></symbol>
+    <symbol id="i-boca" viewBox="0 0 24 24"><path d="M3.500 10c3-3.500 5.500-4 8.500-2.500C15 6 17.500 6.500 20.500 10c-2.500 5-5.300 7-8.500 7s-6-2-8.500-7z"/><path d="M6.500 10.500c3.500 1.300 7.500 1.300 11 0"/></symbol>
+    <symbol id="i-dormir" viewBox="0 0 24 24"><path d="M20 14.500A8.500 8.500 0 0 1 9.500 4a8.500 8.500 0 1 0 10.500 10.500z"/><path d="M15 4h4.500L15 9h4.500"/></symbol>
+    <symbol id="i-cortar" viewBox="0 0 24 24"><rect x="5.500" y="5.500" width="13" height="13" rx="2.500"/></symbol>
+    <symbol id="i-arriba" viewBox="0 0 24 24"><path d="M12 19.500v-15M5.500 11 12 4.500l6.500 6.500"/></symbol>
+    <symbol id="i-izq" viewBox="0 0 24 24"><path d="M19.500 12h-15M11 5.500 4.500 12l6.500 6.500"/></symbol>
+    <symbol id="i-der" viewBox="0 0 24 24"><path d="M4.500 12h15M13 5.500l6.500 6.500-6.500 6.500"/></symbol>
+    <symbol id="i-abajo" viewBox="0 0 24 24"><path d="M12 4.500v15M5.500 13l6.500 6.500 6.500-6.500"/></symbol>
+    <symbol id="i-centro" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.500"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7.500 4.500v15l12-7.500z"/></symbol>
+    <symbol id="i-guardar" viewBox="0 0 24 24"><path d="M6.500 3.500h11v17L12 16.500l-5.500 4z"/></symbol>
+    <symbol id="i-oir" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3.500" y="14" width="4.500" height="6.500" rx="1.500"/><rect x="16" y="14" width="4.500" height="6.500" rx="1.500"/></symbol>
+    <symbol id="i-callar" viewBox="0 0 24 24"><path d="M4 9.500v5h3.500L12.500 19V5L7.500 9.500z"/><path d="m16 9.500 5 5M21 9.500l-5 5"/></symbol>
+    <symbol id="i-nota" viewBox="0 0 24 24"><path d="M9 18V6l10.500-2v12"/><circle cx="6.500" cy="18" r="2.500"/><circle cx="17" cy="16" r="2.500"/></symbol>
+    <symbol id="i-giro-izq" viewBox="0 0 24 24"><path d="M4 5v5.500h5.500"/><path d="M4.500 10.500A8 8 0 1 1 4 14"/></symbol>
+    <symbol id="i-giro-der" viewBox="0 0 24 24"><path d="M20 5v5.500h-5.500"/><path d="M19.500 10.500A8 8 0 1 0 20 14"/></symbol>
+    <symbol id="i-consola" viewBox="0 0 24 24"><rect x="3" y="4.500" width="18" height="15" rx="2.500"/><path d="m7 9.500 3 2.500-3 2.500M12.500 15H17"/></symbol>
+    <symbol id="i-bien" viewBox="0 0 24 24"><path d="m4.500 12.500 5 5 10-11"/></symbol>
+    <symbol id="i-repetir" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.500-5.800L20 8.500"/><path d="M20 3.500v5h-5"/></symbol>
+    <symbol id="i-fijo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.600 5.600 7 7M17 17l1.400 1.400M5.600 18.400 7 17M17 7l1.400-1.400"/></symbol>
+    <symbol id="i-arcoiris" viewBox="0 0 24 24"><path d="M2.500 18a9.500 9.500 0 0 1 19 0"/><path d="M6.500 18a5.500 5.500 0 0 1 11 0"/><path d="M10.500 18a1.500 1.500 0 0 1 3 0"/></symbol>
+    <symbol id="i-respirar" viewBox="0 0 24 24"><path d="M2.500 12c2.500-5 4.500-5 7 0s4.500 5 7 0 3-4.500 5-2.500"/></symbol>
+    <symbol id="i-destello" viewBox="0 0 24 24"><path d="M13 3 5 13.500h6L10 21l9-11h-6.500z"/></symbol>
+    <symbol id="i-apagar" viewBox="0 0 24 24"><path d="M12 3.500V12"/><path d="M7 6.500a8 8 0 1 0 10 0"/></symbol>
+    <symbol id="i-alerta" viewBox="0 0 24 24"><path d="M12 4 2.500 20h19z"/><path d="M12 10v4.500M12 17.300v.01"/></symbol>
+    <symbol id="i-parada" viewBox="0 0 24 24"><path d="M8.300 2.500h7.400l5.800 5.800v7.400l-5.800 5.800H8.300l-5.800-5.800V8.300z"/><path d="M8 12h8" stroke-width="3"/></symbol>
+    <symbol id="i-seguir" viewBox="0 0 24 24"><path d="m9 5.500 6.500 6.500L9 18.500"/></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+
+  <!-- ── Identidad ─────────────────────────────────────────────────────── -->
+  <div class="marca">
+    <img src="icono.svg" alt="" width="44" height="44">
+    <div>
+      <h1>Pikobot</h1>
+      <p>Panel de control</p>
+    </div>
   </div>
-</header>
 
-<main class="wrap">
+  <!-- ── Estado general: se calcula en panel-vista.js ──────────────────── -->
+  <div class="general" id="general" data-tono="mal" role="status" aria-live="polite">
+    <span class="general__luz"></span>
+    <b id="generalTexto">Conectando…</b>
+  </div>
 
-  <section class="bloque">
-    <h2>Ejercicio de pronunciación</h2>
-    <label>Palabras en miskito</label>
-    <div class="fila">
-      <select id="nivel" aria-label="Dificultad">
-        <option value="">Todas</option>
-        <option value="1">Fáciles</option>
-        <option value="2">Medias</option>
-        <option value="3">Difíciles</option>
-      </select>
-      <button class="tecla" id="btnAzar">Otra al azar</button>
-    </div>
-    <div class="frases palabras" id="palabras"><p class="vacio">Buscando las palabras…</p></div>
+  <!-- ── Los cuatro eslabones ──────────────────────────────────────────── -->
+  <div class="chips" aria-label="Estado de la conexión">
+    <span class="chip" id="chipSocket" title="El puente en la PC"><span class="punto" id="pSocket"></span><span id="txtSocket">puente</span></span>
+    <span class="chip" id="chipSerie" title="La placa del robot"><span class="punto" id="pSerie"></span><span id="txtSerie">placa</span></span>
+    <span class="chip" id="chipCara" title="El teléfono de la cara"><span class="punto" id="pCara"></span><span id="txtCara">cara</span></span>
+    <span class="chip" id="chipLatido" title="La telemetría de la placa"><span class="punto" id="pLatido"></span><span id="txtLatido">latido</span></span>
+    <span class="chip" id="chipOido" title="El oído que escucha la pronunciación"><span class="punto" id="pOido"></span><span id="txtOido">oído</span></span>
+  </div>
 
-    <div class="fila" style="margin-top:.4rem">
-      <div style="flex:2 1 0">
-        <label>Palabra</label>
-        <input type="text" id="palabra" value="yul" autocomplete="off" spellcheck="false">
-      </div>
-      <div>
-        <label>Voz de la palabra</label>
-        <select id="idiomaPalabra"></select>
-      </div>
-    </div>
-    <p class="nota" id="sobrePalabra" style="margin-top:.35rem"></p>
-    <label>Consigna</label>
-    <input type="text" id="consigna" value="Di esta palabra" autocomplete="off">
+  <!-- ── Navegación ────────────────────────────────────────────────────── -->
+  <nav class="nav" aria-label="Secciones del panel">
+    <button class="nav__item" data-ir="inicio" aria-current="page"><svg class="ico"><use href="#i-casa"/></svg><span>Inicio</span></button>
+    <button class="nav__item" data-ir="hablar"><svg class="ico"><use href="#i-hablar"/></svg><span>Hablar</span></button>
+    <button class="nav__item" data-ir="mover"><svg class="ico"><use href="#i-ala"/></svg><span>Mover</span></button>
+    <button class="nav__item" data-ir="luces"><svg class="ico"><use href="#i-luz"/></svg><span>Luces</span></button>
+    <button class="nav__item" data-ir="cara"><svg class="ico"><use href="#i-cara"/></svg><span>Cara</span></button>
+    <button class="nav__item" data-ir="ejercicio"><svg class="ico"><use href="#i-ejercicio"/></svg><span>Ejercicio</span></button>
+    <button class="nav__item" data-ir="avanzado"><svg class="ico"><use href="#i-ajustes"/></svg><span>Avanzado</span></button>
+  </nav>
 
-    <div class="fila" style="margin-top:.7rem">
-      <button class="tecla tecla--verde" id="btnPresentar">▶ Presentar el ejercicio</button>
-    </div>
-    <div class="fila" style="margin-top:.5rem">
-      <button class="tecla" id="btnPronunciar">Pronunciar la palabra</button>
-      <button class="tecla" id="btnEsperar">Escuchar otra vez</button>
-    </div>
-    <div class="fila" style="margin-top:.5rem">
-      <button class="tecla tecla--verde" id="btnBien">✓ Lo dijo</button>
-      <button class="tecla tecla--ambar" id="btnMal">↻ Casi</button>
-    </div>
-    <div class="fila" style="margin-top:.5rem">
-      <button class="tecla" id="btnSiguiente">Siguiente palabra</button>
-      <button class="tecla" id="btnTerminar">Terminar</button>
-    </div>
+  <main class="hoja">
+    <p class="aviso" id="aviso" hidden><svg class="ico"><use href="#i-alerta"/></svg><span id="avisoTexto"></span></p>
 
-    <p class="paso"><span class="punto" id="pEjercicio"></span><b id="pasoEjercicio">sin ejercicio</b></p>
+    <!-- ═══ INICIO ═════════════════════════════════════════════════════ -->
+    <section class="vista vista--inicio activa" data-vista="inicio">
 
-    <div class="resultado" id="resultado" hidden>
-      <p class="resultado__oyo">Oyó <b id="oyo"></b> <span class="sello" id="sello"></span></p>
-      <div class="letras" id="letras"></div>
-      <p class="resultado__cifras" id="cifras"></p>
-    </div>
-    <ol class="historial" id="historial"></ol>
+      <article class="heroe">
+        <div class="robot" id="robot"><div id="espejo"></div></div>
+        <dl class="datos">
+          <div><dt>Cara</dt><dd id="datoCara">—</dd></div>
+          <div><dt>Alas</dt><dd id="datoAlas">—</dd></div>
+          <div><dt>Luces</dt><dd id="datoLuces">—</dd></div>
+        </dl>
+        <p class="respuesta"><span class="respuesta__luz" id="respuestaLuz"></span><span id="respuesta">Todavía no hay respuesta de la placa</span></p>
+      </article>
 
-    <details class="ajustes">
-      <summary>Cómo escucha Piko</summary>
-      <label class="casilla"><input type="checkbox" id="escucha" checked> Piko escucha y corrige</label>
-      <div class="fila">
-        <div>
-          <label for="fuente">Micrófono</label>
-          <select id="fuente">
-            <option value="cara">El del robot</option>
-            <option value="control">El de este aparato</option>
-          </select>
+      <article class="tarjeta tarjeta--acciones">
+        <h2><svg class="ico"><use href="#i-celebrar"/></svg>Qué hace</h2>
+        <div class="acciones" id="presets"></div>
+        <details class="ayuda">
+          <summary>Cómo funcionan las secuencias</summary>
+          <p>Cada botón encadena cara, movimiento y luces. Corren en este
+          navegador y no en la placa: si se corta la conexión se cortan solas, que es
+          lo que hay que querer cuando algo se mueve. Cualquier botón corta la
+          secuencia anterior; la parada también.</p>
+        </details>
+      </article>
+
+      <article class="tarjeta tarjeta--mirada">
+        <h2><svg class="ico"><use href="#i-centro"/></svg>Hacia dónde mira</h2>
+        <div class="cruz" id="rumbo"></div>
+        <p class="nota">Gira la cara y mueve la luz al ala contraria. «Centrar» lo
+          devuelve al frente según la cuenta del panel: si el motor quedó torcido,
+          se endereza a mano.</p>
+      </article>
+
+      <article class="tarjeta tarjeta--rapido">
+        <h2><svg class="ico"><use href="#i-hablar"/></svg>Decir algo</h2>
+        <div class="rapido">
+          <input type="text" id="fraseRapida" placeholder="Escribí lo que tiene que decir…" autocomplete="off" aria-label="Lo que tiene que decir Pikobot">
+          <button class="tecla tecla--verde" id="btnDecirRapido"><svg class="ico"><use href="#i-play"/></svg>Decir</button>
         </div>
-        <div>
-          <label for="exigencia">Exigencia</label>
-          <select id="exigencia">
-            <option value="suave">Suave</option>
-            <option value="normal" selected>Normal</option>
-            <option value="estricta">Estricta</option>
-          </select>
-        </div>
-      </div>
-      <div class="fila">
-        <div>
-          <label for="decide">Quién decide</label>
-          <select id="decide">
-            <option value="piko">Piko, solo</option>
-            <option value="maestro">Piko sugiere, el maestro confirma</option>
-          </select>
-        </div>
-      </div>
-      <div class="fila">
-        <div>
-          <label for="segundos">Segundos para contestar</label>
-          <input type="number" id="segundos" min="2" max="10" value="5">
-        </div>
-        <div>
-          <label for="intentos">Intentos por palabra</label>
-          <input type="number" id="intentos" min="1" max="6" value="3">
-        </div>
-      </div>
-      <label class="casilla"><input type="checkbox" id="decirPalabra" checked> Decir la palabra al presentarla</label>
-      <label class="casilla"><input type="checkbox" id="pistas" checked> Decir qué sonido escuchar cuando no sale</label>
-      <label class="casilla"><input type="checkbox" id="pasarSola"> Pasar sola a otra palabra del mismo nivel</label>
-    </details>
+        <button class="enlace" data-ir="hablar">Idioma, frases guardadas y más<svg class="ico"><use href="#i-seguir"/></svg></button>
+      </article>
 
-    <p class="nota">Piko dice la palabra, escucha al chico por el micrófono y le
-      pregunta al oído (<b>robot/escucha</b>) qué tan cerca estuvo. Cuando no
-      sale, nunca dice «mal»: vuelve a mostrar cómo es. Las teclas ✓ y ↻ siguen
-      mandando: el maestro puede corregir a Piko en cualquier momento. Las
-      palabras son las confirmadas del diccionario; cuáles y por qué cuestan
-      está en <b>robot/panel/palabras.json</b>.</p>
-  </section>
-
-  <section class="bloque">
-    <h2>Lo que dice</h2>
-    <textarea id="frase" rows="2" placeholder="Escribí lo que tiene que decir…"></textarea>
-    <div class="fila" style="margin-top:.5rem">
-      <div style="flex:1 1 0"><select id="idiomaVoz"></select></div>
-      <button class="tecla tecla--verde" style="flex:2 1 0" id="btnDecir">Decir</button>
-    </div>
-    <div class="fila" style="margin-top:.5rem">
-      <button class="tecla" id="btnGuardarFrase">Guardar</button>
-      <button class="tecla" id="btnProbarAca">Probar acá</button>
-      <button class="tecla" id="btnCallarVoz">Callar</button>
-    </div>
-    <label>Frases a mano</label>
-    <div class="frases" id="frases"></div>
-    <p class="nota">La voz la pone el traductor de Google y sale por el teléfono
-      del robot, que es donde está la cara y donde el pico se mueve con lo que
-      suena. Las lenguas originarias no están en Google: escritas como suenan y
-      leídas con la voz en español quedan más cerca que con cualquier otra.
-      Sin internet, Piko cae a la voz del propio teléfono.</p>
-  </section>
-
-  <section class="bloque">
-    <h2>Hacia dónde mira</h2>
-    <div class="cruz" id="rumbo"></div>
-    <p class="nota">Gira la cara y mueve la luz al ala contraria. «Centrar» lo
-      devuelve al frente según la cuenta del panel: si el motor quedó torcido,
-      se endereza a mano.</p>
-  </section>
-
-  <section class="bloque">
-    <h2>Qué hace</h2>
-    <div class="acciones" id="presets"></div>
-    <p class="nota">Cada botón encadena cara, movimiento y luces. Corren en este
-      navegador y no en la placa: si se corta la conexión se cortan solas, que es
-      lo que hay que querer cuando algo se mueve. Cualquier botón corta la
-      secuencia anterior; la parada también.</p>
-  </section>
-
-  <section class="bloque">
-    <h2>Expresiones</h2>
-    <div class="caras" id="caras"><p class="vacio">Buscando…</p></div>
-    <p class="nota" id="notaCara">La cara se abre en <b>/cara</b> desde el teléfono del robot.</p>
-  </section>
-
-  <div class="doble">
-
-    <section class="bloque">
-      <h2>Alas y cuerpo</h2>
-      <label>Ángulo <span class="valor" id="vServo">90°</span></label>
-      <input type="range" id="servo" min="0" max="180" value="90">
-      <div class="fila">
-        <button class="tecla" data-servo="0" data-reposo>Abajo</button>
-        <button class="tecla" data-servo="90">Centro</button>
-        <button class="tecla" data-servo="150">Arriba</button>
-      </div>
-      <div class="fila" style="margin-top:.5rem">
-        <button class="tecla tecla--verde sostener" id="aletear">Aletear ✦<br><small style="font-weight:400;opacity:.75">mantené apretado</small></button>
+      <div class="atajos" aria-label="Accesos directos">
+        <button class="atajo" data-ir="mover"><svg class="ico"><use href="#i-ala"/></svg><span><b>Alas y aleteo</b><small id="atajoMover">—</small></span></button>
+        <button class="atajo" data-ir="luces"><svg class="ico"><use href="#i-luz"/></svg><span><b>Luces</b><small id="atajoLuces">—</small></span></button>
+        <button class="atajo" data-ir="cara"><svg class="ico"><use href="#i-nota"/></svg><span><b>Caras y sonidos</b><small id="atajoCara">—</small></span></button>
+        <button class="atajo" data-ir="ejercicio"><svg class="ico"><use href="#i-ejercicio"/></svg><span><b>Ejercicio</b><small id="atajoEjercicio">—</small></span></button>
       </div>
     </section>
 
-    <section class="bloque">
-      <h2>Luces</h2>
-      <div class="modulos">
-        <div class="modulo">
-          <span>Ala izquierda</span>
-          <input type="color" id="colorA" value="#ffffff">
+    <!-- ═══ HABLAR ═════════════════════════════════════════════════════ -->
+    <section class="vista vista--dos" data-vista="hablar">
+      <article class="tarjeta">
+        <h2><svg class="ico"><use href="#i-hablar"/></svg>Lo que dice</h2>
+        <textarea id="frase" rows="3" placeholder="Escribí lo que tiene que decir…" aria-label="Lo que tiene que decir Pikobot"></textarea>
+        <div class="fila fila--decir">
+          <select id="idiomaVoz" aria-label="Idioma de la voz"></select>
+          <button class="tecla tecla--verde" id="btnDecir"><svg class="ico"><use href="#i-play"/></svg>Decir</button>
         </div>
-        <div class="modulo">
-          <span>Ala derecha</span>
-          <input type="color" id="colorB" value="#ffffff">
+        <div class="fila">
+          <button class="tecla" id="btnGuardarFrase"><svg class="ico"><use href="#i-guardar"/></svg>Guardar</button>
+          <button class="tecla" id="btnProbarAca"><svg class="ico"><use href="#i-oir"/></svg>Probar acá</button>
+          <button class="tecla" id="btnCallarVoz"><svg class="ico"><use href="#i-callar"/></svg>Callar</button>
         </div>
-      </div>
-      <div class="colores">
-        <button class="tecla" data-ambas="#ffffff">Blanco</button>
-        <button class="tecla tecla--ambar" data-ambas="#e8a429">Ámbar</button>
-        <button class="tecla" data-ambas="#60c5fa">Cielo</button>
-        <button class="tecla" data-ambas="#000000">Apagar</button>
-      </div>
-      <label>Brillo <span class="valor" id="vBrillo">120</span></label>
-      <input type="range" id="brillo" min="0" max="255" value="120">
-      <label>Efectos</label>
-      <div class="efectos" id="efectos"></div>
-      <p class="nota">Los dos módulos, no luz por luz. Arrancan en blanco.</p>
+        <details class="ayuda">
+          <summary>De dónde sale la voz</summary>
+          <p>La voz la pone el traductor de Google y sale por el teléfono
+          del robot, que es donde está la cara y donde el pico se mueve con lo que
+          suena. Las lenguas originarias no están en Google: escritas como suenan y
+          leídas con la voz en español quedan más cerca que con cualquier otra.
+          Sin internet, Piko cae a la voz del propio teléfono.</p>
+        </details>
+      </article>
+
+      <article class="tarjeta">
+        <h2><svg class="ico"><use href="#i-guardar"/></svg>Frases a mano</h2>
+        <div class="frases" id="frases"></div>
+        <p class="nota">Tocá una frase y Piko la dice. Las que guardás se borran con la ×.</p>
+      </article>
     </section>
 
-  </div>
+    <!-- ═══ MOVER ══════════════════════════════════════════════════════ -->
+    <section class="vista vista--dos" data-vista="mover">
+      <article class="tarjeta">
+        <h2><svg class="ico"><use href="#i-ala"/></svg>Alas y cuerpo</h2>
+        <div class="medida">
+          <label for="servo">Ángulo</label>
+          <span class="valor" id="vServo">90°</span>
+        </div>
+        <input type="range" id="servo" min="0" max="180" value="90">
+        <div class="fila fila--tres">
+          <button class="tecla tecla--pos" data-servo="0" data-reposo><svg class="ico"><use href="#i-abajo"/></svg>Abajo</button>
+          <button class="tecla tecla--pos" data-servo="90"><svg class="ico"><use href="#i-centro"/></svg>Centro</button>
+          <button class="tecla tecla--pos" data-servo="150"><svg class="ico"><use href="#i-arriba"/></svg>Arriba</button>
+        </div>
+        <p class="nota">Un solo motor mueve las alas y el cuerpo: van siempre juntos, como una sola pieza.</p>
+      </article>
 
-  <section class="bloque">
-    <h2>Sonidos</h2>
-    <div id="listaSonidos"><p class="vacio">Buscando…</p></div>
-    <button class="tecla" id="btnCallar" style="width:100%;margin-top:.6rem">Callar</button>
-    <p class="nota">Suenan en el teléfono del robot, que es donde está la cara.</p>
-  </section>
+      <article class="tarjeta tarjeta--aleteo">
+        <h2><svg class="ico"><use href="#i-celebrar"/></svg>Aleteo</h2>
+        <button class="tecla tecla--verde sostener" id="aletear"><svg class="ico"><use href="#i-ala"/></svg>Aletear<small>mantené apretado</small></button>
+        <p class="nota">Aletea mientras el dedo siga apretando. Al soltarlo, las alas bajan solas.</p>
+      </article>
+    </section>
 
-  <details class="plegable">
-    <summary>Girar la cara a mano</summary>
-    <div class="cuerpo">
-      <div class="fila">
-        <div><label>Medios pasos</label><input type="number" id="pasos" value="1024" min="1" max="999999"></div>
-        <div><label>RPM</label><input type="number" id="rpm" value="10" min="1" max="15"></div>
-      </div>
-      <div class="fila" style="margin-top:.6rem">
-        <button class="tecla tecla--verde" id="paIzq">↺ Izquierda</button>
-        <button class="tecla tecla--verde" id="paDer">Derecha ↻</button>
-      </div>
-      <p class="nota">4096 medios pasos es una vuelta entera; 1024 es un cuarto.
-        Arriba de 15 rpm zumba en vez de girar, y con el teléfono montado conviene
-        ir más despacio: un motor a pasos tiene más fuerza cuanto más lento va.</p>
-    </div>
-  </details>
+    <!-- ═══ LUCES ══════════════════════════════════════════════════════ -->
+    <section class="vista vista--dos" data-vista="luces">
+      <article class="tarjeta">
+        <h2><svg class="ico"><use href="#i-luz"/></svg>Color de las alas</h2>
+        <div class="modulos">
+          <label class="modulo">
+            <span>Ala izquierda</span>
+            <input type="color" id="colorA" value="#ffffff">
+          </label>
+          <label class="modulo">
+            <span>Ala derecha</span>
+            <input type="color" id="colorB" value="#ffffff">
+          </label>
+        </div>
+        <p class="rotulo">Las dos alas a la vez</p>
+        <div class="colores">
+          <button class="tecla muestra" data-ambas="#ffffff"><i style="background:#fff"></i>Blanco</button>
+          <button class="tecla muestra" data-ambas="#e8a429"><i style="background:#e8a429"></i>Ámbar</button>
+          <button class="tecla muestra" data-ambas="#60c5fa"><i style="background:#60c5fa"></i>Cielo</button>
+          <button class="tecla muestra" data-ambas="#000000"><i style="background:#16241d"></i>Apagar</button>
+        </div>
+      </article>
 
-  <details class="plegable">
-    <summary>Consola</summary>
-    <div class="cuerpo">
-      <div class="consola" id="consola"></div>
-    </div>
-  </details>
+      <article class="tarjeta">
+        <h2><svg class="ico"><use href="#i-destello"/></svg>Brillo y efectos</h2>
+        <div class="medida">
+          <label for="brillo">Brillo</label>
+          <span class="valor" id="vBrillo">120</span>
+        </div>
+        <input type="range" id="brillo" min="0" max="255" value="120">
+        <p class="rotulo">Efectos</p>
+        <div class="efectos" id="efectos"></div>
+        <p class="nota">Los dos módulos, no luz por luz. Arrancan en blanco.</p>
+      </article>
+    </section>
 
-</main>
+    <!-- ═══ CARA Y SONIDOS ═════════════════════════════════════════════ -->
+    <section class="vista vista--dos vista--cara" data-vista="cara">
+      <article class="tarjeta">
+        <h2><svg class="ico"><use href="#i-cara"/></svg>Expresiones</h2>
+        <div class="caras" id="caras"><p class="vacio">Buscando…</p></div>
+        <p class="nota" id="notaCara">La cara se abre en <b>/cara</b> desde el teléfono del robot.</p>
+      </article>
+
+      <article class="tarjeta">
+        <h2><svg class="ico"><use href="#i-nota"/></svg>Sonidos</h2>
+        <div id="listaSonidos"><p class="vacio">Buscando…</p></div>
+        <button class="tecla tecla--ancha" id="btnCallar"><svg class="ico"><use href="#i-callar"/></svg>Callar</button>
+        <p class="nota">Suenan en el teléfono del robot, que es donde está la cara.</p>
+      </article>
+    </section>
+
+    <!-- ═══ EJERCICIO ══════════════════════════════════════════════════ -->
+    <section class="vista vista--dos" data-vista="ejercicio">
+      <article class="tarjeta">
+        <h2><svg class="ico"><use href="#i-ejercicio"/></svg>Ejercicio de pronunciación</h2>
+        <label for="nivel">Palabras en miskito</label>
+        <div class="fila">
+          <select id="nivel" aria-label="Dificultad">
+            <option value="">Todas</option>
+            <option value="1">Fáciles</option>
+            <option value="2">Medias</option>
+            <option value="3">Difíciles</option>
+          </select>
+          <button class="tecla" id="btnAzar">Otra al azar</button>
+        </div>
+        <div class="frases palabras" id="palabras"><p class="vacio">Buscando las palabras…</p></div>
+        <div class="fila fila--palabra">
+          <div>
+            <label for="palabra">Palabra</label>
+            <input type="text" id="palabra" value="yul" autocomplete="off" spellcheck="false">
+          </div>
+          <div>
+            <label for="idiomaPalabra">Voz de la palabra</label>
+            <select id="idiomaPalabra"></select>
+          </div>
+        </div>
+        <p class="nota" id="sobrePalabra"></p>
+        <label for="consigna">Consigna</label>
+        <input type="text" id="consigna" value="Di esta palabra" autocomplete="off">
+        <button class="tecla tecla--verde tecla--ancha" id="btnPresentar"><svg class="ico"><use href="#i-play"/></svg>Presentar el ejercicio</button>
+      </article>
+
+      <article class="tarjeta">
+        <h2><svg class="ico"><use href="#i-oir"/></svg>Durante el ejercicio</h2>
+        <p class="paso"><span class="punto" id="pEjercicio"></span><b id="pasoEjercicio">sin ejercicio</b></p>
+        <div class="fila">
+          <button class="tecla" id="btnPronunciar"><svg class="ico"><use href="#i-hablar"/></svg>Pronunciar la palabra</button>
+          <button class="tecla" id="btnEsperar"><svg class="ico"><use href="#i-oir"/></svg>Escuchar otra vez</button>
+        </div>
+        <div class="fila">
+          <button class="tecla tecla--verde" id="btnBien"><svg class="ico"><use href="#i-bien"/></svg>Lo dijo</button>
+          <button class="tecla tecla--ambar" id="btnMal"><svg class="ico"><use href="#i-repetir"/></svg>Casi</button>
+        </div>
+        <div class="fila">
+          <button class="tecla" id="btnSiguiente"><svg class="ico"><use href="#i-seguir"/></svg>Siguiente palabra</button>
+          <button class="tecla" id="btnTerminar"><svg class="ico"><use href="#i-cortar"/></svg>Terminar</button>
+        </div>
+
+        <div class="resultado" id="resultado" hidden>
+          <p class="resultado__oyo">Oyó <b id="oyo"></b> <span class="sello" id="sello"></span></p>
+          <div class="letras" id="letras"></div>
+          <p class="resultado__cifras" id="cifras"></p>
+        </div>
+        <ol class="historial" id="historial"></ol>
+
+        <details class="ajustes">
+          <summary>Cómo escucha Piko</summary>
+          <label class="casilla"><input type="checkbox" id="escucha" checked> Piko escucha y corrige</label>
+          <div class="fila">
+            <div>
+              <label for="fuente">Micrófono</label>
+              <select id="fuente">
+                <option value="cara">El del robot</option>
+                <option value="control">El de este aparato</option>
+              </select>
+            </div>
+            <div>
+              <label for="exigencia">Exigencia</label>
+              <select id="exigencia">
+                <option value="suave">Suave</option>
+                <option value="normal" selected>Normal</option>
+                <option value="estricta">Estricta</option>
+              </select>
+            </div>
+          </div>
+          <div class="fila">
+            <div>
+              <label for="decide">Quién decide</label>
+              <select id="decide">
+                <option value="piko">Piko, solo</option>
+                <option value="maestro">Piko sugiere, el maestro confirma</option>
+              </select>
+            </div>
+          </div>
+          <div class="fila">
+            <div>
+              <label for="segundos">Segundos para contestar</label>
+              <input type="number" id="segundos" min="2" max="10" value="5">
+            </div>
+            <div>
+              <label for="intentos">Intentos por palabra</label>
+              <input type="number" id="intentos" min="1" max="6" value="3">
+            </div>
+          </div>
+          <label class="casilla"><input type="checkbox" id="decirPalabra" checked> Decir la palabra al presentarla</label>
+          <label class="casilla"><input type="checkbox" id="pistas" checked> Decir qué sonido escuchar cuando no sale</label>
+          <label class="casilla"><input type="checkbox" id="pasarSola"> Pasar sola a otra palabra del mismo nivel</label>
+        </details>
+
+        <details class="ayuda">
+          <summary>Cómo funciona el ejercicio</summary>
+          <p>Piko dice la palabra, escucha al chico por el micrófono y le
+          pregunta al oído (<b>robot/escucha</b>) qué tan cerca estuvo. Cuando no
+          sale, nunca dice «mal»: vuelve a mostrar cómo es. Las teclas de arriba
+          siguen mandando: el maestro puede corregir a Piko en cualquier momento.
+          Las palabras son las confirmadas del diccionario; cuáles y por qué
+          cuestan está en <b>robot/panel/palabras.json</b>.</p>
+        </details>
+      </article>
+    </section>
+
+    <!-- ═══ AVANZADO ═══════════════════════════════════════════════════ -->
+    <section class="vista vista--dos" data-vista="avanzado">
+      <article class="tarjeta">
+        <h2><svg class="ico"><use href="#i-giro-der"/></svg>Girar la cara a mano</h2>
+        <div class="fila">
+          <div><label for="pasos">Medios pasos</label><input type="number" id="pasos" value="1024" min="1" max="999999"></div>
+          <div><label for="rpm">RPM</label><input type="number" id="rpm" value="10" min="1" max="15"></div>
+        </div>
+        <div class="fila">
+          <button class="tecla tecla--verde" id="paIzq"><svg class="ico"><use href="#i-giro-izq"/></svg>Izquierda</button>
+          <button class="tecla tecla--verde" id="paDer">Derecha<svg class="ico"><use href="#i-giro-der"/></svg></button>
+        </div>
+        <p class="nota">4096 medios pasos es una vuelta entera; 1024 es un cuarto.
+          Arriba de 15 rpm zumba en vez de girar, y con el teléfono montado conviene
+          ir más despacio: un motor a pasos tiene más fuerza cuanto más lento va.</p>
+      </article>
+
+      <article class="tarjeta">
+        <h2><svg class="ico"><use href="#i-consola"/></svg>Consola</h2>
+        <div class="consola" id="consola"></div>
+      </article>
+    </section>
+  </main>
+
+  <button class="parada" id="btnParada"><svg class="ico"><use href="#i-parada"/></svg><span>Parada de emergencia</span></button>
+</div>
+
+<p class="brindis" id="brindis" role="alert" hidden></p>
 
 <!-- Sólo para «probar acá»: la voz de verdad sale por el teléfono del robot. -->
 <audio id="vozPanel"></audio>
-
-<button class="parada" id="btnParada">Parada de emergencia</button>
 
 <script src="piko.js"></script>
 <script src="vigilia.js"></script>
@@ -737,16 +523,20 @@ function parar() {
   // seguiría hablando y mandando expresiones sobre un robot ya frenado.
   cortarSecuencia();
   cortarEjercicio();
+  /* El aleteo también, aunque el dedo siga apretando: si no, seguiría mandando
+     ángulos después de la parada. Al quedar en null, soltar el botón ya no baja
+     las alas, que es lo que se quiere: después de una parada no se mueve nada. */
+  if (aleteo) { clearInterval(aleteo); aleteo = null; }
   mandar('PARA');
   document.querySelectorAll('.sostener').forEach((b) => b.classList.remove('activo'));
 }
 $('btnParada').addEventListener('click', parar);
+/* El espacio frena en todo el panel menos donde se está escribiendo: ahí es un
+   espacio. Sin esto, cada palabra de una frase mandaba una parada y se comía el
+   espacio. Escape frena siempre, también con el cursor en un campo. */
+const escribiendo = (e) => e.target.matches?.('textarea, input[type=text], input[type=number]');
 document.addEventListener('keydown', (e) => {
-  /* El espacio frena, salvo escribiendo: «titan yamni» lleva uno, y antes
-     cada palabra de dos partes paraba el robot a la mitad. Escape frena
-     siempre. */
-  const escribiendo = e.target.closest && e.target.closest('input, textarea, select');
-  if (e.key === 'Escape' || (e.code === 'Space' && !escribiendo)) { e.preventDefault(); parar(); }
+  if (e.key === 'Escape' || (e.code === 'Space' && !escribiendo(e))) { e.preventDefault(); parar(); }
 });
 document.addEventListener('visibilitychange', () => { if (document.hidden) parar(); });
 
@@ -1848,5 +1638,6 @@ Vigilia.empezar({
 
 conectar();
 </script>
+<script src="panel-vista.js"></script>
 </body>
 </html>

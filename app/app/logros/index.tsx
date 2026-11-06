@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Boton } from '../../src/ui/components/Boton';
 import { BarraProgreso } from '../../src/ui/components/BarraProgreso';
@@ -20,11 +20,14 @@ import { useProgreso } from '../../src/features/progreso/store';
 import { CATEGORIAS } from '../../src/core/logros/catalogo';
 import { logrosDe, resumenLogros } from '../../src/core/logros/evaluar';
 import type { LogroConEstado } from '../../src/core/logros/tipos';
-import { color, espacio, radio, texto } from '../../src/ui/tokens';
+import { espacio, radio, texto } from '../../src/ui/tokens';
+import { crearEstilos, useColor } from '../../src/ui/tema';
 
 const COLUMNAS = 3;
 
 export default function MisLogros() {
+  const styles = useEstilos();
+  const color = useColor();
   const router = useRouter();
   const { t } = useTextos();
   const { width } = useWindowDimensions();
@@ -120,7 +123,7 @@ export default function MisLogros() {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { gap: espacio.lg, paddingBottom: espacio.xl, maxWidth: 560, width: '100%', alignSelf: 'center' },
   titulo: { ...texto.display, color: color.verde },
 
@@ -171,4 +174,4 @@ const styles = StyleSheet.create({
   proximo: { ...texto.chico, fontSize: 11, color: color.intentoTinta, fontFamily: 'NunitoSans_700Bold' },
   exclusivo: { backgroundColor: '#F4C542', borderRadius: radio.redondo, paddingHorizontal: espacio.sm },
   exclusivoTexto: { ...texto.etiqueta, fontSize: 10, color: '#5C3D02' },
-});
+}));

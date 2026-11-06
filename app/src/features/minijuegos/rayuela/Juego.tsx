@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Svg, { Path } from 'react-native-svg';
 import { BarraFeedback } from '../../exercises/BarraFeedback';
@@ -26,9 +26,12 @@ import {
   type Pregunta,
 } from '../../../core/minijuegos/rayuela';
 import { callar, decir, vozDePiko } from '../voz';
+import { VerEscrito } from '../../instrucciones/VerEscrito';
+import { textoDelAudio } from '../../../core/preferencias/escrito';
 import { Tablero, type Casilla } from './Tablero';
 import { Globito } from '../../../ui/minijuegos/Iconos';
-import { color, espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
+import { espacio, fuente, labio, radio, texto } from '../../../ui/tokens';
+import { crearEstilos, useColor } from '../../../ui/tema';
 import { usePausaLogros } from '../../logros/store';
 
 /** Dónde termina el cielo y empieza el patio. */
@@ -48,6 +51,8 @@ export interface JuegoProps {
 type Resultado = null | 'acierto' | 'intento';
 
 export function Juego({ preguntas, lengua, nivel, sacuanjoches, onResponder, onTerminar, onSalir }: JuegoProps) {
+  const styles = useEstilos();
+  const color = useColor();
   // Un logro ganado a mitad de la ronda se festeja al terminarla.
   usePausaLogros();
   const { t, frases, idioma } = useTextos();
@@ -204,7 +209,10 @@ export function Juego({ preguntas, lengua, nivel, sacuanjoches, onResponder, onT
               {q.tipo === 'inverso' ? `«${q.foco}»` : q.foco}
             </Text>
           ) : (
-            <Text style={styles.oculto}>• • •</Text>
+            <>
+              <Text style={styles.oculto}>• • •</Text>
+              <VerEscrito key={paso} alternativa={textoDelAudio(q.palabra, q.opcionesEnMeta)} />
+            </>
           )}
         </View>
         {conParlante && (
@@ -256,7 +264,7 @@ export function Juego({ preguntas, lengua, nivel, sacuanjoches, onResponder, onT
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   raiz: { flex: 1, backgroundColor: color.nube },
   cabecera: {
     flexDirection: 'row',
@@ -343,4 +351,4 @@ const styles = StyleSheet.create({
   parlanteGrande: { width: 60, height: 60 },
   parlanteSonando: { backgroundColor: '#1F7FB0' },
   patio: { position: 'absolute', left: 0, right: 0, top: HORIZONTE + 12, bottom: 0 },
-});
+}));

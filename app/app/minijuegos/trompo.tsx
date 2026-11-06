@@ -112,6 +112,7 @@ export default function Trompo() {
     <Pantalla>
       <ElegirPartida
         {...juego.eleccion}
+        actividad="trompo"
         titulo={t('trompo.nombre')}
         portada={<DibujoTrompo tam={120} />}
         pregunta={t('trompo.elegir_lengua')}

@@ -6,7 +6,7 @@
  */
 
 import { useEffect } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useRouter, type Href } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
 import { Boton } from '../../src/ui/components/Boton';
@@ -17,9 +17,12 @@ import { ContadorSacuanjoches } from '../../src/ui/arbol/ContadorSacuanjoches';
 import { useTextos } from '../../src/ui/textos/useTextos';
 import { useProgreso } from '../../src/features/progreso/store';
 import { MINIJUEGOS } from '../../src/features/minijuegos/catalogo';
-import { color, espacio, labio, radio, texto } from '../../src/ui/tokens';
+import { espacio, labio, radio, texto } from '../../src/ui/tokens';
+import { crearEstilos, useColor } from '../../src/ui/tema';
 
 export default function Minijuegos() {
+  const styles = useEstilos();
+  const color = useColor();
   const router = useRouter();
   const { t } = useTextos();
   const sacuanjoches = useProgreso((s) => s.estado.sacuanjoches);
@@ -69,7 +72,7 @@ export default function Minijuegos() {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { flexGrow: 1, gap: espacio.xl, paddingBottom: espacio.xl },
   cabecera: { flexDirection: 'row', alignItems: 'center', gap: espacio.md },
   redondo: {
@@ -100,4 +103,4 @@ const styles = StyleSheet.create({
   nombre: { ...texto.subtitulo, color: color.grafito },
   descripcion: { ...texto.cuerpo, color: color.tinta },
   pronto: { ...texto.chico, color: color.tintaSuave, textAlign: 'center' },
-});
+}));

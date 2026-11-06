@@ -63,6 +63,18 @@ export function ultimaLenguaMinijuegos(sql: SqlDriver): string | null {
   );
 }
 
+/** «Mi forma de aprender», tal como la escribe `escribirPreferencias`. */
+export function recordarPreferencias(sql: SqlDriver, json: string): void {
+  sql.run('UPDATE device SET preferencias = ? WHERE id = 1', [json]);
+}
+
+export function ultimasPreferencias(sql: SqlDriver): string | null {
+  return (
+    sql.get<{ preferencias: string | null }>('SELECT preferencias FROM device WHERE id = 1')
+      ?.preferencias ?? null
+  );
+}
+
 /** Los logros ya celebrados en este teléfono, por estudiante. */
 export function recordarLogrosVistos(sql: SqlDriver, vistos: Record<string, string[]>): void {
   sql.run('UPDATE device SET logros_vistos = ? WHERE id = 1', [JSON.stringify(vistos)]);

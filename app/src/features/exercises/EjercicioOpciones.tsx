@@ -7,16 +7,18 @@
  */
 
 import { useEffect, useMemo, useRef } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import * as Speech from 'expo-speech';
 import Svg, { Path } from 'react-native-svg';
 import { Opcion, type EstadoOpcion } from '../../ui/components/Opcion';
 import { PikoMascota } from '../../ui/piko/PikoMascota';
-import { color, espacio, radio, texto } from '../../ui/tokens';
+import { espacio, radio, texto } from '../../ui/tokens';
 import { mulberry32, shuffle } from '../../core/ids';
 import { normalizar } from '../../core/content/verificar';
 import type { ChoiceItem, ListenItem } from '../../core/content/schema';
 import { useTextos } from '../../ui/textos/useTextos';
+import { VerEscrito } from '../instrucciones/VerEscrito';
+import { crearEstilos, useColor } from '../../ui/tema';
 
 export interface EjercicioOpcionesProps {
   item: ChoiceItem | ListenItem;
@@ -25,6 +27,8 @@ export interface EjercicioOpcionesProps {
   /** Tras responder: se pinta la correcta y se bloquean los toques. */
   revelado: boolean;
   seed: number;
+  /** `false` cuando la narración ya dice la palabra después de la instrucción. */
+  autoSonar?: boolean;
 }
 
 export function EjercicioOpciones({
@@ -33,7 +37,10 @@ export function EjercicioOpciones({
   onSeleccion,
   revelado,
   seed,
+  autoSonar = true,
 }: EjercicioOpcionesProps) {
+  const styles = useEstilos();
+  const color = useColor();
   // Se barajan una sola vez por ítem: si se rebarajaran en cada render, las
   // tarjetas saltarían de lugar bajo el dedo del estudiante.
   const opciones = useMemo(
@@ -58,11 +65,11 @@ export function EjercicioOpciones({
   // que descubrir que hay algo que tocar.
   const yaSono = useRef<string | null>(null);
   useEffect(() => {
-    if (!esEscucha || yaSono.current === item.id) return;
+    if (!esEscucha || !autoSonar || yaSono.current === item.id) return;
     yaSono.current = item.id;
     const t = setTimeout(hablar, 260);
     return () => clearTimeout(t);
-  }, [item.id, esEscucha]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [item.id, esEscucha, autoSonar]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => () => void Speech.stop(), []);
 
@@ -83,11 +90,11 @@ export function EjercicioOpciones({
         <PikoMascota estado={revelado ? 'idle' : 'pensando'} tam={92} />
         <View style={styles.enunciado}>
           {esEscucha ? (
-            <Pressable onPress={hablar} style={styles.bocina} accessibilityRole="button">
+            <Pressable onPress={hablar} style={styles.bocina} accessibilityRole="button" accessibilityLabel={t('ejercicio.tocar_para_escuchar')}>
               <Svg viewBox="0 0 24 24" width={30} height={30}>
                 <Path
                   d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a6.8 6.8 0 0 1 0 13.4v2.1a8.9 8.9 0 0 0 0-17.6z"
-                  fill={color.blanco}
+                  fill={color.tintaCielo}
                 />
               </Svg>
               <Text style={styles.bocinaTexto}>{t('ejercicio.tocar_para_escuchar')}</Text>
@@ -97,6 +104,10 @@ export function EjercicioOpciones({
           )}
         </View>
       </View>
+
+      {item.type === 'listen' && !revelado && (
+        <VerEscrito key={item.id} alternativa={{ forma: 'significa', texto: item.gloss }} />
+      )}
 
       <Text style={styles.instruccion}>
         {t(esEscucha ? 'ejercicio.que_escuchaste' : 'ejercicio.elegir_traduccion')}
@@ -119,7 +130,7 @@ export function EjercicioOpciones({
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { paddingBottom: espacio.xxxl, gap: espacio.xl },
   cabecera: { flexDirection: 'row', alignItems: 'center', gap: espacio.md },
   enunciado: { flex: 1 },
@@ -134,5 +145,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: espacio.sm,
   },
-  bocinaTexto: { ...texto.chico, color: color.blanco, fontFamily: 'Fredoka_600SemiBold' },
-});
+  bocinaTexto: { ...texto.chico, color: color.tintaCielo, fontFamily: 'Fredoka_600SemiBold' },
+}));

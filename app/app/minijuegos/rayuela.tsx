@@ -111,6 +111,7 @@ export default function Rayuela() {
     <Pantalla>
       <ElegirPartida
         {...juego.eleccion}
+        actividad="rayuela"
         titulo={t('rayuela.nombre')}
         portada={<IconoRayuela tam={110} />}
         pregunta={t('rayuela.elegir_lengua')}

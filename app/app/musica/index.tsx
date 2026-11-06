@@ -12,7 +12,7 @@
  */
 
 import { useEffect, useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useRouter, type Href } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
 import { Boton } from '../../src/ui/components/Boton';
@@ -28,12 +28,15 @@ import { useNivelMusical } from '../../src/features/musica/useNivelMusical';
 import { MODO_ADMIN } from '../../src/features/musica/admin';
 import { cancionesAbiertas, NIVELES_CANCION, type Cancion } from '../../src/core/canciones/cancion';
 import { CANCIONES } from '../../content/canciones';
-import { color, espacio, labio, radio, texto } from '../../src/ui/tokens';
+import { espacio, labio, radio, texto } from '../../src/ui/tokens';
+import { crearEstilos, useColor } from '../../src/ui/tema';
 
 /** El nivel anterior, para decir qué hace falta para abrir una canción. */
 const ANTERIOR = { inicial: 'inicial', intermedio: 'inicial', avanzado: 'intermedio' } as const;
 
 export default function Musica() {
+  const styles = useEstilos();
+  const color = useColor();
   const router = useRouter();
   const { t } = useTextos();
   const estado = useProgreso((s) => s.estado);
@@ -150,7 +153,7 @@ export default function Musica() {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   contenido: { flexGrow: 1, gap: espacio.lg, paddingBottom: espacio.xl },
   cabecera: { flexDirection: 'row', alignItems: 'center', gap: espacio.md },
   redondo: {
@@ -222,4 +225,4 @@ const styles = StyleSheet.create({
   detalle: { ...texto.chico, color: color.tinta, flexShrink: 1 },
   hecha: { ...texto.etiqueta, fontSize: 11, color: color.aciertoTinta },
   cerrada: { flexDirection: 'row', alignItems: 'center', gap: espacio.sm },
-});
+}));

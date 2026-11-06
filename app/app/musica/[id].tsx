@@ -9,7 +9,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Boton } from '../../src/ui/components/Boton';
 import { Pantalla } from '../../src/ui/components/Pantalla';
@@ -29,7 +29,8 @@ import { clavePremio, yaPremiado } from '../../src/core/progress/projection';
 import { recompensaEntre, type Recompensa } from '../../src/core/progress/arbol';
 import { CANCIONES } from '../../content/canciones';
 import { AUDIOS } from '../../content/canciones/audios';
-import { color, espacio, radio, texto } from '../../src/ui/tokens';
+import { espacio, radio, texto } from '../../src/ui/tokens';
+import { crearEstilos } from '../../src/ui/tema';
 
 type Fase = 'conoce' | 'cancion' | 'fin';
 
@@ -41,6 +42,7 @@ interface Final {
 }
 
 export default function CancionPantalla() {
+  const styles = useEstilos();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t, frases, idioma } = useTextos();
@@ -199,6 +201,7 @@ export default function CancionPantalla() {
 }
 
 function Dato({ etiqueta, valor }: { etiqueta: string; valor: string }) {
+  const styles = useEstilos();
   return (
     <View style={styles.dato}>
       <Text style={styles.datoEtiqueta}>{etiqueta}</Text>
@@ -207,7 +210,7 @@ function Dato({ etiqueta, valor }: { etiqueta: string; valor: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useEstilos = crearEstilos((color) => ({
   centro: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: espacio.xl },
   contenido: { flexGrow: 1, gap: espacio.xl, paddingBottom: espacio.xl },
   portada: { flexDirection: 'row', alignItems: 'center', gap: espacio.lg },
@@ -234,4 +237,4 @@ const styles = StyleSheet.create({
   chipMiq: { ...texto.cuerpoFuerte, color: color.verde },
   chipEs: { ...texto.chico, color: color.tinta },
   acciones: { gap: espacio.md, marginTop: 'auto' },
-});
+}));
