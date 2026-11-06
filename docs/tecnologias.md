@@ -13,11 +13,10 @@ tienen su propio stack, resumido en [El robot](#el-robot) y
 | Pieza | Versión | Para qué |
 |---|---|---|
 | React Native | 0.86 | La aplicación |
-| Expo SDK | 57 | Módulos nativos, compilación en la nube, herramientas |
+| Expo SDK | 57 | Módulos nativos y herramientas; el APK se compila con Gradle, sin la nube |
 | TypeScript | 6 | En modo estricto, con índices verificados |
 | expo-router | 57 | Navegación basada en la carpeta `app/` |
-| react-native-tcp-socket | 6.4 | Sockets TCP: el aula en red |
-| react-native-udp | 4.1 | Reservado para descubrimiento por difusión |
+| `modules/piko-red` (propio, Kotlin) | — | El aula en red: sockets TCP atados al wifi del hotspot y faro UDP para encontrar la sala |
 | expo-sqlite | 57 | La base local |
 | expo-speech | 57 | Síntesis de voz para los ejercicios de escucha en inglés |
 | expo-audio | 57 | Reproducción de grabaciones (para las lenguas indígenas) |
@@ -123,7 +122,7 @@ sin un teléfono a mano. Metro elige archivos por plataforma:
 | `src/db/base.ts` — SQLite real | `src/db/base.web.ts` — en memoria |
 | `src/net/transporte.ts` — sockets TCP | `src/net/transporte.web.ts` — error explicativo |
 
-Así `expo-sqlite` y `react-native-tcp-socket` **ni siquiera entran** al paquete
+Así `expo-sqlite` y el módulo nativo `PikoRed` **ni siquiera entran** al paquete
 web. Dos diferencias, ambas deliberadas: el aula en red no funciona (un
 navegador no puede abrir un socket TCP crudo, y no hay forma de sortearlo) y el
 progreso no persiste entre recargas.

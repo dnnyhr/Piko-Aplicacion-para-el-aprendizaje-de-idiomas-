@@ -16,6 +16,8 @@ import type { StudentState } from '../progress/projection';
 
 export const PROTOCOL_VERSION = 1;
 export const PUERTO_AULA = 7331;
+/** El faro UDP con el que el maestro anuncia la sala dentro del hotspot. */
+export const PUERTO_FARO = 7332;
 
 export interface RosterEntry {
   id: string;

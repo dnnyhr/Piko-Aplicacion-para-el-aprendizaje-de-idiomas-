@@ -1,0 +1,54 @@
+name: APK
+
+# Compila el APK de Piko en GitHub, sin la cola de EAS: Expo genera la carpeta
+# android/ localmente (prebuild) y Gradle compila. Unos 15 minutos.
+# El APK queda en la pestaña "Actions" → esta corrida → "Artifacts".
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/apk.yml'
+
+jobs:
+  apk:
+    name: APK de Android (release)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - run: npm ci
+
+      - name: Generar android/ (local, sin la nube de Expo)
+        run: npx expo prebuild --platform android --no-install --clean
+        env:
+          CI: '1'
+
+      - name: Compilar con Gradle
+        working-directory: app/android
+        run: ./gradlew assembleRelease -x lint --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: piko-apk
+          path: app/android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error

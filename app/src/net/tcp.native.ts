@@ -1,90 +1,104 @@
 /**
- * Transporte sobre `react-native-tcp-socket`. Es el que corre en el teléfono.
+ * Transporte sobre el módulo nativo `PikoRed`. Es el que corre en el teléfono.
  *
  * Cumple el mismo contrato que `tcp.node.ts`, así que `host.ts` y `client.ts`
  * no cambian ni una línea entre el simulador y el aula de verdad.
+ *
+ * Lo que resuelve el módulo nativo y no resolvía la librería de antes:
+ *  - los sockets del estudiante salen por el wifi aunque el hotspot no tenga
+ *    internet y los datos móviles estén prendidos;
+ *  - el tiempo límite de conexión lo aplica el sistema operativo, así que
+ *    probar una dirección vacía no deja un hilo colgado dos minutos.
  */
 
-import TcpSocket from 'react-native-tcp-socket';
-import type { Conexion, Servidor, Transporte } from './transport';
+import { PikoRed, type PikoRedNativo } from '../../modules/piko-red/src';
+import { AulaNoDisponible, type Conexion, type Servidor, type Transporte } from './transport';
 
-type SocketRN = {
-  write(datos: string): void;
-  destroy(): void;
-  end?(): void;
-  setEncoding?(encoding: string): void;
-  setNoDelay?(activo: boolean): void;
-  on(evento: string, cb: (arg?: unknown) => void): void;
-  remoteAddress?: string;
-  remotePort?: number;
-};
+interface Oyentes {
+  datos: Array<(chunk: string) => void>;
+  cierre: Array<() => void>;
+  error: Array<(err: Error) => void>;
+}
 
-let contador = 0;
+const porId = new Map<number, Oyentes>();
+const entrantes = new Map<number, (c: Conexion) => void>();
+let suscrito = false;
 
-function envolver(socket: SocketRN): Conexion {
-  // Pedir utf-8 al socket: así la librería entrega texto ya decodificado y
-  // nunca parte un carácter multibyte entre dos chunks, que es justo lo que
-  // el framer de líneas no sabría reparar.
-  socket.setEncoding?.('utf8');
-  socket.setNoDelay?.(true);
+function nativo(): PikoRedNativo {
+  if (!PikoRed) throw new AulaNoDisponible();
+  if (!suscrito) {
+    suscrito = true;
+    PikoRed.addListener('datos', ({ id, texto }) => {
+      for (const cb of porId.get(id)?.datos ?? []) cb(texto);
+    });
+    PikoRed.addListener('cierre', ({ id }) => {
+      const o = porId.get(id);
+      porId.delete(id);
+      for (const cb of o?.cierre ?? []) cb();
+    });
+    PikoRed.addListener('entrante', ({ servidor, id, remoto }) => {
+      const cb = entrantes.get(servidor);
+      if (cb) cb(envolver(id, remoto));
+      else PikoRed?.cerrar(id);
+    });
+  }
+  return PikoRed;
+}
 
-  const id = `rn${++contador}`;
-  const remoto = `${socket.remoteAddress ?? '?'}:${socket.remotePort ?? 0}`;
+function envolver(id: number, remoto: string): Conexion {
+  const red = nativo();
+  const oyentes: Oyentes = { datos: [], cierre: [], error: [] };
+  porId.set(id, oyentes);
   let cerrado = false;
+  let leyendo = false;
+
+  oyentes.cierre.push(() => {
+    cerrado = true;
+  });
 
   return {
-    id,
+    id: `rn${id}`,
     remoto,
     send(linea) {
-      if (!cerrado) socket.write(linea);
+      if (!cerrado) red.enviar(id, linea);
     },
     close() {
       if (cerrado) return;
       cerrado = true;
-      try {
-        socket.destroy();
-      } catch {
-        /* ya estaba muerto */
-      }
+      red.cerrar(id);
     },
     onData(cb) {
-      socket.on('data', (chunk) => {
-        // Con `setEncoding` llega texto; sin él, algo tipo Buffer.
-        cb(typeof chunk === 'string' ? chunk : String(chunk));
-      });
+      oyentes.datos.push(cb);
+      // Se empieza a leer recién ahora: así no se pierde nada que llegue
+      // antes de que la lógica del aula esté escuchando.
+      if (!leyendo) {
+        leyendo = true;
+        red.leer(id);
+      }
     },
     onClose(cb) {
-      socket.on('close', () => {
-        cerrado = true;
-        cb();
-      });
+      oyentes.cierre.push(cb);
     },
     onError(cb) {
-      socket.on('error', (err) => cb(err instanceof Error ? err : new Error(String(err))));
+      // El nativo reporta todo error como cierre: no hay errores sueltos.
+      oyentes.error.push(cb);
     },
   };
 }
 
 class ServidorRN implements Servidor {
-  private servidor: ReturnType<typeof TcpSocket.createServer> | null = null;
+  private id: number | null = null;
   private handler: ((c: Conexion) => void) | null = null;
   private enEscucha = 0;
 
-  listen(puerto: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const servidor = TcpSocket.createServer((socket) => {
-        this.handler?.(envolver(socket as unknown as SocketRN));
-      });
-      this.servidor = servidor;
-
-      servidor.on('error', (err: unknown) => {
-        reject(err instanceof Error ? err : new Error(String(err)));
-      });
-      servidor.on('listening', () => {
-        this.enEscucha = puerto;
-        resolve();
-      });
-      servidor.listen({ port: puerto, host: '0.0.0.0', reuseAddress: true });
+  async listen(puerto: number): Promise<void> {
+    const red = nativo();
+    const { id, puerto: real } = await red.escuchar(puerto);
+    this.id = id;
+    this.enEscucha = real;
+    entrantes.set(id, (c) => {
+      if (this.handler) this.handler(c);
+      else c.close();
     });
   }
 
@@ -92,17 +106,16 @@ class ServidorRN implements Servidor {
     this.handler = cb;
   }
 
-  close(): Promise<void> {
-    return new Promise((resolve) => {
-      if (!this.servidor) return resolve();
-      try {
-        this.servidor.close(() => resolve());
-      } catch {
-        resolve();
-      }
-      this.servidor = null;
-      this.enEscucha = 0;
-    });
+  async close(): Promise<void> {
+    if (this.id === null) return;
+    entrantes.delete(this.id);
+    try {
+      nativo().cerrarServidor(this.id);
+    } catch {
+      /* ya estaba cerrado */
+    }
+    this.id = null;
+    this.enEscucha = 0;
   }
 
   get puerto(): number {
@@ -115,34 +128,9 @@ export const transporteNativo: Transporte = {
     return new ServidorRN();
   },
 
-  conectar(host, puerto, timeoutMs = 6000) {
-    return new Promise((resolve, reject) => {
-      let resuelto = false;
-
-      const socket = TcpSocket.createConnection({ host, port: puerto }, () => {
-        if (resuelto) return;
-        resuelto = true;
-        clearTimeout(reloj);
-        resolve(envolver(socket as unknown as SocketRN));
-      });
-
-      const reloj = setTimeout(() => {
-        if (resuelto) return;
-        resuelto = true;
-        try {
-          socket.destroy();
-        } catch {
-          /* nada */
-        }
-        reject(new Error(`No se pudo conectar a ${host}:${puerto}`));
-      }, timeoutMs);
-
-      socket.on('error', (err: unknown) => {
-        if (resuelto) return;
-        resuelto = true;
-        clearTimeout(reloj);
-        reject(err instanceof Error ? err : new Error(String(err)));
-      });
-    });
+  async conectar(host, puerto, timeoutMs = 6000) {
+    const red = nativo();
+    const { id, remoto } = await red.conectar(host, puerto, Math.round(timeoutMs));
+    return envolver(id, remoto);
   },
 };

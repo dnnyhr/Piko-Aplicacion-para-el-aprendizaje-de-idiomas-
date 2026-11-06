@@ -125,6 +125,7 @@ export const ES = {
   // ── Unirse a la clase
   'unirse.sin_red': 'El aula necesita un teléfono: los navegadores no pueden abrir sockets TCP. Desde la computadora podés jugar la práctica en solitario.',
   'unirse.buscando_maestro': 'Buscando al maestro…',
+  'unirse.sin_wifi': 'Este teléfono no está conectado a ningún wifi. Abrí los ajustes de wifi y conectate al hotspot del maestro. Si el teléfono avisa que la red no tiene internet, elegí mantener la conexión.',
   'unirse.revisando_red': 'Revisando la red del aula…',
   'unirse.no_encontre': 'No encontré la clase. ¿Está encendido el hotspot del maestro?',
   'unirse.no_pude_entrar': 'Encontré la sala pero no pude entrar. Probá de nuevo.',
@@ -154,8 +155,9 @@ export const ES = {
   'maestro.antes_de_abrir': 'Antes de abrir la sala',
   'maestro.aviso_1': 'Encendé el ',
   'maestro.aviso_negrita': 'punto de acceso',
-  'maestro.aviso_2': ' (hotspot) desde los ajustes de tu teléfono. Los estudiantes se conectan a esa red y ahí te encuentran. No hace falta que tengas datos ni internet.',
+  'maestro.aviso_2': ' (hotspot) desde los ajustes de tu teléfono. Los estudiantes se conectan a esa red y la app los trae a tu sala sola. No hace falta que tengas datos ni internet.',
   'maestro.codigo': 'Código de la clase',
+  'maestro.sin_hotspot': 'Todavía no veo el hotspot encendido. Prendelo en los ajustes del teléfono: la sala lo detecta sola.',
   'maestro.si_no_encuentra': 'Si algún teléfono no encuentra la sala, que escriba {direccion}',
   'maestro.sin_lista': 'Todavía no cargaste la lista de tu clase.',
   'maestro.usar_ejemplo': 'Usar una lista de ejemplo',

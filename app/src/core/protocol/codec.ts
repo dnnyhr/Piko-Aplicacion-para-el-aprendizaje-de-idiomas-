@@ -7,7 +7,7 @@
  *
  * Trabaja sobre *strings*, no bytes: la capa de transporte pone el socket en
  * modo utf-8 y se encarga de no cortar un carácter multibyte a la mitad
- * (`setEncoding('utf8')` en Node y en react-native-tcp-socket).
+ * (`setEncoding('utf8')` en Node, `InputStreamReader` en el módulo PikoRed).
  */
 
 import { parseMessage, type Message } from './messages';

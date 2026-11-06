@@ -6,8 +6,8 @@
   `node:sqlite`, que no existe en versiones anteriores. Es la misma versión que
   usa CI.
 - **Git.**
-- Sólo para compilar el APK: una cuenta de Expo (gratis). Ver [En el
-  teléfono](#3-en-el-teléfono).
+- Sólo para compilar el APK en la computadora: JDK 17 y el Android SDK. En
+  GitHub Actions no hace falta nada. Ver [En el teléfono](#3-en-el-teléfono).
 - Sólo para el robot: [`arduino-cli`](https://arduino.github.io/arduino-cli/) o
   el IDE de Arduino, y la placa. El panel se prueba sin placa.
 
@@ -107,88 +107,82 @@ configuraciones distintas porque unas corren en el teléfono y otras no.
 
 ## 3. En el teléfono
 
-La aplicación usa módulos nativos, así que **no corre en Expo Go**. Hace falta
-un *development build*: un APK con los módulos nativos incluidos que se conecta
-al servidor de desarrollo. Se compila **una sola vez**.
+La aplicación usa un módulo nativo propio (`app/modules/piko-red`, en Kotlin:
+los sockets de la sala y el faro UDP), así que **no corre en Expo Go**. Todo se
+compila **sin la nube de Expo**: no hay cola de EAS que esperar.
 
-### Preparación
+### El APK para repartir — en GitHub (lo más rápido)
+
+1. Pestaña **Actions** del repositorio → **APK** → **Run workflow**.
+2. A los ~15 minutos, en esa corrida, **Artifacts → piko-apk**: adentro está el
+   `.apk`.
+
+También corre solo en cada push a `main` que toque `app/`.
+
+### El APK para repartir — en la computadora
+
+Hace falta JDK 17 y el Android SDK (Android Studio lo instala, o las
+*command line tools* con `platforms;android-36` y `build-tools;36.0.0`):
 
 ```bash
-npm install -g eas-cli
+cd app
 ```
 
 ```bash
-eas login
+npm run apk
 ```
+
+Queda en `app/android/app/build/outputs/apk/release/app-release.apk`. Se pasa de
+teléfono en teléfono; la primera vez hay que habilitar la instalación desde
+orígenes desconocidos. `npm run apk` genera `android/` con `expo prebuild`
+(local, no usa internet de Expo) y compila con Gradle.
+
+El APK va firmado con la llave de depuración, que alcanza para instalarlo a
+mano. Para publicarlo en una tienda haría falta una llave propia.
+
+### Para desarrollar
 
 ```bash
-eas init
+npx expo run:android
 ```
 
-`eas init` crea el identificador del proyecto en `app.json`. Conviene
-versionarlo.
-
-### Compilar
-
-```bash
-eas build --profile development --platform android
-```
-
-Se compila en la nube (10–20 minutos en el plan gratuito). Al terminar da un
-enlace y un código QR: se abre desde el teléfono y se instala. **Instalalo en
-los dos teléfonos** si vas a probar el aula.
-
-### Iterar
+Compila e instala un build de depuración con el dev client en el teléfono
+conectado por USB. Después:
 
 ```bash
 npm start
 ```
 
-Se abre Piko en el teléfono, escanea el código y listo. A partir de ahí cada
-cambio se recarga solo.
+Cada cambio de pantallas, estilos o contenido se recarga solo. Sólo hay que
+recompilar si cambia algo **nativo** (por ejemplo `modules/piko-red`).
 
 > **Para probar el aula:** conectá también la computadora al hotspot del
 > teléfono que hace de maestro. Así el servidor de desarrollo queda accesible
 > desde ambos teléfonos.
 
-El *development build* sólo hay que rehacerlo si se agrega o cambia una
-dependencia **nativa**. Pantallas, estilos, contenido y sprites entran solos.
+### Cómo se encuentran los teléfonos
 
----
+El estudiante prueba, en este orden y sin escribir nada:
 
-## 4. El APK para repartir
+1. la última sala donde entró;
+2. **la puerta de enlace del wifi** — en un hotspot es exactamente el teléfono
+   del maestro, aunque Android 11+ elija una dirección al azar;
+3. **el faro UDP** (puerto 7332): el maestro anuncia la sala cada segundo y
+   contesta a quien pregunte;
+4. un barrido de la subred (puerto 7331).
 
-Este no necesita servidor de desarrollo: funciona solo.
+Si nada contesta, escribe la dirección que el maestro tiene en pantalla.
 
-```bash
-eas build --profile preview --platform android
-```
-
-Se descarga el `.apk` y ya se puede pasar de teléfono en teléfono. La primera
-vez hay que habilitar la instalación desde orígenes desconocidos.
-
-Para la versión de entrega, con minificación completa:
-
-```bash
-eas build --profile production --platform android
-```
-
-Los tres perfiles están en `app/eas.json` y los tres generan **APK, no AAB**:
-Piko no se distribuye por la tienda, se comparte de mano en mano.
-
-### Sin la nube
-
-Es posible, pero exige Android Studio y JDK 17 (unos 10 GB):
-
-```bash
-npx expo run:android --variant release
-```
+Cada socket del estudiante se **ata a la red wifi**: el hotspot no tiene
+internet, y sin esto Android manda las conexiones por los datos móviles y nunca
+llegan al maestro. Si el teléfono avisa que "la red no tiene acceso a
+internet", hay que elegir **mantener la conexión**.
 
 ---
 
 ## Prueba de aceptación en el aula
 
-Con dos teléfonos y el *development build* instalado:
+Con dos teléfonos y el APK instalado:
 
 1. **Maestro:** enciende el punto de acceso desde los ajustes de Android.
 2. Abre Piko → *Soy el maestro* → *Usar una lista de ejemplo* → **Abrir la
