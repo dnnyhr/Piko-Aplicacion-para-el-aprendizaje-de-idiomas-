@@ -84,11 +84,32 @@
   }
   .forma--principal img{width:110px; height:auto}
   .forma--principal .btn{align-self:center; margin:0}
-  .forma__qr{display:flex; flex-direction:column; align-items:center; gap:.6rem}
-  .forma__qr figure{margin:0; text-align:center}
-  .forma--principal .forma__qr img{width:132px; height:132px; display:block; padding:6px; background:#fff; border-radius:12px; border:2px solid #F6D2B4}
-  .forma__qr figcaption{font:600 .78rem Fredoka,sans-serif; color:var(--tinta-suave); margin-top:.35rem}
-  @media (max-width:720px){ .forma--principal .forma__qr img{display:block} }
+  .forma__acciones{display:flex; flex-direction:column; align-items:stretch; gap:.6rem}
+  .forma__acciones .btn{justify-content:center}
+  .btn-qr svg{width:20px; height:20px; fill:currentColor}
+
+  /* El QR de la encuesta, en grande */
+  .qr-modal{border:none; padding:0; background:transparent; max-width:calc(100vw - 32px); overflow:visible}
+  .qr-modal::backdrop{background:rgba(10,69,48,.62); backdrop-filter:blur(4px)}
+  .qr-modal[open]{animation:qr-entra .35s cubic-bezier(.2,1.3,.4,1)}
+  .qr-modal[open]::backdrop{animation:qr-fondo .25s ease}
+  @keyframes qr-entra{from{opacity:0; transform:translateY(24px) scale(.94)}}
+  @keyframes qr-fondo{from{opacity:0}}
+  .qr-tarjeta{position:relative; width:min(440px, calc(100vw - 32px)); margin-top:70px; padding:84px 28px 26px; text-align:center;
+    background:linear-gradient(180deg,#FFF6EC,#fff 45%); border:2px solid #F6D2B4; border-radius:28px; box-shadow:0 30px 70px rgba(10,69,48,.35)}
+  .qr-tarjeta__piko{position:absolute; left:50%; top:-70px; transform:translateX(-50%); width:96px; height:auto; filter:drop-shadow(0 10px 14px rgba(10,69,48,.22))}
+  .qr-tarjeta .etiqueta{margin:0 0 .3rem}
+  .qr-tarjeta h2{margin:0 0 .4rem; font-size:clamp(1.4rem,5vw,1.8rem); color:var(--verde-piko)}
+  .qr-tarjeta p{margin:0; color:var(--tinta)}
+  .qr-tarjeta__codigo{display:block; width:min(320px, 100%); aspect-ratio:1; height:auto; margin:1.2rem auto .9rem; padding:12px; background:#fff;
+    border-radius:20px; border:3px solid var(--copete); box-shadow:0 12px 30px rgba(233,121,39,.22)}
+  .qr-tarjeta__url{font:600 .85rem Fredoka,sans-serif; color:var(--tinta-suave); word-break:break-all}
+  .qr-tarjeta__cerrar{position:absolute; top:14px; right:14px; width:40px; height:40px; border-radius:50%; border:none; cursor:pointer;
+    background:#fff; color:var(--verde-piko); box-shadow:var(--sombra-chica); display:grid; place-items:center}
+  .qr-tarjeta__cerrar:hover{background:var(--papel)}
+  .qr-tarjeta__cerrar:focus-visible{outline:3px solid var(--copete); outline-offset:2px}
+  .qr-tarjeta__cerrar svg{width:20px; height:20px; fill:currentColor}
+  @media (prefers-reduced-motion:reduce){ .qr-modal[open], .qr-modal[open]::backdrop{animation:none} }
   .forma--principal h3{font-size:clamp(1.4rem,2.6vw,1.9rem)}
   @media (max-width:720px){ .forma--principal{grid-template-columns:1fr} .forma--principal img{display:none} }
 
@@ -164,12 +185,11 @@
           <h3>Contestá «Tu lengua en Piko»</h3>
           <p>Escribís cómo se dicen palabras y frases en tu lengua: saludos, la familia, los números, los animales. Desde el teléfono, y elegís cómo querés que te nombremos.</p>
         </div>
-        <div class="forma__qr">
-          <figure>
-            <img src="../assets/img/qr-encuesta.svg" alt="Código QR que abre la encuesta «Tu lengua en Piko»" width="132" height="132" loading="lazy">
-            <figcaption>Escaneá con el teléfono</figcaption>
-          </figure>
+        <div class="forma__acciones">
           <a class="btn btn--naranja" href="https://encuestas.piko.mugiware.com/e/tu-lengua" target="_blank" rel="noopener">Abrir la encuesta</a>
+          <button type="button" class="btn btn--linea btn-qr" data-abre-qr aria-haspopup="dialog">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm8-2h2v2h-2v-2zm2 2h2v2h-2v-2zm2-2h2v2h-2v-2zm2 2h2v2h-2v-2zm-6 2h2v2h-2v-2zm2 2h2v2h-2v-2zm2-2h2v2h-2v-2zm2 2h2v2h-2v-2zM6 6h2v2H6V6zm10 0h2v2h-2V6zM6 16h2v2H6v-2z"/></svg>Ver QR
+          </button>
         </div>
       </div>
       <div class="tarjeta tarjeta--viva forma" style="--color:var(--cielo)">
@@ -249,6 +269,20 @@
 </main>
 
 <div id="pie"></div>
+<dialog class="qr-modal" id="qr-modal" aria-labelledby="qr-titulo">
+  <div class="qr-tarjeta">
+    <img class="qr-tarjeta__piko" src="../assets/img/piko.svg" alt="" width="96" height="158">
+    <button type="button" class="qr-tarjeta__cerrar" data-cierra-qr aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6 10.6 12 5 6.4z"/></svg>
+    </button>
+    <p class="etiqueta">Tu lengua en Piko</p>
+    <h2 id="qr-titulo">Escaneá y contestá</h2>
+    <p>Apuntá la cámara del teléfono al código y se abre la encuesta.</p>
+    <img class="qr-tarjeta__codigo" src="../assets/img/qr-encuesta.svg" alt="Código QR que abre la encuesta «Tu lengua en Piko»" width="320" height="320">
+    <p class="qr-tarjeta__url">encuestas.piko.mugiware.com/e/tu-lengua</p>
+  </div>
+</dialog>
+
 <script src="../assets/js/nav.js"></script>
 <script src="../assets/js/gsap.min.js" defer></script>
 <script src="../assets/js/ScrollTrigger.min.js" defer></script>
