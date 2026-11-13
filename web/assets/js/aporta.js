@@ -82,3 +82,18 @@
     .catch(function () { $("lenguas").innerHTML = "<p>No se pudo cargar el estado.</p>"; });
 
 })();
+
+/* El botón «Ver QR» abre el código de la encuesta en grande. */
+(function () {
+  "use strict";
+  var modal = document.getElementById("qr-modal");
+  var boton = document.querySelector("[data-abre-qr]");
+  if (!modal || !boton || typeof modal.showModal !== "function") {
+    if (boton) boton.hidden = true;
+    return;
+  }
+  boton.addEventListener("click", function () { modal.showModal(); });
+  modal.querySelector("[data-cierra-qr]").addEventListener("click", function () { modal.close(); });
+  // Un clic en el fondo oscuro (fuera de la tarjeta) también cierra.
+  modal.addEventListener("click", function (e) { if (e.target === modal) modal.close(); });
+})();
