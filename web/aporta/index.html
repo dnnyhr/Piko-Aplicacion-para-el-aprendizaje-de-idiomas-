@@ -89,19 +89,20 @@
   .btn-qr svg{width:20px; height:20px; fill:currentColor}
 
   /* El QR de la encuesta, en grande */
-  .qr-modal{border:none; padding:0; background:transparent; max-width:calc(100vw - 32px); overflow:visible}
+  .qr-modal{border:none; padding:0; background:transparent; max-width:calc(100vw - 32px); max-height:calc(100dvh - 24px); overflow-x:hidden; overflow-y:auto; overscroll-behavior:contain}
   .qr-modal::backdrop{background:rgba(10,69,48,.62); backdrop-filter:blur(4px)}
   .qr-modal[open]{animation:qr-entra .35s cubic-bezier(.2,1.3,.4,1)}
   .qr-modal[open]::backdrop{animation:qr-fondo .25s ease}
   @keyframes qr-entra{from{opacity:0; transform:translateY(24px) scale(.94)}}
   @keyframes qr-fondo{from{opacity:0}}
-  .qr-tarjeta{position:relative; width:min(440px, calc(100vw - 32px)); margin-top:70px; padding:84px 28px 26px; text-align:center;
+  .qr-tarjeta{position:relative; width:min(440px, calc(100vw - 32px)); margin:62px 0 6px; padding:96px 24px 22px; text-align:center;
     background:linear-gradient(180deg,#FFF6EC,#fff 45%); border:2px solid #F6D2B4; border-radius:28px; box-shadow:0 30px 70px rgba(10,69,48,.35)}
-  .qr-tarjeta__piko{position:absolute; left:50%; top:-70px; transform:translateX(-50%); width:96px; height:auto; filter:drop-shadow(0 10px 14px rgba(10,69,48,.22))}
+  .qr-tarjeta__piko{position:absolute; left:50%; top:-62px; transform:translateX(-50%); width:96px; height:auto; filter:drop-shadow(0 10px 14px rgba(10,69,48,.22))}
   .qr-tarjeta .etiqueta{margin:0 0 .3rem}
   .qr-tarjeta h2{margin:0 0 .4rem; font-size:clamp(1.4rem,5vw,1.8rem); color:var(--verde-piko)}
   .qr-tarjeta p{margin:0; color:var(--tinta)}
-  .qr-tarjeta__codigo{display:block; width:min(320px, 100%); aspect-ratio:1; height:auto; margin:1.2rem auto .9rem; padding:12px; background:#fff;
+  /* El QR se achica en pantallas bajas para que la tarjeta entre entera. */
+  .qr-tarjeta__codigo{display:block; width:min(100%, clamp(170px, calc(100dvh - 350px), 320px)); aspect-ratio:1; height:auto; margin:1rem auto .8rem; padding:12px; background:#fff;
     border-radius:20px; border:3px solid var(--copete); box-shadow:0 12px 30px rgba(233,121,39,.22)}
   .qr-tarjeta__url{font:600 .85rem Fredoka,sans-serif; color:var(--tinta-suave); word-break:break-all}
   .qr-tarjeta__cerrar{position:absolute; top:14px; right:14px; width:40px; height:40px; border-radius:50%; border:none; cursor:pointer;
@@ -109,6 +110,10 @@
   .qr-tarjeta__cerrar:hover{background:var(--papel)}
   .qr-tarjeta__cerrar:focus-visible{outline:3px solid var(--copete); outline-offset:2px}
   .qr-tarjeta__cerrar svg{width:20px; height:20px; fill:currentColor}
+  @media (max-height:520px){
+    .qr-tarjeta{margin-top:44px; padding-top:68px} .qr-tarjeta__piko{top:-44px; width:64px}
+    .qr-tarjeta > p:not(.etiqueta):not(.qr-tarjeta__url){display:none}
+  }
   @media (prefers-reduced-motion:reduce){ .qr-modal[open], .qr-modal[open]::backdrop{animation:none} }
   .forma--principal h3{font-size:clamp(1.4rem,2.6vw,1.9rem)}
   @media (max-width:720px){ .forma--principal{grid-template-columns:1fr} .forma--principal img{display:none} }
@@ -287,6 +292,6 @@
 <script src="../assets/js/gsap.min.js" defer></script>
 <script src="../assets/js/ScrollTrigger.min.js" defer></script>
 <script src="../assets/js/animaciones.js" defer></script>
-<script src="../assets/js/aporta.js" defer></script>
+<script src="../assets/js/aporta.js?v=2" defer></script>
 </body>
 </html>
