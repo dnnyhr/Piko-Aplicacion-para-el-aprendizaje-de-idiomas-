@@ -83,17 +83,43 @@
 
 })();
 
-/* El botón «Ver QR» abre el código de la encuesta en grande. */
+/*
+ * El botón «Ver QR» abre el código de la encuesta en grande. Es un enlace a
+ * #ver-qr: sin JS abre igual con :target. Con JS se suma Escape, el foco y
+ * que el fondo de la página no se mueva.
+ */
 (function () {
   "use strict";
-  var modal = document.getElementById("qr-modal");
-  var boton = document.querySelector("[data-abre-qr]");
-  if (!modal || !boton || typeof modal.showModal !== "function") {
-    if (boton) boton.hidden = true;
-    return;
+  var modal = document.getElementById("ver-qr");
+  if (!modal) return;
+  var html = document.documentElement;
+  var volver = null;
+
+  function abrir(e) {
+    if (e) e.preventDefault();
+    volver = document.activeElement;
+    modal.classList.add("qr-modal--abierto");
+    html.classList.add("qr-abierto");
+    var x = modal.querySelector(".qr-tarjeta__cerrar");
+    if (x) x.focus();
   }
-  boton.addEventListener("click", function () { modal.showModal(); });
-  modal.querySelector("[data-cierra-qr]").addEventListener("click", function () { modal.close(); });
-  // Un clic en el fondo oscuro (fuera de la tarjeta) también cierra.
-  modal.addEventListener("click", function (e) { if (e.target === modal) modal.close(); });
+  function cerrar(e) {
+    if (e) e.preventDefault();
+    modal.classList.remove("qr-modal--abierto");
+    html.classList.remove("qr-abierto");
+    if (location.hash === "#ver-qr" && history.replaceState) {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+    if (volver && volver.focus) volver.focus();
+  }
+
+  var botones = document.querySelectorAll("[data-abre-qr]");
+  for (var i = 0; i < botones.length; i++) botones[i].addEventListener("click", abrir);
+  var cierres = modal.querySelectorAll("[data-cierra-qr]");
+  for (var k = 0; k < cierres.length; k++) cierres[k].addEventListener("click", cerrar);
+  document.addEventListener("keydown", function (e) {
+    if ((e.key === "Escape" || e.key === "Esc") && modal.classList.contains("qr-modal--abierto")) cerrar(e);
+  });
+  // Si alguien llega con el enlace …/aporta/#ver-qr, queda abierto con JS también.
+  if (location.hash === "#ver-qr") abrir();
 })();

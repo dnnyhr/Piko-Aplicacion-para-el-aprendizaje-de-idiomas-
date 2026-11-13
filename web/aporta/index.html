@@ -89,32 +89,35 @@
   .btn-qr svg{width:20px; height:20px; fill:currentColor}
 
   /* El QR de la encuesta, en grande */
-  .qr-modal{border:none; padding:0; background:transparent; max-width:calc(100vw - 32px); max-height:calc(100dvh - 24px); overflow-x:hidden; overflow-y:auto; overscroll-behavior:contain}
-  .qr-modal::backdrop{background:rgba(10,69,48,.62); backdrop-filter:blur(4px)}
-  .qr-modal[open]{animation:qr-entra .35s cubic-bezier(.2,1.3,.4,1)}
-  .qr-modal[open]::backdrop{animation:qr-fondo .25s ease}
+  /* Un div fijo en vez de dialog: así abre en cualquier Safari. Sin JS abre igual con #ver-qr (:target). */
+  .qr-modal{display:none; position:fixed; top:0; right:0; bottom:0; left:0; z-index:1000; align-items:center; justify-content:center; padding:12px 16px}
+  .qr-modal:target, .qr-modal.qr-modal--abierto{display:flex}
+  .qr-modal__fondo{position:absolute; top:0; right:0; bottom:0; left:0; background:rgba(10,69,48,.72); animation:qr-fondo .25s ease}
+  .qr-modal__caja{position:relative; max-width:100%; max-height:100%; overflow-x:hidden; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; filter:drop-shadow(0 22px 34px rgba(0,0,0,.28)); animation:qr-entra .35s cubic-bezier(.2,1.3,.4,1)}
+  html.qr-abierto, html.qr-abierto body{overflow:hidden}
   @keyframes qr-entra{from{opacity:0; transform:translateY(24px) scale(.94)}}
   @keyframes qr-fondo{from{opacity:0}}
   .qr-tarjeta{position:relative; width:min(440px, calc(100vw - 32px)); margin:62px 0 6px; padding:96px 24px 22px; text-align:center;
-    background:linear-gradient(180deg,#FFF6EC,#fff 45%); border:2px solid #F6D2B4; border-radius:28px; box-shadow:0 30px 70px rgba(10,69,48,.35)}
+    background:linear-gradient(180deg,#FFF6EC,#fff 45%); border:2px solid #F6D2B4; border-radius:28px}
   .qr-tarjeta__piko{position:absolute; left:50%; top:-62px; transform:translateX(-50%); width:96px; height:auto; filter:drop-shadow(0 10px 14px rgba(10,69,48,.22))}
   .qr-tarjeta .etiqueta{margin:0 0 .3rem}
   .qr-tarjeta h2{margin:0 0 .4rem; font-size:clamp(1.4rem,5vw,1.8rem); color:var(--verde-piko)}
   .qr-tarjeta p{margin:0; color:var(--tinta)}
   /* El QR se achica en pantallas bajas para que la tarjeta entre entera. */
-  .qr-tarjeta__codigo{display:block; width:min(100%, clamp(170px, calc(100dvh - 350px), 320px)); aspect-ratio:1; height:auto; margin:1rem auto .8rem; padding:12px; background:#fff;
+  .qr-tarjeta__codigo{display:block; width:min(100%, clamp(170px, calc(100vh - 350px), 320px)); width:min(100%, clamp(170px, calc(100dvh - 350px), 320px)); aspect-ratio:1; height:auto; margin:1rem auto .8rem; padding:12px; background:#fff;
     border-radius:20px; border:3px solid var(--copete); box-shadow:0 12px 30px rgba(233,121,39,.22)}
-  .qr-tarjeta__url{font:600 .85rem Fredoka,sans-serif; color:var(--tinta-suave); word-break:break-all}
-  .qr-tarjeta__cerrar{position:absolute; top:14px; right:14px; width:40px; height:40px; border-radius:50%; border:none; cursor:pointer;
+  .qr-tarjeta__url{font:600 .85rem Fredoka,sans-serif; color:var(--tinta-suave); overflow-wrap:anywhere}
+  .qr-tarjeta__cerrar{position:absolute; top:14px; right:14px; width:44px; height:44px; border-radius:50%; border:none; cursor:pointer; text-decoration:none;
     background:#fff; color:var(--verde-piko); box-shadow:var(--sombra-chica); display:grid; place-items:center}
   .qr-tarjeta__cerrar:hover{background:var(--papel)}
   .qr-tarjeta__cerrar:focus-visible{outline:3px solid var(--copete); outline-offset:2px}
   .qr-tarjeta__cerrar svg{width:20px; height:20px; fill:currentColor}
-  @media (max-height:520px){
+  @media (max-height:700px){
     .qr-tarjeta{margin-top:44px; padding-top:68px} .qr-tarjeta__piko{top:-44px; width:64px}
     .qr-tarjeta > p:not(.etiqueta):not(.qr-tarjeta__url){display:none}
+    .qr-tarjeta__codigo{width:min(100%, clamp(170px, calc(100vh - 250px), 320px)); width:min(100%, clamp(170px, calc(100dvh - 250px), 320px))}
   }
-  @media (prefers-reduced-motion:reduce){ .qr-modal[open], .qr-modal[open]::backdrop{animation:none} }
+  @media (prefers-reduced-motion:reduce){ .qr-modal__fondo, .qr-modal__caja{animation:none} }
   .forma--principal h3{font-size:clamp(1.4rem,2.6vw,1.9rem)}
   @media (max-width:720px){ .forma--principal{grid-template-columns:1fr} .forma--principal img{display:none} }
 
@@ -192,9 +195,9 @@
         </div>
         <div class="forma__acciones">
           <a class="btn btn--naranja" href="https://encuestas.piko.mugiware.com/e/tu-lengua" target="_blank" rel="noopener">Abrir la encuesta</a>
-          <button type="button" class="btn btn--linea btn-qr" data-abre-qr aria-haspopup="dialog">
+          <a class="btn btn--linea btn-qr" href="#ver-qr" data-abre-qr role="button" aria-haspopup="dialog">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm8-2h2v2h-2v-2zm2 2h2v2h-2v-2zm2-2h2v2h-2v-2zm2 2h2v2h-2v-2zm-6 2h2v2h-2v-2zm2 2h2v2h-2v-2zm2-2h2v2h-2v-2zm2 2h2v2h-2v-2zM6 6h2v2H6V6zm10 0h2v2h-2V6zM6 16h2v2H6v-2z"/></svg>Ver QR
-          </button>
+          </a>
         </div>
       </div>
       <div class="tarjeta tarjeta--viva forma" style="--color:var(--cielo)">
@@ -274,24 +277,27 @@
 </main>
 
 <div id="pie"></div>
-<dialog class="qr-modal" id="qr-modal" aria-labelledby="qr-titulo">
+<div class="qr-modal" id="ver-qr" role="dialog" aria-modal="true" aria-labelledby="qr-titulo">
+  <a class="qr-modal__fondo" href="#cerrar-qr" data-cierra-qr tabindex="-1" aria-hidden="true"></a>
+  <div class="qr-modal__caja">
   <div class="qr-tarjeta">
     <img class="qr-tarjeta__piko" src="../assets/img/piko.svg" alt="" width="96" height="158">
-    <button type="button" class="qr-tarjeta__cerrar" data-cierra-qr aria-label="Cerrar">
+    <a class="qr-tarjeta__cerrar" href="#cerrar-qr" data-cierra-qr role="button" aria-label="Cerrar">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.4 5 12 10.6 17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6 10.6 12 5 6.4z"/></svg>
-    </button>
+    </a>
     <p class="etiqueta">Tu lengua en Piko</p>
     <h2 id="qr-titulo">Escaneá y contestá</h2>
     <p>Apuntá la cámara del teléfono al código y se abre la encuesta.</p>
     <img class="qr-tarjeta__codigo" src="../assets/img/qr-encuesta.svg" alt="Código QR que abre la encuesta «Tu lengua en Piko»" width="320" height="320">
-    <p class="qr-tarjeta__url">encuestas.piko.mugiware.com/e/tu-lengua</p>
+    <p class="qr-tarjeta__url">encuestas.piko.mugiware.com/<wbr>e/tu-lengua</p>
   </div>
-</dialog>
+  </div>
+</div>
 
 <script src="../assets/js/nav.js"></script>
 <script src="../assets/js/gsap.min.js" defer></script>
 <script src="../assets/js/ScrollTrigger.min.js" defer></script>
 <script src="../assets/js/animaciones.js" defer></script>
-<script src="../assets/js/aporta.js?v=2" defer></script>
+<script src="../assets/js/aporta.js?v=3" defer></script>
 </body>
 </html>
